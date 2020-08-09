@@ -1,0 +1,13 @@
+#Environment variables
+.env
+.flaskenv
+
+#Visual Studio 
+/.vs
+
+#Python cache
+/__pycache__
+/app/__pycache__
+
+#Virtual environment
+/venv

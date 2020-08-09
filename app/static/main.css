@@ -1,0 +1,93 @@
+﻿* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+#calendar {
+    width: 150px;
+    border: 1px solid grey;
+    height: auto;
+    display: none;
+}
+
+#calendar:focus {
+    outline: none;
+}
+
+#calendar:hover {
+    cursor: default;
+}
+
+.calendar-controls {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 150px;
+    padding: 5px;
+}
+
+.calendar-controls {
+    justify-content: space-between;
+}
+
+.cal-arrows:hover {
+    cursor: pointer;
+}
+
+.calendar-days {
+    position: relative;
+    display: flex;
+    list-style: none;
+    width: 150px;
+    padding: 5px;
+}
+
+.calendar-days li {
+    width: 15%;
+    text-align: center;
+}
+
+.calendar-carousel {
+    display: flex;
+    transition: all 0.4s;
+    width: 150px;
+    height: 140px;
+    position: relative;
+    overflow: hidden;
+}
+
+table {
+    position: absolute;
+    transition: all 0.3s;
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+}
+
+tr {
+    height: 18%;
+}
+
+td {
+    width: 15%;
+    text-align: center;
+}
+
+.booked {
+    background-color: red;
+}
+
+.booked:hover {
+    cursor: default;
+}
+
+.available {
+    color: skyblue;
+
+}
+
+.available:hover {
+    cursor: pointer;
+    background-color: gainsboro;
+}
