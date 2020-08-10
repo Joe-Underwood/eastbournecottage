@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Cottage @ Eastbourne</title>
+    <link rel="stylesheet" href="../static/newMain.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-async-computed"></script>
+</head>
+
+<body>
+    <div id="root">
+
+        <nav class="nav-bar">
+            <div>☰</div>
+        </nav>
+
+        <section class="banner">
+            <div class="title">
+                <h1>The Cottage</h1>
+                <h1>Eastbourne</h1>
+            </div>
+        </section>
+
+        <section class="profile">
+            <div class="gallery">
+                <div class="gallery-view">
+                    <div class="gallery-slide">
+                        <img v-for="image in galleryImages" :src="image" />
+                    </div>
+
+                </div>
+            </div>
+            <div class="description">
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                    Gravida quis blandit turpis cursus in. Non curabitur gravida arcu ac tortor dignissim convallis.
+                    Mus mauris vitae ultricies leo integer malesuada nunc. Bibendum at varius vel pharetra vel.
+                    Luctus accumsan tortor posuere ac ut consequat semper viverra. Quisque id diam vel quam.
+                    Dictum fusce ut placerat orci nulla. Sed viverra ipsum nunc aliquet bibendum. Sit amet volutpat consequat mauris.
+                    Egestas erat imperdiet sed euismod. Lacus vel facilisis volutpat est velit egestas dui id ornare.
+                </p>
+            </div>
+            <div class="location">
+                <div class="mapouter">
+                    <div class="gmap_canvas">
+                        <iframe width="475" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=the%20village%2Cmeads%2Ceastbourne&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="booking">
+            <h1>Book</h1>
+            <div class="price-list">
+                <h3>Price List</h3>
+                <p>[insert price list table here]</p>
+
+            </div>
+            <form method="post">
+                {{ booking_form.hidden_tag() }}
+
+                <label for="arrival-date">Arrival Date</label>
+                <input id="arrival-date" v-model="bookingFormData.arrivalDate" type="text" required placeholder="dd / mm / yyyy" />
+
+                <label for="departure-date">Departure Date</label>
+                <input id="departure-date" v-model="bookingFormData.departureDate" type="text" required placeholder="dd / mm / yyyy" />
+
+                <div class="party">
+                    <label for="adults">Adults</label>
+                    <input id="adults" v-model="bookingFormData.party.adults" type="number" />
+
+                    <label for="children">Children</label>
+                    <input id="children" v-model="bookingFormData.party.children" type="number" />
+
+                    <label for="infants">Infants</label>
+                    <input id="infants" v-model="bookingFormData.party.infants" type="number" />
+
+                    <label for="dogs">Dogs</label>
+                    <input id="dogs" v-model="bookingFormData.party.dogs" type="number" max="1" />
+                </div>
+
+                <div>
+                    <label for="first-name">First Name</label>
+                    <input id="first-name" v-model="bookingFormData.firstName" type="text" required />
+
+                    <label for="last-name">Last Name</label>
+                    <input id="last-name" v-model="bookingFormData.lastName" type="text" required />
+
+                    <label for="email-address">Email Address</label>
+                    <input id="email-address" v-model="bookingFormData.emailAddress" type="email" required />
+
+                    <label for="phone-number">Phone Number</label>
+                    <input id="phone-number" v-model="bookingFormData.phoneNumber" type="text" required />
+
+                    <div class="address">
+                        <label for="address-line1">Address Line 1</label>
+                        <input id="address-line1" v-model="bookingFormData.addressLine1" type="text" required />
+
+                        <label for="address-line2">Address Line 2</label>
+                        <input id="address-line2" v-model="bookingFormData.addressLine2" type="text" />
+
+                        <label for="town-city">Town/City</label>
+                        <input id="town-city" v-model="bookingFormData.townCity" type="text" required />
+
+                        <label for="county-region">County/Region</label>
+                        <input id="county-region" v-model="bookingFormData.countyRegion" type="text" required />
+
+                        <label for="post-zip-code">Post/Zip Code</label>
+                        <input id="post-zip-code" v-model="bookingFormData.postZipCode" type="text" required />
+                    </div>
+                </div>
+                <input type="submit" />
+            </form>
+        </section>
+
+        <section class="contact">
+            <h3>Contact Us</h3>
+            <form method="post">
+                <label for="contact-first-name">First Name</label>
+                <input id="contact-first-name" v-model="contactFormData.firstName" type="text" required />
+
+                <label for="contact-last-name">Last Name</label>
+                <input id="contact-last-name" v-model="contactFormData.lastName" type="text" required />
+
+                <label for="contact-email-address">Email Address</label>
+                <input id="contact-email-address" v-model="contactFormData.emailAddress" type="email" required />
+
+                <label for="contact-phone-number">Phone Number (Optional)</label>
+                <input id="contact-phone-number" v-model="contactFormData.phoneNumber" type="email" />
+
+                <label for="contact-message">Message</label>
+                <textarea id="contact-message" v-model="contactFormData.message" required></textarea>
+
+                <input type="submit" />
+            </form>
+        </section>
+
+        <footer>
+            <a href="http://www.facebook.com">f</a>
+        </footer>
+
+    </div>
+
+    <script src="../static/newMain.js"></script>
+</body>
+
+</html>

@@ -8,61 +8,65 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/vue-async-computed"></script>
 </head>
-<body id="root">
-    <h1>Welcome!</h1>
-    <div id="booking-form">
-        <form method="post">
-            {{ booking_form.hidden_tag() }}
-            <div>
-                {{ booking_form.name.label }}
-                {{ booking_form.name(placeholder="Your Name...") }}
-            </div>
-            <div>
-                {{ booking_form.email_address.label }}
-                {{ booking_form.email_address(type="email", placeholder="Your Email Address...") }}
-            </div>
-            <div>
-                {{ booking_form.phone_number.label }}
-                {{ booking_form.phone_number(type="tel", placeholder="Your Phone Number") }}
-            </div>
-            <div class="datepicker">
+<body>
+    <div id="root">
+        <h1>Welcome!</h1>
+        <div id="booking-form">
+            <form method="post">
+                {{ booking_form.hidden_tag() }}
                 <div>
-                    <label for="arrival-date">Arrival Date</label>
-                    <input id="arrival-date" type="text" placeholder="dd / mm / yyyy" v-on:click="selectArrivalDate()" />
+                    {{ booking_form.name.label }}
+                    {{ booking_form.name(placeholder="Your Name...") }}
                 </div>
                 <div>
-                    <label for="departure-date">Departure Date</label>
-                    <input id="departure-date" type="text" placeholder="dd / mm / yyyy" v-on:click="selectDepartureDate()" />
+                    {{ booking_form.email_address.label }}
+                    {{ booking_form.email_address(type="email", placeholder="Your Email Address...") }}
                 </div>
-                <div id="calendar" tabindex="-1" onblur="hideCalendar()">
-                    <div class="calendar-header">
-                        <div class="calendar-controls">
-                            <div class="cal-arrows" v-on:click="decreaseMonth()" tabindex="0"><</div>
-                            <div><% monthString %></div>
-                            <div><% selectedDate.getFullYear() %></div>
-                            <div class="cal-arrows" v-on:click="increaseMonth()" tabindex="0">></div>
+                <div>
+                    {{ booking_form.phone_number.label }}
+                    {{ booking_form.phone_number(type="tel", placeholder="Your Phone Number") }}
+                </div>
+                <div class="datepicker">
+                    <div>
+                        <label for="arrival-date">Arrival Date</label>
+                        <input id="arrival-date" type="text" placeholder="dd / mm / yyyy" v-on:click="selectArrivalDate()" />
+                    </div>
+                    <div>
+                        <label for="departure-date">Departure Date</label>
+                        <input id="departure-date" type="text" placeholder="dd / mm / yyyy" v-on:click="selectDepartureDate()" />
+                    </div>
+                    <div id="calendar" tabindex="-1" onblur="hideCalendar()">
+                        <div class="calendar-header">
+                            <div class="calendar-controls">
+                                <div class="cal-arrows" v-on:click="decreaseMonth()" tabindex="0"><</div>
+                                <div><% monthString %></div>
+                                <div><% selectedDate.getFullYear() %></div>
+                                <div class="cal-arrows" v-on:click="increaseMonth()" tabindex="0">></div>
+                            </div>
+                            <ul class="calendar-days">
+                                <li>Mo</li>
+                                <li>Tu</li>
+                                <li>We</li>
+                                <li>Th</li>
+                                <li>Fr</li>
+                                <li>Sa</li>
+                                <li>Su</li>
+                            </ul>
                         </div>
-                        <ul class="calendar-days">
-                            <li>Mo</li>
-                            <li>Tu</li>
-                            <li>We</li>
-                            <li>Th</li>
-                            <li>Fr</li>
-                            <li>Sa</li>
-                            <li>Su</li>
-                        </ul>
-                    </div>
-                    <div class="calendar-carousel">
-                        <table v-for="i in 5"></table>
+                        <div class="calendar-carousel">
+                            <table v-for="i in 5"></table>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            {{ booking_form.submit_button }}
-        </form>
+
+                {{ booking_form.submit_button }}
+            </form>
+        </div>
     </div>
+    
 
     <script src="../static/main.js"></script>
+    <script src="../static/newMain.js"></script>
 
 </body>
 

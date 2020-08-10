@@ -26,7 +26,7 @@ def landing_page():
         db.session.add(booking)
         db.session.commit()
 
-    return render_template('landing_page.html', booking_form=booking_form)
+    return render_template('index.html', booking_form=booking_form)
 
 #-----------INSERT BOOKING FORM SUBMIT ROUTE HERE VIA JSON INSTEAD OF THROUGH '/' (ROOT) AS ABOVE-------------#
 #temporary solution: e.preventDefault() in main.js
