@@ -16,7 +16,14 @@
     <div id="root">
 
         <nav class="nav-bar">
-            <div>☰</div>
+            <div class="hamburger" v-on:click="toggleSideMenu()">☰</div>
+            <div ref="sideMenu" class="side-menu" style="display: none;">
+                <ul>
+                    <li v-on:click="goToProfile()">The Cottage</li>
+                    <li v-on:click="goToBooking()" >Booking/Availability</li>
+                    <li v-on:click="goToContact()">Contact Us</li>
+                </ul>
+            </div>
         </nav>
 
         <section class="banner">
@@ -26,16 +33,26 @@
             </div>
         </section>
 
-        <section class="profile">
+        <section ref="profile" class="profile">
+
             <div class="gallery">
                 <div class="gallery-view">
                     <div class="gallery-slide">
                         <img v-for="image in galleryImages" :src="image" />
                     </div>
-
                 </div>
             </div>
-            <div class="description">
+
+            <nav class="profile-nav">
+                <ul class="profile-nav-links">
+                    <li v-on:click="showOverview()">Overview</li>
+                    <li v-on:click="showFacilities()">Facilites</li>
+                    <li v-on:click="showLocation()">Location</li>
+                    <li v-on:click="showReviews()">Reviews</li>
+                </ul>
+            </nav>
+
+            <div ref="overview" class="overview">
                 <p>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                     Gravida quis blandit turpis cursus in. Non curabitur gravida arcu ac tortor dignissim convallis.
@@ -45,16 +62,27 @@
                     Egestas erat imperdiet sed euismod. Lacus vel facilisis volutpat est velit egestas dui id ornare.
                 </p>
             </div>
-            <div class="location">
+
+            <div ref="facilities" class="facilities">
+                <p>Facilities</p>
+            </div>
+
+            <div ref="location" class="location">
                 <div class="mapouter">
                     <div class="gmap_canvas">
                         <iframe width="475" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=the%20village%2Cmeads%2Ceastbourne&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
                     </div>
                 </div>
+                <p>The Cottage is located in Eastbourne. Short walk from the beach.</p>
             </div>
+
+            <div ref="reviews" class="reviews">
+                <p>5* would stay again</p>
+            </div>
+
         </section>
 
-        <section class="booking">
+        <section ref="booking" class="booking">
             <h1>Book</h1>
             <div class="price-list">
                 <h3>Price List</h3>
@@ -85,11 +113,8 @@
                 </div>
 
                 <div>
-                    <label for="first-name">First Name</label>
-                    <input id="first-name" v-model="bookingFormData.firstName" type="text" required />
-
-                    <label for="last-name">Last Name</label>
-                    <input id="last-name" v-model="bookingFormData.lastName" type="text" required />
+                    <label for="name">Full Name</label>
+                    <input id="name" v-model="bookingFormData.name" type="text" required />
 
                     <label for="email-address">Email Address</label>
                     <input id="email-address" v-model="bookingFormData.emailAddress" type="email" required />
@@ -118,11 +143,11 @@
             </form>
         </section>
 
-        <section class="contact">
+        <section ref="contact" class="contact">
             <h3>Contact Us</h3>
             <form method="post">
-                <label for="contact-first-name">First Name</label>
-                <input id="contact-first-name" v-model="contactFormData.firstName" type="text" required />
+                <label for="contact-name">Full Name</label>
+                <input id="contact-name" v-model="contactFormData.name" type="text" required />
 
                 <label for="contact-last-name">Last Name</label>
                 <input id="contact-last-name" v-model="contactFormData.lastName" type="text" required />

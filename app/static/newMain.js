@@ -69,8 +69,7 @@ const vm = new Vue({
             '../static/14-gardens.jpg'
         ],
         bookingFormData: {
-            firstName: '',
-            lastName: '',
+            name: '',
             emailAddress: '',
             phoneNumber: '',
             address: {
@@ -90,7 +89,7 @@ const vm = new Vue({
             departureDate: ''
         },
         contactFormData: {
-            firstName: '',
+            name: '',
             lastName: '',
             emailAddress: '',
             phoneNumber: '',
@@ -107,61 +106,45 @@ const vm = new Vue({
         }
     },
     methods: {
-        calendarArray(year, month) {
-            //---add days to calendar from first of month--//
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            let week = [];
-            let calendar = [];
-            let n = 1;
-            for (let n = 1; n <= daysInMonth; n++) {
-                let date = new Date(year, month, n);
-                week.push(date.getDate());
-                if (date.getDay() === 0) {
-                    calendar.push(week);
-                    week = [];
-                }
-            }
-            calendar.push(week);
-
-            //--fills first week--//
-            datesAdded = 0;
-            while (calendar[0].length < 7) {
-                calendar[0].unshift('');
-                datesAdded++;
-            }
-            return (calendar);
-        },
-        initialCalendarLoad(year, month, inputField) {
-            const calendarCarousel = document.querySelector('.calendar-carousel');
-            const allMonths = calendarCarousel.children;
-            const inputObj = {
-                data: inputField
-            }
-            for (let i = 0; i < 5; i++) {
-                const mountPoint = document.createElement('table');
-                calendarCarousel.insertBefore(mountPoint, allMonths[i]);
-
-                allMonths[i + 1].remove();
-
-                const instance = new Component({
-                    data: {
-                        field: inputField
-                    },
-                    propsData: {
-                        instYear: year,
-                        instMonth: month + i - 2,
-                        calMonth: daysOfMonth(year, month + i - 2),
-                    }
-                });
-
-                instance.$mount(mountPoint);
-
-                allMonths[i].style.transform = `translateX(${((i - 2) * 150)}px`;
+        toggleSideMenu() {
+            if (this.$refs.sideMenu.style.display === 'none') {
+                this.$refs.sideMenu.style.display = 'block';
+            } else {
+                this.$refs.sideMenu.style.display = 'none';
             }
         },
-        hideCalendar() {
-            const calendar = document.querySelector('#calendar');
-            calendar.style.display = 'none';
+        goToProfile() {
+            this.$refs.profile.scrollIntoView();
+        },
+        goToBooking() {
+            this.$refs.booking.scrollIntoView();
+        },
+        goToContact() {
+            this.$refs.contact.scrollIntoView();
+        },
+        showOverview() {
+            this.$refs.overview.style.display = 'block';
+            this.$refs.facilities.style.display = 'none';
+            this.$refs.location.style.display = 'none';
+            this.$refs.reviews.style.display = 'none';
+        },
+        showFacilities() {
+            this.$refs.overview.style.display = 'none';
+            this.$refs.facilities.style.display = 'block';
+            this.$refs.location.style.display = 'none';
+            this.$refs.reviews.style.display = 'none';
+        },
+        showLocation() {
+            this.$refs.overview.style.display = 'none';
+            this.$refs.facilities.style.display = 'none';
+            this.$refs.location.style.display = 'block';
+            this.$refs.reviews.style.display = 'none';
+        },
+        showReviews() {
+            this.$refs.overview.style.display = 'none';
+            this.$refs.facilities.style.display = 'none';
+            this.$refs.location.style.display = 'none';
+            this.$refs.reviews.style.display = 'block';
         }
     },
     delimiters: ['<%', '%>']

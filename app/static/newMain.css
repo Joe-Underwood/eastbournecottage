@@ -46,8 +46,6 @@ section {
         color: whitesmoke;
     }
 
-
-
 .gallery,
 .description,
 .location {
@@ -75,6 +73,34 @@ section {
         scroll-snap-align: start;
     }
 
+.profile-nav {
+    position: relative;
+    width: 100%;
+    height: 40px;
+    background-color: lightgrey;
+}
+    
+    .profile-nav-links {
+        display: flex;
+        justify-content: space-evenly;
+        height: 100%;
+        padding: 5px;
+        align-content: center;
+    }
+
+        .profile-nav-links li {
+            list-style-type: none;
+            height: 100%;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .facilities,
+        .location,
+        .reviews {
+            display: none;
+        }
+ 
 .mapouter {
     position: relative;
     text-align: right;
