@@ -69,24 +69,17 @@ const vm = new Vue({
             '../static/14-gardens.jpg'
         ],
         bookingFormData: {
-            name: '',
-            emailAddress: '',
+            arrivalDate: '',
+            departureDate: '',
             phoneNumber: '',
-            address: {
-                addressLine1: '',
-                addressLine2: '',
-                townCity: '',
-                countyRegion: '',
-                postZipCode: ''
-            },
             party: {
                 adults: 0,
                 children: 0,
                 infants: 0,
                 dogs: 0
             },
-            arrivalDate: '',
-            departureDate: ''
+            name: '',
+            emailAddress: ''
         },
         contactFormData: {
             name: '',
@@ -114,37 +107,39 @@ const vm = new Vue({
             }
         },
         goToProfile() {
-            this.$refs.profile.scrollIntoView();
+            this.$refs.profile.scrollIntoView(true);
         },
         goToBooking() {
-            this.$refs.booking.scrollIntoView();
+            this.$refs.booking.scrollIntoView(true);
         },
         goToContact() {
-            this.$refs.contact.scrollIntoView();
+            this.$refs.contact.scrollIntoView(true);
         },
         showOverview() {
             this.$refs.overview.style.display = 'block';
             this.$refs.facilities.style.display = 'none';
             this.$refs.location.style.display = 'none';
-            this.$refs.reviews.style.display = 'none';
         },
         showFacilities() {
             this.$refs.overview.style.display = 'none';
             this.$refs.facilities.style.display = 'block';
             this.$refs.location.style.display = 'none';
-            this.$refs.reviews.style.display = 'none';
         },
         showLocation() {
             this.$refs.overview.style.display = 'none';
             this.$refs.facilities.style.display = 'none';
             this.$refs.location.style.display = 'block';
-            this.$refs.reviews.style.display = 'none';
         },
-        showReviews() {
-            this.$refs.overview.style.display = 'none';
-            this.$refs.facilities.style.display = 'none';
-            this.$refs.location.style.display = 'none';
-            this.$refs.reviews.style.display = 'block';
+        toggleParty() {
+            if (this.$refs.party.style.display === 'none') {
+                this.$refs.party.style.display = 'block';
+                document.querySelector('#test-widget').style.transform = 'translateY(-400px)';
+            } else {
+                this.$refs.party.style.display = 'none';
+            }
+        },
+        toggleCalendar() {
+
         }
     },
     delimiters: ['<%', '%>']

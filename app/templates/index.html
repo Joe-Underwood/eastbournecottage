@@ -15,20 +15,29 @@
 <body>
     <div id="root">
 
+
+
+        <div ref="calendar" class="calendar">
+
+        </div>
+
         <nav class="nav-bar">
+            <p>The Cottage</p>
             <div class="hamburger" v-on:click="toggleSideMenu()">☰</div>
-            <div ref="sideMenu" class="side-menu" style="display: none;">
-                <ul>
-                    <li v-on:click="goToProfile()">The Cottage</li>
-                    <li v-on:click="goToBooking()" >Booking/Availability</li>
-                    <li v-on:click="goToContact()">Contact Us</li>
-                </ul>
-            </div>
         </nav>
+
+        <div ref="sideMenu" class="side-menu" style="display: none;">
+            <ul>
+                <li v-on:click="goToProfile()">The Cottage</li>
+                <li v-on:click="goToBooking()">Booking/Availability</li>
+                <li v-on:click="goToContact()">Contact Us</li>
+            </ul>
+        </div>
 
         <section class="banner">
             <div class="title">
                 <h1>The Cottage</h1>
+                <h1> _______ </h1>
                 <h1>Eastbourne</h1>
             </div>
         </section>
@@ -48,7 +57,6 @@
                     <li v-on:click="showOverview()">Overview</li>
                     <li v-on:click="showFacilities()">Facilites</li>
                     <li v-on:click="showLocation()">Location</li>
-                    <li v-on:click="showReviews()">Reviews</li>
                 </ul>
             </nav>
 
@@ -76,90 +84,93 @@
                 <p>The Cottage is located in Eastbourne. Short walk from the beach.</p>
             </div>
 
-            <div ref="reviews" class="reviews">
-                <p>5* would stay again</p>
-            </div>
-
         </section>
 
         <section ref="booking" class="booking">
             <h1>Book</h1>
-            <div class="price-list">
-                <h3>Price List</h3>
-                <p>[insert price list table here]</p>
+            <div class="booking-form-background">
+                <div class="booking-form-containter">
+                    <form method="post" class="booking-form">
+                        {{ booking_form.hidden_tag() }}
 
+                        <div class="booking-info">
+                            <div class="input-container">
+                                <label for="arrival-date">Arrival Date</label>
+                                <div id="date-input">
+                                    <input id="arrival-date" v-model="bookingFormData.arrivalDate" type="text" required />
+                                    <div class="date-button-div">
+                                        <button>&#128197;</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-container">
+                                <label for="departure-date">Departure Date</label>
+                                <div id="date-input">
+                                    <input id="departure-date" v-model="bookingFormData.departureDate" type="text" required />
+                                    <div class="date-button-div">
+                                        <button>&#128197;</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-container">
+                                <label for="party-input">Party</label>
+                                <input id="party-input" type="text" v-on:click="toggleParty()" />
+                            </div>
+                        </div>
+
+
+                        <div class="personal-details">
+                            <h3>Personal Details</h3>
+                            <div class="input-container">
+                                <label for="name">Full Name</label>
+                                <input id="name" v-model="bookingFormData.name" type="text" required />
+                            </div>
+
+
+                            <div class="input-container">
+                                <label for="email-address">Email Address</label>
+                                <input id="email-address" v-model="bookingFormData.emailAddress" type="email" required />
+                            </div>
+
+
+                            <div class="input-container">
+                                <label for="phone-number">Phone Number</label>
+                                <input id="phone-number" v-model="bookingFormData.phoneNumber" type="text" required />
+                            </div>
+
+                        </div>
+                        <input type="submit" />
+                    </form>
+                </div>
             </div>
-            <form method="post">
-                {{ booking_form.hidden_tag() }}
 
-                <label for="arrival-date">Arrival Date</label>
-                <input id="arrival-date" v-model="bookingFormData.arrivalDate" type="text" required placeholder="dd / mm / yyyy" />
-
-                <label for="departure-date">Departure Date</label>
-                <input id="departure-date" v-model="bookingFormData.departureDate" type="text" required placeholder="dd / mm / yyyy" />
-
-                <div class="party">
-                    <label for="adults">Adults</label>
-                    <input id="adults" v-model="bookingFormData.party.adults" type="number" />
-
-                    <label for="children">Children</label>
-                    <input id="children" v-model="bookingFormData.party.children" type="number" />
-
-                    <label for="infants">Infants</label>
-                    <input id="infants" v-model="bookingFormData.party.infants" type="number" />
-
-                    <label for="dogs">Dogs</label>
-                    <input id="dogs" v-model="bookingFormData.party.dogs" type="number" max="1" />
-                </div>
-
-                <div>
-                    <label for="name">Full Name</label>
-                    <input id="name" v-model="bookingFormData.name" type="text" required />
-
-                    <label for="email-address">Email Address</label>
-                    <input id="email-address" v-model="bookingFormData.emailAddress" type="email" required />
-
-                    <label for="phone-number">Phone Number</label>
-                    <input id="phone-number" v-model="bookingFormData.phoneNumber" type="text" required />
-
-                    <div class="address">
-                        <label for="address-line1">Address Line 1</label>
-                        <input id="address-line1" v-model="bookingFormData.addressLine1" type="text" required />
-
-                        <label for="address-line2">Address Line 2</label>
-                        <input id="address-line2" v-model="bookingFormData.addressLine2" type="text" />
-
-                        <label for="town-city">Town/City</label>
-                        <input id="town-city" v-model="bookingFormData.townCity" type="text" required />
-
-                        <label for="county-region">County/Region</label>
-                        <input id="county-region" v-model="bookingFormData.countyRegion" type="text" required />
-
-                        <label for="post-zip-code">Post/Zip Code</label>
-                        <input id="post-zip-code" v-model="bookingFormData.postZipCode" type="text" required />
-                    </div>
-                </div>
-                <input type="submit" />
-            </form>
         </section>
 
         <section ref="contact" class="contact">
             <h3>Contact Us</h3>
             <form method="post">
-                <label for="contact-name">Full Name</label>
-                <input id="contact-name" v-model="contactFormData.name" type="text" required />
+                <div class=input-container>
+                    <label for="contact-name">Full Name</label>
+                    <input id="contact-name" v-model="contactFormData.name" type="text" required />
+                </div>
 
-                <label for="contact-last-name">Last Name</label>
-                <input id="contact-last-name" v-model="contactFormData.lastName" type="text" required />
+                <div class=input-container>
+                    <label for="contact-email-address">Email Address</label>
+                    <input id="contact-email-address" v-model="contactFormData.emailAddress" type="email" required />
+                </div>
 
-                <label for="contact-email-address">Email Address</label>
-                <input id="contact-email-address" v-model="contactFormData.emailAddress" type="email" required />
+                <div class=input-container>
+                    <label for="contact-phone-number">Phone Number (Optional)</label>
+                    <input id="contact-phone-number" v-model="contactFormData.phoneNumber" type="email" />
+                </div>
 
-                <label for="contact-phone-number">Phone Number (Optional)</label>
-                <input id="contact-phone-number" v-model="contactFormData.phoneNumber" type="email" />
+                <div class=input-container>
+                    <label for="contact-message">Message</label>
+                    <textarea id="contact-message" v-model="contactFormData.message" required></textarea>
+                </div>
 
-                <label for="contact-message">Message</label>
-                <textarea id="contact-message" v-model="contactFormData.message" required></textarea>
 
                 <input type="submit" />
             </form>
@@ -169,7 +180,23 @@
             <a href="http://www.facebook.com">f</a>
         </footer>
 
+        <div ref="party" class="party" style="display: none;">
+            <label for="adults">Adults</label>
+            <input id="adults" v-model="bookingFormData.party.adults" type="number" />
+
+            <label for="children">Children</label>
+            <input id="children" v-model="bookingFormData.party.children" type="number" />
+
+            <label for="infants">Infants</label>
+            <input id="infants" v-model="bookingFormData.party.infants" type="number" />
+
+            <label for="dogs">Dogs</label>
+            <input id="dogs" v-model="bookingFormData.party.dogs" type="number" max="1" />
+        </div>
+
     </div>
+
+    
 
     <script src="../static/newMain.js"></script>
 </body>
