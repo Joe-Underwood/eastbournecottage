@@ -20,9 +20,6 @@
         <div ref="calendar" class="calendar">
 
         </div>
-        <div ref="party-slide" class="party-slide">
-
-        </div>
 
         <nav class="nav-bar">
             <p>The Cottage</p>
@@ -38,18 +35,22 @@
             </ul>
         </div>
 
-        <section class="banner">
-            <div class="banner-title">
-                <h1>The Cottage</h1>
-                <h1> _______ </h1>
-                <h1>Eastbourne</h1>
-            </div>
-            <div class="banner-text">
-                <p>A nice cottage in Eastbourne</p>
-                <button>Book</button>
-            </div>
-            
-        </section>
+        <div class="banner-background">
+            <section class="banner">
+
+                <div class="banner-title">
+                    <h1>The Cottage</h1>
+                    <h1> _______ </h1>
+                    <h1>Eastbourne</h1>
+                </div>
+                <div class="banner-text">
+                    <p>A nice cottage in Eastbourne</p>
+                    <button>Book</button>
+                </div>
+
+            </section>
+        </div>
+        
 
         <section ref="profile" class="profile">
 
@@ -123,9 +124,44 @@
                                 </div>
                             </div>
 
-                            <div class="input-container">
-                                <label for="party-input">Party</label>
-                                <input id="party-input" type="text" v-on:click="toggleParty()" />
+                            <p>Party</p>
+                            <div class="party-container">
+                                <div class="party-input">
+                                    <label for="adults">Adults</label>
+                                    <div class="party-stepper" id="adults">
+                                        <button type="button">-</button>
+                                        <div>0</div>
+                                        <button type="button">+</button>
+                                    </div>
+                                </div>
+
+                                <div class="party-input">
+                                    <label for="children">Children</label>
+                                    <div class="party-stepper" id="children">
+                                        <button type="button">-</button>
+                                        <div>0</div>
+                                        <button type="button">+</button>
+                                    </div>
+                                </div>
+
+                                <div class="party-input">
+                                    <label for="infants">Infants</label>
+                                    <div class="party-stepper" id="infants">
+                                        <button type="button">-</button>
+                                        <div>0</div>
+                                        <button type="button">+</button>
+                                    </div>
+                                </div>
+                                    
+                                <div class="party-input">
+                                    <label for="dogs">Dogs</label>
+                                    <div class="party-stepper" id="dogs">
+                                        <button type="button">-</button>
+                                        <div>0</div>
+                                        <button type="button">+</button>
+                                    </div>
+                                </div>
+                                   
                             </div>
                         </div>
 
@@ -150,7 +186,10 @@
                             </div>
 
                         </div>
-                        <input type="submit" />
+                        <div class="button-container">
+                            <button class="button" type="submit">Book</button>
+                        </div>
+                        
                     </form>
                 </div>
             </div>
@@ -171,7 +210,7 @@
                 </div>
 
                 <div class=input-container>
-                    <label for="contact-phone-number">Phone Number (Optional)</label>
+                    <label for="contact-phone-number">Phone Number <span class="optional-label">(Optional)</span></label>
                     <input id="contact-phone-number" v-model="contactFormData.phoneNumber" type="email" />
                 </div>
 
@@ -180,28 +219,16 @@
                     <textarea id="contact-message" v-model="contactFormData.message" required></textarea>
                 </div>
 
-
-                <input type="submit" />
+                <div class="button-container">
+                    <button class="button" type="submit">Send</button>
+                </div>
+                
             </form>
         </section>
 
         <footer>
             <a href="http://www.facebook.com">f</a>
         </footer>
-
-        <div ref="party" class="party" style="display: none;">
-            <label for="adults">Adults</label>
-            <input id="adults" v-model="bookingFormData.party.adults" type="number" />
-
-            <label for="children">Children</label>
-            <input id="children" v-model="bookingFormData.party.children" type="number" />
-
-            <label for="infants">Infants</label>
-            <input id="infants" v-model="bookingFormData.party.infants" type="number" />
-
-            <label for="dogs">Dogs</label>
-            <input id="dogs" v-model="bookingFormData.party.dogs" type="number" max="1" />
-        </div>
 
     </div>
 

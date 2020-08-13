@@ -130,14 +130,6 @@ const vm = new Vue({
             this.$refs.facilities.style.display = 'none';
             this.$refs.location.style.display = 'block';
         },
-        toggleParty() {
-            if (this.$refs.party.style.display === 'none') {
-                this.$refs.party.style.display = 'block';
-                document.querySelector('#test-widget').style.transform = 'translateY(-400px)';
-            } else {
-                this.$refs.party.style.display = 'none';
-            }
-        },
         toggleCalendar() {
 
         }
