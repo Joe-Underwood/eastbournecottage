@@ -10,20 +10,15 @@
     <link rel="stylesheet" href="../static/newMain.css" />
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/vue-async-computed"></script>
+    <script src="https://unpkg.com/animate-css-grid@latest"></script>
 </head>
 
 <body>
     <div id="root">
 
-
-
-        <div ref="calendar" class="calendar">
-
-        </div>
-
         <nav class="nav-bar">
-            <p>The Cottage</p>
-            <button>Book</button>
+            <p>THE COTTAGE</p>
+            <button>BOOK</button>
             <div class="hamburger" v-on:click="toggleSideMenu()">☰</div>
         </nav>
 
@@ -35,21 +30,20 @@
             </ul>
         </div>
 
-        <div class="banner-background">
-            <section class="banner">
+        <section class="banner">
 
+            <div class="banner-overlay">
                 <div class="banner-title">
-                    <h1>The Cottage</h1>
-                    <h1> _______ </h1>
-                    <h1>Eastbourne</h1>
+                    <h2>A Nice Cottage In Eastbourne</h2>
                 </div>
                 <div class="banner-text">
                     <p>A nice cottage in Eastbourne</p>
-                    <button>Book</button>
                 </div>
+                <button>Book</button>
+            </div>
+            
 
-            </section>
-        </div>
+        </section>
         
 
         <section ref="profile" class="profile">
@@ -100,16 +94,57 @@
             <h1>Book</h1>
             <div class="booking-form-background">
                 <div class="booking-form-containter">
-                    <form method="post" class="booking-form">
+                    <form ref="bookingForm" @submit.prevent="submitBooking()" class="booking-form">
                         {{ booking_form.hidden_tag() }}
 
                         <div class="booking-info">
+                            <div ref="calendar" class="calendar">
+                                <div class="calendar-header">
+                                    <div class="calendar-controls">
+                                        <div class="calendar-arrows" v-on:click="decreaseMonth()">
+                                            <div><</div>
+                                        </div>
+                                        <div><% selectedMonth.toLocaleString('default', { month: 'long' }) %></div>
+                                        <div><% selectedMonth.getFullYear() %></div>
+                                        <div class="calendar-arrows" v-on:click="increaseMonth()">
+                                            <div>></div>
+                                        </div>
+                                    </div>
+                                    <div class="calendar-days">
+                                        <ul>
+                                            <li>Mo</li>
+                                            <li>Tu</li>
+                                            <li>We</li>
+                                            <li>Th</li>
+                                            <li>Fr</li>
+                                            <li>Sa</li>
+                                            <li>Su</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div ref="calendarView" class="calendar-view">
+                                    <div ref="calendarSlide" class="calendar-slide">
+                                        <table v-for="i in 5"></table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="availability-key">
+                                <div class="booked-key">
+                                    <div class="booked-box"></div>
+                                    <div> = Booked </div>
+                                </div>
+                                <div class="available-key">
+                                    <div class="available-box"></div>
+                                    <div> = Available </div>
+                                </div>
+                            </div>
+
                             <div class="input-container">
                                 <label for="arrival-date">Arrival Date</label>
                                 <div id="date-input">
                                     <input id="arrival-date" v-model="bookingFormData.arrivalDate" type="text" required />
                                     <div class="date-button-div">
-                                        <button>&#128197;</button>
+                                        <button type="button">&#128197;</button>
                                     </div>
                                 </div>
                             </div>
@@ -119,7 +154,7 @@
                                 <div id="date-input">
                                     <input id="departure-date" v-model="bookingFormData.departureDate" type="text" required />
                                     <div class="date-button-div">
-                                        <button>&#128197;</button>
+                                        <button type="button">&#128197;</button>
                                     </div>
                                 </div>
                             </div>
@@ -129,39 +164,39 @@
                                 <div class="party-input">
                                     <label for="adults">Adults</label>
                                     <div class="party-stepper" id="adults">
-                                        <button type="button">-</button>
-                                        <div>0</div>
-                                        <button type="button">+</button>
+                                        <button class="party-decrease" type="button" v-on:click="adultsDecrease()">-</button>
+                                        <div><% bookingFormData.party.adults %></div>
+                                        <button class="party-increase" type="button" v-on:click="adultsIncrease()">+</button>
                                     </div>
                                 </div>
 
                                 <div class="party-input">
                                     <label for="children">Children</label>
                                     <div class="party-stepper" id="children">
-                                        <button type="button">-</button>
+                                        <button class="party-decrease" type="button" v-on:click="childrenDecrease()">-</button>
                                         <div>0</div>
-                                        <button type="button">+</button>
+                                        <button class="party-increase" type="button" v-on:click="childrenIncrease()">+</button>
                                     </div>
                                 </div>
 
                                 <div class="party-input">
                                     <label for="infants">Infants</label>
                                     <div class="party-stepper" id="infants">
-                                        <button type="button">-</button>
+                                        <button class="party-decrease" type="button" v-on:click="infantsDecrease()">-</button>
                                         <div>0</div>
-                                        <button type="button">+</button>
+                                        <button class="party-increase" type="button" v-on:click="infantsIncrease()">+</button>
                                     </div>
                                 </div>
-                                    
+
                                 <div class="party-input">
                                     <label for="dogs">Dogs</label>
                                     <div class="party-stepper" id="dogs">
-                                        <button type="button">-</button>
+                                        <button class="party-decrease" type="button" v-on:click="dogsDecrease()">-</button>
                                         <div>0</div>
-                                        <button type="button">+</button>
+                                        <button class="party-increase" type="button" v-on:click="dogsIncrease()">+</button>
                                     </div>
                                 </div>
-                                   
+
                             </div>
                         </div>
 

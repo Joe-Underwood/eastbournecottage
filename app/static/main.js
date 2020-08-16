@@ -13,7 +13,8 @@ Vue.component('table-date', {
             const monthString = this.isoDate.slice(5, 7);
             const dateString = this.isoDate.slice(8, 10);
             return `${dateString}-${monthString}-${yearString}`;
-        }
+        },
+
     },
     asyncComputed: {
         availability: async function () {

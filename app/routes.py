@@ -1,7 +1,7 @@
 from app import app, db
 from app.forms import BookingForm
 from app.models import Customer, Booking, Date
-from flask import render_template
+from flask import render_template, request, jsonify
 from datetime import date, timedelta
 from calendar import Calendar
 
@@ -28,9 +28,6 @@ def landing_page():
 
     return render_template('index.html', booking_form=booking_form)
 
-#-----------INSERT BOOKING FORM SUBMIT ROUTE HERE VIA JSON INSTEAD OF THROUGH '/' (ROOT) AS ABOVE-------------#
-#temporary solution: e.preventDefault() in main.js
-
 @app.route('/dates', methods=['POST'])
 def dates():
 
@@ -40,3 +37,11 @@ def dates():
         booked_dates.append(date[0])
 
     return {'dates' : booked_dates }
+
+@app.route('/booking', methods=['POST'])
+def booking():
+    booking_form_data = request.get_json()
+    print('received')
+    print(booking_form_data)
+
+    return { 'success': True }
