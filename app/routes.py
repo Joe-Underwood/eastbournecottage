@@ -40,8 +40,8 @@ def dates():
 
 @app.route('/booking', methods=['POST'])
 def booking():
-    booking_form_data = request.get_json()
     print('received')
+    booking_form_data = request.get_json()
     print(booking_form_data)
 
     return { 'success': True }

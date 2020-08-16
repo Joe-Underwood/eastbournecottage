@@ -94,50 +94,52 @@
             <h1>Book</h1>
             <div class="booking-form-background">
                 <div class="booking-form-containter">
+                    <div ref="calendar" class="calendar">
+                        <div class="calendar-header">
+                            <div class="calendar-controls">
+                                <div class="calendar-arrows" v-on:click="decreaseMonth()">
+                                    <div><</div>
+                                </div>
+                                <div><% selectedMonth.toLocaleString('default', { month: 'long' }) %></div>
+                                <div><% selectedMonth.getFullYear() %></div>
+                                <div class="calendar-arrows" v-on:click="increaseMonth()">
+                                    <div>></div>
+                                </div>
+                            </div>
+                            <div class="calendar-days">
+                                <ul>
+                                    <li v-on:click="hideCalendar()">Mo</li>
+                                    <li>Tu</li>
+                                    <li>We</li>
+                                    <li>Th</li>
+                                    <li>Fr</li>
+                                    <li>Sa</li>
+                                    <li>Su</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div ref="calendarView" class="calendar-view">
+                            <div ref="calendarSlide" class="calendar-slide">
+                                <table v-for="i in 5"></table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="availability-key">
+                        <div class="booked-key">
+                            <div class="booked-box"></div>
+                            <div> = Booked </div>
+                        </div>
+                        <div class="available-key">
+                            <div class="available-box"></div>
+                            <div> = Available </div>
+                        </div>
+                    </div>
+
                     <form ref="bookingForm" @submit.prevent="submitBooking()" class="booking-form">
                         {{ booking_form.hidden_tag() }}
 
                         <div class="booking-info">
-                            <div ref="calendar" class="calendar">
-                                <div class="calendar-header">
-                                    <div class="calendar-controls">
-                                        <div class="calendar-arrows" v-on:click="decreaseMonth()">
-                                            <div><</div>
-                                        </div>
-                                        <div><% selectedMonth.toLocaleString('default', { month: 'long' }) %></div>
-                                        <div><% selectedMonth.getFullYear() %></div>
-                                        <div class="calendar-arrows" v-on:click="increaseMonth()">
-                                            <div>></div>
-                                        </div>
-                                    </div>
-                                    <div class="calendar-days">
-                                        <ul>
-                                            <li>Mo</li>
-                                            <li>Tu</li>
-                                            <li>We</li>
-                                            <li>Th</li>
-                                            <li>Fr</li>
-                                            <li>Sa</li>
-                                            <li>Su</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div ref="calendarView" class="calendar-view">
-                                    <div ref="calendarSlide" class="calendar-slide">
-                                        <table v-for="i in 5"></table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="availability-key">
-                                <div class="booked-key">
-                                    <div class="booked-box"></div>
-                                    <div> = Booked </div>
-                                </div>
-                                <div class="available-key">
-                                    <div class="available-box"></div>
-                                    <div> = Available </div>
-                                </div>
-                            </div>
 
                             <div class="input-container">
                                 <label for="arrival-date">Arrival Date</label>
@@ -224,7 +226,7 @@
                         <div class="button-container">
                             <button class="button" type="submit">Book</button>
                         </div>
-                        
+
                     </form>
                 </div>
             </div>

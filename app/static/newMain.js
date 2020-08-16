@@ -38,7 +38,9 @@ Vue.component('calendar-date', {
             input.setAttribute('value', this.isoDateString);
         }
     },*/
-    template: '<div :class="[availability, dayOfWeek]">{{ dateDate }}</div>'
+    template: `<div :class="['calendar-date', availability, dayOfWeek]">
+                   <div>{{ dateDate }}</div>
+               </div>`
 })
 
 const calendarMonth = Vue.extend({
@@ -48,7 +50,7 @@ const calendarMonth = Vue.extend({
             return `${this.instIndex + 1} / span 1`;
         },
         monthRows: function () {
-            return (this.instCalendarValues.length * '1fr');
+            return ('45px '.repeat(this.instCalendarValues.length));
         }
     },
     methods: {
@@ -61,7 +63,7 @@ const calendarMonth = Vue.extend({
     },
     template: `<div>
                    <div :class="['calendar-month']" :style="{ display: 'grid', 'grid-template-rows': monthRows, 'grid-column': monthColumn }">
-                       <div v-for="week in instCalendarValues" :style="{ 'grid-row': weekRow(week), display: 'grid', 'grid-template-columns': '1fr 1fr 1fr 1fr 1fr 1fr 1fr' }">
+                       <div :class="['calendar-week']" v-for="week in instCalendarValues" :style="{ 'grid-row': weekRow(week), display: 'grid', 'grid-template-columns': '1fr 1fr 1fr 1fr 1fr 1fr 1fr' }">
                            <calendar-date v-for="i in 7" :style="{ 'grid-column': dateColumn(i) }" :dateYear="instYear" :dateMonth="instMonth" :dateDate="week[i-1]">{{ week[i-1] }}</calendar-date>
                        </div>
                    </div>
@@ -90,7 +92,6 @@ const vm = new Vue({
         bookingFormData: {
             arrivalDate: '',
             departureDate: '',
-            phoneNumber: '',
             party: {
                 adults: 0,
                 children: 0,
@@ -98,7 +99,9 @@ const vm = new Vue({
                 dogs: 0
             },
             name: '',
-            emailAddress: ''
+            emailAddress: '',
+            phoneNumber: '',
+            price: 0
         },
         contactFormData: {
             name: '',
@@ -340,7 +343,10 @@ const vm = new Vue({
 
             fetch('/booking', {
                 method: 'post',
-                body: JSON.stringify(this.bookingFormData)
+                body: JSON.stringify(this.bookingFormData),
+                headers: new Headers({
+                    'content-type': 'application/json'
+                })
             })
                 .then(response => {
                     return (response.json());
@@ -352,6 +358,12 @@ const vm = new Vue({
                         console.log('request unsuccessful');
                     }
                 })
+        },
+        hideCalendar() {
+            console.log('yes');
+            for (month in document.querySelectorAll('.calendar-month')) {
+                month.style.display = 'none';
+            }
         }
         
     },
