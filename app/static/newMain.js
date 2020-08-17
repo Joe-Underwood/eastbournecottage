@@ -207,6 +207,16 @@ const vm = new Vue({
             })
 
             instance.$mount(mountPoint);
+
+            const weekList = document.querySelectorAll('.calendar-month')[2].children;
+            let height = 0;
+            for (let i = 0; i < weekList.length; i++) {
+                height += weekList[i].offsetHeight;
+                if (i === 5) {
+                    break;
+                }
+            }
+            this.$refs.calendarSlide.style.height = `${height + 20}px`;
         },
         increaseMonth() {
             this.slideCount++;
@@ -233,6 +243,18 @@ const vm = new Vue({
 
             instance.$mount(mountPoint);
 
+            const weekList = document.querySelectorAll('.calendar-month')[2].children;
+            let height = 0;
+            for (let i = 0; i < weekList.length; i++) {
+                height += weekList[i].offsetHeight;
+                if (i === 5) {
+                    break;
+                }
+            }
+            this.$refs.calendarSlide.style.height = `${height + 20}px`;
+
+            
+
         },
 
         calendarValues(year, month) { //populates calendar
@@ -249,7 +271,10 @@ const vm = new Vue({
                     week = [];
                 }
             }
-            calendar.push(week);
+            if (week.length > 0) {
+                calendar.push(week);
+            }
+            
 
             //--fills first week with dates of previous month--//
             datesAdded = 0;
@@ -285,7 +310,18 @@ const vm = new Vue({
                 });
 
                 instance.$mount(mountPoint);
+                                
             }
+            const weekList = document.querySelectorAll('.calendar-month')[2].children;
+            let height = 0;
+            for (let i = 0; i < weekList.length; i++) {
+                height += weekList[i].offsetHeight;
+                if (i === 5) {
+                    break;
+                }
+            }
+            this.$refs.calendarSlide.style.height = `${height + 20}px`;
+
         },
         adultsDecrease() {
             if (this.bookingFormData.party.adults > 0) {

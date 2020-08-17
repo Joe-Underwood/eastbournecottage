@@ -102,7 +102,11 @@ body {
             display: grid;
             grid-template-columns: 100% 100% 100% 100% 100%;
             width: 100%;
+            transition: height 0.2s;
         }
+            
+            .calendar-slide div {
+            }
 
             .calendar-month {
                 padding: 10px;
