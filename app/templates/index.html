@@ -17,7 +17,11 @@
     <div id="root">
 
         <nav class="nav-bar">
-            <p>THE COTTAGE</p>
+            <div class="nav-title">
+                <div class="nav-cottage">THE COTTAGE</div>
+                <div class="nav-eastbourne">EASTBOURNE</div>
+            </div>
+            
             <button>BOOK</button>
             <div class="hamburger" v-on:click="toggleSideMenu()">☰</div>
         </nav>
@@ -58,9 +62,9 @@
 
             <nav class="profile-nav">
                 <ul class="profile-nav-links">
-                    <li v-on:click="showOverview()">Overview</li>
-                    <li v-on:click="showFacilities()">Facilites</li>
-                    <li v-on:click="showLocation()">Location</li>
+                    <li v-on:click="showOverview()">OVERVIEW</li>
+                    <li v-on:click="showFacilities()">FACILITIES</li>
+                    <li v-on:click="showLocation()">LOCATION</li>
                 </ul>
             </nav>
 
@@ -91,9 +95,9 @@
         </section>
 
         <section ref="booking" class="booking">
-            <h1>Book</h1>
+            <h1>Availability & Booking</h1>
             <div class="booking-form-background">
-                <div class="booking-form-containter">
+                <div ref="bookingContainer" class="booking-form-containter">
                     <div ref="calendar" class="calendar">
                         <div class="calendar-header">
                             <div class="calendar-controls">
@@ -134,6 +138,15 @@
                             <div class="available-box"></div>
                             <div> = Available </div>
                         </div>
+                    </div>
+
+                    <div class="price-box">
+                        <span>Total</span>
+                        <span><% bookingFormData.price %></span>
+                    </div>
+
+                    <div class="booking-proceed">
+                        <button type="button" v-on:click="bookingProceed()">Proceed</button>
                     </div>
 
                     <form ref="bookingForm" @submit.prevent="submitBooking()" class="booking-form">
@@ -228,13 +241,17 @@
                         </div>
 
                     </form>
+
+
+
+
                 </div>
             </div>
 
         </section>
 
         <section ref="contact" class="contact">
-            <h3>Contact Us</h3>
+            <h1>Contact Us</h1>
             <form method="post">
                 <div class=input-container>
                     <label for="contact-name">Full Name</label>

@@ -1,6 +1,9 @@
 Vue.component('calendar-date', {
     props: ['dateYear', 'dateMonth', 'dateDate'],
     computed: {
+        selfDate: function () {
+            return new Date(this.dateYear, this.dateMonth, this.dateDate);
+        },
         isoDate: function () {
             const thisDate = new Date(this.dateYear, this.dateMonth, this.dateDate, 12);
             const isoDate = thisDate.toISOString().slice(0, 10);
@@ -31,14 +34,12 @@ Vue.component('calendar-date', {
             return 'available';
         }
     },
-    /*methods: {
-        returnDate() {
-            const inputDate = ``
-            const input = document.getElementById(field);
-            input.setAttribute('value', this.isoDateString);
+    methods: {
+        selectDate(element, date) {
+            vm.selectDate(element, date);
         }
-    },*/
-    template: `<div :class="['calendar-date', availability, dayOfWeek]">
+    },
+    template: `<div :class="['calendar-date', availability, dayOfWeek]" v-on:click="selectDate(_vnode.elm, selfDate)">
                    <div>{{ dateDate }}</div>
                </div>`
 })
@@ -103,6 +104,7 @@ const vm = new Vue({
             phoneNumber: '',
             price: 0
         },
+
         contactFormData: {
             name: '',
             lastName: '',
@@ -115,18 +117,12 @@ const vm = new Vue({
         currentMonth: new Date().getMonth(),
         slideCount: 0,
         calendarShow: false,
+        calendarSelector: 0
     },
     computed: {
         selectedMonth: function () {
             return new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + this.slideCount);
-        },
-        bookingFormComputed: function () {
-            return {
-                price: function () {
-                    return 0;
-                }
-            }
-        },
+        }
     },
     methods: {
         toggleSideMenu() {
@@ -149,39 +145,16 @@ const vm = new Vue({
             this.$refs.overview.style.display = 'block';
             this.$refs.facilities.style.display = 'none';
             this.$refs.location.style.display = 'none';
-
-            this.$refs.overview.style.opacity = '1.0';
-            this.$refs.facilities.style.opacity = '0.0';
-            this.$refs.location.style.opacity = '0.0';
         },
         showFacilities() {
             this.$refs.overview.style.display = 'none';
             this.$refs.facilities.style.display = 'block';
             this.$refs.location.style.display = 'none';
-
-            this.$refs.overview.style.opacity = '0.0';
-            this.$refs.facilities.style.opacity = '1.0';
-            this.$refs.location.style.opacity = '0.0';
         },
         showLocation() {
             this.$refs.overview.style.display = 'none';
             this.$refs.facilities.style.display = 'none';
             this.$refs.location.style.display = 'block';
-
-            this.$refs.overview.style.opacity = '0.0';
-            this.$refs.facilities.style.opacity = '0.0';
-            this.$refs.location.style.opacity = '1.0';
-        },
-        toggleCalendar() {
-            if (!this.calendarShow) {
-                this.$refs.calendar.style.transform = "translateY(0)";
-                this.calendarShow = true;
-            } else {
-                this.$refs.calendar.style.transform = "translateY(100%)";
-                this.initialCalendarLoad(this.currentYear, this.currentMonth);
-                this.slideCount = 0;
-                this.calendarShow = false;
-            }
         },
         decreaseMonth() {
             this.slideCount--;
@@ -251,12 +224,8 @@ const vm = new Vue({
                     break;
                 }
             }
-            this.$refs.calendarSlide.style.height = `${height + 20}px`;
-
-            
-
+            this.$refs.calendarSlide.style.height = `${height + 20}px`;            
         },
-
         calendarValues(year, month) { //populates calendar
 
             //---add days to calendar from first of month--//
@@ -321,7 +290,35 @@ const vm = new Vue({
                 }
             }
             this.$refs.calendarSlide.style.height = `${height + 20}px`;
-
+        },
+        selectDate(element, date) {
+            if (this.calendarSelector === 0) {
+                this.bookingFormData.departureDate = '';
+                this.bookingFormData.arrivalDate = date;
+                this.bookingFormData.price = 0;
+                this.calendarSelector = 1;
+            }
+            else if (this.calendarSelector === 1) {
+                this.bookingFormData.departureDate = date;
+                this.calendarSelector = 0;
+                this.bookingFormData.price = getPrice(this.bookingFormData.arrivalDate, this.bookingFormData.departureDate);
+            }
+        },
+        datesValid(arrival, departure) { //---add date rules here--potentially editable by server?--//
+            if (arrival === departure) {
+                return 'Departure date cannot be the same as arrival date';
+            }
+            return true;
+        },
+        bookingProceed() {
+            this.$refs.bookingContainer.style.maxHeight = '1000px';
+            this.$refs.bookingForm.style.visibility = 'visible';
+            this.$refs.bookingContainer.addEventListener('transitionend', () => {
+                
+                this.$refs.bookingForm.style.opacity = '1.0';
+            })
+            
+    
         },
         adultsDecrease() {
             if (this.bookingFormData.party.adults > 0) {
@@ -394,18 +391,36 @@ const vm = new Vue({
                         console.log('request unsuccessful');
                     }
                 })
-        },
-        hideCalendar() {
-            console.log('yes');
-            for (month in document.querySelectorAll('.calendar-month')) {
-                month.style.display = 'none';
-            }
-        }
-        
+        }    
     },
     delimiters: ['<%', '%>']
 })
 
+function getPrice(arrival, departure) { //assuming that data is ordered by date
+    for (let i = 0; i < priceList.length; i++) {
+        if (priceList[i]['startDate'] <= arrival && arrival < priceList[i]['endDate']) {
+            let price = priceList[i]['price'];
+            if (departure <= priceList[i]['endDate']) {
+                return price;
+            } else {
+                for (let j = i + 1; j < priceList.length; j++) {
+                    if (departure >= priceList[j]['startDate']) {
+                        price += priceList[j]['price'];
+                        if (departure <= priceList[j]['endDate']) {
+                            return price; ///return applyDiscount(price, stayLength (departure - arrival))
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+const priceList = [
+    { 'startDate': new Date(2020, 7, 15), 'endDate': new Date(2020, 7, 22), 'price': 1000.00 },
+    { 'startDate': new Date(2020, 7, 22), 'endDate': new Date(2020, 7, 29), 'price': 900.00 },
+    { 'startDate': new Date(2020, 7, 29), 'endDate': new Date(2020, 8, 5), 'price': 800.00}
+]
 
 const bookedDates =
     fetch('/dates', { method: 'post' })
