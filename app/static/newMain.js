@@ -75,20 +75,20 @@ const vm = new Vue({
     el: '#root',
     data: {
         galleryImages: [
-            '../static/01-front.jpg',
+            '../static/01-lounge.jpg',
             '../static/02-lounge.jpg',
-            '../static/03-lounge.jpg',
+            '../static/03-dining.jpg',
             '../static/04-dining.jpg',
-            '../static/05-dining.jpg',
-            '../static/06-kitchen.jpg',
-            '../static/07-stairs.jpg',
-            '../static/08-master.jpg',
-            '../static/09-twin.jpg',
-            '../static/10-single.jpg',
-            '../static/11-bathroom.jpg',
-            '../static/12-garden.jpg',
+            '../static/05-kitchen.jpg',
+            '../static/06-stairs.jpg',
+            '../static/07-master.jpg',
+            '../static/08-twin.jpg',
+            '../static/09-single.jpg',
+            '../static/10-bathroom.jpg',
+            '../static/11-garden.jpg',
+            '../static/12-gardens.jpg',
             '../static/13-gardens.jpg',
-            '../static/14-gardens.jpg'
+            '../static/14-front.jpg'
         ],
         bookingFormData: {
             arrivalDate: '',
