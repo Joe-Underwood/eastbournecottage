@@ -5,6 +5,7 @@
     font-family: 'Lato', sans-serif;
     font-smoothing: antialiased;
     color: rgb(15, 72, 117);
+    text-rendering: optimizeLegibility;
 }
 
 html,
@@ -241,13 +242,13 @@ section {
 
 .banner {
     display: flex;
-    justify-content: flex-start;
+    justify-content: flex-end;
     align-items: center;
     flex-direction: column;
     height: 100%;
     width: 100%;
-    background-image: url("hero-tall.jpg");
-    background-position: center;
+    background-image: url("10-single.jpg");
+    background-position: top;
     background-size: cover;
     background-attachment: fixed;
 }
@@ -260,16 +261,17 @@ section {
         background-color: rgb(226, 138, 12); 
         color: white;
     }
-   
-    .banner-overlay {
-        padding-top: 50px;
-        position: sticky;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        align-items: center;
-    }
+
+.banner-overlay {
+    padding: 20px;
+    position: sticky;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    background-color: rgba(15, 72, 117, 0.25);
+}
 
     .banner-title {
         position: center;
@@ -282,7 +284,7 @@ section {
         font-weight: 300;
         font-family: Arapey;
         color: white;
-        text-rendering: optimizeLegibility;
+        
         
     }
 
@@ -398,6 +400,7 @@ section {
             color: white;
             visibility: collapse;
             transition: all 0.5s;
+            transition-delay: 0.1s;
             opacity: 0.0;
             
         }
@@ -488,6 +491,7 @@ section {
 
 .contact {
     padding: 10px;
+    z-index: 1;
 }
 
     .contact h1 {

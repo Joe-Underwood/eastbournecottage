@@ -53,7 +53,7 @@
         <section ref="profile" class="profile">
 
             <div class="gallery">
-                <div class="gallery-view">
+                <div ref="galleryView" class="gallery-view" v-on:click="viewFullScreen()">
                     <div class="gallery-slide">
                         <img v-for="image in galleryImages" :src="image" />
                     </div>

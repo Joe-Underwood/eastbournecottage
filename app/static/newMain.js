@@ -313,10 +313,7 @@ const vm = new Vue({
         bookingProceed() {
             this.$refs.bookingContainer.style.maxHeight = '1000px';
             this.$refs.bookingForm.style.visibility = 'visible';
-            this.$refs.bookingContainer.addEventListener('transitionend', () => {
-                
-                this.$refs.bookingForm.style.opacity = '1.0';
-            })
+            this.$refs.bookingForm.style.opacity = '1.0';
             
     
         },
@@ -391,7 +388,19 @@ const vm = new Vue({
                         console.log('request unsuccessful');
                     }
                 })
-        }    
+        },
+        viewFullScreen() {
+            const element = this.$refs.galleryView;
+            if (element.requestFullscreen) {
+                element.requestFullscreen();
+            } else if (element.mozRequestFullScreen) { /* Firefox */
+                element.mozRequestFullScreen();
+            } else if (element.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+                element.webkitRequestFullscreen();
+            } else if (element.msRequestFullscreen) { /* IE/Edge */
+                element.msRequestFullscreen();
+            }
+        },
     },
     delimiters: ['<%', '%>']
 })
