@@ -140,15 +140,6 @@
                         </div>
                     </div>
 
-                    <div class="price-box">
-                        <span>Total</span>
-                        <span><% bookingFormData.price %></span>
-                    </div>
-
-                    <div class="booking-proceed">
-                        <button type="button" v-on:click="bookingProceed()">Proceed</button>
-                    </div>
-
                     <form ref="bookingForm" @submit.prevent="submitBooking()" class="booking-form">
                         {{ booking_form.hidden_tag() }}
 
@@ -215,7 +206,6 @@
                             </div>
                         </div>
 
-
                         <div class="personal-details">
                             <h3>Personal Details</h3>
                             <div class="input-container">
@@ -242,8 +232,17 @@
 
                     </form>
 
+                    <div class="booking-footer">
+                        <div class="price-box">
+                            <span>Total</span>
+                            <span><% bookingFormData.price %></span>
+                        </div>
 
-
+                        <div class="booking-proceed">
+                            <div ref="proceedButton" v-on:click="bookingProceed()">Proceed</div>
+                        </div>
+                    </div>
+                    
 
                 </div>
             </div>

@@ -311,11 +311,22 @@ const vm = new Vue({
             return true;
         },
         bookingProceed() {
-            this.$refs.bookingContainer.style.maxHeight = '1000px';
+            let i = 1;
+            console.log(i);
+            const callback = function (mutation) {
+                i++;
+                console.log(mutation);
+            }
+            const observer = new MutationObserver(callback);
+            observer.observe(this.$refs.bookingForm, {
+                childList: true,
+                attributes: true,
+                subtree: true
+            });
             this.$refs.bookingForm.style.visibility = 'visible';
+            this.$refs.bookingForm.style.maxHeight = '1000px';
             this.$refs.bookingForm.style.opacity = '1.0';
-            
-    
+            observer.disconnect();
         },
         adultsDecrease() {
             if (this.bookingFormData.party.adults > 0) {
@@ -407,7 +418,7 @@ const vm = new Vue({
 
 function getPrice(arrival, departure) { //assuming that data is ordered by date
     for (let i = 0; i < priceList.length; i++) {
-        if (priceList[i]['startDate'] <= arrival && arrival < priceList[i]['endDate']) {
+        if (priceList[i]['startDate'] <= arrival && arrival < priceList[i]['endDate'] && arrival < departure) {
             let price = priceList[i]['price'];
             if (departure <= priceList[i]['endDate']) {
                 return price;
