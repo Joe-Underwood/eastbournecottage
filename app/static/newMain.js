@@ -22,7 +22,10 @@ Vue.component('calendar-date', {
     asyncComputed: {
         availability: async function () {
             if (this.dateDate === '') {
-                return 'whitespace';
+                return 'start-space';
+            }
+            else if (this.dateDate === undefined) {
+                return 'end-space';
             }
 
             let dates = await bookedDates;
@@ -36,7 +39,9 @@ Vue.component('calendar-date', {
     },
     methods: {
         selectDate(element, date) {
-            vm.selectDate(element, date);
+            if (this.dateDate) {
+                vm.selectDate(element, date);
+            }  
         }
     },
     template: `<div :class="['calendar-date', availability, dayOfWeek]" v-on:click="selectDate(_vnode.elm, selfDate)">
@@ -293,20 +298,54 @@ const vm = new Vue({
         },
         selectDate(element, date) {
             if (this.calendarSelector === 0) {
+                console.log(0);
+                if (document.querySelector('.arrival-date')) {
+                    document.querySelector('.arrival-date').classList.remove('arrival-date');
+                    if (document.querySelector('.departure-date')) {
+                        document.querySelector('.departure-date').classList.remove('departure-date');
+                        let dateRange = document.querySelectorAll('.valid-range-date');
+                        for (let i = 0; i < dateRange.length; i++) {
+                            dateRange[i].classList.remove('valid-range-date');
+                        }
+                    }
+                    
+                }
+                
+                element.classList.add('arrival-date');
+
                 this.bookingFormData.departureDate = '';
                 this.bookingFormData.arrivalDate = date;
                 this.bookingFormData.price = 0;
                 this.calendarSelector = 1;
             }
             else if (this.calendarSelector === 1) {
-                this.bookingFormData.departureDate = date;
-                this.calendarSelector = 0;
-                this.bookingFormData.price = getPrice(this.bookingFormData.arrivalDate, this.bookingFormData.departureDate);
+                console.log(1);
+                let calendarDates = Array.from(document.querySelectorAll('.calendar-date'));
+                calendarDates = calendarDates.filter((node) => {
+                    return node.classList.contains('available');
+                })
+                let arrivalIndex = calendarDates.indexOf(document.querySelector('.arrival-date'));
+                let departureIndex = calendarDates.indexOf(element);
+                if (departureIndex > arrivalIndex) {
+                    element.classList.add('departure-date');
+                    for (let i = arrivalIndex; i <= departureIndex; i++) {
+                        calendarDates[i].classList.add('valid-range-date');
+                    }
+                    this.bookingFormData.departureDate = date;
+                    this.calendarSelector = 0;
+                    this.bookingFormData.price = getPrice(this.bookingFormData.arrivalDate, this.bookingFormData.departureDate);
+                }
+                else {
+                    document.querySelector('.arrival-date').classList.remove('arrival-date');
+                    element.classList.add('arrival-date');
+                    console.log('departure date must be after arrival date');
+                }
+                
             }
         },
         datesValid(arrival, departure) { //---add date rules here--potentially editable by server?--//
-            if (arrival === departure) {
-                return 'Departure date cannot be the same as arrival date';
+            if (arrival < departure) {
+                return 'Departure must be after arrival';
             }
             return true;
         },

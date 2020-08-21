@@ -53,6 +53,13 @@ body {
     display: block; 
 }
 
+#root {
+    height: 100%;
+    width: 100%;
+    font-size: 16px;
+    display: block;
+}
+
 .calendar {
     position: relative;
     background-color: white;
@@ -126,13 +133,19 @@ body {
                     align-items: center;
                 }
 
+                .arrival-date {
+                    background-color: orange;
+                }
+
+                .valid-range-date {
+                    background-color: orange;
+                }
+
                 .calendar-date div {
                 }
 
 
-.available:hover {
-    background-color: rgba(226, 138, 12, 0.5);
-}
+            
 
 .availability-key {
     display: flex;
@@ -222,15 +235,25 @@ input {
     }
 
 .side-menu {
+    margin-top: 50px;
+    display: block;
     position: fixed;
-    margin-left: auto;
-    width: 50%;
+    right: 0;
+    background-color: rgb(176, 201, 213);
     z-index: 2;
+    padding: 10px;
 }
 
     .side-menu ul {
-        margin-left: auto;
+        list-style: none;
     }
+
+        .side-menu li {
+            padding: 15px 5px 15px 5px;
+            color: white;
+        }
+
+
 
 section {
     position: relative;
@@ -290,8 +313,12 @@ section {
 
     .banner-text {
         text-align: center;
-        color: rgb(176, 201, 213);
+        color: white;
         padding-bottom: 15px;
+    }
+
+    .banner-text p {
+        color: white;
     }
 
     .banner button { 
@@ -338,7 +365,7 @@ section {
     position: relative;
     width: 100%;
     height: 60px;
-    background-color: rgb(248, 243, 245); /*246, 249, 250*/
+    background-color: rgb(246, 249, 250); /* 248, 243, 245*/
     color: rgb(15, 72, 117);
 }
     
