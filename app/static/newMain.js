@@ -98,12 +98,10 @@ const vm = new Vue({
         bookingFormData: {
             arrivalDate: '',
             departureDate: '',
-            party: {
-                adults: 0,
-                children: 0,
-                infants: 0,
-                dogs: 0
-            },
+            adults: 0,
+            children: 0,
+            infants: 0,
+            dogs: 0,
             name: '',
             emailAddress: '',
             phoneNumber: '',
@@ -368,9 +366,9 @@ const vm = new Vue({
             observer.disconnect();
         },
         adultsDecrease() {
-            if (this.bookingFormData.party.adults > 0) {
-                this.bookingFormData.party.adults--;
-                if (this.bookingFormData.party.adults === 0) {
+            if (this.bookingFormData.adults > 0) {
+                this.bookingFormData.adults--;
+                if (this.bookingFormData.adults === 0) {
                     document.querySelector('#adults .party-decrease').disabled = true;
                 }
             }
@@ -378,9 +376,9 @@ const vm = new Vue({
             document.querySelector('#children .party-increase').disabled = false;
         },
         adultsIncrease() {
-            if (this.bookingFormData.party.adults + this.bookingFormData.party.children < 5) {
-                this.bookingFormData.party.adults++;
-                if (this.bookingFormData.party.adults + this.bookingFormData.party.children === 5) {
+            if (this.bookingFormData.adults + this.bookingFormData.children < 5) {
+                this.bookingFormData.adults++;
+                if (this.bookingFormData.adults + this.bookingFormData.children === 5) {
                     document.querySelector('#adults .party-increase').disabled = true;
                     document.querySelector('#children .party-increase').disabled = true;
                 }
@@ -388,18 +386,18 @@ const vm = new Vue({
             document.querySelector('#adults .party-decrease').disabled = false;
         },
         childrenDecrease() {
-            if (this.bookingFormData.party.children > 0) {
-                this.bookingFormData.party.children--;
-            } if (this.bookingFormdata.party.children === 0) {
+            if (this.bookingFormData.children > 0) {
+                this.bookingFormData.children--;
+            } if (this.bookingFormdata.children === 0) {
                 document.querySelector('#children .party-decrease').disabled = true;
             }
             document.querySelector('#children .party-increase').disabled = false;
             document.querySelector('#adults .party-increase').disabled = false;
         },
         childrenIncrease() {
-            if (this.bookingFormData.party.chilren + this.bookingFormData.party.adults < 5) {
-                this.bookingFormData.party.children++;
-                if (this.bookingFormData.party.children + this.bookingFormData.party.adults === 5) {
+            if (this.bookingFormData.chilren + this.bookingFormData.adults < 5) {
+                this.bookingFormData.children++;
+                if (this.bookingFormData.children + this.bookingFormData.adults === 5) {
                     document.querySelector('#children .party-increase').disabled = true;
                     document.querySelector('#adults .party-increase').disabled = true;
                 }

@@ -9,14 +9,21 @@ class Customer(db.Model):
 
 class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    dates = db.relationship('Date', backref='booking')
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
-    confirmed = db.Column(db.Boolean)
-    paid = db.Column(db.Boolean)
-    cancelled = db.Column(db.Boolean)
+    dates = db.relationship('Date', backref='booking')
+    adults = db.Column(db.Integer)
+    children = db.Column(db.Integer)
+    infants = db.Column(db.Integer)
+    dogs = db.Column(db.Integer)
+    price = db.Column(db.Numeric(10,2))
 
 class Date(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     booking_id = db.Column(db.Integer, db.ForeignKey('booking.id'))
-    date = db.Column(db.String(15), unique=True)
+    date = db.Column(db.Date, unique=True)
 
+class Price_List(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    start_date = db.Column(db.Date, unique=True)
+    end_date = db.Column(db.Date, unique=True)
+    price = db.Column(db.Numeric(10,2))

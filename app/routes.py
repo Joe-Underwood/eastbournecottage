@@ -2,8 +2,9 @@ from app import app, db
 from app.forms import BookingForm
 from app.models import Customer, Booking, Date
 from flask import render_template, request, jsonify
-from datetime import date, timedelta
+from datetime import datetime, date, timedelta
 from calendar import Calendar
+from decimal import Decimal
 
 @app.route('/', methods=['GET', 'POST'])
 def landing_page():
@@ -40,8 +41,33 @@ def dates():
 
 @app.route('/booking', methods=['POST'])
 def booking():
-    print('received')
     booking_form_data = request.get_json()
-    print(booking_form_data)
+
+    customer = Customer(
+        name = booking_form_data['name'],
+        email_address = booking_form_data['emailAddress'],
+        phone_number = booking_form_data['phoneNumber']
+    )
+    booking = Booking(
+        adults = int(booking_form_data['adults']),
+        children = int(booking_form_data['children']),
+        infants = int(booking_form_data['infants']),
+        dogs = int(booking_form_data['dogs']),
+        price = Decimal(booking_form_data['price'])
+    )
+
+    arrival_date = datetime.strptime(booking_form_data['arrivalDate'][0:10], '%Y-%m-%d').date()
+    departure_date = datetime.strptime(booking_form_data['departureDate'][0:10], '%Y-%m-%d').date()
+    date_delta = (departure_date - arrival_date).days
+    for i in range(0, date_delta+1):
+        date = Date(date = (arrival_date + timedelta(days=i)))
+        booking.dates.append(date)
+        db.session.add(date)
+
+    customer.bookings.append(booking)
+
+    db.session.add(customer)
+    db.session.add(booking)
+    db.session.commit()
 
     return { 'success': True }
