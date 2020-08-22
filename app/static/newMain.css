@@ -133,6 +133,10 @@ body {
                     align-items: center;
                 }
 
+                .booked {
+                    background-color: red;
+                }
+
                 .arrival-date {
                     background-color: orange;
                 }
@@ -141,7 +145,8 @@ body {
                     background-color: orange;
                 }
 
-                .calendar-date div {
+                .invalid-range-date {
+                    background-color: blue;
                 }
 
 
