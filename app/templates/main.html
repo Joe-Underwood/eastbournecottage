@@ -14,27 +14,40 @@
 
 <body>
     <div id="root">
-
-    <!--=============NAVIGATION================-->
+        <!--=============NAVIGATION================-->
         <nav class="navbar">
+            <div class="hamburger-container" v-on:click="toggleSideMenu()">
+                <div ref="hamburger" class="hamburger">
+                    <span v-for="i in 3"></span>
+                </div>
+            </div>
+
             <div class="navbar-logo">
                 <div>THE COTTAGE</div>
                 <div>EASTBOURNE</div>
             </div>
 
             <button type="button">BOOK</button>
-
-            <div class="hamburger" v-on:click="toggleSideMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
         </nav>
 
         <div ref="sideMenu" class="side-menu">
-            <ul>
-                <li v-on:click="goToProfile()">The Cottage</li>
-                <li v-on:click="goToBooking()">Availability & Booking</li>
-                <li v-on:click="goToContact()">Contact Us</li>
+            <ul class="main-links">
+                <li class="main-link" v-on:click="goToProfile()">The Cottage
+                    <ul class="cottage-links">
+                        <li>Overview</li>
+                        <li>Facilities</li>
+                        <li>Floor Plan</li>
+                        <li>Location</li>
+                    </ul>
+                </li>
+                <li class="main-link" v-on:click="goToBooking()">Availability</li>
+                <li class="main-link" v-on:click="goToContact()">Contact Us</li>
             </ul>
         </div>
+        
+    </div>
+
+    <script src="../static/newMain.js"></script>
+</body>
+
+    

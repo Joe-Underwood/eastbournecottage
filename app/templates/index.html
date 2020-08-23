@@ -4,9 +4,8 @@
 
 <head>
     <meta charset="utf-8" />
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Cottage @ Eastbourne</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Cottage - Eastbourne</title>
     <link rel="stylesheet" href="../static/newMain.css" />
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/vue-async-computed"></script>
@@ -15,26 +14,34 @@
 
 <body>
     <div id="root">
+        <!--=============NAVIGATION================-->
+        <nav class="navbar">
+            <div class="hamburger-container" v-on:click="toggleSideMenu()">
+                <div ref="hamburger" class="hamburger">
+                    <span v-for="i in 3"></span>
+                </div>
+            </div>
 
-        <nav class="nav-bar">
-            <div class="nav-title">
-                <div class="nav-cottage">THE COTTAGE</div>
-                <div class="nav-eastbourne">EASTBOURNE</div>
+            <div class="navbar-logo">
+                <div>THE COTTAGE</div>
+                <div>EASTBOURNE</div>
             </div>
-            
-            <button>BOOK</button>
-            <div class="hamburger" v-on:click="toggleSideMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+
+            <button type="button">BOOK</button>
         </nav>
 
-        <div ref="sideMenu" class="side-menu" style="display: none;">
-            <ul>
-                <li v-on:click="goToProfile()">The Cottage</li>
-                <li v-on:click="goToBooking()">Availability & Booking</li>
-                <li v-on:click="goToContact()">Contact Us</li>
+        <div ref="sideMenu" class="side-menu">
+            <ul class="main-links">
+                <li class="main-link" v-on:click="goToProfile()">The Cottage
+                    <ul class="cottage-links">
+                        <li>Overview</li>
+                        <li>Facilities</li>
+                        <li>Floor Plan</li>
+                        <li>Location</li>
+                    </ul>
+                </li>
+                <li class="main-link" v-on:click="goToBooking()">Availability</li>
+                <li class="main-link" v-on:click="goToContact()">Contact Us</li>
             </ul>
         </div>
 
@@ -286,10 +293,8 @@
         <footer>
             <a href="http://www.facebook.com">f</a>
         </footer>
-
+        
     </div>
-
-    
 
     <script src="../static/newMain.js"></script>
 </body>
