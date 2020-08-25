@@ -52,7 +52,7 @@ body,
 #root > * {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    column-gap: 2%;
+    column-gap: 8px;
     justify-content: center;
 }
 
@@ -70,10 +70,11 @@ body,
     position: fixed;
     grid-template-rows: 100%;
     align-items: center;
-    height: 45px;
+    
+    height: 56px;
     width: 100%;
-    padding-right: 13.5px;
-    background-color: rgb(15, 72, 117);
+    background-color: rgba(15, 72, 117, 0.9);
+    border-bottom: 1px solid rgb(246, 249, 250);
 }
 
     /*-----------HAMBURGER------------------*/
@@ -82,14 +83,15 @@ body,
         justify-content: center;
         align-items: center;
         position: relative;
-        height: 45px;
-        width: 45px;
-        grid-column: 1 / span 1;
+        height: 40px;
+        width: 40px;
+        margin-left: 6px;
+        grid-column: 1 / span 2;
     }
 
         .hamburger {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             display: block;
             position: relative;
         }
@@ -124,7 +126,7 @@ body,
 
             /*--------menu open----------------*/
             .hamburger.open span:nth-child(1) {
-                transform: translateY(8px) rotate(135deg) ;
+                transform: translateY(9px) rotate(45deg) ;
             }
 
             .hamburger.open span:nth-child(2) {
@@ -133,61 +135,64 @@ body,
             }
             
             .hamburger.open span:nth-child(3) {
-                transform: translateY(-8px) rotate(-135deg);
+                transform: translateY(-9px) rotate(-45deg);
             }
 
     /*------------------logo---------------------*/
     .navbar-logo {
-        height: auto;
-        grid-column: 2 / span 6;  
+        height: 30px;
+        grid-column: 3 / span 6;  
     }
 
         .navbar-logo div:nth-child(1) {
             font-size: 14px;
             font-weight: 900;
             color: white;
+            width: auto;
+
         }
 
         .navbar-logo div:nth-child(2) {
             font-size: 10px;
             font-weight: 200;
             color: white;
+            width: auto;
         }
     
     /*--------------CTA button-------------------*/
     .navbar button {
-        grid-column: 10 / span 3;
+        grid-column: 9 / span 4;
         background-color: rgb(226, 138, 12);
         color: white;
         border-radius: 4px;
-        padding: 3px 16px;
+        margin-right: 16px;
         font-size: 12px;
-        line-height: 24px;
+        line-height: 100%;
         font-weight: 700;
+        height: 32px;
     }
 
     
 /*--------------side menu--------------------*/
 .side-menu {
-    margin-top: 45px;
+    margin-top: 56px;
     position: fixed;
     grid-template-rows: 100%;
     height: 100%;
     width: 100%;
-    align-items: start;
 }
 
     .nav-links {
         position: relative;
-        grid-column: 1 / span 6;
+        grid-column: 1 / span 8;
         transform: translateX(-100%);
         background-color: rgb(246, 249, 250);
         list-style: none;
         transition: all 0.2s;
-        align-items: left;
-        height: auto;
-        width: 100%;
-        padding-left: 13.5px;
+        height: 100%;
+        width: auto;  
+        padding-left: 16px;   
+        padding-right: 16px; 
     }
 
     .nav-links.open {
@@ -195,27 +200,44 @@ body,
     }
 
         .nav-links div {
-            font-family: 'Arapey';
-            line-height: 40px;
-            width: 100%;
-            height: 40px;
+            font-family: 'Lato';
+            font-size: 13px;
+            text-transform: uppercase;
+            font-weight: 600;
+            line-height: 48px;
+            width: auto;
+            height: 48px;
+            border-bottom: 1px solid grey;
+            
         }
 
+        .nav-links div:nth-child(4) {
+            border-bottom: none;
+        }
+
+            .nav-links div:nth-child(1) span {
+                position: absolute;
+                right: 0;
+                padding-right: 16px;
+            }
+
         .nav-links ul {
-            padding-top: auto;
-            padding-bottom: auto;
-            padding-left: calc(100% / 6);
+            padding-left: 40px;
+            padding-top: 8px;
+            padding-bottom: 8px;
             position: relative;
-            width: 100%;
-            height: auto;
             list-style: none;
+            border-bottom: 1px solid grey;
         }
 
             .nav-links li {
-                font-family: 'Arapey';
-                font-size: 16px;
-                height: 30px;
-                width: 100%;
+                font-family: 'Lato';
+                text-transform: uppercase;
+                font-size: 11px;
+                font-weight: 200;
+                line-height: 40px;
+                height: 40px;
+
             }
 
 /*-------------HERO AREA--------------------------*/

@@ -6,15 +6,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>The Cottage - Eastbourne</title>
-    <link rel="stylesheet" href="../static/newMain.css" />
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://unpkg.com/vue-async-computed"></script>
-    <script src="https://unpkg.com/animate-css-grid@latest"></script>
+    <link rel="stylesheet" href="../static/demo.css" />
+    
 </head>
 
 <body>
     <div id="root">
         <!--=============NAVIGATION================-->
+         <!--=============  NAVIGATION  ================-->
         <nav class="navbar">
             <div class="hamburger-container" v-on:click="toggleSideMenu()">
                 <div ref="hamburger" class="hamburger">
@@ -31,19 +30,19 @@
         </nav>
 
         <div ref="sideMenu" class="side-menu">
-            <ul class="main-links">
-                <li class="main-link" v-on:click="goToProfile()">The Cottage
-                    <ul class="cottage-links">
-                        <li>Overview</li>
-                        <li>Facilities</li>
-                        <li>Floor Plan</li>
-                        <li>Location</li>
-                    </ul>
-                </li>
-                <li class="main-link" v-on:click="goToBooking()">Availability</li>
-                <li class="main-link" v-on:click="goToContact()">Contact Us</li>
-            </ul>
+            <div class="nav-links">
+                <div>The Cottage <span>▾</span></div>
+                <ul>
+                    <li>Overview</li>
+                    <li>Facilities</li>
+                    <li>Floor Plan</li>
+                    <li>Location</li>
+                </ul>
+                <div>Availability &amp; Booking</div>
+                <div>Contact Us</div>
+            </div>
         </div>
+
 
         <section class="banner">
 
@@ -296,6 +295,9 @@
         
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-async-computed"></script>
+    <script src="https://unpkg.com/animate-css-grid@latest"></script>
     <script src="../static/newMain.js"></script>
 </body>
 

@@ -9,7 +9,7 @@ from decimal import Decimal
 @app.route('/', methods=['GET', 'POST'])
 def landing_page():
     booking_form = BookingForm()
-    return render_template('main.html', booking_form=booking_form)
+    return render_template('index.html', booking_form=booking_form)
 
 @app.route('/dates', methods=['POST'])
 def dates():

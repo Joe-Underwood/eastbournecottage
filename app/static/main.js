@@ -1,4 +1,3 @@
-//import { directive as onClickaway } from 'vue-clickaway';
 
 //---------------CALENDAR COMPONENTS---------------------------------------//
 
@@ -133,18 +132,12 @@ const vm = new Vue({
             return new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + this.slideCount);
         }
     },
-    /*directives: {
-        onClickaway: onClickaway,
-    },*/
     methods: {
         toggleSideMenu() {
             document.querySelector('#root').classList.toggle('open');
             this.$refs.hamburger.classList.toggle('open');
             document.querySelector('.nav-links').classList.toggle('open');
             document.querySelector('.hero-area').classList.toggle('open');
-        },
-        hello() {
-            console.log('hello!');
         },
         goToProfile() {
             this.$refs.profile.scrollIntoView(true);

@@ -129,10 +129,12 @@ const vm = new Vue({
     },
     methods: {
         toggleSideMenu() {
+            document.querySelector('#root').classList.toggle('open');
             this.$refs.hamburger.classList.toggle('open');
-            document.querySelector('.side-menu ul').classList.toggle('open');
+            document.querySelector('.nav-links').classList.toggle('open');
+            document.querySelector('.banner').classList.toggle('open');
             if (this.$refs.sideMenu.style.zIndex === '5') {
-                this.$refs.sideMenu.style.zIndex = '-5';
+                setTimeout(function(){this.$refs.sideMenu.style.zIndex = '-5';}, 2000);
             } else {
                 this.$refs.sideMenu.style.zIndex = '5';
             }
