@@ -46,7 +46,6 @@ body,
 #root {
     width: 100%;
     height: 100%;
-    overflow: hidden;
 }
 
 #root > * {
@@ -59,6 +58,8 @@ body,
 #root {
     background-color: rgba(0, 0, 0, 0.0);
     transition: background-color 0.4s;
+    /*perspective: 1px;
+    overflow-y: auto;*/
 }
 
 #root.open {
@@ -69,12 +70,13 @@ body,
 .navbar {
     position: fixed;
     grid-template-rows: 100%;
-    align-items: center;
-    
+    align-items: center;  
     height: 56px;
     width: 100%;
-    background-color: rgba(15, 72, 117, 0.9);
-    border-bottom: 1px solid rgb(246, 249, 250);
+    background-color: rgba(15, 72, 117, 0.90);
+    box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.20);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
 }
 
     /*-----------HAMBURGER------------------*/
@@ -170,9 +172,9 @@ body,
         line-height: 100%;
         font-weight: 700;
         height: 32px;
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20);
     }
 
-    
 /*--------------side menu--------------------*/
 .side-menu {
     margin-top: 56px;
@@ -193,10 +195,12 @@ body,
         width: auto;  
         padding-left: 16px;   
         padding-right: 16px; 
+        
     }
 
     .nav-links.open {
         transform: translateX(0);
+        box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.20);
     }
 
         .nav-links div {
@@ -210,7 +214,7 @@ body,
             border-bottom: 1px solid grey;
             
         }
-
+        
         .nav-links div:nth-child(4) {
             border-bottom: none;
         }
@@ -244,13 +248,25 @@ body,
 .hero-area {
     background-color: rgba(0, 0, 0, 0.0);
     background-blend-mode: color;
-    background-image: url('09-single.jpg');
+    background-image: url('01-lounge.jpg');
+    background-position: center left;
     background-size: cover;
     background-attachment: fixed;
     height: 100%;
     transition: background-color 0.4s;
+    /*z-index: -1;
+    transform-style: preserve-3d;
+    transform: translateZ(-3px) scale(4);
+    overflow-x: hidden;
+    overflow-y: scroll;*/
 }
 
 .hero-area.open {
     background-color: rgba(0, 0, 0, 0.5);
+}
+
+.space {
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
 }

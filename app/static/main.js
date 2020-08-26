@@ -1,4 +1,3 @@
-
 //---------------CALENDAR COMPONENTS---------------------------------------//
 
 Vue.component('calendar-date', {
