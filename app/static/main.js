@@ -1,3 +1,18 @@
+document.addEventListener('touchend', event => {
+    if (document.querySelector('.nav-links').classList.contains('open')) {
+        if (!document.querySelector('.hamburger-container').contains(event.target) && !document.querySelector('.nav-links').contains(event.target)) {
+            vm.toggleSideMenu();
+        }
+    }      
+})
+
+document.addEventListener('click', event => {
+    if (document.querySelector('.nav-links').classList.contains('open')) {
+        if (!document.querySelector('.hamburger-container').contains(event.target) && !document.querySelector('.nav-links').contains(event.target)) {
+            vm.toggleSideMenu();
+        }
+    }      
+})
 //---------------CALENDAR COMPONENTS---------------------------------------//
 
 Vue.component('calendar-date', {
@@ -137,6 +152,10 @@ const vm = new Vue({
             this.$refs.hamburger.classList.toggle('open');
             document.querySelector('.nav-links').classList.toggle('open');
             document.querySelector('.hero-area').classList.toggle('open');
+        },
+        bookCTAPress() {
+            console.log('yes');
+            document.querySelector('.navbar button').classList.toggle('pressed');
         },
         goToProfile() {
             this.$refs.profile.scrollIntoView(true);

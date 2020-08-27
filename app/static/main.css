@@ -58,8 +58,6 @@ body,
 #root {
     background-color: rgba(0, 0, 0, 0.0);
     transition: background-color 0.4s;
-    /*perspective: 1px;
-    overflow-y: auto;*/
 }
 
 #root.open {
@@ -77,6 +75,7 @@ body,
     box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.20);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
+    z-index: 1;
 }
 
     /*-----------HAMBURGER------------------*/
@@ -175,6 +174,10 @@ body,
         box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20);
     }
 
+    .navbar button.pressed {
+        box-shadow: 0 8px 10px 1px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.20);
+    }
+
 /*--------------side menu--------------------*/
 .side-menu {
     margin-top: 56px;
@@ -182,6 +185,7 @@ body,
     grid-template-rows: 100%;
     height: 100%;
     width: 100%;
+    z-index: 1;
 }
 
     .nav-links {
@@ -254,19 +258,8 @@ body,
     background-attachment: fixed;
     height: 100%;
     transition: background-color 0.4s;
-    /*z-index: -1;
-    transform-style: preserve-3d;
-    transform: translateZ(-3px) scale(4);
-    overflow-x: hidden;
-    overflow-y: scroll;*/
 }
 
 .hero-area.open {
     background-color: rgba(0, 0, 0, 0.5);
-}
-
-.space {
-    height: 100%;
-    position: relative;
-    transform-style: preserve-3d;
 }
