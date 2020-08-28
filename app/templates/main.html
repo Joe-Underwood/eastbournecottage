@@ -42,9 +42,18 @@
         </div>
         
         <!--==============  HERO AREA  =============-->
-        <section class="hero-area">
-        </section>
+        <header class="hero-area">
+        </header>
 
+        <section class="cottage">
+            <div class="gallery">
+                <div class="gallery-view">
+                    <div class="gallery-slide">
+                        <img v-for="image in galleryImages" :src="image" />
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>

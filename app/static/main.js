@@ -1,18 +1,53 @@
-document.addEventListener('touchend', event => {
-    if (document.querySelector('.nav-links').classList.contains('open')) {
-        if (!document.querySelector('.hamburger-container').contains(event.target) && !document.querySelector('.nav-links').contains(event.target)) {
-            vm.toggleSideMenu();
-        }
-    }      
+let scrimClose = false;
+let initialX, offsetX;
+
+document.addEventListener('touchstart', event => {
+
+    if (document.querySelector('.nav-links').contains(event.target)) {
+        initialX = event.touches[0].clientX;
+        document.querySelector('.nav-links').style.transition = "none"; 
+    } else if (document.querySelector('.nav-links').classList.contains('open') && event.target === document.querySelector('.side-menu')) {
+        scrimClose = true;
+        initialX = document.querySelector('.nav-links').clientWidth;
+        document.querySelector('.nav-links').style.transition = "none"; 
+    }
 })
 
-document.addEventListener('click', event => {
-    if (document.querySelector('.nav-links').classList.contains('open')) {
-        if (!document.querySelector('.hamburger-container').contains(event.target) && !document.querySelector('.nav-links').contains(event.target)) {
+document.addEventListener('touchmove', event => {
+    if (document.querySelector('.side-menu').contains(event.target) && document.querySelector('.nav-links').classList.contains('open')) {
+        scrimClose = false;
+        if (!document.querySelector('.navbar').contains(event.target)) {
+            offsetX = event.touches[0].clientX - initialX;
+            if (offsetX <= 0) {
+                document.querySelector('.nav-links').style.transform = `translate3d(${offsetX}px, 0, 0)`;
+            }   
+        }
+    }
+})
+
+document.addEventListener('touchend', event => {
+    if (scrimClose && document.querySelector('.nav-links').classList.contains('open')) {
+        document.querySelector('.nav-links').style.transition = 'all 0.2s';
+        let endX = event.changedTouches[0].clientX;
+        let endY = event.changedTouches[0].clientY;
+        if (document.elementFromPoint(endX, endY) === document.querySelector('.side-menu')) {
             vm.toggleSideMenu();
         }
-    }      
+        scrimClose = false;
+    }
+    if (document.querySelector('.side-menu').contains(event.target) && document.querySelector('.nav-links').classList.contains('open')) {
+            document.querySelector('.nav-links').style.transition = 'all 0.2s';
+        if (offsetX < -(document.querySelector('.nav-links').clientWidth) / 2) {
+            document.querySelector('.nav-links').style.transform = `translate3d(-100%, 0, 0)`;
+            vm.toggleSideMenu();
+        } else {
+            document.querySelector('.nav-links').style.transform = `translate3d(0, 0, 0)`;
+        }
+    }
+    
 })
+
+
 //---------------CALENDAR COMPONENTS---------------------------------------//
 
 Vue.component('calendar-date', {
@@ -148,10 +183,17 @@ const vm = new Vue({
     },
     methods: {
         toggleSideMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('open');
+            if (navLinks.classList.contains('open')) {
+                navLinks.style.transform = 'translate3d(0, 0, 0)';
+            } else {
+                navLinks.style.transform = 'translate3d(-100%, 0, 0)';
+            }
             document.querySelector('#root').classList.toggle('open');
             this.$refs.hamburger.classList.toggle('open');
-            document.querySelector('.nav-links').classList.toggle('open');
             document.querySelector('.hero-area').classList.toggle('open');
+            document.querySelector('.side-menu').classList.toggle('open');
         },
         bookCTAPress() {
             console.log('yes');
