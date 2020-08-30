@@ -1,3 +1,8 @@
+console.log(navigator.userAgent);
+
+const disableBodyScroll = bodyScrollLock.disableBodyScroll;
+const enableBodyScroll = bodyScrollLock.enableBodyScroll;
+
 let scrimClose = false;
 let initialX, offsetX;
 
@@ -174,7 +179,7 @@ const vm = new Vue({
         slideCount: 0,
         calendarShow: false,
         calendarSelector: 0,
-        scrollYLock: 0
+        scrollY: 0
     },
     computed: {
         selectedMonth: function () {
@@ -183,6 +188,7 @@ const vm = new Vue({
     },
     methods: {
         toggleSideMenu() {
+            
             const navLinks = document.querySelector('.nav-links');
             document.querySelector('.side-menu').ontransitionend = function() {
                 if (!document.querySelector('.side-menu').classList.contains('open')) {
@@ -193,15 +199,41 @@ const vm = new Vue({
             if (!navLinks.classList.contains('open')) {
                 document.querySelector('.side-menu').style.transform = 'translate3d(0, 0, 0)';
                 navLinks.style.transform = 'translate3d(0, 0, 0)';
+
+                //body scroll lock
+                this.scrollY = window.scrollY;
+                let offsetY = this.scrollY;
+                disableBodyScroll(navLinks);
+                //desktop browsers scroll to the top of page, below code corrects view only if this happens
+                setTimeout(function () {
+                    if (window.scrollY != offsetY) {
+                        document.querySelector('.content-wrapper').style.transform = `translateY(-${offsetY}px)`;
+                    }
+                })
                 
             } else {
                 navLinks.style.transform = 'translate3d(-100%, 0, 0)';
+
+                //body scroll unlock
+                let offsetY = this.scrollY;
+                enableBodyScroll(navLinks);
+                //desktop browsers scroll to the top of page, below code corrects view only if this happens
+                setTimeout(function () {
+                    if (window.scrollY != offsetY) {
+                        document.querySelector('.content-wrapper').style.transform = `translateY(0)`;
+                    }
+                    window.scrollTo(0, offsetY);
+                }, 1)
+
+                
             }
             navLinks.classList.toggle('open');
             document.querySelector('#root').classList.toggle('open');
             this.$refs.hamburger.classList.toggle('open');
             document.querySelector('.hero-area').classList.toggle('open');
             document.querySelector('.side-menu').classList.toggle('open');
+
+            
         },
         bookCTAPress() {
             console.log('yes');

@@ -55,10 +55,7 @@ body,
 }
 
 #root > * {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    column-gap: 8px;
-    justify-content: center;
+    
 }
 
 /*---------------NAVIGATION-----------------*/
@@ -73,6 +70,11 @@ body,
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     z-index: 2;
+
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: 8px;
+    justify-content: center;
 }
 
     /*-----------HAMBURGER------------------*/
@@ -185,6 +187,11 @@ body,
     transition: background-color 0.4s;
     transform: translate3d(-100%, 0, 0);
     z-index: 1;
+
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: 8px;
+    justify-content: center;
 }
 
 .side-menu.open {
@@ -198,10 +205,11 @@ body,
         background-color: rgb(246, 249, 250);
         list-style: none;
         transition: all 0.2s;
-        height: 100%;
+        min-height: 100%;
         width: auto;  
         padding-left: 16px;   
         padding-right: 16px; 
+        overflow-y: scroll;
 
     }
 
@@ -253,6 +261,11 @@ body,
     background-attachment: scroll;
     height: 100vh;
     z-index: -1;
+
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: 8px;
+    justify-content: center;
 }
 
 
@@ -262,6 +275,11 @@ body,
     position: relative;
     grid-template-rows: 1fr;
     padding: 16px;
+
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: 8px;
+    justify-content: center;
 }
 
     .gallery {
