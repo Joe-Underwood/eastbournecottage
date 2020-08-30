@@ -2,7 +2,6 @@ let scrimClose = false;
 let initialX, offsetX;
 
 document.addEventListener('touchstart', event => {
-
     if (document.querySelector('.nav-links').contains(event.target)) {
         initialX = event.touches[0].clientX;
         document.querySelector('.nav-links').style.transition = "none"; 
@@ -36,7 +35,7 @@ document.addEventListener('touchend', event => {
         scrimClose = false;
     }
     if (document.querySelector('.side-menu').contains(event.target) && document.querySelector('.nav-links').classList.contains('open')) {
-            document.querySelector('.nav-links').style.transition = 'all 0.2s';
+        document.querySelector('.nav-links').style.transition = 'all 0.2s';
         if (offsetX < -(document.querySelector('.nav-links').clientWidth) / 2) {
             document.querySelector('.nav-links').style.transform = `translate3d(-100%, 0, 0)`;
             vm.toggleSideMenu();
@@ -174,7 +173,8 @@ const vm = new Vue({
         currentMonth: new Date().getMonth(),
         slideCount: 0,
         calendarShow: false,
-        calendarSelector: 0
+        calendarSelector: 0,
+        scrollYLock: 0
     },
     computed: {
         selectedMonth: function () {
@@ -184,12 +184,20 @@ const vm = new Vue({
     methods: {
         toggleSideMenu() {
             const navLinks = document.querySelector('.nav-links');
-            navLinks.classList.toggle('open');
-            if (navLinks.classList.contains('open')) {
+            document.querySelector('.side-menu').ontransitionend = function() {
+                if (!document.querySelector('.side-menu').classList.contains('open')) {
+                    document.querySelector('.side-menu').style.transform = 'translate3d(-100%, 0, 0)';
+                }
+            }
+            
+            if (!navLinks.classList.contains('open')) {
+                document.querySelector('.side-menu').style.transform = 'translate3d(0, 0, 0)';
                 navLinks.style.transform = 'translate3d(0, 0, 0)';
+                
             } else {
                 navLinks.style.transform = 'translate3d(-100%, 0, 0)';
             }
+            navLinks.classList.toggle('open');
             document.querySelector('#root').classList.toggle('open');
             this.$refs.hamburger.classList.toggle('open');
             document.querySelector('.hero-area').classList.toggle('open');

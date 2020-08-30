@@ -42,7 +42,7 @@
 }
 
 html {
-    overflow-x: hidden; 
+    overflow-x: hidden;
 }
 
 
@@ -51,6 +51,7 @@ body,
 #root {
     width: 100%;
     height: 100%;
+    position: relative;
 }
 
 #root > * {
@@ -58,16 +59,6 @@ body,
     grid-template-columns: repeat(12, 1fr);
     column-gap: 8px;
     justify-content: center;
-}
-
-#root {
-    background-color: rgba(0, 0, 0, 0.0);
-    transition: background-color 0.4s;
-    z-index: 1;
-}
-
-#root.open {
-    background-color: rgba(0, 0, 0, 0.4);
 }
 
 /*---------------NAVIGATION-----------------*/
@@ -191,11 +182,13 @@ body,
     grid-template-rows: 100%;
     height: 100%;
     width: 100%;
-    z-index: -10;
+    transition: background-color 0.4s;
+    transform: translate3d(-100%, 0, 0);
+    z-index: 1;
 }
 
 .side-menu.open {
-    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
     .nav-links {
@@ -209,10 +202,11 @@ body,
         width: auto;  
         padding-left: 16px;   
         padding-right: 16px; 
-        
+
     }
 
     .nav-links.open {
+        transform: translate3d(0, 0, 0);
         box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20);
     }
 
@@ -252,25 +246,19 @@ body,
 
 /*-------------HERO AREA--------------------------*/
 .hero-area {
-    background-color: rgba(0, 0, 0, 0.0);
-    background-blend-mode: color;
+    position: relative;
     background-image: url('01-lounge.jpg');
     background-position: center left;
     background-size: cover;
     background-attachment: scroll;
-    height: 100%;
-    transition: background-color 0.4s;
+    height: 100vh;
     z-index: -1;
 }
 
-.hero-area.open {
-    background-color: rgba(0, 0, 0, 0.5);
-}
 
 /*--------------------- MAIN CONTENT ------------*/
 /*------------ COTTAGE -------------------------*/
 .cottage {
-    display: block;
     position: relative;
     grid-template-rows: 1fr;
     padding: 16px;

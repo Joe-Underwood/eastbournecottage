@@ -1,0 +1,22 @@
+{
+  "name": "eastbournecottage",
+  "version": "0.2.0",
+  "description": "Website for the cottage - eastbourne",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Joe-Underwood/eastbournecottage.git"
+  },
+  "author": "joe-underwood",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Joe-Underwood/eastbournecottage/issues"
+  },
+  "homepage": "https://github.com/Joe-Underwood/eastbournecottage#readme",
+  "dependencies": {
+    "body-scroll-lock": "^3.0.3"
+  }
+}
