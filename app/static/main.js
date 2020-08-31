@@ -30,53 +30,6 @@ const disableBodyScroll = bodyScrollLock.disableBodyScroll;
 const enableBodyScroll = bodyScrollLock.enableBodyScroll;
 
 //-------------------- side menu close behavious ---------------//
-let scrimClose = false;
-let initialX, offsetX;
-
-document.addEventListener('touchstart', event => {
-    if (document.querySelector('.nav-links').contains(event.target)) {
-        initialX = event.touches[0].clientX;
-        document.querySelector('.nav-links').style.transition = "none"; 
-    } else if (document.querySelector('.nav-links').classList.contains('open') && event.target === document.querySelector('.side-menu')) {
-        scrimClose = true;
-        initialX = document.querySelector('.nav-links').clientWidth;
-        document.querySelector('.nav-links').style.transition = "none"; 
-    }
-})
-
-document.addEventListener('touchmove', event => {
-    if (document.querySelector('.side-menu').contains(event.target) && document.querySelector('.nav-links').classList.contains('open')) {
-        scrimClose = false;
-        if (!document.querySelector('.navbar').contains(event.target)) {
-            offsetX = event.touches[0].clientX - initialX;
-            if (offsetX <= 0) {
-                document.querySelector('.nav-links').style.transform = `translate3d(${offsetX}px, 0, 0)`;
-            }   
-        }
-    }
-})
-
-document.addEventListener('touchend', event => {
-    if (scrimClose && document.querySelector('.nav-links').classList.contains('open')) {
-        document.querySelector('.nav-links').style.transition = 'all 0.2s';
-        let endX = event.changedTouches[0].clientX;
-        let endY = event.changedTouches[0].clientY;
-        if (document.elementFromPoint(endX, endY) === document.querySelector('.side-menu')) {
-            vm.toggleSideMenu();
-        }
-        scrimClose = false;
-    }
-    if (document.querySelector('.side-menu').contains(event.target) && document.querySelector('.nav-links').classList.contains('open')) {
-        document.querySelector('.nav-links').style.transition = 'all 0.2s';
-        if (offsetX < -(document.querySelector('.nav-links').clientWidth) / 2) {
-            document.querySelector('.nav-links').style.transform = `translate3d(-100%, 0, 0)`;
-            vm.toggleSideMenu();
-        } else {
-            document.querySelector('.nav-links').style.transform = `translate3d(0, 0, 0)`;
-        }
-    }
-    
-})
 
 
 //---------------CALENDAR COMPONENTS---------------------------------------//
@@ -207,7 +160,10 @@ const vm = new Vue({
         calendarShow: false,
         calendarSelector: 0,
         scrollY: 0,
-        orientation: ''
+        orientation: '',
+        scrimClose: false,
+        initialX: undefined,
+        offsetX: undefined
     },
     computed: {
         selectedMonth: function () {
@@ -215,8 +171,7 @@ const vm = new Vue({
         }
     },
     methods: {
-        toggleSideMenu() {
-            
+        toggleSideMenu() {  
             const navLinks = document.querySelector('.nav-links');
             document.querySelector('.side-menu').ontransitionend = function() {
                 if (!document.querySelector('.side-menu').classList.contains('open')) {
@@ -266,6 +221,50 @@ const vm = new Vue({
         bookCTAPress() {
             console.log('yes');
             document.querySelector('.navbar button').classList.toggle('pressed');
+        },
+        menuTouchstart(event) {
+            console.log('touchstart');
+            if (document.querySelector('.nav-links').contains(event.target)) {
+                this.initialX = event.touches[0].clientX;
+                document.querySelector('.nav-links').style.transition = "none"; 
+            } else if (document.querySelector('.nav-links').classList.contains('open') && event.target === document.querySelector('.side-menu')) {
+                this.scrimClose = true;
+                this.initialX = document.querySelector('.nav-links').clientWidth;
+                document.querySelector('.nav-links').style.transition = "none"; 
+            }
+        },
+        menuTouchmove(event) {
+            console.log('touchmove');
+            if (document.querySelector('.side-menu').contains(event.target) && document.querySelector('.nav-links').classList.contains('open')) {
+                this.scrimClose = false;
+                if (!document.querySelector('.navbar').contains(event.target)) {
+                    this.offsetX = event.touches[0].clientX - this.initialX;
+                    if (this.offsetX <= 0) {
+                        document.querySelector('.nav-links').style.transform = `translate3d(${this.offsetX}px, 0, 0)`;
+                    }   
+                }
+            }
+        },
+        menuTouchend(event) {
+            console.log('touchend');
+            if (this.scrimClose && document.querySelector('.nav-links').classList.contains('open')) {
+                document.querySelector('.nav-links').style.transition = 'all 0.2s';
+                let endX = event.changedTouches[0].clientX;
+                let endY = event.changedTouches[0].clientY;
+                if (document.elementFromPoint(endX, endY) === document.querySelector('.side-menu')) {
+                    vm.toggleSideMenu();
+                }
+                this.scrimClose = false;
+            }
+            if (document.querySelector('.side-menu').contains(event.target) && document.querySelector('.nav-links').classList.contains('open')) {
+                document.querySelector('.nav-links').style.transition = 'all 0.2s';
+                if (this.offsetX < -(document.querySelector('.nav-links').clientWidth) / 2) {
+                    document.querySelector('.nav-links').style.transform = `translate3d(-100%, 0, 0)`;
+                    this.toggleSideMenu();
+                } else {
+                    document.querySelector('.nav-links').style.transform = `translate3d(0, 0, 0)`;
+                }
+            }
         },
         goToProfile() {
             this.$refs.profile.scrollIntoView(true);
