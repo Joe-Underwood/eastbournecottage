@@ -73,10 +73,6 @@ body,
     justify-content: center;
 }
 
-.navbar.landscape {
-    background-color: rgb(226, 138, 12);
-}
-
     /*-----------HAMBURGER------------------*/
     .hamburger-container {
         display: flex;
