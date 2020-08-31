@@ -207,23 +207,17 @@ const vm = new Vue({
                     }
                     window.scrollTo(0, offsetY);
                 }, 1)
-
-                
             }
             navLinks.classList.toggle('open');
             document.querySelector('#root').classList.toggle('open');
             this.$refs.hamburger.classList.toggle('open');
             document.querySelector('.hero-area').classList.toggle('open');
-            document.querySelector('.side-menu').classList.toggle('open');
-
-            
+            document.querySelector('.side-menu').classList.toggle('open');          
         },
         bookCTAPress() {
-            console.log('yes');
             document.querySelector('.navbar button').classList.toggle('pressed');
         },
         menuTouchstart(event) {
-            console.log('touchstart');
             if (document.querySelector('.nav-links').contains(event.target)) {
                 this.initialX = event.touches[0].clientX;
                 document.querySelector('.nav-links').style.transition = "none"; 
@@ -234,7 +228,6 @@ const vm = new Vue({
             }
         },
         menuTouchmove(event) {
-            console.log('touchmove');
             if (document.querySelector('.side-menu').contains(event.target) && document.querySelector('.nav-links').classList.contains('open')) {
                 this.scrimClose = false;
                 if (!document.querySelector('.navbar').contains(event.target)) {
@@ -246,7 +239,6 @@ const vm = new Vue({
             }
         },
         menuTouchend(event) {
-            console.log('touchend');
             if (this.scrimClose && document.querySelector('.nav-links').classList.contains('open')) {
                 document.querySelector('.nav-links').style.transition = 'all 0.2s';
                 let endX = event.changedTouches[0].clientX;
@@ -265,6 +257,9 @@ const vm = new Vue({
                     document.querySelector('.nav-links').style.transform = `translate3d(0, 0, 0)`;
                 }
             }
+            this.scrimClose = false;
+            this.initialX = undefined;
+            this.offsetX = undefined;
         },
         goToProfile() {
             this.$refs.profile.scrollIntoView(true);
