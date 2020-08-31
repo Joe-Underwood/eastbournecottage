@@ -1,8 +1,35 @@
-console.log(navigator.userAgent);
+// corrects hero image size, as most mobile browsers have inconsistent viewport dimensions
+// which causes undesirable resizing of hero area
+// also accounts for mobile browsers confusing height and width in landscape orientation
 
+let heroHeight;
+
+const heroResize = function () {
+    if (document.documentElement.offsetHeight > document.documentElement.offsetWidth) {
+        if (window.screen.height > window.screen.width) {
+            heroHeight = window.screen.height;
+        } else {
+            heroHeight = window.screen.width;
+        }
+    } else {
+        if (window.screen.height < window.screen.width) {
+            heroHeight = window.screen.height;
+        } else {
+            heroHeight = window.screen.width;
+        }
+    }
+    document.querySelector('.hero-area').style.height = `${heroHeight}px`;
+}
+
+heroResize();
+
+window.addEventListener('resize', heroResize);
+
+//------body scroll lock used when side menu open--------//
 const disableBodyScroll = bodyScrollLock.disableBodyScroll;
 const enableBodyScroll = bodyScrollLock.enableBodyScroll;
 
+//-------------------- side menu close behavious ---------------//
 let scrimClose = false;
 let initialX, offsetX;
 
@@ -179,7 +206,8 @@ const vm = new Vue({
         slideCount: 0,
         calendarShow: false,
         calendarSelector: 0,
-        scrollY: 0
+        scrollY: 0,
+        orientation: ''
     },
     computed: {
         selectedMonth: function () {
