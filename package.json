@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/Joe-Underwood/eastbournecottage#readme",
   "dependencies": {
-    "body-scroll-lock": "^3.0.3"
+    "@glidejs/glide": "^3.4.1",
+    "body-scroll-lock": "^3.0.3",
+    "swiper": "^6.2.0",
+    "vue-tiny-slider": "^0.1.39"
   }
 }

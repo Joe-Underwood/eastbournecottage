@@ -1,3 +1,24 @@
+window.addEventListener('load', function() {
+    var mySwiper = new Swiper('.swiper-container', {
+        // Optional parameters
+        loop: true,
+      
+        // If we need pagination
+        pagination: {
+          el: '.swiper-pagination',
+          dynamicBullets: true
+        },
+      
+        // Navigation arrows
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        }
+      })
+})
+
+
+
 // corrects hero image size, as most mobile browsers have inconsistent viewport dimensions
 // which causes undesirable resizing of hero area
 // also accounts for mobile browsers confusing height and width in landscape orientation
@@ -131,7 +152,7 @@ const vm = new Vue({
             '../static/11-garden.jpg',
             '../static/12-gardens.jpg',
             '../static/13-gardens.jpg',
-            '../static/14-front.jpg'
+            '../static/14-front-o.jpg'
         ],
         bookingFormData: {
             arrivalDate: '',
@@ -159,11 +180,13 @@ const vm = new Vue({
         slideCount: 0,
         calendarShow: false,
         calendarSelector: 0,
+        //side menu open parameters
         scrollY: 0,
-        orientation: '',
         scrimClose: false,
         initialX: undefined,
-        offsetX: undefined
+        offsetX: undefined,
+        //gallery 
+        gallerySlideCount: 1
     },
     computed: {
         selectedMonth: function () {
@@ -171,7 +194,9 @@ const vm = new Vue({
         }
     },
     methods: {
+        //-------------------- NAVBAR METHODS ------------------------//
         toggleSideMenu() {  
+            //toggles side menu
             const navLinks = document.querySelector('.nav-links');
             document.querySelector('.side-menu').ontransitionend = function() {
                 if (!document.querySelector('.side-menu').classList.contains('open')) {
@@ -215,9 +240,15 @@ const vm = new Vue({
             document.querySelector('.side-menu').classList.toggle('open');          
         },
         bookCTAPress() {
+            //goes to booking section when navbar cta button is pressed
             document.querySelector('.navbar button').classList.toggle('pressed');
         },
+
+        //----------------------- SIDE MENU METHODS -----------------------------//
+        //-----------navigation links--------------//
+        //---------- side menu touch methods used to close menu by tapping or sliding //
         menuTouchstart(event) {
+            //on touchstart
             if (document.querySelector('.nav-links').contains(event.target)) {
                 this.initialX = event.touches[0].clientX;
                 document.querySelector('.nav-links').style.transition = "none"; 
@@ -228,6 +259,7 @@ const vm = new Vue({
             }
         },
         menuTouchmove(event) {
+            //on touchmove, slides menu horizontally based on touch position
             if (document.querySelector('.side-menu').contains(event.target) && document.querySelector('.nav-links').classList.contains('open')) {
                 this.scrimClose = false;
                 if (!document.querySelector('.navbar').contains(event.target)) {
@@ -239,6 +271,7 @@ const vm = new Vue({
             }
         },
         menuTouchend(event) {
+            //on touchend, calls side menu if conditions are met, else keeps side menu open and resets parameters ready for next touch event
             if (this.scrimClose && document.querySelector('.nav-links').classList.contains('open')) {
                 document.querySelector('.nav-links').style.transition = 'all 0.2s';
                 let endX = event.changedTouches[0].clientX;
@@ -250,7 +283,7 @@ const vm = new Vue({
             }
             if (document.querySelector('.side-menu').contains(event.target) && document.querySelector('.nav-links').classList.contains('open')) {
                 document.querySelector('.nav-links').style.transition = 'all 0.2s';
-                if (this.offsetX < -(document.querySelector('.nav-links').clientWidth) / 2) {
+                if (this.offsetX < -(document.querySelector('.nav-links').clientWidth) / 4) {
                     document.querySelector('.nav-links').style.transform = `translate3d(-100%, 0, 0)`;
                     this.toggleSideMenu();
                 } else {
@@ -261,29 +294,64 @@ const vm = new Vue({
             this.initialX = undefined;
             this.offsetX = undefined;
         },
-        goToProfile() {
-            this.$refs.profile.scrollIntoView(true);
+        //------------------- GALLERY METHODS -------------------------------------//
+        prevImage() {
+            if (this.gallerySlideCount <= 0) {
+                return;
+            }
+            this.gallerySlideCount--;
+            document.querySelector('.gallery-slide').style.transition = 'all 0.5s';
+            document.querySelector('.gallery-slide').style.transform = `translateX(-${this.gallerySlideCount * 100 / 16}%)`;
         },
-        goToBooking() {
-            this.$refs.booking.scrollIntoView(true);
+        nextImage() {
+            if (this.gallerySlideCount >= 15) {
+                return;
+            }
+            this.gallerySlideCount++;
+            document.querySelector('.gallery-slide').style.transition = 'all 0.5s';
+            document.querySelector('.gallery-slide').style.transform = `translateX(-${this.gallerySlideCount * 100 / 16}%)`;
         },
-        goToContact() {
-            this.$refs.contact.scrollIntoView(true);
+        galleryWrap() {
+            if (this.gallerySlideCount === 15) {
+                this.gallerySlideCount = 1;
+                document.querySelector('.gallery-slide').style.transition = 'none';
+                document.querySelector('.gallery-slide').style.transform = `translateX(-${this.gallerySlideCount * 100 / 16}%)`;
+
+            } else if (this.gallerySlideCount === 0) {
+                this.gallerySlideCount = 14;
+                document.querySelector('.gallery-slide').style.transition = 'none';
+                document.querySelector('.gallery-slide').style.transform = `translateX(-${this.gallerySlideCount * 100 / 16}%)`;
+            }
         },
+        toggleFullscreenGallery() {
+        },
+        //-------------------COTTAGE NAV-----------------//
         showOverview() {
-            this.$refs.overview.style.display = 'block';
-            this.$refs.facilities.style.display = 'none';
-            this.$refs.location.style.display = 'none';
+            document.querySelector('.overview-cottage-nav').classList.add('active-cottage-link');
+            document.querySelector('.facilities-cottage-nav').classList.remove('active-cottage-link');
+            document.querySelector('.location-cottage-nav').classList.remove('active-cottage-link');
+
+            document.querySelector('.overview').style.display = 'block';
+            document.querySelector('.facilities').style.display = 'none';
+            document.querySelector('.location').style.display = 'none';
         },
         showFacilities() {
-            this.$refs.overview.style.display = 'none';
-            this.$refs.facilities.style.display = 'block';
-            this.$refs.location.style.display = 'none';
+            document.querySelector('.overview-cottage-nav').classList.remove('active-cottage-link');
+            document.querySelector('.facilities-cottage-nav').classList.add('active-cottage-link');
+            document.querySelector('.location-cottage-nav').classList.remove('active-cottage-link');
+
+            document.querySelector('.overview').style.display = 'none';
+            document.querySelector('.facilities').style.display = 'block';
+            document.querySelector('.location').style.display = 'none';
         },
         showLocation() {
-            this.$refs.overview.style.display = 'none';
-            this.$refs.facilities.style.display = 'none';
-            this.$refs.location.style.display = 'block';
+            document.querySelector('.overview-cottage-nav').classList.remove('active-cottage-link');
+            document.querySelector('.facilities-cottage-nav').classList.remove('active-cottage-link');
+            document.querySelector('.location-cottage-nav').classList.add('active-cottage-link');
+            
+            document.querySelector('.overview').style.display = 'none';
+            document.querySelector('.facilities').style.display = 'none';
+            document.querySelector('.location').style.display = 'block';
         },
         decreaseMonth() {
             this.slideCount--;

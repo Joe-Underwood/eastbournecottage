@@ -6,6 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="user-scalable=no, width=device-width, height=device-height, initial-scale=1.0" />
     <title>The Cottage - Eastbourne</title>
+    <link rel="stylesheet" href="../static/swiper/swiper-bundle.min.css">
     <link rel="stylesheet" href="../static/main.css" />
 </head>
 
@@ -33,7 +34,6 @@
                 <ul>
                     <li>Overview</li>
                     <li>Facilities</li>
-                    <li>Floor Plan</li>
                     <li>Location</li>
                 </ul>
                 <div>Availability &amp; Booking</div>
@@ -44,26 +44,61 @@
         <!--==============  HERO AREA  =============-->
         <div class="content-wrapper">
             <header class="hero-area"></header>
-
             <section class="cottage">
+
                 <div class="gallery">
-                    <div class="gallery-view">
-                        <div class="gallery-slide">
-                            <img v-for="image in galleryImages" :src="image" />
-                        </div>
+                    <div class="swiper-container">
+                        <div class="swiper-wrapper">
+                            <img class="swiper-slide" src="../static/01-lounge.jpg" />
+                            <img class="swiper-slide" src="../static/02-lounge.jpg" />
+                            <img class="swiper-slide" src="../static/03-dining.jpg" />
+                            <img class="swiper-slide" src="../static/04-dining.jpg" />
+                            <img class="swiper-slide" src="../static/05-kitchen.jpg" />
+                            <img class="swiper-slide" src="../static/06-stairs.jpg" />
+                            <img class="swiper-slide" src="../static/07-master.jpg" />
+                            <img class="swiper-slide" src="../static/08-twin.jpg" />
+                            <img class="swiper-slide" src="../static/09-single.jpg" />
+                            <img class="swiper-slide" src="../static/10-bathroom.jpg" />
+                            <img class="swiper-slide" src="../static/11-garden.jpg" />
+                            <img class="swiper-slide" src="../static/12-gardens.jpg" />
+                            <img class="swiper-slide" src="../static/13-gardens.jpg" />
+                            <img class="swiper-slide" src="../static/14-front-o.jpg" />
+                        </div>  
+                        <div class="fullscreen-toggle" v-on:click="toggleFullscreenGallery()">+</div>
+                        <div class="swiper-pagination"></div>
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
                     </div>
                 </div>
+
+                <nav class="cottage-nav">
+                    <ul class="cottage-nav-links">
+                        <li class="overview-cottage-nav active-cottage-link" v-on:click="showOverview()">OVERVIEW</li>
+                        <li class="facilities-cottage-nav" v-on:click="showFacilities()">FACILITIES</li>
+                        <li class="location-cottage-nav" v-on:click="showLocation()">LOCATION</li>
+                    </ul>
+                </nav>
+
+                <div class="cottage-content">
+                    <div class="overview">overview</div>
+                    <div class="facilities">facilities</div>
+                    <div class="location">location</div>
+                </div>
+
             </section>
+
         </div>
          
     </div>
 
     
 </body>
+
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/vue-async-computed"></script>
 <script src="https://unpkg.com/animate-css-grid@latest"></script>
 <script src="../static/body-scroll-lock/bodyScrollLock.js"></script>
+<script src="../static/swiper/swiper-bundle.min.js"></script>
 <script src="../static/main.js"></script>
 
 </html>
