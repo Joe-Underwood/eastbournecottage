@@ -1,11 +1,11 @@
 window.addEventListener('load', function() {
-    var mySwiper = new Swiper('.swiper-container', {
+    var gallerySwiper = new Swiper('.gallery-swiper', {
         // Optional parameters
         loop: true,
       
         // If we need pagination
         pagination: {
-          el: '.swiper-pagination',
+          el: '.gallery-pagination',
           dynamicBullets: true
         },
       
@@ -14,10 +14,10 @@ window.addEventListener('load', function() {
           nextEl: '.swiper-button-next',
           prevEl: '.swiper-button-prev',
         }
-      })
+    });
+    
+    
 })
-
-
 
 // corrects hero image size, as most mobile browsers have inconsistent viewport dimensions
 // which causes undesirable resizing of hero area
@@ -109,9 +109,6 @@ Vue.component('calendar-date', {
 const calendarMonth = Vue.extend({
     props: ['instCalendarValues', 'instYear', 'instMonth', 'instIndex'],
     computed: {
-        monthColumn: function() {
-            return `${this.instIndex + 1} / span 1`;
-        },
         monthRows: function () {
             return ('45px '.repeat(this.instCalendarValues.length));
         }
@@ -124,9 +121,9 @@ const calendarMonth = Vue.extend({
             return `${index} / span 1`;
         }
     },
-    template: `<div>
-                   <div :class="['calendar-month']" :style="{ display: 'grid', 'grid-template-rows': monthRows, 'grid-column': monthColumn }">
-                       <div :class="['calendar-week']" v-for="week in instCalendarValues" :style="{ 'grid-row': weekRow(week), display: 'grid', 'grid-template-columns': '1fr 1fr 1fr 1fr 1fr 1fr 1fr' }">
+    template: `<div class="swiper-slide">
+                   <div class="calendar-month" :style="{ display: 'grid', 'grid-template-rows': monthRows }">
+                       <div class="calendar-week" v-for="week in instCalendarValues" :style="{ 'grid-row': weekRow(week), display: 'grid', 'grid-template-columns': '1fr 1fr 1fr 1fr 1fr 1fr 1fr' }">
                            <calendar-date v-for="i in 7" :style="{ 'grid-column': dateColumn(i) }" :dateYear="instYear" :dateMonth="instMonth" :dateDate="week[i-1]">{{ week[i-1] }}</calendar-date>
                        </div>
                    </div>
@@ -138,22 +135,6 @@ const calendarMonth = Vue.extend({
 const vm = new Vue({
     el: '#root',
     data: {
-        galleryImages: [
-            '../static/01-lounge.jpg',
-            '../static/02-lounge.jpg',
-            '../static/03-dining.jpg',
-            '../static/04-dining.jpg',
-            '../static/05-kitchen.jpg',
-            '../static/06-stairs.jpg',
-            '../static/07-master.jpg',
-            '../static/08-twin.jpg',
-            '../static/09-single.jpg',
-            '../static/10-bathroom.jpg',
-            '../static/11-garden.jpg',
-            '../static/12-gardens.jpg',
-            '../static/13-gardens.jpg',
-            '../static/14-front-o.jpg'
-        ],
         bookingFormData: {
             arrivalDate: '',
             departureDate: '',
@@ -178,6 +159,7 @@ const vm = new Vue({
         currentYear: new Date().getFullYear(),
         currentMonth: new Date().getMonth(),
         slideCount: 0,
+        calendarRange: 18,
         calendarShow: false,
         calendarSelector: 0,
         //side menu open parameters
@@ -294,6 +276,7 @@ const vm = new Vue({
             this.initialX = undefined;
             this.offsetX = undefined;
         },
+
         //------------------- GALLERY METHODS -------------------------------------//
         prevImage() {
             if (this.gallerySlideCount <= 0) {
@@ -325,6 +308,7 @@ const vm = new Vue({
         },
         toggleFullscreenGallery() {
         },
+
         //-------------------COTTAGE NAV-----------------//
         showOverview() {
             document.querySelector('.overview-cottage-nav').classList.add('active-cottage-link');
@@ -353,76 +337,10 @@ const vm = new Vue({
             document.querySelector('.facilities').style.display = 'none';
             document.querySelector('.location').style.display = 'block';
         },
-        decreaseMonth() {
-            this.slideCount--;
-            const calendarSlide = this.$refs.calendarSlide;
-            const allMonths = calendarSlide.children;
 
-            allMonths[4].remove();
+        //--------------- CALENDAR ---------------------------//
+        //---------calendar months loading----//
 
-            const mountPoint = document.createElement('table');
-            calendarSlide.insertBefore(mountPoint, allMonths[0]);
-
-            for (let i = 0; i < allMonths.length; i++) {
-                allMonths[i].style.gridColumn = `${i + 1} / span 1`;
-            }
-
-            let instance = new calendarMonth({
-                propsData: {
-                    instCalendarValues: this.calendarValues(this.currentYear, this.currentMonth + this.slideCount - 2),
-                    instYear: this.currentYear,
-                    instMonth: this.currentMonth + this.slideCount - 2,
-                    instIndex: 0
-                }
-            })
-
-            instance.$mount(mountPoint);
-
-            const weekList = document.querySelectorAll('.calendar-month')[2].children;
-            let height = 0;
-            for (let i = 0; i < weekList.length; i++) {
-                height += weekList[i].offsetHeight;
-                if (i === 5) {
-                    break;
-                }
-            }
-            this.$refs.calendarSlide.style.height = `${height + 20}px`;
-        },
-        increaseMonth() {
-            this.slideCount++;
-            const calendarSlide = this.$refs.calendarSlide;
-            const allMonths = calendarSlide.children;
-
-            allMonths[0].remove();
-
-            const mountPoint = document.createElement('table');
-            calendarSlide.insertBefore(mountPoint, allMonths[4]);
-
-            for (let i = 0; i < allMonths.length; i++) {
-                allMonths[i].style.gridColumn = `${i + 1} / span 1`;
-            }
-
-            let instance = new calendarMonth({
-                propsData: {
-                    instCalendarValues: this.calendarValues(this.currentYear, this.currentMonth + this.slideCount + 2),
-                    instYear: this.currentYear,
-                    instMonth: this.currentMonth + this.slideCount + 2,
-                    instIndex: 4
-                }
-            })
-
-            instance.$mount(mountPoint);
-
-            const weekList = document.querySelectorAll('.calendar-month')[2].children;
-            let height = 0;
-            for (let i = 0; i < weekList.length; i++) {
-                height += weekList[i].offsetHeight;
-                if (i === 5) {
-                    break;
-                }
-            }
-            this.$refs.calendarSlide.style.height = `${height + 20}px`;            
-        },
         calendarValues(year, month) { //populates calendar
 
             //---add days to calendar from first of month--//
@@ -453,16 +371,17 @@ const vm = new Vue({
             }
             return (calendar);
         },
-        initialCalendarLoad(year, month, inputField) {
-            const calendarSlide = this.$refs.calendarSlide;
-            const allMonths = calendarSlide.children;
 
-            for (let i = 0; i < 5; i++) {
-                const mountPoint = document.createElement('table');
-                calendarSlide.insertBefore(mountPoint, allMonths[i]);
-
-                allMonths[i + 1].remove();
-
+        initCalendar(year, month, inputField) {
+            var calendarSwiper = new Swiper('.calendar-swiper', {
+                autoHeight: true,
+                preventInteractionOnTransition: true,
+                navigation: {
+                    nextEl: '.next-month',
+                    prevEl: '.prev-month',
+                  }
+            });
+            for (let i = 0; i < this.calendarRange; i++) {
                 const instance = new calendarMonth({
                     data: {
                         field: inputField,
@@ -474,20 +393,32 @@ const vm = new Vue({
                         instIndex: i
                     }
                 });
-
+                let mountPoint = document.createElement('div');
+                calendarSwiper.appendSlide(mountPoint);
                 instance.$mount(mountPoint);
-                                
             }
-            const weekList = document.querySelectorAll('.calendar-month')[2].children;
-            let height = 0;
-            for (let i = 0; i < weekList.length; i++) {
-                height += weekList[i].offsetHeight;
-                if (i === 5) {
-                    break;
-                }
-            }
-            this.$refs.calendarSlide.style.height = `${height + 20}px`;
+            calendarSwiper.update();
+
+            calendarSwiper.on('slideNextTransitionEnd', () => {
+                this.slideCount++;
+            })
+
+            calendarSwiper.on('slidePrevTransitionEnd', () => {
+                this.slideCount--;
+            })
         },
+
+        decreaseMonth() {
+            this.slideCount--;
+        },
+        increaseMonth() {
+            this.slideCount++;
+        },
+        
+        //--------calendar update------//
+        
+        
+
         selectDate(element, date) {
             if (element.classList.contains('available')) {
                 if (this.calendarSelector === 0) {
@@ -712,7 +643,4 @@ const bookedDates =
 
 let field = '';
 
-vm.initialCalendarLoad(2020, 7, field);
-
-const calendarGrid = vm.$refs.calendarSlide;
-animateCSSGrid.wrapGrid(calendarGrid);
+vm.initCalendar(vm.currentYear, vm.currentMonth, field);

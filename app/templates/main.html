@@ -47,7 +47,7 @@
             <section class="cottage">
 
                 <div class="gallery">
-                    <div class="swiper-container">
+                    <div class="swiper-container gallery-swiper">
                         <div class="swiper-wrapper">
                             <img class="swiper-slide" src="../static/01-lounge.jpg" />
                             <img class="swiper-slide" src="../static/02-lounge.jpg" />
@@ -65,7 +65,7 @@
                             <img class="swiper-slide" src="../static/14-front-o.jpg" />
                         </div>  
                         <div class="fullscreen-toggle" v-on:click="toggleFullscreenGallery()">+</div>
-                        <div class="swiper-pagination"></div>
+                        <div class="swiper-pagination gallery-pagination"></div>
                         <div class="swiper-button-prev"></div>
                         <div class="swiper-button-next"></div>
                     </div>
@@ -82,11 +82,62 @@
                 <div class="cottage-content">
                     <div class="overview">overview</div>
                     <div class="facilities">facilities</div>
-                    <div class="location">location</div>
+                    <div class="location">
+
+                        <div class="map-container">
+                            <iframe width='100%' height='100%' id='mapcanvas' src="https://maps.google.com/maps?q=the%20village,%20meads,%20eastbourne&amp;t=&amp;z=12&amp;ie=UTF8&amp;iwloc=&amp;output=embed" frameborder='0' scrolling='no' marginheight='0' marginwidth='0'>
+                                <div style='overflow:hidden;'>
+                                    <div id='gmap_canvas' style='height:100%;width:100%;'></div>
+                                </div>
+                            </iframe>
+                        </div>
+
+                        <div class="location-nearby">
+                            <h2>Nearby</h2>
+                            <ul class="nearby-list">
+                                <li>Holywell Shore (Beach) 0.5 miles</li>
+                                <li>Towner Art Gallery 1 mile</li>
+                                <li>Eastbourne Bandstand 1.3 miles</li>
+                                <li>Eastbourne Pier 1.5 miles</li>
+                                <li>Beachy Head 1.6 miles</li>
+                                <li>Redoubt Fortress 2.1 miles</li>
+                            </ul>
+                        </div>
+
+                    </div>
                 </div>
 
             </section>
 
+            <section class="booking">
+                <div class="booking-content">
+                    <h2>Availability &amp; Booking</h2>
+                    <div class="calendar">
+                        
+                        <div class="calendar-controls">
+                            <div class="prev-month">&#60;</div>
+                            <div class="current-month">&#60;% selectedMonth.toLocaleString('default', { month: 'long' }) %> &#60;% selectedMonth.getFullYear() %></div>
+                            <div class="next-month">&#62;</div>
+                        </div>
+
+                        <ul class="calendar-weekdays">
+                            <li>Mo</li>
+                            <li>Tu</li>
+                            <li>We</li>
+                            <li>Th</li>
+                            <li>Fr</li>
+                            <li>Sa</li>
+                            <li>Su</li>
+                        </ul>
+                        
+                        <div class="swiper-container calendar-swiper">
+                            <div class="swiper-wrapper">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+                
         </div>
          
     </div>
@@ -96,7 +147,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/vue-async-computed"></script>
-<script src="https://unpkg.com/animate-css-grid@latest"></script>
 <script src="../static/body-scroll-lock/bodyScrollLock.js"></script>
 <script src="../static/swiper/swiper-bundle.min.js"></script>
 <script src="../static/main.js"></script>
