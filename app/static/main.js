@@ -1,4 +1,4 @@
-window.addEventListener('load', function() {
+/*window.addEventListener('load', function() {
     var gallerySwiper = new Swiper('.gallery-swiper', {
         // Optional parameters
         loop: true,
@@ -17,7 +17,7 @@ window.addEventListener('load', function() {
     });
     
     
-})
+})*/
 
 // corrects hero image size, as most mobile browsers have inconsistent viewport dimensions
 // which causes undesirable resizing of hero area
@@ -92,6 +92,15 @@ Vue.component('calendar-date', {
                 }
             }
             return 'available';
+        },
+        extendedAvailability: async function () {
+            let dates = await bookedDates;
+            for (date in dates) {
+                if (this.isoDate === dates[date]) {
+                    return 'booked';
+                }
+            }
+            return 'available';
         }
     },
     methods: {
@@ -107,10 +116,13 @@ Vue.component('calendar-date', {
 })
 
 const calendarMonth = Vue.extend({
-    props: ['instCalendarValues', 'instYear', 'instMonth', 'instIndex'],
-    computed: {
+    props: ['instYear', 'instMonth'],
+    computed: {           
+        instCalendarValues: function () {
+            return (vm.calendarValues(this.instYear, this.instMonth));
+        },
         monthRows: function () {
-            return ('45px '.repeat(this.instCalendarValues.length));
+            return ('48px '.repeat(this.instCalendarValues.length));
         }
     },
     methods: {
@@ -119,16 +131,89 @@ const calendarMonth = Vue.extend({
         },
         dateColumn(index) {
             return `${index} / span 1`;
-        }
+        },
     },
     template: `<div class="swiper-slide">
                    <div class="calendar-month" :style="{ display: 'grid', 'grid-template-rows': monthRows }">
-                       <div class="calendar-week" v-for="week in instCalendarValues" :style="{ 'grid-row': weekRow(week), display: 'grid', 'grid-template-columns': '1fr 1fr 1fr 1fr 1fr 1fr 1fr' }">
-                           <calendar-date v-for="i in 7" :style="{ 'grid-column': dateColumn(i) }" :dateYear="instYear" :dateMonth="instMonth" :dateDate="week[i-1]">{{ week[i-1] }}</calendar-date>
+                       <div class="calendar-week" v-for="week in instCalendarValues" :style="{ 'grid-row': weekRow(week), display: 'grid', 'grid-template-columns': 'repeat(7, 1fr)' }">
+                           <calendar-date v-for="i in 7" :style="{ 'grid-column': dateColumn(i) }" :dateYear="instYear" :dateMonth="instMonth" :dateDate="week[i-1]"></calendar-date>
                        </div>
                    </div>
                </div>`
 })
+
+/*const calendarMonth = Vue.extend({
+    props: ['instYear', 'instMonth'],
+    computed: {           
+        instCalendarValues: function () {
+            return (vm.experimentCalendarValues(this.instYear, this.instMonth));
+        },
+        monthRows: function () {
+            return ('48px '.repeat(this.instCalendarValues.length));
+        }
+    },
+    methods: {
+        weekRow(week) {
+            return `${this.instCalendarValues.indexOf(week) + 1} / span 1`;
+        },
+        dateColumn(index) {
+            return `${index} / span 1`;
+        },
+        dateNumber(week, index) {
+            if (week.prevDays) {
+                if (index < week.prevDays.length) {
+                    return(week.prevDays[index]);
+                } else if (week.days) {
+                    return(week.days[index - week.prevDays.length]);
+                }
+            }
+            else if (week.nextDays) {
+                if (week.days) {
+                    if (index < week.days.length) {
+                        return(week.days[index]);
+                    } else {
+                        return(week.nextDays[index - week.days.length]);
+                    }
+                } else {
+                    return (week.nextDays[index]);
+                }
+            } 
+            else {
+                return (week.days[index]);
+            }
+        },
+        dateClass(week, index) {
+            if (week.prevDays) {
+                if (index < week.prevDays.length) {
+                    return('prev-days');
+                } else if (week.days) {
+                    return('');
+                }
+            }
+            else if (week.nextDays) {
+                if (week.days) {
+                    if (index < week.days.length) {
+                        return('');
+                    } else {
+                        return('next-days');
+                    }
+                } else {
+                    return ('next-days');
+                }
+            } 
+            else {
+                return ('');
+            }
+        },
+    },
+    template: `<div class="swiper-slide">
+                   <div class="calendar-month" :style="{ display: 'grid', 'grid-template-rows': monthRows }">
+                       <div class="calendar-week" v-for="week in instCalendarValues" :style="{ 'grid-row': weekRow(week), display: 'grid', 'grid-template-columns': 'repeat(7, 1fr)' }">
+                           <calendar-date v-for="i in 7" :style="{ 'grid-column': dateColumn(i) }" :dateYear="instYear" :dateMonth="instMonth" :dateDate="dateNumber(week, i-1)" :class="dateClass(week, i-1)"></calendar-date>
+                       </div>
+                   </div>
+               </div>`
+})*/
 
 //---------------------------ROOT COMPONENT--------------------//
 
@@ -372,10 +457,92 @@ const vm = new Vue({
             return (calendar);
         },
 
+        extendedCalendarValues(year, month) { //populates calendar
+
+            //---add days to calendar from first of month--//
+            const daysInMonth = new Date(year, month + 1, 0, 12).getDate();
+            let week = [];
+            let calendar = [];
+            
+            function dateAppend(x) {
+                let date = new Date(year, month, x, 12);
+                week.push(date.getDate());
+                if (date.getDay() === 0) {
+                    calendar.push(week);
+                    week = [];
+                }
+            }
+
+            let n = 1;
+            for (n; n <= daysInMonth; n++) {
+                dateAppend(n);
+            }
+            while (calendar.length < 6) {
+                dateAppend(n);
+                n++;
+            }
+            
+            //--fills first week with dates of previous month--//
+            let datesToAdd = 7 - (calendar[0].length);
+            for (let i = 0; i < datesToAdd; i++) {
+                dateToAdd = (new Date(year, month, -i, 12)).getDate();
+                calendar[0].unshift(dateToAdd);
+            }
+            return(calendar);
+        },
+
+        experimentCalendarValues(year, month) { //populates calendar
+
+            //---add days to calendar from first of month--//
+            const daysInMonth = new Date(year, month + 1, 0, 12).getDate();
+            let week = {};
+            let prevDays = [];
+            let days = [];
+            let nextDays = [];
+            let calendar = [];
+
+            let n = 1;
+
+            for (n; n <= daysInMonth; n++) {
+                let date = new Date(year, month, n, 12);
+                days.push(date.getDate());
+                if (date.getDay() === 0) {
+                    week.days = days;
+                    calendar.push(week);
+                    days = [];
+                    week = {};
+                }
+            }
+            week.days = days;
+            days = [];
+
+            while (calendar.length < 6) {
+                let date = new Date(year, month, n, 12);
+                nextDays.push(date.getDate());
+                if (date.getDay() === 0) {
+                    week.nextDays = nextDays;
+                    calendar.push(week);
+                    nextDays = [];
+                    week = {};
+                }
+                n++;
+            }
+            
+            //--fills first week with dates of previous month--//
+            let datesToAdd = 7 - (calendar[0].days.length);
+            for (let i = 0; i < datesToAdd; i++) {
+                dateToAdd = (new Date(year, month, -i, 12)).getDate();
+                prevDays.unshift(dateToAdd);
+            }
+            calendar[0].prevDays = prevDays;
+
+            return(calendar);
+        },
+        
+
         initCalendar(year, month, inputField) {
             var calendarSwiper = new Swiper('.calendar-swiper', {
                 autoHeight: true,
-                preventInteractionOnTransition: true,
                 navigation: {
                     nextEl: '.next-month',
                     prevEl: '.prev-month',
@@ -387,10 +554,9 @@ const vm = new Vue({
                         field: inputField,
                     },
                     propsData: {
-                        instCalendarValues: this.calendarValues(year, month + i - 2),
+                        instCalendarValues: this.extendedCalendarValues(year, month + i),
                         instYear: year,
-                        instMonth: month + i - 2,
-                        instIndex: i
+                        instMonth: month + i,
                     }
                 });
                 let mountPoint = document.createElement('div');
@@ -399,20 +565,38 @@ const vm = new Vue({
             }
             calendarSwiper.update();
 
-            calendarSwiper.on('slideNextTransitionEnd', () => {
-                this.slideCount++;
-            })
-
-            calendarSwiper.on('slidePrevTransitionEnd', () => {
-                this.slideCount--;
+            calendarSwiper.on('slideChange', () => {
+                this.slideCount = calendarSwiper.activeIndex;
             })
         },
 
-        decreaseMonth() {
-            this.slideCount--;
-        },
-        increaseMonth() {
-            this.slideCount++;
+        initGliderCalendar(year, month, inputField) {
+            var glider = new Glider(document.querySelector('.glider'), {
+                arrows: {
+                    prev: '.glider-prev-month',
+                    // may also pass element directly
+                    next: '.glider-next-month'
+                },
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                scrollLock: true
+            });
+
+            for (let i = 0; i < this.calendarRange; i++) {
+                const instance = new calendarMonth({
+                    data: {
+                        field: inputField,
+                    },
+                    propsData: {
+                        instYear: year,
+                        instMonth: month + i,
+                    }
+                });
+                let mountPoint = document.createElement('div');
+                glider.addItem(mountPoint);
+                instance.$mount(mountPoint);
+            }
+            glider.refresh();
         },
         
         //--------calendar update------//

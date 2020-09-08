@@ -269,8 +269,8 @@ ul {
 /*-------------HERO AREA--------------------------*/
 .hero-area {
     position: relative;
-    background-image: url('01-lounge.jpg');
-    background-position: center left;
+    background-image: url('kitchen-01.jpg');
+    background-position: 65%;
     background-size: cover;
     background-attachment: scroll;
     width: 100%;
@@ -411,6 +411,9 @@ ul {
         .calendar {
             background-color: white;
             box-shadow: 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.20);
+            height: 378px;
+            margin-bottom: 32px;
+            background-color: rgba(15, 72, 117, 0.90);
         }
 
             .calendar-controls {
@@ -418,15 +421,18 @@ ul {
                 grid-template-columns: repeat(7, 1fr);
                 align-items: center;
                 position: relative;
-                height: 40px;
+                height: 48px;
+                background-color:white;
             }
 
-                .prev-month {
+                .prev-month,
+                .glider-prev-month {
                     position: relative;
                     grid-column: 1 / span 1;
                     text-align: center;
                     height: 100%;
-                    line-height: 40px;
+                    line-height: 48px;
+                    font-size: 24px;
                 }
 
                 .current-month {
@@ -435,12 +441,14 @@ ul {
                     text-align: center;
                 }
 
-                .next-month {
+                .next-month,
+                .glider-next-month {
                     position: relative;
                     grid-column: 7 / span 1;
                     text-align: center;
                     height: 100%;
-                    line-height: 40px;
+                    line-height: 48px;
+                    font-size: 24px;
                 }
 
             .calendar-weekdays {
@@ -448,6 +456,8 @@ ul {
                 display: grid;
                 grid-template-columns: repeat(7, 1fr);
                 align-items: center;
+                padding-bottom: 4px;
+                background-color:white;
             }
 
                 .calendar-weekdays li {
@@ -489,3 +499,25 @@ ul {
                 position: relative;
                 line-height: 45px;
             }
+
+                .prev-days div {
+                    color: grey;
+                }
+
+                .next-days div {
+                    color: grey;
+                }
+
+        .swiper-container,
+        .glider-container {
+            background-color:white;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            border-bottom: rgba(15, 72, 117, 0.90);
+        }
+
+    .temp-space {
+        height: 64px;
+        position: relative;
+        display: block;
+    }
