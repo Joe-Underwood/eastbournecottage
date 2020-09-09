@@ -1,4 +1,4 @@
-/*window.addEventListener('load', function() {
+window.addEventListener('load', function() {
     var gallerySwiper = new Swiper('.gallery-swiper', {
         // Optional parameters
         loop: true,
@@ -17,7 +17,7 @@
     });
     
     
-})*/
+})
 
 // corrects hero image size, as most mobile browsers have inconsistent viewport dimensions
 // which causes undesirable resizing of hero area
@@ -115,7 +115,7 @@ Vue.component('calendar-date', {
                </div>`
 })
 
-const calendarMonth = Vue.extend({
+/*const calendarMonth = Vue.extend({
     props: ['instYear', 'instMonth'],
     computed: {           
         instCalendarValues: function () {
@@ -140,9 +140,9 @@ const calendarMonth = Vue.extend({
                        </div>
                    </div>
                </div>`
-})
+})*/
 
-/*const calendarMonth = Vue.extend({
+const calendarMonth = Vue.extend({
     props: ['instYear', 'instMonth'],
     computed: {           
         instCalendarValues: function () {
@@ -213,7 +213,7 @@ const calendarMonth = Vue.extend({
                        </div>
                    </div>
                </div>`
-})*/
+})
 
 //---------------------------ROOT COMPONENT--------------------//
 
@@ -542,7 +542,6 @@ const vm = new Vue({
 
         initCalendar(year, month, inputField) {
             var calendarSwiper = new Swiper('.calendar-swiper', {
-                autoHeight: true,
                 navigation: {
                     nextEl: '.next-month',
                     prevEl: '.prev-month',
