@@ -46,6 +46,11 @@
         <div class="content-wrapper">
             <header class="hero-area">
                 <img src="../static/cottage-02.jpg" />
+                <div class="hero-message">
+                    <h1>Welcome To The Cottage</h1>
+                    <p>A Cosy Holiday Cottage Located In The Seaside Town Of Eastbourne</p>
+                    <button>BOOK</button>
+                </div>
             </header>
             <section class="cottage">
 
@@ -139,37 +144,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="temp-space"></div>
-            </section>
-
-            <!--<section class="booking">
-                <div class="booking-content">
-                    <h2>Availability &amp; Booking</h2>
-                    <div class="calendar">
-                        
-                        <div class="calendar-controls">
-                            <div class="glider-prev-month">&#60;</div>
-                            <div class="current-month">&#60;% selectedMonth.toLocaleString('default', { month: 'long' }) %> &#60;% selectedMonth.getFullYear() %></div>
-                            <div class="glider-next-month">&#62;</div>
-                        </div>
-
-                        <ul class="calendar-weekdays">
-                            <li>Mo</li>
-                            <li>Tu</li>
-                            <li>We</li>
-                            <li>Th</li>
-                            <li>Fr</li>
-                            <li>Sa</li>
-                            <li>Su</li>
-                        </ul>
-                        
-                        <div class="glider-container">
-                            <div class="glider">
-                            </div>
-                        </div>
-                    </div>
+                <div class="booking-box">
+                    <div>Please select arrival date from calendar</div>
+                    <div>Arrival Date: &#60;% arrivalDateString %></div>
+                    <div>Departure Date: &#60;% departureDateString %></div>
+                    <div>Price: &#60;% bookingFormData.price %></div>
                 </div>
-            </section>-->
+            </section>
                 
         </div>
          

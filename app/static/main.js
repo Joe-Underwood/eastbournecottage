@@ -24,22 +24,42 @@ window.addEventListener('load', function() {
 // also accounts for mobile browsers confusing height and width in landscape orientation
 
 let heroHeight;
+let innerHeight;
+let offsetHeight;
+let currentOrientation;
+let newOrientation;
+
 
 const heroResize = function () {
     if (document.documentElement.offsetHeight > document.documentElement.offsetWidth) {
         if (window.screen.height > window.screen.width) {
             heroHeight = window.screen.height;
+            newOrientation = 'portait';
         } else {
             heroHeight = window.screen.width;
+            newOrientation = 'landscape';
         }
     } else {
         if (window.screen.height < window.screen.width) {
             heroHeight = window.screen.height;
+            newOrientation = 'portait';
         } else {
             heroHeight = window.screen.width;
+            newOrientation = 'landscape';
         }
     }
-    document.querySelector('.hero-area').style.height = `${heroHeight}px`;
+    if (currentOrientation != newOrientation) {
+        offsetHeight = heroHeight - document.documentElement.offsetHeight;
+        currentOrientation = newOrientation;
+    }
+
+    if (newOrientation === 'portait') {
+        document.querySelector('.hero-area img').src = '../static/cottage-02.jpg';
+    } else {
+        document.querySelector('.hero-area img').src = '../static/cottage-01.jpg';
+    }
+
+    document.querySelector('.hero-area').style.height = `${heroHeight - offsetHeight}px`;
 }
 
 heroResize();
@@ -71,29 +91,10 @@ Vue.component('calendar-date', {
             const monthString = this.isoDate.slice(5, 7);
             const dateString = this.isoDate.slice(8, 10);
             return `${dateString}-${monthString}-${yearString}`;
-        },
-        dayOfWeek: function () {
-            return `day${new Date(this.dateYear, this.dateMonth, this.dateDate, 12).getDay()}`;
         }
     },
     asyncComputed: {
         availability: async function () {
-            if (this.dateDate === '') {
-                return 'start-space';
-            }
-            else if (this.dateDate === undefined) {
-                return 'end-space';
-            }
-
-            let dates = await bookedDates;
-            for (date in dates) {
-                if (this.isoDate === dates[date]) {
-                    return 'booked';
-                }
-            }
-            return 'available';
-        },
-        extendedAvailability: async function () {
             let dates = await bookedDates;
             for (date in dates) {
                 if (this.isoDate === dates[date]) {
@@ -110,12 +111,12 @@ Vue.component('calendar-date', {
             }  
         }
     },
-    template: `<div :class="['calendar-date', availability, dayOfWeek]" v-on:click="selectDate(_vnode.elm, selfDate)">
+    template: `<div :class="['calendar-date', availability]" v-on:click="selectDate(_vnode.elm, selfDate)">
                    <div>{{ dateDate }}</div>
                </div>`
 })
 
-/*const calendarMonth = Vue.extend({
+const calendarMonth = Vue.extend({
     props: ['instYear', 'instMonth'],
     computed: {           
         instCalendarValues: function () {
@@ -129,87 +130,50 @@ Vue.component('calendar-date', {
         weekRow(week) {
             return `${this.instCalendarValues.indexOf(week) + 1} / span 1`;
         },
-        dateColumn(index) {
-            return `${index} / span 1`;
+        prevDateColumn(arr, date) {
+            return `${arr.indexOf(date) + 1} / span 1`;
         },
-    },
-    template: `<div class="swiper-slide">
-                   <div class="calendar-month" :style="{ display: 'grid', 'grid-template-rows': monthRows }">
-                       <div class="calendar-week" v-for="week in instCalendarValues" :style="{ 'grid-row': weekRow(week), display: 'grid', 'grid-template-columns': 'repeat(7, 1fr)' }">
-                           <calendar-date v-for="i in 7" :style="{ 'grid-column': dateColumn(i) }" :dateYear="instYear" :dateMonth="instMonth" :dateDate="week[i-1]"></calendar-date>
-                       </div>
-                   </div>
-               </div>`
-})*/
-
-const calendarMonth = Vue.extend({
-    props: ['instYear', 'instMonth'],
-    computed: {           
-        instCalendarValues: function () {
-            return (vm.experimentCalendarValues(this.instYear, this.instMonth));
+        dateColumn(arr, date, week) {
+            return `${arr.indexOf(date) + 1 + week.prevDays.length} / span 1`;
         },
-        monthRows: function () {
-            return ('48px '.repeat(this.instCalendarValues.length));
+        nextDateColumn(arr, date, week) {
+            return `${arr.indexOf(date) + 1 + week.prevDays.length + week.days.length} / span 1`;
+        },
+        prevYear(year, month) {
+            if (month === 0) {
+                return (year - 1);
+            } else {
+                return year;
+            }
+        },
+        prevMonth(month) {
+            if (month === -1) {
+                return 11;
+            } else {
+                return month;
+            }
+        },
+        nextYear(year, month) {
+            if (month === 11) {
+                return (year + 1);
+            } else { 
+                return year;
+            }
+        },
+        nextMonth(month) {
+            if (month === 12) {
+                return 0;
+            } else {
+                return month;
+            }
         }
     },
-    methods: {
-        weekRow(week) {
-            return `${this.instCalendarValues.indexOf(week) + 1} / span 1`;
-        },
-        dateColumn(index) {
-            return `${index} / span 1`;
-        },
-        dateNumber(week, index) {
-            if (week.prevDays) {
-                if (index < week.prevDays.length) {
-                    return(week.prevDays[index]);
-                } else if (week.days) {
-                    return(week.days[index - week.prevDays.length]);
-                }
-            }
-            else if (week.nextDays) {
-                if (week.days) {
-                    if (index < week.days.length) {
-                        return(week.days[index]);
-                    } else {
-                        return(week.nextDays[index - week.days.length]);
-                    }
-                } else {
-                    return (week.nextDays[index]);
-                }
-            } 
-            else {
-                return (week.days[index]);
-            }
-        },
-        dateClass(week, index) {
-            if (week.prevDays) {
-                if (index < week.prevDays.length) {
-                    return('prev-days');
-                } else if (week.days) {
-                    return('');
-                }
-            }
-            else if (week.nextDays) {
-                if (week.days) {
-                    if (index < week.days.length) {
-                        return('');
-                    } else {
-                        return('next-days');
-                    }
-                } else {
-                    return ('next-days');
-                }
-            } 
-            else {
-                return ('');
-            }
-        },
-    },
     template: `<div class="swiper-slide">
-                   <div class="calendar-month" :style="{ display: 'grid', 'grid-template-rows': monthRows }">
+                   <div class="calendar-month" style="{ display: 'grid', 'grid-template-rows': 'repeat(6, 48px)' }">
                        <div class="calendar-week" v-for="week in instCalendarValues" :style="{ 'grid-row': weekRow(week), display: 'grid', 'grid-template-columns': 'repeat(7, 1fr)' }">
-                           <calendar-date v-for="i in 7" :style="{ 'grid-column': dateColumn(i) }" :dateYear="instYear" :dateMonth="instMonth" :dateDate="dateNumber(week, i-1)" :class="dateClass(week, i-1)"></calendar-date>
+                           <calendar-date v-for="date in week.prevDays" class="prev-days" :style="{ 'grid-column': prevDateColumn(week.prevDays, date) }" :dateYear="prevYear(instYear, instMonth)" :dateMonth="prevMonth(instMonth - 1)" :dateDate="date"></calendar-date>
+                           <calendar-date v-for="date in week.days" class="days" :style="{ 'grid-column': dateColumn(week.days, date, week) }" :dateYear="instYear" :dateMonth="instMonth" :dateDate="date"></calendar-date>
+                           <calendar-date v-for="date in week.nextDays" class="next-days" :style="{ 'grid-column': nextDateColumn(week.nextDays, date, week) }" :dateYear="nextYear(instYear, instMonth)" :dateMonth="nextMonth(instMonth + 1)" :dateDate="date"></calendar-date>
                        </div>
                    </div>
                </div>`
@@ -240,6 +204,8 @@ const vm = new Vue({
             phoneNumber: '',
             message: ''
         },
+        arrivalDateString: '',
+        departureDateString: '',
         currentDate: new Date(),
         currentYear: new Date().getFullYear(),
         currentMonth: new Date().getMonth(),
@@ -429,71 +395,6 @@ const vm = new Vue({
         calendarValues(year, month) { //populates calendar
 
             //---add days to calendar from first of month--//
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            let week = [];
-            let calendar = [];
-            for (let n = 1; n <= daysInMonth; n++) {
-                let date = new Date(year, month, n);
-                week.push(date.getDate());
-                if (date.getDay() === 0) {
-                    calendar.push(week);
-                    week = [];
-                }
-            }
-            if (week.length > 0) {
-                calendar.push(week);
-            }
-            
-
-            //--fills first week with dates of previous month--//
-            datesAdded = 0;
-            while (calendar[0].length < 7) {
-                calendar[0].unshift('');
-                datesAdded++;
-                /*dateToAdd = (new Date(year, month, 0 - datesAdded)).getDate();
-                calendar[0].unshift(dateToAdd);
-                datesAdded++;*/
-            }
-            return (calendar);
-        },
-
-        extendedCalendarValues(year, month) { //populates calendar
-
-            //---add days to calendar from first of month--//
-            const daysInMonth = new Date(year, month + 1, 0, 12).getDate();
-            let week = [];
-            let calendar = [];
-            
-            function dateAppend(x) {
-                let date = new Date(year, month, x, 12);
-                week.push(date.getDate());
-                if (date.getDay() === 0) {
-                    calendar.push(week);
-                    week = [];
-                }
-            }
-
-            let n = 1;
-            for (n; n <= daysInMonth; n++) {
-                dateAppend(n);
-            }
-            while (calendar.length < 6) {
-                dateAppend(n);
-                n++;
-            }
-            
-            //--fills first week with dates of previous month--//
-            let datesToAdd = 7 - (calendar[0].length);
-            for (let i = 0; i < datesToAdd; i++) {
-                dateToAdd = (new Date(year, month, -i, 12)).getDate();
-                calendar[0].unshift(dateToAdd);
-            }
-            return(calendar);
-        },
-
-        experimentCalendarValues(year, month) { //populates calendar
-
-            //---add days to calendar from first of month--//
             const daysInMonth = new Date(year, month + 1, 0, 12).getDate();
             let week = {};
             let prevDays = [];
@@ -536,6 +437,18 @@ const vm = new Vue({
             }
             calendar[0].prevDays = prevDays;
 
+            for (let i = 0; i < calendar.length; i++) {
+                if (!calendar[i].prevDays) {
+                    calendar[i].prevDays = [];
+                }
+                if (!calendar[i].days) {
+                    calendar[i].days = [];
+                }
+                if (!calendar[i].nextDays) {
+                    calendar[i].nextDays = [];
+                }
+            }
+
             return(calendar);
         },
         
@@ -553,7 +466,6 @@ const vm = new Vue({
                         field: inputField,
                     },
                     propsData: {
-                        instCalendarValues: this.extendedCalendarValues(year, month + i),
                         instYear: year,
                         instMonth: month + i,
                     }
@@ -568,40 +480,9 @@ const vm = new Vue({
                 this.slideCount = calendarSwiper.activeIndex;
             })
         },
-
-        initGliderCalendar(year, month, inputField) {
-            var glider = new Glider(document.querySelector('.glider'), {
-                arrows: {
-                    prev: '.glider-prev-month',
-                    // may also pass element directly
-                    next: '.glider-next-month'
-                },
-                slidesToShow: 1,
-                slidesToScroll: 1,
-                scrollLock: true
-            });
-
-            for (let i = 0; i < this.calendarRange; i++) {
-                const instance = new calendarMonth({
-                    data: {
-                        field: inputField,
-                    },
-                    propsData: {
-                        instYear: year,
-                        instMonth: month + i,
-                    }
-                });
-                let mountPoint = document.createElement('div');
-                glider.addItem(mountPoint);
-                instance.$mount(mountPoint);
-            }
-            glider.refresh();
-        },
         
         //--------calendar update------//
         
-        
-
         selectDate(element, date) {
             if (element.classList.contains('available')) {
                 if (this.calendarSelector === 0) {
@@ -624,7 +505,9 @@ const vm = new Vue({
                     element.classList.add('arrival-date');
     
                     this.bookingFormData.departureDate = '';
+                    this.departureDateString = '';
                     this.bookingFormData.arrivalDate = date;
+                    this.arrivalDateString = date.toDateString();
                     this.bookingFormData.price = 0;
                     this.calendarSelector = 1;
                 }
@@ -665,6 +548,7 @@ const vm = new Vue({
                             
                         }
                         this.bookingFormData.departureDate = date;
+                        this.departureDateString = date.toDateString();
                         this.calendarSelector = 0;
                         this.bookingFormData.price = getPrice(this.bookingFormData.arrivalDate, this.bookingFormData.departureDate);
                     }
@@ -672,16 +556,11 @@ const vm = new Vue({
                         document.querySelector('.arrival-date').classList.remove('arrival-date');
                         element.classList.add('arrival-date');
                         this.bookingFormData.arrivalDate = date;
+                        this.arrivalDateString = date.toDateString();
                         console.log('departure date must be after arrival date');
                     } 
                 }
             }  
-        },
-        datesValid(arrival, departure) { //---add date rules here--potentially editable by server?--//
-            if (arrival < departure) {
-                return 'Departure must be after arrival';
-            }
-            return true;
         },
         bookingProceed() {
             let i = 1;
@@ -812,7 +691,16 @@ function getPrice(arrival, departure) { //assuming that data is ordered by date
 const priceList = [
     { 'startDate': new Date(2020, 7, 15), 'endDate': new Date(2020, 7, 22), 'price': 1000.00 },
     { 'startDate': new Date(2020, 7, 22), 'endDate': new Date(2020, 7, 29), 'price': 900.00 },
-    { 'startDate': new Date(2020, 7, 29), 'endDate': new Date(2020, 8, 5), 'price': 800.00}
+    { 'startDate': new Date(2020, 7, 29), 'endDate': new Date(2020, 8, 5), 'price': 800.00},
+    { 'startDate': new Date(2020, 8, 5), 'endDate': new Date(2020, 8, 12), 'price': 900.00 },
+    { 'startDate': new Date(2020, 8, 12), 'endDate': new Date(2020, 8, 19), 'price': 1000.00 },
+    { 'startDate': new Date(2020, 8, 19), 'endDate': new Date(2020, 8, 26), 'price': 900.00 },
+    { 'startDate': new Date(2020, 8, 26), 'endDate': new Date(2020, 9, 3), 'price': 800.00 },
+    { 'startDate': new Date(2020, 9, 3), 'endDate': new Date(2020, 9, 10), 'price': 900.00 },
+    { 'startDate': new Date(2020, 9, 10), 'endDate': new Date(2020, 9, 17), 'price': 1000.00 },
+    { 'startDate': new Date(2020, 9, 17), 'endDate': new Date(2020, 9, 24), 'price': 900.00 },
+    { 'startDate': new Date(2020, 9, 24), 'endDate': new Date(2020, 9, 31), 'price': 800.00 },
+    { 'startDate': new Date(2020, 9, 31), 'endDate': new Date(2020, 10, 7), 'price': 900.00 },
 ]
 
 const bookedDates =

@@ -257,6 +257,7 @@ ul {
                 font-weight: 200;
                 line-height: 40px;
                 height: 40px;
+                color:rgb
 
             }
 
@@ -279,19 +280,54 @@ ul {
 
     display: grid;
     grid-template-columns: repeat(12, 1fr);
+    align-items: flex-end;
     column-gap: 8px;
-    justify-content: center;
 }
 
     .hero-area img {
         z-index: -2;
         width: 100%;
         height: 100%;
-        object-position: 0%;
+        object-position: center;
         object-fit: cover;
         image-orientation: from-image;
         position: absolute;
     }
+
+    .hero-message {
+        background-color: rgba(15, 72, 117, 0.50);
+        backdrop-filter: blur(0px);
+        -webkit-backdrop-filter: blur(1px);
+        position: relative;
+        grid-column: 1 / span 12;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+        .hero-message h1 {
+            color: white;
+            text-align: center;
+        }
+
+        .hero-message p {
+            color: white;
+            text-align: center;
+        }
+
+        .hero-message button {
+            position: relative;
+            background-color: rgb(226, 138, 12);
+            color: white;
+            border-radius: 4px;
+            margin-top: 16px;
+            font-size: 12px;
+            line-height: 100%;
+            font-weight: 700;
+            height: 32px;
+            box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20);
+        }
 
 /*--------------------- MAIN CONTENT ------------*/
 /*------------ COTTAGE -------------------------*/
@@ -511,11 +547,24 @@ ul {
 
                 .prev-days div {
                     color: grey;
+                    background-color: white;
                 }
 
                 .next-days div {
                     color: grey;
+                    background-color:white;
                 }
+
+                .booked div {
+                    background-color: red;
+                    color: white;
+                }
+
+                    .booked.next-days div,
+                    .booked.prev-days div {
+                        background-color: rgb(255, 0, 0, 0.5) !important;
+                        color: grey !important;
+                    }
 
         .swiper-container,
         .glider-container {
@@ -525,8 +574,13 @@ ul {
             /*border-bottom: rgba(15, 72, 117, 0.90);*/
         }
 
-    .temp-space {
-        height: 64px;
+    .booking-box {
         position: relative;
-        display: block;
+        display:block;
+        margin-left: 16px;
+        margin-right: 16px;
+        margin-top: 16px;
+        box-shadow: 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.20);
+        background-color: white;
+        padding: 8px;
     }
