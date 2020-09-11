@@ -172,12 +172,11 @@ ul {
         grid-column: 9 / span 4;
         background-color: rgb(226, 138, 12);
         color: white;
-        border-radius: 4px;
         margin-right: 16px;
         font-size: 12px;
         line-height: 100%;
         font-weight: 700;
-        height: 32px;
+        height: 36px;
         box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20);
     }
 
@@ -295,7 +294,7 @@ ul {
     }
 
     .hero-message {
-        background-color: rgba(15, 72, 117, 0.50);
+        background-color: rgba(15, 72, 117, 0.4);
         backdrop-filter: blur(0px);
         -webkit-backdrop-filter: blur(1px);
         position: relative;
@@ -309,23 +308,29 @@ ul {
         .hero-message h1 {
             color: white;
             text-align: center;
+            font-size: 28px;
+        }
+
+        .hero-message h1:nth-child(1) {
+            font-family: Lato;
+            font-size: 16px;
         }
 
         .hero-message p {
             color: white;
             text-align: center;
+            font-size: 14px;
         }
 
         .hero-message button {
             position: relative;
             background-color: rgb(226, 138, 12);
             color: white;
-            border-radius: 4px;
             margin-top: 16px;
             font-size: 12px;
             line-height: 100%;
             font-weight: 700;
-            height: 32px;
+            height: 40px;
             box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20);
         }
 
@@ -456,9 +461,8 @@ ul {
         .calendar {
             background-color: white;
             box-shadow: 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.20);
-            height: 378px;
+            height: 362px;
             margin-bottom: 32px;
-            /*background-color: rgba(15, 72, 117, 0.90);*/
         }
 
             .calendar-controls {
@@ -470,14 +474,14 @@ ul {
                 background-color:white;
             }
 
-                .prev-month,
-                .glider-prev-month {
+                .prev-month {
                     position: relative;
                     grid-column: 1 / span 1;
                     text-align: center;
                     height: 100%;
                     line-height: 48px;
                     font-size: 24px;
+                    padding-left: 8px;
                 }
 
                 .current-month {
@@ -486,14 +490,14 @@ ul {
                     text-align: center;
                 }
 
-                .next-month,
-                .glider-next-month {
+                .next-month {
                     position: relative;
                     grid-column: 7 / span 1;
                     text-align: center;
                     height: 100%;
                     line-height: 48px;
                     font-size: 24px;
+                    padding-right: 8px;
                 }
 
             .calendar-weekdays {
@@ -502,6 +506,8 @@ ul {
                 grid-template-columns: repeat(7, 1fr);
                 align-items: center;
                 padding-bottom: 4px;
+                padding-left: 8px;
+                padding-right: 8px;
                 background-color:white;
             }
 
@@ -566,21 +572,71 @@ ul {
                         color: grey !important;
                     }
 
-        .swiper-container,
-        .glider-container {
+                .valid-range-date div {
+                    /*background-color: green;*/
+                    color: white;
+                }
+
+                .arrival-date div {
+                    overflow: hidden;
+                }
+                .arrival-date div::before{
+                    content: '';
+                    height: 200%;
+                    width: 200%;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    position: absolute;
+                    background-color: green;
+                    transform: skewY(-45deg) translateY(50%);
+                    overflow: hidden;
+                    z-index: -1;
+                }
+
+                    .valid-range-date.prev-days div,
+                    .valid-range-date.next-days div{
+                        background-color: rgba(0, 255, 0, 0.75) !important;
+                    }
+
+        .calendar-swiper {
             background-color:white;
             padding-top: 8px;
-            padding-bottom: 8px;
-            /*border-bottom: rgba(15, 72, 117, 0.90);*/
+            padding-left: 8px;
+            padding-right: 8px;
         }
 
-    .booking-box {
+    .lower-page-slide {
         position: relative;
-        display:block;
-        margin-left: 16px;
-        margin-right: 16px;
-        margin-top: 16px;
-        box-shadow: 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.20);
-        background-color: white;
-        padding: 8px;
+        display: block;
     }
+
+        .booking-box {
+            margin-top: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            margin-left: 16px;
+            margin-right: 16px;
+            margin-top: 16px;
+            box-shadow: 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.20);
+            background-color: white;
+            padding: 8px;
+        }
+
+            .booking-box button {
+                opacity: 0.5;
+                background-color: rgb(226, 138, 12);
+                color: white;
+                padding-left: 16px;
+                padding-right: 16px;
+                margin-top: 8px;
+                width: 210px;
+                margin-left: auto;
+                font-size: 12px;
+                line-height: 100%;
+                font-weight: 700;
+                height: 40px;
+                box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20);
+            }

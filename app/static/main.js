@@ -563,22 +563,7 @@ const vm = new Vue({
             }  
         },
         bookingProceed() {
-            let i = 1;
-            console.log(i);
-            const callback = function (mutation) {
-                i++;
-                console.log(mutation);
-            }
-            const observer = new MutationObserver(callback);
-            observer.observe(this.$refs.bookingForm, {
-                childList: true,
-                attributes: true,
-                subtree: true
-            });
-            this.$refs.bookingForm.style.visibility = 'visible';
-            this.$refs.bookingForm.style.maxHeight = '1000px';
-            this.$refs.bookingForm.style.opacity = '1.0';
-            observer.disconnect();
+            
         },
         adultsDecrease() {
             if (this.bookingFormData.adults > 0) {
@@ -690,17 +675,17 @@ function getPrice(arrival, departure) { //assuming that data is ordered by date
 
 const priceList = [
     { 'startDate': new Date(2020, 7, 15), 'endDate': new Date(2020, 7, 22), 'price': 1000.00 },
-    { 'startDate': new Date(2020, 7, 22), 'endDate': new Date(2020, 7, 29), 'price': 900.00 },
-    { 'startDate': new Date(2020, 7, 29), 'endDate': new Date(2020, 8, 5), 'price': 800.00},
-    { 'startDate': new Date(2020, 8, 5), 'endDate': new Date(2020, 8, 12), 'price': 900.00 },
+    { 'startDate': new Date(2020, 7, 22), 'endDate': new Date(2020, 7, 29), 'price': 1000.00  },
+    { 'startDate': new Date(2020, 7, 29), 'endDate': new Date(2020, 8, 5), 'price': 1000.00},
+    { 'startDate': new Date(2020, 8, 5), 'endDate': new Date(2020, 8, 12), 'price': 1000.00 },
     { 'startDate': new Date(2020, 8, 12), 'endDate': new Date(2020, 8, 19), 'price': 1000.00 },
-    { 'startDate': new Date(2020, 8, 19), 'endDate': new Date(2020, 8, 26), 'price': 900.00 },
-    { 'startDate': new Date(2020, 8, 26), 'endDate': new Date(2020, 9, 3), 'price': 800.00 },
-    { 'startDate': new Date(2020, 9, 3), 'endDate': new Date(2020, 9, 10), 'price': 900.00 },
+    { 'startDate': new Date(2020, 8, 19), 'endDate': new Date(2020, 8, 26), 'price': 1000.00 },
+    { 'startDate': new Date(2020, 8, 26), 'endDate': new Date(2020, 9, 3), 'price': 1000.00 },
+    { 'startDate': new Date(2020, 9, 3), 'endDate': new Date(2020, 9, 10), 'price': 1000.00 },
     { 'startDate': new Date(2020, 9, 10), 'endDate': new Date(2020, 9, 17), 'price': 1000.00 },
-    { 'startDate': new Date(2020, 9, 17), 'endDate': new Date(2020, 9, 24), 'price': 900.00 },
-    { 'startDate': new Date(2020, 9, 24), 'endDate': new Date(2020, 9, 31), 'price': 800.00 },
-    { 'startDate': new Date(2020, 9, 31), 'endDate': new Date(2020, 10, 7), 'price': 900.00 },
+    { 'startDate': new Date(2020, 9, 17), 'endDate': new Date(2020, 9, 24), 'price': 1000.00 },
+    { 'startDate': new Date(2020, 9, 24), 'endDate': new Date(2020, 9, 31), 'price': 1000.00 },
+    { 'startDate': new Date(2020, 9, 31), 'endDate': new Date(2020, 10, 7), 'price': 1000.00 },
 ]
 
 const bookedDates =

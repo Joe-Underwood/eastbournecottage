@@ -47,9 +47,10 @@
             <header class="hero-area">
                 <img src="../static/cottage-02.jpg" />
                 <div class="hero-message">
-                    <h1>Welcome To The Cottage</h1>
-                    <p>A Cosy Holiday Cottage Located In The Seaside Town Of Eastbourne</p>
-                    <button>BOOK</button>
+                    <h1>WELCOME TO</h1>
+                    <h1>The Cottage</h1>
+                    <p>A cosy holiday cottage situated in the seaside town of Eastbourne</p>
+                    <button>BOOK YOUR STAY</button>
                 </div>
             </header>
             <section class="cottage">
@@ -144,11 +145,18 @@
                         </div>
                     </div>
                 </div>
-                <div class="booking-box">
-                    <div>Please select arrival date from calendar</div>
-                    <div>Arrival Date: &#60;% arrivalDateString %></div>
-                    <div>Departure Date: &#60;% departureDateString %></div>
-                    <div>Price: &#60;% bookingFormData.price %></div>
+                <div class="lower-page-slide">
+
+
+                    <div class="booking-box">
+                        <div>Please select arrival date from calendar</div>
+                        <div>Arrival Date: &#60;% arrivalDateString %></div>
+                        <div>Departure Date: &#60;% departureDateString %></div>
+                        <div>Price: &#60;% bookingFormData.price %></div>
+                        <button type="button" v-on:click="bookingProceed()">PROCEED WITH BOOKING</button>
+                    </div>
+
+
                 </div>
             </section>
                 
