@@ -458,7 +458,8 @@ const vm = new Vue({
                 navigation: {
                     nextEl: '.next-month',
                     prevEl: '.prev-month',
-                  }
+                  },
+                  spaceBetween: 16
             });
             for (let i = 0; i < this.calendarRange; i++) {
                 const instance = new calendarMonth({
@@ -482,7 +483,9 @@ const vm = new Vue({
         },
         
         //--------calendar update------//
-        
+        formatDate(date) {
+
+        },
         selectDate(element, date) {
             if (element.classList.contains('available')) {
                 if (this.calendarSelector === 0) {
@@ -506,7 +509,7 @@ const vm = new Vue({
     
                     this.bookingFormData.departureDate = '';
                     this.departureDateString = '';
-                    this.bookingFormData.arrivalDate = date;
+                    this.bookingFormData.arrivalDate = date.toISOString();
                     this.arrivalDateString = date.toDateString();
                     this.bookingFormData.price = 0;
                     this.calendarSelector = 1;
@@ -544,10 +547,8 @@ const vm = new Vue({
                                     return;
                                 }
                             }
-                            
-                            
                         }
-                        this.bookingFormData.departureDate = date;
+                        this.bookingFormData.departureDate = date.toISOString();
                         this.departureDateString = date.toDateString();
                         this.calendarSelector = 0;
                         this.bookingFormData.price = getPrice(this.bookingFormData.arrivalDate, this.bookingFormData.departureDate);
@@ -555,7 +556,7 @@ const vm = new Vue({
                     else {
                         document.querySelector('.arrival-date').classList.remove('arrival-date');
                         element.classList.add('arrival-date');
-                        this.bookingFormData.arrivalDate = date;
+                        this.bookingFormData.arrivalDate = date.toISOString();
                         this.arrivalDateString = date.toDateString();
                         console.log('departure date must be after arrival date');
                     } 
@@ -564,6 +565,29 @@ const vm = new Vue({
         },
         bookingProceed() {
             
+        },
+        //----------------- BOOKING FORM ---------------------------//
+        inputFocus(e) {
+            e.target.classList.add('focused');
+            e.target.classList.remove('activated');
+            e.target.classList.remove('invalid');
+            
+            e.target.labels[0].classList.add('focused');
+            e.target.labels[0].classList.remove('activated');
+            e.target.labels[0].classList.remove('invalid');
+        },
+        inputBlur(e) {
+            e.target.classList.remove('focused');
+            e.target.labels[0].classList.remove('focused');
+            if (e.target.value) {
+                e.target.classList.add('activated');
+                e.target.labels[0].classList.add('activated');
+            }
+        },
+        inputInvalid(e) {
+            console.log('invalid');
+            e.preventDefault();
+            e.target.classList.add('invalid');
         },
         adultsDecrease() {
             if (this.bookingFormData.adults > 0) {
