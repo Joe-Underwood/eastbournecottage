@@ -79,7 +79,7 @@ Vue.component('calendar-date', {
     props: ['dateYear', 'dateMonth', 'dateDate'],
     computed: {
         selfDate: function () {
-            return new Date(this.dateYear, this.dateMonth, this.dateDate);
+            return new Date(this.dateYear, this.dateMonth, this.dateDate, 12);
         },
         isoDate: function () {
             const thisDate = new Date(this.dateYear, this.dateMonth, this.dateDate, 12);
@@ -212,7 +212,7 @@ const vm = new Vue({
         slideCount: 0,
         calendarRange: 18,
         calendarShow: false,
-        calendarSelector: 0,
+        calendarSelector: 'arrival',
         //side menu open parameters
         scrollY: 0,
         scrimClose: false,
@@ -488,8 +488,7 @@ const vm = new Vue({
         },
         selectDate(element, date) {
             if (element.classList.contains('available')) {
-                if (this.calendarSelector === 0) {
-                    console.log(0);
+                if (this.calendarSelector === 'arrival') {
                     if (document.querySelector('.arrival-date')) {
                         document.querySelector('.arrival-date').classList.remove('arrival-date');
                         if (document.querySelector('.departure-date')) {
@@ -509,13 +508,12 @@ const vm = new Vue({
     
                     this.bookingFormData.departureDate = '';
                     this.departureDateString = '';
-                    this.bookingFormData.arrivalDate = date.toISOString();
+                    this.bookingFormData.arrivalDate = date.toISOString().slice(0, 10);
                     this.arrivalDateString = date.toDateString();
                     this.bookingFormData.price = 0;
-                    this.calendarSelector = 1;
+                    this.calendarSelector = 'departure';
                 }
-                else if (this.calendarSelector === 1) {
-                    console.log(1);
+                else if (this.calendarSelector === 'departure') {
                     let calendarDates = Array.from(document.querySelectorAll('.calendar-date'));
                     calendarDates = calendarDates.filter((node) => {
                         if (node.classList.contains('available') || node.classList.contains('booked')) {
@@ -543,20 +541,20 @@ const vm = new Vue({
                                 }
                                 calendarDates[i].classList.add('invalid-range-date');
                                 if (i === departureIndex) {
-                                    this.calendarSelector = 0;
+                                    this.calendarSelector = 'arrival';
                                     return;
                                 }
                             }
                         }
-                        this.bookingFormData.departureDate = date.toISOString();
+                        this.bookingFormData.departureDate = date.toISOString().slice(0, 10);
                         this.departureDateString = date.toDateString();
-                        this.calendarSelector = 0;
+                        this.calendarSelector = 'arrival';
                         this.bookingFormData.price = getPrice(this.bookingFormData.arrivalDate, this.bookingFormData.departureDate);
                     }
                     else {
                         document.querySelector('.arrival-date').classList.remove('arrival-date');
                         element.classList.add('arrival-date');
-                        this.bookingFormData.arrivalDate = date.toISOString();
+                        this.bookingFormData.arrivalDate = date.toISOString().slice(0, 10);
                         this.arrivalDateString = date.toDateString();
                         console.log('departure date must be after arrival date');
                     } 
@@ -567,6 +565,15 @@ const vm = new Vue({
             
         },
         //----------------- BOOKING FORM ---------------------------//
+        arrivalDateFocus(e) {
+            document.querySelector('.calendar').scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
+            this.calendarSelector = 'arrival';
+        },
+        departureDateFocus(e) {
+            document.querySelector('.calendar').scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
+            this.calendarSelector = 'departure';
+        },
+
         inputFocus(e) {
             e.target.classList.add('focused');
             e.target.classList.remove('activated');
@@ -575,10 +582,17 @@ const vm = new Vue({
             e.target.labels[0].classList.add('focused');
             e.target.labels[0].classList.remove('activated');
             e.target.labels[0].classList.remove('invalid');
+
+            e.target.parentElement.classList.add('focused');
+
+            e.target.parentElement.querySelector('.clear-icon').classList.add('visible');
         },
         inputBlur(e) {
             e.target.classList.remove('focused');
             e.target.labels[0].classList.remove('focused');
+            e.target.parentElement.classList.remove('focused');
+            e.target.parentElement.querySelector('.clear-icon').classList.remove('visible');
+            
             if (e.target.value) {
                 e.target.classList.add('activated');
                 e.target.labels[0].classList.add('activated');
