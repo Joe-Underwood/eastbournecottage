@@ -99,6 +99,11 @@ label.invalid {
     flex-direction: column;
     transition: all 0.2s;
     position: relative;
+    z-index: 0;
+}
+
+.input-container.focused {
+    z-index: 1;
 }
 
 input {
@@ -114,8 +119,7 @@ input {
 }
 
 input.focused {
-    border-bottom: 2px solid rgb(15, 72, 117);
-    
+    border: 2px solid rgb(15, 72, 117);
 }
 
 input.activated {
@@ -526,8 +530,8 @@ input.disabled {
             background-color: white;
             /*box-shadow: 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.20);*/
             border: 1px solid #a5c2cf;
+            border-bottom: none;
             height: 362px;
-            margin-bottom: 16px;
             border-radius: 0;
         }
 
@@ -618,13 +622,34 @@ input.disabled {
             }
 
                 .prev-days div {
+
+                }
+                .next-days div {
+
+                }
+                .booked div {
+
+                }
+                .available div {
+
+                }
+                .valid-date div {
+
+                }
+                .invalid-date div {
+                    text-decoration: line-through;
                     color: grey;
-                    background-color: white;
+                }
+                .date-range div {
+
+                }
+
+                .prev-days div {
+                    color: grey;
                 }
 
                 .next-days div {
                     color: grey;
-                    background-color:white;
                 }
 
                 .booked div {
@@ -638,33 +663,42 @@ input.disabled {
                         color: grey !important;
                     }
 
-                .valid-range-date div {
-                    /*background-color: green;*/
-                    color: white;
-                }
+
 
                 .arrival-date div {
-                    overflow: hidden;
-                }
-                .arrival-date div::before{
-                    content: '';
-                    height: 200%;
-                    width: 200%;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    bottom: 0;
-                    position: absolute;
-                    background-color: green;
-                    transform: skewY(-45deg) translateY(50%);
-                    overflow: hidden;
-                    z-index: -1;
+                    position: relative;
+                    
                 }
 
-                    .valid-range-date.prev-days div,
-                    .valid-range-date.next-days div{
-                        background-color: rgba(0, 255, 0, 0.75) !important;
-                    }
+                .arrival-date div::before {
+                    content: url('arrival_date_background.svg');
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+                    left: 0;
+                    top: 0;
+                    z-index: -1;
+                    overflow: hidden;
+                }
+
+                .departure-date div {
+                    position: relative;
+                }
+
+                .departure-date div::before {
+                    content: url('departure_date_background.svg');
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+                    left: 0;
+                    top: 0;
+                    z-index: -1;
+                    overflow: hidden;
+                }
+
+                .date-range {
+                    background-color: #a5c2cf;
+                }
 
         .calendar-swiper {
             background-color:white;
@@ -700,16 +734,16 @@ input.disabled {
                 }
 
                     .date-fields .input-container {
-                        width: calc(50% - 8px);
+                        width: calc(50% + 1px);
                         position: relative;
                     }
 
                     .date-fields .input-container:nth-child(1) {
-                        margin-right: 8px;
+                        margin-right: -1px;
                     }
 
                     .date-fields .input-container:nth-child(2) {
-                        margin-left: 8px;
+                        margin-left: -1px;
                     }
 
                 .party-input-container {

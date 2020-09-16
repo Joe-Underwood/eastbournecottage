@@ -142,27 +142,31 @@
                         <div class="swiper-container calendar-swiper">
                             <div class="swiper-wrapper">
                             </div>
-                        </div>
+                        </div> 
+
                     </div>
+
+                    <div class="date-fields">
+
+                        <div class="input-container focused">
+                            <label for="arrival-date">Arrival Date</label>
+                            <input id="arrival-date" class="focused" v-model="bookingFormData.arrivalDate" type="text" required v-on:focus="arrivalDateFocus()" v-on:blur="arrivalDateBlur()" readonly/>      
+                        </div>
+
+                        <div class="input-container">
+                            <label for="departure-date">Departure Date</label>
+                            <input id="departure-date" v-model="bookingFormData.departureDate" type="text" required v-on:focus="departureDateFocus()" v-on:blur="departureDateBlur()" readonly/>
+                        </div>
+
+                    </div>
+
                 </div>
+                
                 <div class="lower-page-slide">
                     <form class="booking-form">
                         {{ booking_form.hidden_tag() }}
 
-                        <div class="date-fields">
-
-                            <div class="input-container">
-                                <label for="arrival-date">Arrival Date</label>
-                                <input id="arrival-date" v-model="bookingFormData.arrivalDate" type="text" required v-on:focus="arrivalDateFocus($event)" readonly/>
-                                
-                            </div>
-
-                            <div class="input-container">
-                                <label for="departure-date">Departure Date</label>
-                                <input id="departure-date" v-model="bookingFormData.departureDate" type="text" required v-on:focus="departureDateFocus($event)" readonly/>
-                            </div>
-
-                        </div>
+                        
                         
 
                         

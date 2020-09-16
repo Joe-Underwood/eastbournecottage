@@ -205,7 +205,9 @@ const vm = new Vue({
             message: ''
         },
         arrivalDateString: '',
+        arrivalDateObject: undefined,
         departureDateString: '',
+        departureDateObject: undefined,
         currentDate: new Date(),
         currentYear: new Date().getFullYear(),
         currentMonth: new Date().getMonth(),
@@ -213,6 +215,7 @@ const vm = new Vue({
         calendarRange: 18,
         calendarShow: false,
         calendarSelector: 'arrival',
+        invalidDates: [],
         //side menu open parameters
         scrollY: 0,
         scrimClose: false,
@@ -482,11 +485,213 @@ const vm = new Vue({
             })
         },
         
-        //--------calendar update------//
-        formatDate(date) {
+        //---------------------------- SELECT DATE FROM CALENDAR ---------------------------------------//
+        selectDate(element, date) {
+            if (element.classList.contains('available')) {
+                if (this.calendarSelector === 'arrival') {
+                    if (!this.bookingFormData.departureDate) {
+                        this.selectArrivalDate(element, date);
+                        this.refreshDateRange(element, date);
+                        this.showInvalidDates();
+                        this.calendarSelector = 'departure';
+                        this.departureDateFocus();
+                    } else {
+                        this.selectArrivalDate(element, date);
+                        this.refreshDateRange(element, date);
+                        this.showInvalidDates();
+                        if (date >= this.departureDateObject || !this.isValidRange()) {
+                            this.removeDepartureDate();
+                        } 
+                        this.calendarSelector = 'departure';
+                        this.departureDateFocus();
+                    }
+                } else {
+                    this.selectDepartureDate(element, date);
+                }
+                this.calculatePrice();
+            }
+        },
+        selectArrivalDate(element, date) {
+            let arrivalDates = document.querySelectorAll('.arrival-date');
+            if (arrivalDates[0]) {
+                arrivalDates[0].classList.remove('arrival-date');
+            }
+            if (arrivalDates[1]) {
+                arrivalDates[1].classList.remove('arrival-date');
+            }
+            element.classList.add('arrival-date');
+            this.bookingFormData.arrivalDate = date.toISOString().slice(0, 10);
+            this.arrivalDateString = date.toDateString();
+            this.arrivalDateObject = date;
+        },
+        selectDepartureDate(element, date) {
+            if (!element.classList.contains('invalid-date')) {
+                if (date > this.arrivalDateObject) {
+                    let departureDates = document.querySelectorAll('.departure-date');
+                    if (departureDates.length > 0) {
+                        for (let i = 0; i < departureDates.length; i++) {
+                            departureDates[i].classList.remove('departure-date');
+                        }
+                    }
+                    element.classList.add('departure-date');
+                    this.bookingFormData.departureDate = date.toISOString().slice(0, 10);
+                    this.departureDateString = date.toDateString();
+                    this.departureDateObject = date;
+                } 
+                else if (date <= this.arrivalDateObject) {
+                    this.removeDepartureDate();
+                }
+            }
+
+            let calendarDates = Array.from(document.querySelectorAll('.calendar-date'));
+            let departureDateIndex = calendarDates.indexOf(element);
+            let departureDate = new Date(element.__vue__._props.dateYear, element.__vue__._props.dateMonth, element.__vue__._props.dateDate);
+
+            for (let i = departureDateIndex + 1; i < calendarDates.length; i++) {
+                let indexDate = new Date (calendarDates[i].__vue__._props.dateYear, calendarDates[i].__vue__._props.dateMonth, calendarDates[i].__vue__._props.dateDate);
+
+                if (+indexDate === +departureDate) {
+                    calendarDates[i].classList.add('departure-date');
+                    return;
+                }
+            }
+
+            for (let i = departureDateIndex - 1; i >= 0; i--) {
+                let indexDate = new Date (calendarDates[i].__vue__._props.dateYear, calendarDates[i].__vue__._props.dateMonth, calendarDates[i].__vue__._props.dateDate);
+                if (+indexDate === +departureDate) {
+                    calendarDates[i].classList.add('departure-date');
+                    return;
+                }
+            }
+        },
+        /*displayRange() {
+            let calendarDates = Array.from(document.querySelectorAll('.calendar-date'));
+
+            calendarDates = calendarDates.filter(node => {
+                if (!node.classList.contains('.invalid-date') && !node.classList.contains('booked')) {
+                    return node;
+                }
+            })
+
+            for (let i = 0; i < calendarDates.length; i++) {
+                let indexDate = new Date (calendarDates[i].__vue__._props.dateYear, calendarDates[i].__vue__._props.dateMonth, calendarDates[i].__vue__._props.dateDate);
+                if (indexDate === this.arrivalDateObject) {
+                    calendarDates[i].classList.add('arrival-date-proxy');
+                } 
+                else if (indexDate > this.arrivalDateObject && indexDate < this.departureDateObject) {
+                    calendarDates[i].classList.add('date-range');
+                } 
+                else if (indexDate === this.departureDateObject) {
+                    calendarDates[i].classList.add('departure-date-proxy');
+                }
+            }
+
+        },*/
+        removeDepartureDate() {
+            let departureDates = document.querySelectorAll('.departure-date');
+            for (let i = 0; i < departureDates.length; i++) {
+                departureDates[i].classList.remove('departure-date');
+            }
+            this.bookingFormData.departureDate = '';
+            this.departureDateString = '';
+            this.departureDateObject = undefined;
+            this.invalidDates = [];
+        },
+        refreshDateRange(element) {
+            this.invalidDates = [];
+            let calendarDates = Array.from(document.querySelectorAll('.calendar-date'));
+            let arrivalIndex = calendarDates.indexOf(element);
+            let arrivalDate = new Date(element.__vue__._props.dateYear, element.__vue__._props.dateMonth, element.__vue__._props.dateDate);
+
+            let upperBound;
+            let upperBoundDate;
+            let validDate = true;
+            for (let i = arrivalIndex; i < calendarDates.length; i++) {
+                let indexDate = new Date (calendarDates[i].__vue__._props.dateYear, calendarDates[i].__vue__._props.dateMonth, calendarDates[i].__vue__._props.dateDate);
+                if (calendarDates[i].classList.contains('booked') && !validDate) {
+                    upperBound = calendarDates[i];
+                    upperBoundDate = new Date (upperBound.__vue__._props.dateYear, upperBound.__vue__._props.dateMonth, upperBound.__vue__._props.dateDate);
+                    validDate = false;
+                }
+                if (+indexDate === +arrivalDate) {
+                    calendarDates[i].classList.add('arrival-date');
+                }
+                else if (!validDate) {
+                    if (indexDate >= upperBoundDate) {
+                        this.invalidDates.push(calendarDates[i]);
+                    } 
+                }
+                if (indexDate < arrivalDate) {
+                    this.invalidDates.push(calendarDates[i]);
+                }
+            }
+
+            for (let i = arrivalIndex - 1; i >= 0; i--) {
+                let indexDate = new Date (calendarDates[i].__vue__._props.dateYear, calendarDates[i].__vue__._props.dateMonth, calendarDates[i].__vue__._props.dateDate);
+                if (indexDate < arrivalDate) {
+                    this.invalidDates.push(calendarDates[i]);
+                } 
+                else if (+indexDate === +arrivalDate) {
+                    calendarDates[i].classList.add('arrival-date');
+                }
+            }
+        },
+        isValidRange() {
+            let calendarDates = Array.from(document.querySelectorAll('.calendar-date'));
+            let arrivalIndex = calendarDates.indexOf(document.querySelectorAll('.arrival-date')[0]);
+            let departureIndex = calendarDates.indexOf(document.querySelectorAll('.departure-date')[0]);
+
+            for (let i = arrivalIndex; i <= departureIndex; i++) {
+                if (calendarDates[i].classList.contains('invalid-date') || calendarDates[i].classList.contains('booked')) {
+                    return false;
+                }
+            } 
+            return true;
+
+        },      
+        hideInvalidDates() {
+            for (let i = 0; i < this.invalidDates.length; i++) {
+                this.invalidDates[i].classList.remove('invalid-date');
+            }
+        },
+        showInvalidDates() {
+            for (let i = 0; i < this.invalidDates.length; i++) {
+                this.invalidDates[i].classList.add('invalid-date');
+            }
+        },
+        arrivalDateFocus() {
+            document.querySelector('#departure-date').classList.remove('focused');
+            document.querySelector('#departure-date').parentElement.classList.remove('focused');
+
+            document.querySelector('#arrival-date').classList.add('focused');
+            document.querySelector('#arrival-date').parentElement.classList.add('focused');
+            
+
+            this.calendarSelector = 'arrival';
+            this.hideInvalidDates();
+        },
+        arrivalDateBlur() {
+            document.querySelector('#arrival-date').classList.remove('focused');
+            document.querySelector('#arrival-date').parentElement.classList.remove('focused');
+        },
+        departureDateFocus() {
+            document.querySelector('#arrival-date').classList.remove('focused');
+            document.querySelector('#arrival-date').parentElement.classList.remove('focused');
+
+            document.querySelector('#departure-date').classList.add('focused');
+            document.querySelector('#departure-date').parentElement.classList.add('focused');
+
+            this.calendarSelector = 'departure';
+            this.showInvalidDates();
+        },
+        departureDateBlur() {
+            document.querySelector('#departure-date').classList.remove('focused');
+            document.querySelector('#departure-date').parentElement.classList.remove('focused');
+        },
+        calculatePrice() {
 
         },
-        selectDate(element, date) {
+        /*selectDate(element, date) {
             if (element.classList.contains('available')) {
                 if (this.calendarSelector === 'arrival') {
                     if (document.querySelector('.arrival-date')) {
@@ -560,19 +765,11 @@ const vm = new Vue({
                     } 
                 }
             }  
-        },
+        },*/
         bookingProceed() {
             
         },
         //----------------- BOOKING FORM ---------------------------//
-        arrivalDateFocus(e) {
-            document.querySelector('.calendar').scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
-            this.calendarSelector = 'arrival';
-        },
-        departureDateFocus(e) {
-            document.querySelector('.calendar').scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
-            this.calendarSelector = 'departure';
-        },
 
         inputFocus(e) {
             e.target.classList.add('focused');
