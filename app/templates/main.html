@@ -146,30 +146,30 @@
 
                     </div>
 
-                    <div class="date-fields">
+                    <form>
+                        {{ booking_form.hidden_tag() }}
+                        <div class="date-fields">
 
-                        <div class="input-container focused">
-                            <label for="arrival-date">Arrival Date</label>
-                            <input id="arrival-date" class="focused" v-model="bookingFormData.arrivalDate" type="text" required v-on:focus="arrivalDateFocus()" v-on:blur="arrivalDateBlur()" readonly/>      
+                            <div class="input-container focused">
+                                <label for="arrival-date">Arrival Date</label>
+                                <input id="arrival-date" class="focused" v-model="bookingFormData.arrivalDate" type="text" required v-on:focus="arrivalDateFocus()" v-on:blur="arrivalDateBlur()" readonly/>      
+                            </div>
+
+                            <div class="input-container">
+                                <label for="departure-date">Departure Date</label>
+                                <input id="departure-date" v-model="bookingFormData.departureDate" type="text" required v-on:focus="departureDateFocus()" v-on:blur="departureDateBlur()" readonly/>
+                            </div>
+
                         </div>
-
-                        <div class="input-container">
-                            <label for="departure-date">Departure Date</label>
-                            <input id="departure-date" v-model="bookingFormData.departureDate" type="text" required v-on:focus="departureDateFocus()" v-on:blur="departureDateBlur()" readonly/>
-                        </div>
-
-                    </div>
+                    </form>
+                    
 
                 </div>
                 
-                <div class="lower-page-slide">
+            </section>
+            <div class="lower-page-slide">
                     <form class="booking-form">
                         {{ booking_form.hidden_tag() }}
-
-                        
-                        
-
-                        
 
                         <div class="party-container">
 
@@ -177,36 +177,36 @@
                                 <label for="adults"><h5>Adults</h5>Ages 13 or above</label>
 
                                 <div class="party-input" id="adults">
-                                    <button type="button">-</button>
+                                    <button type="button" v-on:click="adultsDecrease()">-</button>
                                     <div>&#60;% bookingFormData.adults %></div>
-                                    <button type="button">+</button>
+                                    <button type="button" v-on:click="adultsIncrease()">+</button>
                                 </div>
                             </div>
 
                             <div class="party-input-container">
                                 <label for="children"><h5>Children</h5>Ages 2-12</label>
                                 <div class="party-input" id="children">
-                                    <button type="button">-</button>
+                                    <button type="button" v-on:click="childrenDecrease()">-</button>
                                     <div>&#60;% bookingFormData.children %></div>
-                                    <button type="button">+</button>
+                                    <button type="button" v-on:click="childrenIncrease()">+</button>
                                 </div>
                             </div>
 
                             <div class="party-input-container">
                                 <label for="infants"><h5>Infants</h5>Under 2</label>
                                 <div class="party-input" id="infants">
-                                    <button type="button">-</button>
+                                    <button type="button" v-on:click="infantsDecrease()">-</button>
                                     <div>&#60;% bookingFormData.infants %></div>
-                                    <button type="button">+</button>
+                                    <button type="button" v-on:click="infantsIncrease()">+</button>
                                 </div>
                             </div>
 
                             <div class="party-input-container">
                                 <label for="dogs"><h5>Dogs</h5>£20 each</label>
                                 <div class="party-input" id="dogs">
-                                    <button type="button">-</button>
+                                    <button type="button" v-on:click="dogsDecrease()">-</button>
                                     <div>&#60;% bookingFormData.dogs %></div>
-                                    <button type="button">+</button>
+                                    <button type="button" v-on:click="dogsIncrease()">+</button>
                                 </div>
                             </div>
                             
@@ -239,17 +239,17 @@
                         </div>
 
                         <div class="booking-box">
-                            <div>Please select arrival date from calendar</div>
-                            <div>Arrival Date: &#60;% arrivalDateString %></div>
-                            <div>Departure Date: &#60;% departureDateString %></div>
                             <div>Price: &#60;% bookingFormData.price %></div>
-                            <button type="button" v-on:click="bookingProceed()">PROCEED WITH BOOKING</button>
+                            <div class="booking-box-buttons">
+                                <button type="button" v-on:click="bookingBack()">V</button>
+                                <button type="button" v-on:click="bookingProceed()">PROCEED WITH BOOKING</button>
+                            </div>
+                            
                         </div>
                     
                     <form>
 
                 </div>
-            </section>
                 
         </div>
          
