@@ -17,6 +17,24 @@ window.addEventListener('load', function() {
     });
     
     var calendarSwiper;
+
+    let pageSlide = 0;
+    document.querySelector('.checkout-container').addEventListener('transitionend', () => {
+        if (pageSlide === 0) {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+            setTimeout( () => {
+                document.querySelector('.checkout-container').classList.add('open');
+                setTimeout( () => {
+                    document.querySelector('.content-wrapper').classList.add('closed');
+                }, 10)
+            }, 10);
+            pageSlide = 1;
+        } 
+        else if (pageSlide === 1) {
+            pageSlide = 0;
+        }
+    })
 })
 
 // corrects hero image size, as most mobile browsers have inconsistent viewport dimensions
@@ -204,6 +222,11 @@ const vm = new Vue({
             name: '',
             emailAddress: '',
             phoneNumber: '',
+            addressLine1: '',
+            addressLine2: '',
+            townOrCity: '',
+            countyOrRegion: '',
+            postcode: '',
             price: 0
         },
 
@@ -214,25 +237,37 @@ const vm = new Vue({
             phoneNumber: '',
             message: ''
         },
+        
+        //calendar load settings
+        currentDate: new Date(),
+        currentYear: new Date().getFullYear(),
+        currentMonth: new Date().getMonth(),
+        calendarRange: 18,
+        slideCount: 0,
+        //calendar select date parameters
+        calendarSelector: 'arrival',
+        invalidDates: [],
+        //additional date formats
         arrivalDateString: '',
         arrivalDateObject: undefined,
         departureDateString: '',
         departureDateObject: undefined,
-        currentDate: new Date(),
-        currentYear: new Date().getFullYear(),
-        currentMonth: new Date().getMonth(),
-        slideCount: 0,
-        calendarRange: 18,
-        calendarShow: false,
-        calendarSelector: 'arrival',
-        invalidDates: [],
         //side menu open parameters
         scrollY: 0,
         scrimClose: false,
         initialX: undefined,
         offsetX: undefined,
         //gallery 
-        gallerySlideCount: 1
+        gallerySlideCount: 1,
+        //party settings
+        partyMax: 5,
+        infantsMax: 5,
+        dogsMax: 1,
+        pricePerDog: 20,
+        //page-wrapper
+        pageSlide: 0,
+        checkoutScrollTop: 0
+
     },
     computed: {
         selectedMonth: function () {
@@ -241,6 +276,13 @@ const vm = new Vue({
     },
     methods: {
         //-------------------- NAVBAR METHODS ------------------------//
+        hamburgerAction() {
+            if (!document.querySelector('.hamburger').classList.contains('back')) {
+                this.toggleSideMenu();
+            } else {
+                this.bookingBack();
+            }
+        },
         toggleSideMenu() {  
             //toggles side menu
             const navLinks = document.querySelector('.nav-links');
@@ -373,7 +415,7 @@ const vm = new Vue({
         toggleFullscreenGallery() {
         },
 
-        //-------------------COTTAGE NAV-----------------//
+        //-------------------COTTAGE NAV------------------------//
         showOverview() {
             document.querySelector('.overview-cottage-nav').classList.add('active-cottage-link');
             document.querySelector('.facilities-cottage-nav').classList.remove('active-cottage-link');
@@ -402,8 +444,8 @@ const vm = new Vue({
             document.querySelector('.location').style.display = 'block';
         },
 
-        //--------------- CALENDAR ---------------------------//
-        //---------calendar months loading----//
+        //--------------- CALENDAR ------------------------------------------//
+        //---------calendar initiation-----------------------//
 
         calendarValues(year, month) { //populates calendar
 
@@ -601,9 +643,7 @@ const vm = new Vue({
                         }
                     }
                 }
-                
             }
-
         },
         displayDateRange() {
             let calendarDateDays = Array.from(document.querySelectorAll('.days'));
@@ -734,49 +774,82 @@ const vm = new Vue({
             document.querySelector('#departure-date').classList.remove('focused');
             document.querySelector('#departure-date').parentElement.classList.remove('focused');
         },
+        //-----------------------BOOKING BOX ---------------------//
         calculatePrice() {
 
         },
         bookingProceed() {
-            document.querySelector('.lower-page-slide').addEventListener('transitionend', () => {
-                if (!document.querySelector('.lower-page-slide').classList.contains('open')) {
-                    document.querySelector('.lower-page-slide').classList.add('open');
-                } else {
-                    document.querySelector('.lower-page-slide').style.position = 'absolute';
-                    document.querySelector('.lower-page-slide').classList.remove('open');
-                }
-            })
-            document.querySelector('.lower-page-slide').style.transform = 'translate3d(0, 0, 0)';
-            document.querySelector('.lower-page-slide').style.position = 'relative';
+            document.querySelector('.checkout-container').classList.remove('closed');
+            this.checkoutScrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            //transitionend event
+
+            document.querySelector('.hamburger').classList.add('back');
+            document.querySelector('.navbar button').classList.add('hidden');
         },  
         bookingBack() {
-            document.querySelector('.lower-page-slide').style.transform = 'translate3d(0, -472px, 0)';
+            
+            document.querySelector('.content-wrapper').classList.remove('closed');
+            document.querySelector('.checkout-container').classList.remove('open');
+            document.querySelector('.checkout-container').classList.add('closed');
+
+            document.documentElement.scrollTop = this.checkoutScrollTop;
+            document.body.scrollTop = this.checkoutScrollTop;
+
+            document.querySelector('.hamburger').classList.remove('back');
+            document.querySelector('.navbar button').classList.remove('hidden');
         },
-        //----------------- BOOKING FORM ---------------------------//
+        //----------------- BOOKING FORM (main)------------------------------------//
         //---------------PARTY INPUTS-------------------//
         adultsDecrease() {
-            console.log('adultsDecrease');
+            if (this.bookingFormData.adults > 0) {
+                this.bookingFormData.adults--;
+                document.querySelector('#adults div').classList.remove('active');
+            }
         },
         adultsIncrease() {
-            console.log('adultsIncrease');
+            if (this.bookingFormData.adults + this.bookingFormData.children < this.partyMax) {
+                this.bookingFormData.adults++;
+            }
+            document.querySelector('#adults div').classList.add('active');
         },
         childrenDecrease() {
+            if (this.bookingFormData.children > 0) {
+                this.bookingFormData.children--;
+                document.querySelector('#children div').classList.remove('active');
+            }
         },
         childrenIncrease() {
-
+            if (this.bookingFormData.children + this.bookingFormData.adults < this.partyMax) {
+                this.bookingFormData.children++;
+            }
+            document.querySelector('#children div').classList.add('active');
         },
         infantsDecrease() {
-
+            if (this.bookingFormData.infants > 0) {
+                this.bookingFormData.infants--;
+                document.querySelector('#infants div').classList.remove('active');
+            }
         },
         infantsIncrease() {
-
+            if (this.bookingFormData.infants < this.infantsMax) {
+                this.bookingFormData.infants++;
+            }
+            document.querySelector('#infants div').classList.add('active');
         },
         dogsDecrease() {
-
+            if (this.bookingFormData.dogs > 0) {
+                this.bookingFormData.dogs--;
+                document.querySelector('#dogs div').classList.remove('active');
+            }
         },
         dogsIncrease() {
-
+            if (this.bookingFormData.dogs < this.dogsMax) {
+                this.bookingFormData.dogs++;
+            }
+            document.querySelector('#dogs div').classList.add('active');
         },
+
+        //-----------personal details//
         inputFocus(e) {
             e.target.classList.add('focused');
             e.target.classList.remove('activated');

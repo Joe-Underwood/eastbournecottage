@@ -13,9 +13,10 @@
 
 <body>
     <div id="root">
+
         <!--=============  NAVIGATION  ================-->
         <nav class="navbar">
-            <div class="hamburger-container" v-on:click="toggleSideMenu()">
+            <div class="hamburger-container" v-on:click="hamburgerAction()">
                 <div ref="hamburger" class="hamburger">
                     <span v-for="i in 3"></span>
                 </div>
@@ -41,217 +42,260 @@
                 <div>Contact Us</div>
             </div>
         </div>
-        
-        <!--==============  HERO AREA  =============-->
-        <div class="content-wrapper">
-            <header class="hero-area">
-                <img src="../static/cottage-02.jpg" />
-                <div class="hero-message">
-                    <h1>WELCOME TO</h1>
-                    <h1>The Cottage</h1>
-                    <p>A cosy holiday cottage situated in the seaside town of Eastbourne</p>
-                    <button>BOOK YOUR STAY</button>
-                </div>
-            </header>
-            <section class="cottage">
 
-                <div class="gallery">
-                    <div class="swiper-container gallery-swiper">
-                        <div class="swiper-wrapper">
-                            <img class="swiper-slide" src="../static/01-lounge.jpg" />
-                            <img class="swiper-slide" src="../static/02-lounge.jpg" />
-                            <img class="swiper-slide" src="../static/03-dining.jpg" />
-                            <img class="swiper-slide" src="../static/04-dining.jpg" />
-                            <img class="swiper-slide" src="../static/05-kitchen.jpg" />
-                            <img class="swiper-slide" src="../static/06-stairs.jpg" />
-                            <img class="swiper-slide" src="../static/07-master.jpg" />
-                            <img class="swiper-slide" src="../static/08-twin.jpg" />
-                            <img class="swiper-slide" src="../static/09-single.jpg" />
-                            <img class="swiper-slide" src="../static/10-bathroom.jpg" />
-                            <img class="swiper-slide" src="../static/11-garden.jpg" />
-                            <img class="swiper-slide" src="../static/12-gardens.jpg" />
-                            <img class="swiper-slide" src="../static/13-gardens.jpg" />
-                            <img class="swiper-slide" src="../static/14-front-o.jpg" />
-                        </div>  
-                        <div class="fullscreen-toggle" v-on:click="toggleFullscreenGallery()">+</div>
-                        <div class="swiper-pagination gallery-pagination"></div>
-                        <div class="swiper-button-prev"></div>
-                        <div class="swiper-button-next"></div>
-                    </div>
-                </div>
+        <!--===============  OVERLAY ===============-->
+        <div class="page-wrapper">
+            <div class="checkout-container closed">
+                <h4>Step 1 of 3</h4>
+                <h2>Personal Details</h2>
+                <form class="booking-form">
+                    {{ booking_form.hidden_tag() }}
 
-                <nav class="cottage-nav">
-                    <ul class="cottage-nav-links">
-                        <li class="overview-cottage-nav active-cottage-link" v-on:click="showOverview()">OVERVIEW</li>
-                        <li class="facilities-cottage-nav" v-on:click="showFacilities()">FACILITIES</li>
-                        <li class="location-cottage-nav" v-on:click="showLocation()">LOCATION</li>
-                    </ul>
-                </nav>
+                    <div class="input-container">
+                        <label for="name">Full Name</label>
+                        <input id="name" v-model="bookingFormData.name" type="text" required v-on:focus="inputFocus($event)" v-on:blur="inputBlur($event)"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="clear-icon" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path class="done-icon" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path class="error-icon" d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>
 
-                <div class="cottage-content">
-                    <div class="overview">overview</div>
-                    <div class="facilities">facilities</div>
-                    <div class="location">
-
-                        <div class="map-container">
-                            <iframe width='100%' height='100%' id='mapcanvas' src="https://maps.google.com/maps?q=the%20village,%20meads,%20eastbourne&amp;t=&amp;z=12&amp;ie=UTF8&amp;iwloc=&amp;output=embed" frameborder='0' scrolling='no' marginheight='0' marginwidth='0'>
-                                <div style='overflow:hidden;'>
-                                    <div id='gmap_canvas' style='height:100%;width:100%;'></div>
-                                </div>
-                            </iframe>
-                        </div>
-
-                        <div class="location-nearby">
-                            <h2>Nearby</h2>
-                            <ul class="nearby-list">
-                                <li>Holywell Shore (Beach) 0.5 miles</li>
-                                <li>Towner Art Gallery 1 mile</li>
-                                <li>Eastbourne Bandstand 1.3 miles</li>
-                                <li>Eastbourne Pier 1.5 miles</li>
-                                <li>Beachy Head 1.6 miles</li>
-                                <li>Redoubt Fortress 2.1 miles</li>
-                            </ul>
-                        </div>
 
                     </div>
-                </div>
 
-            </section>
+                    <div class="input-container">
+                        <label for="email-address">Email Address</label>
+                        <input id="email-address" v-model="bookingFormData.emailAddress" type="email" required v-on:focus="inputFocus($event)" v-on:blur="inputBlur($event)"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="clear-icon" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path class="done-icon" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path class="error-icon" d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>
+                    </div>
 
-            <section class="booking">
-                <div class="booking-content">
-                    <h2>Availability &amp; Booking</h2>
-                    <div class="calendar">
-                        
-                        <div class="calendar-controls">
-                            <div class="prev-month">&#60;</div>
-                            <div class="current-month">&#60;% selectedMonth.toLocaleString('default', { month: 'long' }) %> &#60;% selectedMonth.getFullYear() %></div>
-                            <div class="next-month">&#62;</div>
-                        </div>
+                    <div class="input-container">
+                        <label for="phone-number">Phone Number</label>
+                        <input id="phone-number" v-model="bookingFormData.phoneNumber" type="tel" required v-on:focus="inputFocus($event)" v-on:blur="inputBlur($event)"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="clear-icon" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path class="done-icon" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path class="error-icon" d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>
+                    </div>
 
-                        <ul class="calendar-weekdays">
-                            <li>Mo</li>
-                            <li>Tu</li>
-                            <li>We</li>
-                            <li>Th</li>
-                            <li>Fr</li>
-                            <li>Sa</li>
-                            <li>Su</li>
-                        </ul>
-                        
-                        <div class="swiper-container calendar-swiper">
+                    <div class="input-container">
+                        <label for="address-line-1">Address Line 1</label>
+                        <input id="address-line-1" v-model="bookingFormData.addressLine1" type="text" required />
+                    </div>
+
+                    <div class="input-container">
+                        <label for="address-line-2">Address Line 2 (Optional)</label>
+                        <input id="address-line-2" v-model="bookingFormData.addressLine2" type="text" />
+                    </div>
+
+                    <div class="input-container">
+                        <label for="town-or-city">Town / City</label>
+                        <input id="town-or-city" v-model="bookingFormData.townOrCity" type="text" required />
+                    </div>
+
+                    <div class="input-container">
+                        <label for="county-or-region">County / Region</label>
+                        <input id="county-or-region" v-model="bookingFormData.countyOrRegion" type="text" required />
+                    </div>
+
+                    <div class="input-container">
+                        <label for="postcode">Postcode / Zip</label>
+                        <input id="postcode" v-model="bookingFormData.postcode" type="text" required />
+                    </div>
+
+                    
+                    
+                <form>
+            </div>
+
+            
+            
+            <!--==============  HERO AREA  =============-->
+            <div class="content-wrapper">
+                <header class="hero-area">
+                    <img src="../static/cottage-02.jpg" />
+                    <div class="hero-message">
+                        <h1>WELCOME TO</h1>
+                        <h1>The Cottage</h1>
+                        <p>A cosy holiday cottage situated in the seaside town of Eastbourne</p>
+                        <button>BOOK YOUR STAY</button>
+                    </div>
+                </header>
+                <section class="cottage">
+
+                    <div class="gallery">
+                        <div class="swiper-container gallery-swiper">
                             <div class="swiper-wrapper">
-                            </div>
-                        </div> 
-
+                                <img class="swiper-slide" src="../static/01-lounge.jpg" />
+                                <img class="swiper-slide" src="../static/02-lounge.jpg" />
+                                <img class="swiper-slide" src="../static/03-dining.jpg" />
+                                <img class="swiper-slide" src="../static/04-dining.jpg" />
+                                <img class="swiper-slide" src="../static/05-kitchen.jpg" />
+                                <img class="swiper-slide" src="../static/06-stairs.jpg" />
+                                <img class="swiper-slide" src="../static/07-master.jpg" />
+                                <img class="swiper-slide" src="../static/08-twin.jpg" />
+                                <img class="swiper-slide" src="../static/09-single.jpg" />
+                                <img class="swiper-slide" src="../static/10-bathroom.jpg" />
+                                <img class="swiper-slide" src="../static/11-garden.jpg" />
+                                <img class="swiper-slide" src="../static/12-gardens.jpg" />
+                                <img class="swiper-slide" src="../static/13-gardens.jpg" />
+                                <img class="swiper-slide" src="../static/14-front-o.jpg" />
+                            </div>  
+                            <div class="fullscreen-toggle" v-on:click="toggleFullscreenGallery()">+</div>
+                            <div class="swiper-pagination gallery-pagination"></div>
+                            <div class="swiper-button-prev"></div>
+                            <div class="swiper-button-next"></div>
+                        </div>
                     </div>
 
-                    <form>
-                        {{ booking_form.hidden_tag() }}
-                        <div class="date-fields">
+                    <nav class="cottage-nav">
+                        <ul class="cottage-nav-links">
+                            <li class="overview-cottage-nav active-cottage-link" v-on:click="showOverview()">OVERVIEW</li>
+                            <li class="facilities-cottage-nav" v-on:click="showFacilities()">FACILITIES</li>
+                            <li class="location-cottage-nav" v-on:click="showLocation()">LOCATION</li>
+                        </ul>
+                    </nav>
 
-                            <div class="input-container focused">
-                                <label for="arrival-date">Arrival Date</label>
-                                <input id="arrival-date" class="focused" v-model="bookingFormData.arrivalDate" type="text" required v-on:focus="arrivalDateFocus()" v-on:blur="arrivalDateBlur()" readonly/>      
+                    <div class="cottage-content">
+                        <div class="overview">overview</div>
+                        <div class="facilities">facilities</div>
+                        <div class="location">
+
+                            <div class="map-container">
+                                <iframe width='100%' height='100%' id='mapcanvas' src="https://maps.google.com/maps?q=the%20village,%20meads,%20eastbourne&amp;t=&amp;z=12&amp;ie=UTF8&amp;iwloc=&amp;output=embed" frameborder='0' scrolling='no' marginheight='0' marginwidth='0'>
+                                    <div style='overflow:hidden;'>
+                                        <div id='gmap_canvas' style='height:100%;width:100%;'></div>
+                                    </div>
+                                </iframe>
                             </div>
 
-                            <div class="input-container">
-                                <label for="departure-date">Departure Date</label>
-                                <input id="departure-date" v-model="bookingFormData.departureDate" type="text" required v-on:focus="departureDateFocus()" v-on:blur="departureDateBlur()" readonly/>
+                            <div class="location-nearby">
+                                <h2>Nearby</h2>
+                                <ul class="nearby-list">
+                                    <li>Holywell Shore (Beach) 0.5 miles</li>
+                                    <li>Towner Art Gallery 1 mile</li>
+                                    <li>Eastbourne Bandstand 1.3 miles</li>
+                                    <li>Eastbourne Pier 1.5 miles</li>
+                                    <li>Beachy Head 1.6 miles</li>
+                                    <li>Redoubt Fortress 2.1 miles</li>
+                                </ul>
                             </div>
 
                         </div>
-                    </form>
-                    
+                    </div>
 
-                </div>
-                
-            </section>
-            <div class="lower-page-slide">
-                    <form class="booking-form">
-                        {{ booking_form.hidden_tag() }}
+                </section>
 
-                        <div class="party-container">
+                <section class="booking">
+                    <div class="booking-content">
+                        <h2>Availability &amp; Booking</h2>
+                        <div class="price-list">
+                            <h3>Price List</h3>
+                            <div class="price-list-container">
 
-                            <div class="party-input-container">
-                                <label for="adults"><h5>Adults</h5>Ages 13 or above</label>
-
-                                <div class="party-input" id="adults">
-                                    <button type="button" v-on:click="adultsDecrease()">-</button>
-                                    <div>&#60;% bookingFormData.adults %></div>
-                                    <button type="button" v-on:click="adultsIncrease()">+</button>
-                                </div>
                             </div>
-
-                            <div class="party-input-container">
-                                <label for="children"><h5>Children</h5>Ages 2-12</label>
-                                <div class="party-input" id="children">
-                                    <button type="button" v-on:click="childrenDecrease()">-</button>
-                                    <div>&#60;% bookingFormData.children %></div>
-                                    <button type="button" v-on:click="childrenIncrease()">+</button>
-                                </div>
-                            </div>
-
-                            <div class="party-input-container">
-                                <label for="infants"><h5>Infants</h5>Under 2</label>
-                                <div class="party-input" id="infants">
-                                    <button type="button" v-on:click="infantsDecrease()">-</button>
-                                    <div>&#60;% bookingFormData.infants %></div>
-                                    <button type="button" v-on:click="infantsIncrease()">+</button>
-                                </div>
-                            </div>
-
-                            <div class="party-input-container">
-                                <label for="dogs"><h5>Dogs</h5>£20 each</label>
-                                <div class="party-input" id="dogs">
-                                    <button type="button" v-on:click="dogsDecrease()">-</button>
-                                    <div>&#60;% bookingFormData.dogs %></div>
-                                    <button type="button" v-on:click="dogsIncrease()">+</button>
-                                </div>
-                            </div>
+                        </div>
+                        <div class="calendar">
                             
-                        </div>
-
-                        <div class="input-container">
-                            <label for="name">Full Name</label>
-                            <input id="name" v-model="bookingFormData.name" type="text" required v-on:focus="inputFocus($event)" v-on:blur="inputBlur($event)"/>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="clear-icon" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path class="done-icon" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path class="error-icon" d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>
-
-
-                        </div>
-
-                        <div class="input-container">
-                            <label for="email-address">Email Address</label>
-                            <input id="email-address" v-model="bookingFormData.emailAddress" type="email" required v-on:focus="inputFocus($event)" v-on:blur="inputBlur($event)"/>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="clear-icon" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path class="done-icon" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path class="error-icon" d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>
-                        </div>
-
-                        <div class="input-container">
-                            <label for="phone-number">Phone Number</label>
-                            <input id="phone-number" v-model="bookingFormData.phoneNumber" type="tel" required v-on:focus="inputFocus($event)" v-on:blur="inputBlur($event)"/>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="clear-icon" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path class="done-icon" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path class="error-icon" d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>
-                        </div>
-
-                        <div class="booking-box">
-                            <div>Price: &#60;% bookingFormData.price %></div>
-                            <div class="booking-box-buttons">
-                                <button type="button" v-on:click="bookingBack()">V</button>
-                                <button type="button" v-on:click="bookingProceed()">PROCEED WITH BOOKING</button>
+                            <div class="calendar-controls">
+                                <div class="prev-month">&#60;</div>
+                                <div class="current-month">&#60;% selectedMonth.toLocaleString('default', { month: 'long' }) %> &#60;% selectedMonth.getFullYear() %></div>
+                                <div class="next-month">&#62;</div>
                             </div>
-                            
-                        </div>
-                    
-                    <form>
 
-                </div>
+                            <ul class="calendar-weekdays">
+                                <li>Mo</li>
+                                <li>Tu</li>
+                                <li>We</li>
+                                <li>Th</li>
+                                <li>Fr</li>
+                                <li>Sa</li>
+                                <li>Su</li>
+                            </ul>
+                            
+                            <div class="swiper-container calendar-swiper">
+                                <div class="swiper-wrapper">
+                                </div>
+                            </div> 
+
+                        </div>
+
+                        <form>
+                            {{ booking_form.hidden_tag() }}
+                            <div class="date-fields">
+
+                                <div class="input-container focused">
+                                    <label for="arrival-date">Arrival Date</label>
+                                    <input id="arrival-date" class="focused" v-model="bookingFormData.arrivalDate" type="text" required v-on:focus="arrivalDateFocus()" v-on:blur="arrivalDateBlur()" readonly/>      
+                                </div>
+
+                                <div class="input-container">
+                                    <label for="departure-date">Departure Date</label>
+                                    <input id="departure-date" v-model="bookingFormData.departureDate" type="text" required v-on:focus="departureDateFocus()" v-on:blur="departureDateBlur()" readonly/>
+                                </div>
+
+                                
+
+                            </div>
+
+                            <div class="party-container">
+
+                                <div class="party-input-container">
+                                    <label for="adults"><h5>Adults</h5>Ages 13 or above</label>
+
+                                    <div class="party-input" id="adults">
+                                        <button type="button" v-on:click="adultsDecrease()">-</button>
+                                        <div>&#60;% bookingFormData.adults %></div>
+                                        <button type="button" v-on:click="adultsIncrease()">+</button>
+                                    </div>
+                                </div>
+
+                                <div class="party-input-container">
+                                    <label for="children"><h5>Children</h5>Ages 2-12</label>
+                                    <div class="party-input" id="children">
+                                        <button type="button" v-on:click="childrenDecrease()">-</button>
+                                        <div>&#60;% bookingFormData.children %></div>
+                                        <button type="button" v-on:click="childrenIncrease()">+</button>
+                                    </div>
+                                </div>
+
+                                <div class="party-input-container">
+                                    <label for="infants"><h5>Infants</h5>Under 2</label>
+                                    <div class="party-input" id="infants">
+                                        <button type="button" v-on:click="infantsDecrease()">-</button>
+                                        <div>&#60;% bookingFormData.infants %></div>
+                                        <button type="button" v-on:click="infantsIncrease()">+</button>
+                                    </div>
+                                </div>
+
+                                <div class="party-input-container">
+                                    <label for="dogs"><h5>Dogs</h5>£20 each</label>
+                                    <div class="party-input" id="dogs">
+                                        <button type="button" v-on:click="dogsDecrease()">-</button>
+                                        <div>&#60;% bookingFormData.dogs %></div>
+                                        <button type="button" v-on:click="dogsIncrease()">+</button>
+                                    </div>
+                                </div>
+                                        
+                            </div>
+
+                            <div class="booking-box">
+                                <div>Price: &#60;% bookingFormData.price %></div>
+                                <div class="booking-box-buttons">
+                                    <button type="button" v-on:click="bookingProceed()">PROCEED WITH BOOKING</button>
+                                </div>          
+                            </div> 
+
+                        </form>
+                        
+
+                    </div>
+                    
+                </section>
                 
+                    
+            </div>
         </div>
+        
          
     </div>
 
