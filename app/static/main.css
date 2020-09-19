@@ -57,6 +57,7 @@ button {
     font-weight: 700;
     height: 36px;
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20); 
+    border-radius: 4px;
 }
 
 h1, h2 {
@@ -187,87 +188,13 @@ input.disabled {
     .booking-form {
         position: relative;
         display: block;
-    }
+    }        
 
-        .party-container {
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            width: 100%;
-        }
-
-            .date-fields {
-                display: flex;
-                position: relative;
-                width: 100%;
-            }
-
-                .date-fields .input-container {
-                    width: calc(50% + 1px);
-                    position: relative;
-                }
-
-                .date-fields .input-container:nth-child(1) {
-                    margin-right: -1px;
-                }
-
-                .date-fields .input-container:nth-child(2) {
-                    margin-left: -1px;
-                }
-
-            .party-input-container {
-                position: relative;
-                display: flex;
-                height: 56px;
-                width: 100%;
-                margin-bottom: 8px;
-            }
-
-                .party-input-container label {
-                    position: relative;
-                }
-
-                .party-input {
-                    display: flex;
-                    position: relative;
-                    margin-left: auto;
-                    justify-content: flex-end;
-                    height: 32px;
-                    margin-top: 8px;
-                }
-
-                    .party-input button {
-                        height: 32px;
-                        width: 32px;
-                        background-color: white;
-                        border-radius: 0;
-                        border: 1px solid #a5c2cf;
-                        font-size: 22px;
-                        text-align: center;
-                        color: rgb(113, 113, 113);
-                        box-shadow: none;
-                    }
-
-                    .party-input div {
-                        line-height: 32px;
-                        height: 32px;
-                        width: 40px;
-                        background-color: white;
-                        border-top: 1px solid #a5c2cf;
-                        border-bottom: 1px solid #a5c2cf;
-                        text-align: center;
-                        color: rgb(113, 113, 113);
-                    }
-
-                    .party-input div.active {
-                        color: rgb(15, 72, 117);
-                    }
-
-        .input-container:nth-child(5) {
+        .input-container:nth-child(4) {
             width: 224px;
         }
 
-        .input-container:nth-child(10) {
+        .input-container:nth-child(9) {
             width: 168px;
         }
 
@@ -302,6 +229,91 @@ input.disabled {
             visibility: visible;
         }
 
+/*--------- PARTY INPUT OVERLAY --------*/
+.party-wrapper {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+    width: 100%;
+    z-index: 5;
+    transition: background-color 0.4s;
+    
+}
+
+.party-wrapper.closed {
+    z-index: -5;
+    transform: translate3d(0, 100%, 0);
+}
+
+.party-wrapper.open {
+    background-color: rgba(0, 0, 0, 0.5);
+    transform: translate3d(0, 0, 0);
+}
+
+    .party-container {
+        background-color: white;
+        padding-left: 16px;
+        padding-right: 16px;
+        transform: translate3d(0, 100%, 0);
+        transition: all 0.2s;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        width: 100%;
+    }
+
+    .party-container.open {
+        transform: translate3d(0, 0, 0);
+    }
+
+        .party-input-container {
+            position: relative;
+            display: flex;
+            height: 56px;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+            .party-input-container label {
+                position: relative;
+            }
+
+            .party-input {
+                display: flex;
+                position: relative;
+                margin-left: auto;
+                justify-content: flex-end;
+                height: 32px;
+                margin-top: 8px;
+            }
+
+                .party-input button {
+                    height: 32px;
+                    width: 32px;
+                    background-color: white;
+                    border: 1px solid #a5c2cf;
+                    font-size: 22px;
+                    text-align: center;
+                    color: rgb(113, 113, 113);
+                    box-shadow: none;
+                }
+
+                .party-input div {
+                    line-height: 32px;
+                    height: 32px;
+                    width: 40px;
+                    background-color: white;
+                    border-top: 1px solid #a5c2cf;
+                    border-bottom: 1px solid #a5c2cf;
+                    text-align: center;
+                    color: rgb(113, 113, 113);
+                }
+
+                .party-input div.active {
+                    color: rgb(15, 72, 117);
+                }
 /*---------------NAVIGATION-----------------*/
 .navbar {
     position: fixed;
@@ -726,6 +738,7 @@ input.disabled {
             position: relative;
             display: block;
             width: 100%;
+            margin-bottom: 32px;
 
         }
 
@@ -741,9 +754,8 @@ input.disabled {
             background-color: white;
             /*box-shadow: 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.20);*/
             border: 1px solid #a5c2cf;
-            border-bottom: none;
             height: 362px;
-            border-radius: 0;
+            border-radius: 4px;
         }
 
             .calendar-controls {
@@ -753,6 +765,7 @@ input.disabled {
                 position: relative;
                 height: 48px;
                 background-color:white;
+                border-radius: 4px;
             }
 
                 .prev-month {
@@ -836,51 +849,56 @@ input.disabled {
                     text-decoration: line-through;
                     color: grey;
                 }
-                .date-range div {
-
-                }
-
-                .prev-days {
-                }
 
                     .prev-days div {
-                        color: grey;
+                        color: grey !important;
                         background-color: white !important;
                     }
-                
-                .next-days {
-                }
 
                     .next-days div {
-                        color: grey;
+                        color: grey !important;
                         background-color: white !important;
                     }
 
                 .booked div {
-                    background-color: red;
+                    background-color: rgb(229, 229, 229);
                     color: white;
+                    text-decoration: none !important;
                 }
 
-                    .booked.next-days div,
-                    .booked.prev-days div {
-                        background-color: rgb(255, 0, 0, 0.5) !important;
-                        color: grey !important;
+                    .booked.prev-days div,
+                    .booked.next-days div {
+                        background-color: rgba(229, 229, 229, 0.5) !important;
                     }
+
 
                 .arrival-date div {
                     position: relative;
-                    background-color: rgb(165,194,207);
-                    border-radius: 100%;
+                    background-color: rgb(15, 72, 117);
+                    color: white;
                 }
+
+                /*.arrival-date div::after {
+                    background-color: #e5e5e5;
+                    content: "";
+                    left: 0;
+                    padding-bottom: 100%;
+                    position: absolute;
+                    top: 0;
+                    transform: skewX(-45deg);
+                    width: 100%;
+                    z-index: 5;
+                    transform-origin: 0 100%;
+                }*/
 
                 .departure-date div {
                     position: relative;
-                    background-color: rgb(165,194,207);
-                    border-radius: 100%;
+                    background-color: rgb(15, 72, 117);
+                    color: white;
                 }
 
                 .date-range {
-                    background-color: rgb(165,194,207)
+                    background-color: rgb(211,222,242);
                 }
 
         .calendar-swiper {
@@ -890,34 +908,91 @@ input.disabled {
             padding-right: 8px;
         }
 
-        .booking-box {
-            margin-top: auto;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            border: 1px solid #a5c2cf;
-            border-radius: 0;
-            /*box-shadow: 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.20);*/
-            background-color: white;
-            padding: 8px;
+        .availability-form {
+
         }
 
-            .booking-box-buttons {
+            .date-fields {
                 display: flex;
+                position: relative;
+                width: 100%;
+                margin-top: 16px;
             }
 
-            .booking-box button:nth-child(1) {
-                opacity: 0.5;
-                background-color: rgb(226, 138, 12);
-                color: white;
-                padding-left: 16px;
-                padding-right: 16px;
-                margin-top: 8px;
-                width: 100%;
-                margin-left: auto;
-                font-size: 12px;
-                line-height: 100%;
-                font-weight: 700;
-                height: 40px;
-                box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20);
+                .date-fields .input-container {
+                    width: calc(50% + 1px);
+                    position: relative;
+                    margin-bottom: -1px;
+                }
+
+                .date-fields .input-container:nth-child(1) {
+                    margin-right: -1px;
+                }
+
+                    #arrival-date {
+                        border-top-left-radius: 4px;
+                    }
+
+                .date-fields .input-container:nth-child(2) {
+                    margin-left: -1px;
+                }
+                    #departure-date {
+                        border-top-right-radius: 4px;
+                    }
+
+                .availability-form #guests {
+                    border-bottom-left-radius: 4px;
+                    border-bottom-right-radius: 4px;
+                }
+
+                #arrival-date,
+                #departure-date,
+                #guests {
+                    height: 56px;
+                    padding-left: 16px;
+                    padding-right: 12px;
+                    padding-top: 20px;
+                    outline: none;
+                    appearance: none;
+                    -webkit-appearance: none;
+                    border: 1px solid #a5c2cf;
+                    background-color: white;
+                    line-height: 36px;
+                }
+
+                #arrival-date.focused,
+                #departure-date.focused,
+                #guests.focused {
+                    border: 2px solid rgb(15, 72, 117);
+                }
+                
+
+        .total-box {
+            margin-top: 16px;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            /*border: 1px solid #a5c2cf;*/
+            border-radius: 0;
+            /*box-shadow: 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.20);*/
+            /*background-color: white;*/
+        }
+
+            .total-box div {
+                font-weight: 800;
             }
+
+        .booking-proceed {
+            background-color: rgb(226, 138, 12);
+            color: white;
+            padding-left: 16px;
+            padding-right: 16px;
+            margin-top: 8px;
+            width: 100%;
+            margin-left: auto;
+            font-size: 12px;
+            line-height: 100%;
+            font-weight: 700;
+            height: 40px;
+            box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20);
+        }

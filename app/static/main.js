@@ -17,24 +17,12 @@ window.addEventListener('load', function() {
     });
     
     var calendarSwiper;
+    let closePartyOverlay = false;
 
-    let pageSlide = 0;
-    document.querySelector('.checkout-container').addEventListener('transitionend', () => {
-        if (pageSlide === 0) {
-            document.body.scrollTop = 0;
-            document.documentElement.scrollTop = 0;
-            setTimeout( () => {
-                document.querySelector('.checkout-container').classList.add('open');
-                setTimeout( () => {
-                    document.querySelector('.content-wrapper').classList.add('closed');
-                }, 10)
-            }, 10);
-            pageSlide = 1;
-        } 
-        else if (pageSlide === 1) {
-            pageSlide = 0;
-        }
-    })
+    
+
+    
+
 })
 
 // corrects hero image size, as most mobile browsers have inconsistent viewport dimensions
@@ -266,12 +254,53 @@ const vm = new Vue({
         pricePerDog: 20,
         //page-wrapper
         pageSlide: 0,
-        checkoutScrollTop: 0
+        checkoutScrollTop: 0,
+        //party-overlay
+        partyScrimClose: false,
+        initialY: undefined,
+        offsetY: undefined
 
     },
     computed: {
         selectedMonth: function () {
             return new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + this.slideCount);
+        },
+        partyString: function () {
+            let guests = this.bookingFormData.adults + this.bookingFormData.children;
+            let partyString = '';
+
+            if (guests === 1) {
+                partyString += `${guests} guest`;
+            } 
+            else if (guests > 1) {
+                partyString += `${guests} guests`;
+            }
+
+            if (this.bookingFormData.infants) {
+                if (guests) {
+                    partyString += ', ';
+                }
+                if (this.bookingFormData.infants === 1) {
+                    partyString += `${this.bookingFormData.infants} infant`;
+                }
+                else if (this.bookingFormData.infants > 1) {
+                    partyString += `${this.bookingFormData.infants} infants`;
+                }
+            } 
+
+            if (this.bookingFormData.dogs) {
+                if (guests || this.bookingFormData.infants) {
+                    partyString += ', ';
+                }
+                if (this.bookingFormData.dogs === 1) {
+                    partyString += `${this.bookingFormData.dogs} dog`;
+                }
+                else if (this.bookingFormData.dogs > 1) {
+                    partyString += `${this.bookingFormData.dogs} dogs`;
+                }
+            }
+
+            return partyString;
         }
     },
     methods: {
@@ -381,6 +410,63 @@ const vm = new Vue({
             this.scrimClose = false;
             this.initialX = undefined;
             this.offsetX = undefined;
+        },
+
+        //------------ PARTY OVERLAY METHODS ----------------------//
+        partyTouchstart(event) {
+            //on touchstart
+            if (document.querySelector('.party-container').contains(event.target)) {
+                this.initialY = event.touches[0].clientY;
+                document.querySelector('.party-container').style.transition = "none"; 
+            } else if (document.querySelector('.party-container').classList.contains('open') && event.target === document.querySelector('.party-wrapper')) {
+                this.partyScrimClose = true;
+                this.initialY = document.querySelector('.party-container').offsetTop;
+                document.querySelector('.party-container').style.transition = "none"; 
+            }
+        },
+        partyTouchmove(event) {
+            //on touchmove, slides menu horizontally based on touch position
+            if (document.querySelector('.party-wrapper').contains(event.target) && document.querySelector('.party-container').classList.contains('open')) {
+                this.partyScrimClose = false;
+                if (!document.querySelector('.navbar').contains(event.target)) {
+                    this.offsetY = event.touches[0].clientY - this.initialY;
+                    if (this.offsetY >= 0) {
+                        document.querySelector('.party-container').style.transform = `translate3d(0, ${this.offsetY}px, 0)`;
+                    }   
+                }
+            }
+        },
+        partyTouchend(event) {
+            //on touchend, calls side menu if conditions are met, else keeps side menu open and resets parameters ready for next touch event
+            if (this.partyScrimClose && document.querySelector('.party-container').classList.contains('open')) {
+                document.querySelector('.party-container').style.transition = 'all 0.2s';
+                let endX = event.changedTouches[0].clientX;
+                let endY = event.changedTouches[0].clientY;
+                if (document.elementFromPoint(endX, endY) === document.querySelector('.party-wrapper')) {
+                    vm.hidePartyOverlay();
+                }
+                this.partyScrimClose = false;
+            }
+            /*else if (document.querySelector('.party-wrapper').contains(event.target) && document.querySelector('.party-container').classList.contains('open')) {
+                document.querySelector('.party-container').style.transition = 'all 0.4s';
+                if (this.offsetY > (document.querySelector('.party-container').clientHeight) / 4) {  
+                    this.hidePartyOverlay();
+                } else {
+                    document.querySelector('.party-container').style.transform = `translate3d(0, 0, 0)`;
+                }
+            }*/
+            else if (document.querySelector('.party-wrapper').contains(event.target) && document.querySelector('.party-container').classList.contains('open')) {
+                document.querySelector('.party-container').style.transition = 'all 0.2s';
+                if (this.offsetY > document.querySelector('.party-container').clientHeight / 4) {
+                    this.hidePartyOverlay();
+                } else {
+                    document.querySelector('.party-container').style.transform = 'translate3d(0, 0, 0)';
+                }
+                
+            }
+            this.partyScrimClose = false;
+            this.initialY = undefined;
+            this.offsetY = undefined;
         },
 
         //------------------- GALLERY METHODS -------------------------------------//
@@ -753,6 +839,9 @@ const vm = new Vue({
             document.querySelector('#arrival-date').classList.add('focused');
             document.querySelector('#arrival-date').parentElement.classList.add('focused');
 
+            document.querySelector('#guests').classList.remove('focused');
+            document.querySelector('#guests').parentElement.classList.remove('focused');
+
             this.calendarSelector = 'arrival';
             this.hideInvalidDates();
         },
@@ -761,11 +850,18 @@ const vm = new Vue({
             document.querySelector('#arrival-date').parentElement.classList.remove('focused');
         },
         departureDateFocus() {
+            if (!this.bookingFormData.arrivalDate && !this.bookingFormData.departureDate) {
+                this.arrivalDateFocus();
+                return;
+            }
             document.querySelector('#arrival-date').classList.remove('focused');
             document.querySelector('#arrival-date').parentElement.classList.remove('focused');
 
             document.querySelector('#departure-date').classList.add('focused');
             document.querySelector('#departure-date').parentElement.classList.add('focused');
+
+            document.querySelector('#guests').classList.remove('focused');
+            document.querySelector('#guests').parentElement.classList.remove('focused');
 
             this.calendarSelector = 'departure';
             this.showInvalidDates();
@@ -773,6 +869,47 @@ const vm = new Vue({
         departureDateBlur() {
             document.querySelector('#departure-date').classList.remove('focused');
             document.querySelector('#departure-date').parentElement.classList.remove('focused');
+        },
+        guestsFocus() {
+            document.querySelector('#guests').classList.add('focused');
+            document.querySelector('#guests').parentElement.classList.add('focused');
+
+            document.querySelector('#arrival-date').classList.remove('focused');
+            document.querySelector('#arrival-date').parentElement.classList.remove('focused');
+
+            document.querySelector('#departure-date').classList.remove('focused');
+            document.querySelector('#departure-date').parentElement.classList.remove('focused');
+        },
+        guestsBlur() {
+            document.querySelector('#guests').classList.remove('focused');
+            document.querySelector('#guests').parentElement.classList.remove('focused');
+        },
+        displayPartyOverlay() {
+            this.guestsFocus();
+
+            document.querySelector('.party-wrapper').classList.remove('closed');
+            document.querySelector('.party-wrapper').classList.add('open');
+            document.querySelector('.party-container').classList.add('open');
+            document.querySelector('.party-container').style.transform = 'translate3d(0, 0, 0)';
+
+            disableBodyScroll(document.querySelector('.party-container'));
+        },
+        hidePartyOverlay() {
+            document.querySelector('#guests').focus();
+            closePartyOverlay = true;
+            document.querySelector('.party-wrapper').classList.remove('open');
+            document.querySelector('.party-container').classList.remove('open');
+            document.querySelector('.party-container').style.transform = 'translate3d(0, 100%, 0)';
+
+            document.querySelector('.party-container').ontransitionend = function() {
+                if (!document.querySelector('.party-wrapper').classList.contains('open') && closePartyOverlay) {
+                    document.querySelector('.party-wrapper').classList.add('closed');
+                    closePartyOverlay = false;
+
+                    document.querySelector('#guests').blur();
+                }
+            }
+            enableBodyScroll(document.querySelector('.party-container'));
         },
         //-----------------------BOOKING BOX ---------------------//
         calculatePrice() {
@@ -782,6 +919,24 @@ const vm = new Vue({
             document.querySelector('.checkout-container').classList.remove('closed');
             this.checkoutScrollTop = document.documentElement.scrollTop || document.body.scrollTop;
             //transitionend event
+            let pageSlide = this.pageSlide;
+            document.querySelector('.checkout-container').ontransitionend = function() {
+                if (pageSlide === 0) {
+                    document.body.scrollTop = 0;
+                    document.documentElement.scrollTop = 0;
+                    setTimeout( () => {
+                        document.querySelector('.checkout-container').classList.add('open');
+                        setTimeout( () => {
+                            document.querySelector('.content-wrapper').classList.add('closed');
+                        }, 5)
+                    }, 5);
+                    pageSlide = 1;
+                } 
+                else if (pageSlide === 1) {
+                    pageSlide = 0;
+                }
+            }
+            this.pageSlide = pageSlide;
 
             document.querySelector('.hamburger').classList.add('back');
             document.querySelector('.navbar button').classList.add('hidden');
