@@ -46,65 +46,95 @@
         <!--===============  BOOKING PAGE ===============-->
         <div class="page-wrapper">
             <div class="checkout-container closed">
-                <h4>Step 1 of 3</h4>
-                <h2>Personal Details</h2>
-                <form class="booking-form">
-                    {{ booking_form.hidden_tag() }}
+                <section class="checkout-1">
+                    <h4>Step 1 of 3</h4>
+                    <h2>Personal Details</h2>
+                    <form class="booking-form">
+                        {{ booking_form.hidden_tag() }}
 
-                    <div class="input-container">
-                        <label for="name">Full Name</label>
-                        <input id="name" v-model="bookingFormData.name" type="text" required v-on:focus="inputFocus($event)" v-on:blur="inputBlur($event)"/>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="clear-icon" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path class="done-icon" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path class="error-icon" d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>
+                        <div class="names">
+                            <div class="input-container">
+                                <label for="first-name">First Name</label>
+                                <input id="first-name" v-model="bookingFormData.firstName" type="text" required v-on:focus="inputFocus($event)" v-on:blur="inputBlur($event)"/>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="clear-icon" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path class="done-icon" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path class="error-icon" d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>
+                            </div>
 
+                            <div class="input-container">
+                                <label for="last-name">Last Name</label>
+                                <input id="last-name" v-model="bookingFormData.lastName" type="text" required v-on:focus="inputFocus($event)" v-on:blur="inputBlur($event)"/>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="clear-icon" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path class="done-icon" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path class="error-icon" d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>
+                            </div>
+                        </div>
+                        
 
+                        <div class="input-container">
+                            <label for="email-address">Email Address</label>
+                            <input id="email-address" v-model="bookingFormData.emailAddress" type="email" required v-on:focus="inputFocus($event)" v-on:blur="inputBlur($event)"/>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="clear-icon" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path class="done-icon" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path class="error-icon" d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>
+                        </div>
+
+                        <div class="input-container">
+                            <label for="phone-number">Phone Number</label>
+                            <input id="phone-number" v-model="bookingFormData.phoneNumber" type="tel" required v-on:focus="inputFocus($event)" v-on:blur="inputBlur($event)"/>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="clear-icon" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path class="done-icon" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path class="error-icon" d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>
+                        </div>
+
+                        <div class="input-container">
+                            <label for="address-line-1">Address Line 1</label>
+                            <input id="address-line-1" v-model="bookingFormData.addressLine1" type="text" required />
+                        </div>
+
+                        <div class="input-container">
+                            <label for="address-line-2">Address Line 2 (Optional)</label>
+                            <input id="address-line-2" v-model="bookingFormData.addressLine2" type="text" />
+                        </div>
+
+                        <div class="input-container">
+                            <label for="town-or-city">Town / City</label>
+                            <input id="town-or-city" v-model="bookingFormData.townOrCity" type="text" required />
+                        </div>
+
+                        <div class="input-container">
+                            <label for="county-or-region">County / Region</label>
+                            <input id="county-or-region" v-model="bookingFormData.countyOrRegion" type="text" required />
+                        </div>
+
+                        <div class="input-container">
+                            <label for="postcode">Postcode / Zip</label>
+                            <input id="postcode" v-model="bookingFormData.postcode" type="text" required />
+                        </div>
+
+                        <div class="checkout-buttons">
+                            <button type="button" v-on:click="checkoutNext()">CONTINUE</button>
+                        </div>
+                        
+                    <form>
+                </section>
+
+                <section class="checkout-2">
+                    <h4>Step 2 of 3</h4>
+                    <h2>Review Terms</h2>
+                    <div class="checkout-buttons">
+                        <button type="button" v-on:click="checkoutNext()">CONTINUE</button>
                     </div>
+                </section>
 
-                    <div class="input-container">
-                        <label for="email-address">Email Address</label>
-                        <input id="email-address" v-model="bookingFormData.emailAddress" type="email" required v-on:focus="inputFocus($event)" v-on:blur="inputBlur($event)"/>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="clear-icon" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path class="done-icon" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path class="error-icon" d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>
+                <section class="checkout-3">
+                    <h4>Step 3 of 3</h4>
+                    <h2>Confirm Booking</h2>
+                    <div class="checkout-buttons">
+                        <button type="button">CONFIRM BOOKING</button>
                     </div>
-
-                    <div class="input-container">
-                        <label for="phone-number">Phone Number</label>
-                        <input id="phone-number" v-model="bookingFormData.phoneNumber" type="tel" required v-on:focus="inputFocus($event)" v-on:blur="inputBlur($event)"/>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="clear-icon" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path class="done-icon" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path class="error-icon" d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>
-                    </div>
-
-                    <div class="input-container">
-                        <label for="address-line-1">Address Line 1</label>
-                        <input id="address-line-1" v-model="bookingFormData.addressLine1" type="text" required />
-                    </div>
-
-                    <div class="input-container">
-                        <label for="address-line-2">Address Line 2 (Optional)</label>
-                        <input id="address-line-2" v-model="bookingFormData.addressLine2" type="text" />
-                    </div>
-
-                    <div class="input-container">
-                        <label for="town-or-city">Town / City</label>
-                        <input id="town-or-city" v-model="bookingFormData.townOrCity" type="text" required />
-                    </div>
-
-                    <div class="input-container">
-                        <label for="county-or-region">County / Region</label>
-                        <input id="county-or-region" v-model="bookingFormData.countyOrRegion" type="text" required />
-                    </div>
-
-                    <div class="input-container">
-                        <label for="postcode">Postcode / Zip</label>
-                        <input id="postcode" v-model="bookingFormData.postcode" type="text" required />
-                    </div>
-
-                    
-                    
-                <form>
+                </section>
+                
             </div>
 
             <!--=========  PARTY INPUT OVERLAY  ========-->

@@ -137,9 +137,6 @@ const calendarMonth = Vue.extend({
     computed: {           
         instCalendarValues: function () {
             return (vm.calendarValues(this.instYear, this.instMonth));
-        },
-        monthRows: function () {
-            return ('48px '.repeat(this.instCalendarValues.length));
         }
     },
     methods: {
@@ -185,7 +182,7 @@ const calendarMonth = Vue.extend({
         }
     },
     template: `<div class="swiper-slide">
-                   <div class="calendar-month" style="{ display: 'grid', 'grid-template-rows': 'repeat(6, 48px)' }">
+                   <div class="calendar-month" style="{ display: 'grid', 'grid-template-rows': 'repeat(6, 1fr)' }">
                        <div class="calendar-week" v-for="week in instCalendarValues" :style="{ 'grid-row': weekRow(week), display: 'grid', 'grid-template-columns': 'repeat(7, 1fr)' }">
                            <calendar-date v-for="date in week.prevDays" class="prev-days" :style="{ 'grid-column': prevDateColumn(week.prevDays, date) }" :dateYear="prevYear(instYear, instMonth)" :dateMonth="prevMonth(instMonth - 1)" :dateDate="date"></calendar-date>
                            <calendar-date v-for="date in week.days" class="days" :style="{ 'grid-column': dateColumn(week.days, date, week) }" :dateYear="instYear" :dateMonth="instMonth" :dateDate="date"></calendar-date>
@@ -207,7 +204,8 @@ const vm = new Vue({
             children: 0,
             infants: 0,
             dogs: 0,
-            name: '',
+            firstName: '',
+            lastName: '',
             emailAddress: '',
             phoneNumber: '',
             addressLine1: '',
@@ -255,6 +253,7 @@ const vm = new Vue({
         //page-wrapper
         pageSlide: 0,
         checkoutScrollTop: 0,
+        checkoutStep: 0,
         //party-overlay
         partyScrimClose: false,
         initialY: undefined,
@@ -309,7 +308,7 @@ const vm = new Vue({
             if (!document.querySelector('.hamburger').classList.contains('back')) {
                 this.toggleSideMenu();
             } else {
-                this.bookingBack();
+                this.checkoutPrev();
             }
         },
         toggleSideMenu() {  
@@ -915,34 +914,39 @@ const vm = new Vue({
         calculatePrice() {
 
         },
+        
+
+        //------------------CHECKOUT BUTTONS-------------------------//
         bookingProceed() {
             document.querySelector('.checkout-container').classList.remove('closed');
             this.checkoutScrollTop = document.documentElement.scrollTop || document.body.scrollTop;
             //transitionend event
             let pageSlide = this.pageSlide;
-            document.querySelector('.checkout-container').ontransitionend = function() {
-                if (pageSlide === 0) {
-                    document.body.scrollTop = 0;
-                    document.documentElement.scrollTop = 0;
-                    setTimeout( () => {
-                        document.querySelector('.checkout-container').classList.add('open');
+            document.querySelector('.checkout-container').ontransitionend = function(e) {
+                if (e.target === document.querySelector('.checkout-container')) {
+                    if (pageSlide === 0) {
+                        document.body.scrollTop = 0;
+                        document.documentElement.scrollTop = 0;
                         setTimeout( () => {
-                            document.querySelector('.content-wrapper').classList.add('closed');
-                        }, 5)
-                    }, 5);
-                    pageSlide = 1;
-                } 
-                else if (pageSlide === 1) {
-                    pageSlide = 0;
+                            document.querySelector('.checkout-container').classList.add('open');
+                            setTimeout( () => {
+                                document.querySelector('.content-wrapper').classList.add('closed');
+                            }, 5)
+                        }, 5);
+                        pageSlide = 1;
+                    } 
+                    else if (pageSlide === 1) {
+                        pageSlide = 1;
+                    }
                 }
             }
             this.pageSlide = pageSlide;
 
             document.querySelector('.hamburger').classList.add('back');
             document.querySelector('.navbar button').classList.add('hidden');
+            this.checkoutStep = 1;
         },  
         bookingBack() {
-            
             document.querySelector('.content-wrapper').classList.remove('closed');
             document.querySelector('.checkout-container').classList.remove('open');
             document.querySelector('.checkout-container').classList.add('closed');
@@ -952,6 +956,31 @@ const vm = new Vue({
 
             document.querySelector('.hamburger').classList.remove('back');
             document.querySelector('.navbar button').classList.remove('hidden');
+        },
+        checkoutPrev() {
+            if (this.checkoutStep === 1) {
+                this.bookingBack();
+            }
+            else if (this.checkoutStep === 2) {
+                document.querySelector('.checkout-2').style.display = 'none';
+                document.querySelector('.checkout-1').style.display = 'block';
+            }
+            else if (this.checkoutStep === 3) {
+                document.querySelector('.checkout-3').style.display = 'none';
+                document.querySelector('.checkout-2').style.display = 'block';
+            }
+            this.checkoutStep--;
+        },      
+        checkoutNext() {
+            if (this.checkoutStep === 1) {
+                document.querySelector('.checkout-1').style.display = 'none';
+                document.querySelector('.checkout-2').style.display = 'block';
+            } 
+            else if (this.checkoutStep === 2) {
+                document.querySelector('.checkout-2').style.display = 'none';
+                document.querySelector('.checkout-3').style.display = 'block';
+            }
+            this.checkoutStep++;
         },
         //----------------- BOOKING FORM (main)------------------------------------//
         //---------------PARTY INPUTS-------------------//
