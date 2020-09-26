@@ -217,7 +217,7 @@ const vm = new Vue({
         },
 
         contactFormData: {
-            name: '',
+            firstName: '',
             lastName: '',
             emailAddress: '',
             phoneNumber: '',
@@ -668,7 +668,13 @@ const vm = new Vue({
                     this.selectDepartureDate(element, date);
                     this.displayDateRange();                
                 }
-                this.calculatePrice();
+            }
+            if (this.arrivalDateObject && this.departureDateObject) {
+                this.bookingFormData.price = this.calculatePrice(this.arrivalDateObject, this.departureDateObject);
+            } 
+            if (!this.arrivalDate || this.departureDate) {
+                this.bookingFormData.price = 0;
+                console.log(0);
             }
         },
         selectArrivalDate(element, date) {
@@ -911,10 +917,25 @@ const vm = new Vue({
             enableBodyScroll(document.querySelector('.party-container'));
         },
         //-----------------------BOOKING BOX ---------------------//
-        calculatePrice() {
-
+        calculatePrice(arrival, departure) { //assuming that data is ordered by date
+            for (let i = 0; i < priceList.length; i++) {
+                if (priceList[i]['startDate'] <= arrival && arrival < priceList[i]['endDate'] && arrival < departure) {
+                    let price = priceList[i]['price'];
+                    if (departure <= priceList[i]['endDate']) {
+                        return price;
+                    } else {
+                        for (let j = i + 1; j < priceList.length; j++) {
+                            if (departure > priceList[j]['startDate']) {
+                                price += priceList[j]['price'];
+                                if (departure <= priceList[j]['endDate']) {
+                                    return price; ///return applyDiscount(price, stayLength (departure - arrival))
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         },
-        
 
         //------------------CHECKOUT BUTTONS-------------------------//
         bookingProceed() {
@@ -984,51 +1005,97 @@ const vm = new Vue({
         },
         //----------------- BOOKING FORM (main)------------------------------------//
         //---------------PARTY INPUTS-------------------//
-        adultsDecrease() {
+        adultsDecrease(e) {
+            e.preventDefault();
             if (this.bookingFormData.adults > 0) {
                 this.bookingFormData.adults--;
-                document.querySelector('#adults div').classList.remove('active');
+                document.querySelector('#adults .party-increase').classList.remove('inactive');
+                document.querySelector('#children .party-increase').classList.remove('inactive');
             }
+            if (this.bookingFormData.adults === 0) {
+                document.querySelector('#adults div').classList.remove('active');
+                document.querySelector('#adults .party-decrease').classList.add('inactive');
+            } 
         },
-        adultsIncrease() {
+        adultsIncrease(e) {
+            e.preventDefault();
             if (this.bookingFormData.adults + this.bookingFormData.children < this.partyMax) {
-                this.bookingFormData.adults++;
+                this.bookingFormData.adults++;  
+                document.querySelector('#adults .party-decrease').classList.remove('inactive');
+            } 
+            if (this.bookingFormData.adults + this.bookingFormData.children === this.partyMax) {
+                document.querySelector('#adults .party-increase').classList.add('inactive');
+                document.querySelector('#children .party-increase').classList.add('inactive'); 
+            } else {
+                
             }
             document.querySelector('#adults div').classList.add('active');
         },
-        childrenDecrease() {
+        childrenDecrease(e) {
+            e.preventDefault();
             if (this.bookingFormData.children > 0) {
                 this.bookingFormData.children--;
+                document.querySelector('#children .party-increase').classList.remove('inactive');
+                document.querySelector('#adults .party-increase').classList.remove('inactive');
+            }
+            if (this.bookingFormData.children === 0) {
                 document.querySelector('#children div').classList.remove('active');
+                document.querySelector('#children .party-decrease').classList.add('inactive');
             }
         },
-        childrenIncrease() {
+        childrenIncrease(e) {
+            e.preventDefault();
             if (this.bookingFormData.children + this.bookingFormData.adults < this.partyMax) {
-                this.bookingFormData.children++;
+                this.bookingFormData.children++;  
+                document.querySelector('#children .party-decrease').classList.remove('inactive');
+            } 
+            if (this.bookingFormData.children + this.bookingFormData.adults === this.partyMax) {
+                document.querySelector('#children .party-increase').classList.add('inactive');
+                document.querySelector('#adults .party-increase').classList.add('inactive');
             }
             document.querySelector('#children div').classList.add('active');
         },
-        infantsDecrease() {
+        infantsDecrease(e) {
+            e.preventDefault();
             if (this.bookingFormData.infants > 0) {
                 this.bookingFormData.infants--;
+                document.querySelector('#infants .party-increase').classList.remove('inactive');
+            }
+            if (this.bookingFormData.infants === 0) {
                 document.querySelector('#infants div').classList.remove('active');
+                document.querySelector('#infants .party-decrease').classList.add('inactive');
             }
         },
-        infantsIncrease() {
+        infantsIncrease(e) {
+            e.preventDefault();
             if (this.bookingFormData.infants < this.infantsMax) {
                 this.bookingFormData.infants++;
+                document.querySelector('#infants .party-decrease').classList.remove('inactive');
+            }
+            if (this.bookingFormData.infants === this.infantsMax) {
+                document.querySelector('#infants .party-increase').classList.add('inactive');
             }
             document.querySelector('#infants div').classList.add('active');
         },
-        dogsDecrease() {
+        dogsDecrease(e) {
+            e.preventDefault();
             if (this.bookingFormData.dogs > 0) {
                 this.bookingFormData.dogs--;
+                document.querySelector('#dogs .party-increase').classList.remove('inactive');
+            }
+            if (this.bookingFormData.dogs === 0) {
                 document.querySelector('#dogs div').classList.remove('active');
+                document.querySelector('#dogs .party-decrease').classList.add('inactive');
             }
         },
-        dogsIncrease() {
+        dogsIncrease(e) {
+            e.preventDefault();
             if (this.bookingFormData.dogs < this.dogsMax) {
                 this.bookingFormData.dogs++;
+                document.querySelector('#dogs .party-decrease').classList.remove('inactive');
+            }
+            if (this.bookingFormData.dogs === this.dogsMax) {
+                document.querySelector('#dogs .party-increase').classList.add('inactive');
             }
             document.querySelector('#dogs div').classList.add('active');
         },
@@ -1101,25 +1168,6 @@ const vm = new Vue({
     delimiters: ['<%', '%>']
 })
 
-function getPrice(arrival, departure) { //assuming that data is ordered by date
-    for (let i = 0; i < priceList.length; i++) {
-        if (priceList[i]['startDate'] <= arrival && arrival < priceList[i]['endDate'] && arrival < departure) {
-            let price = priceList[i]['price'];
-            if (departure <= priceList[i]['endDate']) {
-                return price;
-            } else {
-                for (let j = i + 1; j < priceList.length; j++) {
-                    if (departure >= priceList[j]['startDate']) {
-                        price += priceList[j]['price'];
-                        if (departure <= priceList[j]['endDate']) {
-                            return price; ///return applyDiscount(price, stayLength (departure - arrival))
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
 
 const priceList = [
     { 'startDate': new Date(2020, 7, 15), 'endDate': new Date(2020, 7, 22), 'price': 1000.00 },

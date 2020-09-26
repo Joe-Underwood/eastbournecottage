@@ -157,6 +157,17 @@ input.disabled {
     opacity: 0.5;
 }
 
+textarea {
+    padding-left: 16px;
+    padding-right: 12px;
+    outline: none;
+    padding-top: 20px;
+    appearance: none;
+    -webkit-appearance: none;
+    border: 1px solid #a5c2cf;
+    resize: vertical;
+    height: 160px;
+}
 .page-wrapper {
 }
 
@@ -306,21 +317,75 @@ input.disabled {
 
     .party-container {
         background-color: white;
-        padding-left: 16px;
-        padding-right: 16px;
         transform: translate3d(0, 100%, 0);
         transition: all 0.2s;
         display: flex;
         flex-direction: column;
         position: relative;
         width: 100%;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
     }
 
     .party-container.open {
         transform: translate3d(0, 0, 0);
     }
 
+        .party-header {
+            display: flex;
+            position: relative;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            box-shadow: 0 0 16px 0 rgba(0,0,0,.1);
+            z-index: 1;
+        } 
+
+            .party-header-text {
+                font-weight: 1000;
+                padding-left: 24px;
+                padding-top: 18px;
+                padding-bottom: 18px;
+            }
+
+            .party-close-container {
+                margin-right: 8px;
+                margin-top: 8px;
+                margin-bottom: 8px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                height: 40px;
+                width: 40px;
+            }
+
+                .party-close {
+                    width: 20px;
+                    height: 20px;
+                    display: block;
+                    position: relative;
+                }
+
+                    .party-close span {
+                        display: block;
+                        position: absolute;
+                        height: 2px;
+                        width: 100%;
+                        background-color: rgb(15, 72, 117);
+                        border-radius: 3px;
+                    }
+
+                    .party-close span:nth-child(1) {
+                        transform: translate3d(0, 9px, 0) rotate3d(0, 0, 1, 45deg);
+                    }
+
+                    .party-close span:nth-child(2) {
+                        transform: translate3d(0, 9px, 0) rotate3d(0, 0, 1, -45deg);
+                    }
+
         .party-input-container {
+            padding-left: 16px;
+            padding-right: 16px;
             position: relative;
             display: flex;
             height: 56px;
@@ -330,6 +395,7 @@ input.disabled {
 
             .party-input-container label {
                 position: relative;
+                padding-left: 8px;
             }
 
             .party-input {
@@ -337,28 +403,31 @@ input.disabled {
                 position: relative;
                 margin-left: auto;
                 justify-content: flex-end;
-                height: 32px;
+                height: 40px;
                 margin-top: 8px;
             }
 
                 .party-input button {
-                    height: 32px;
-                    width: 32px;
+                    height: 40px;
+                    width: 40px;
                     background-color: white;
                     border: 1px solid #a5c2cf;
                     font-size: 22px;
                     text-align: center;
                     color: rgb(113, 113, 113);
                     box-shadow: none;
+                    border-radius: 100%;
+                }
+
+                .party-input button.inactive {
+                    opacity: 0.35;
                 }
 
                 .party-input div {
-                    line-height: 32px;
-                    height: 32px;
+                    line-height: 40px;
+                    height: 40px;
                     width: 40px;
                     background-color: white;
-                    border-top: 1px solid #a5c2cf;
-                    border-bottom: 1px solid #a5c2cf;
                     text-align: center;
                     color: rgb(113, 113, 113);
                 }
@@ -774,6 +843,7 @@ input.disabled {
     display: block;
     width: 100%;
     padding-top: 16px;
+    padding-bottom: 32px;
     z-index: 1;
 }
 
@@ -1069,3 +1139,15 @@ input.disabled {
             height: 40px;
             box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20);
         }
+
+/*-------------- CONTACT FORM --------------------*/
+.contact {
+    padding: 16px;
+}
+
+/*------------- FOOTER ------------------*/
+footer {
+    height: 64px;
+    width: 100%;
+    background: grey;
+}

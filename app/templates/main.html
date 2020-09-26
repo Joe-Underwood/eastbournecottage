@@ -141,40 +141,49 @@
             <div class="party-wrapper closed" v-on:touchstart="partyTouchstart($event)" v-on:touchmove="partyTouchmove($event)" v-on:touchend="partyTouchend($event)">
                 <div class="party-container">
 
+                    <div class="party-header">
+                        <div class="party-header-text">Select Guests</div>
+                        <div class="party-close-container" v-on:click="hidePartyOverlay()">
+                            <div class="party-close" >
+                                <span v-for="i in 2"></span>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="party-input-container">
                         <label for="adults"><h5>Adults</h5>Ages 13 or above</label>
 
                         <div class="party-input" id="adults">
-                            <button type="button" v-on:click="adultsDecrease()">-</button>
+                            <button type="button" v-on:click="adultsDecrease($event)" class="party-decrease inactive">-</button>
                             <div>&#60;% bookingFormData.adults %></div>
-                            <button type="button" v-on:click="adultsIncrease()">+</button>
+                            <button type="button" v-on:click="adultsIncrease($event)" class="party-increase">+</button>
                         </div>
                     </div>
 
                     <div class="party-input-container">
                         <label for="children"><h5>Children</h5>Ages 2-12</label>
                         <div class="party-input" id="children">
-                            <button type="button" v-on:click="childrenDecrease()">-</button>
+                            <button type="button" v-on:click="childrenDecrease($event)" class="party-decrease inactive">-</button>
                             <div>&#60;% bookingFormData.children %></div>
-                            <button type="button" v-on:click="childrenIncrease()">+</button>
+                            <button type="button" v-on:click="childrenIncrease($event)" class="party-increase">+</button>
                         </div>
                     </div>
 
                     <div class="party-input-container">
                         <label for="infants"><h5>Infants</h5>Under 2</label>
                         <div class="party-input" id="infants">
-                            <button type="button" v-on:click="infantsDecrease()">-</button>
+                            <button type="button" v-on:click="infantsDecrease($event)" class="party-decrease inactive">-</button>
                             <div>&#60;% bookingFormData.infants %></div>
-                            <button type="button" v-on:click="infantsIncrease()">+</button>
+                            <button type="button" v-on:click="infantsIncrease($event)" class="party-increase">+</button>
                         </div>
                     </div>
 
                     <div class="party-input-container">
                         <label for="dogs"><h5>Dogs</h5>£20 each</label>
                         <div class="party-input" id="dogs">
-                            <button type="button" v-on:click="dogsDecrease()">-</button>
+                            <button type="button" v-on:click="dogsDecrease($event)" class="party-decrease inactive">-</button>
                             <div>&#60;% bookingFormData.dogs %></div>
-                            <button type="button" v-on:click="dogsIncrease()">+</button>
+                            <button type="button" v-on:click="dogsIncrease($event)" class="party-increase">+</button>
                         </div>
                     </div>
                                             
@@ -331,8 +340,52 @@
                     </div>
                     
                 </section>
-                
-                    
+
+                <section class="contact">
+
+                    <div class="contact-container">
+                        <h2>Contact Us</h2>
+                        <form class="contact-form">
+
+                            <div class="names">
+                                <div class="input-container">
+                                    <label for="contact-first-name">First Name</label>
+                                    <input id="contact-first-name" v-model="contactFormData.firstName" type="text" required v-on:focus="inputFocus($event)" v-on:blur="inputBlur($event)"/>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="clear-icon" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path class="done-icon" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path class="error-icon" d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>
+                                </div>
+
+                                <div class="input-container">
+                                    <label for="contact-last-name">Last Name</label>
+                                    <input id="contact-last-name" v-model="contactFormData.lastName" type="text" required v-on:focus="inputFocus($event)" v-on:blur="inputBlur($event)"/>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="clear-icon" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path class="done-icon" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path class="error-icon" d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>
+                                </div>
+                            </div>
+
+                            <div class="input-container">
+                                <label for="contact-email-address">Email Address</label>
+                                <input id="contact-email-address" v-model="contactFormData.emailAddress" type="email" required v-on:focus="inputFocus($event)" v-on:blur="inputBlur($event)"/>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="clear-icon" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path class="done-icon" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path class="error-icon" d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>
+                            </div>
+
+                            <div class="input-container">
+                                <label for="contact-message">Message</label>
+                                <textarea></textarea>
+                            </div>
+
+                            <button type="button">SEND MESSAGE</button>
+                        </form>
+                    </div>
+
+                </section>
+
+                <footer></footer>
+                       
             </div>
         </div>
         
