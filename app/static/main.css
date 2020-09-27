@@ -131,7 +131,7 @@ label.invalid {
 input {
     height: 56px;
     padding-left: 16px;
-    padding-right: 12px;
+    padding-right: 40px;
     border-radius: 0;
     outline: none;
     padding-top: 20px;
@@ -168,10 +168,9 @@ textarea {
     resize: vertical;
     height: 160px;
 }
-.page-wrapper {
-}
 
-.page-wrapper.one {
+svg {
+    z-index: 2;
 }
 /*--------------CHECKOUT OVERLAY-------------*/
 .checkout-container {
@@ -199,6 +198,16 @@ textarea {
 
     .checkout-container section {
         width: 100%;
+        transform: translate3d(0, 0, 0);
+        transition: all 0.4s;
+    }
+
+    .checkout-container section.next {
+        transform: translate3d(50%, 0, 0);
+    }
+
+    .checkout-container section.prev {
+        transform: translate3d(-50%, 0, 0);
     }
 
     .checkout-1 {
@@ -756,6 +765,35 @@ textarea {
                 z-index: 5;
             }
 
+    .cottage-basic {
+        display: flex;
+        position: relative;
+        justify-content: space-evenly;
+        width: calc(100% - 32px);
+        margin-left: 16px;
+        margin-right: 16px;
+        margin-bottom: 16px;
+    }
+
+        .cottage-basic-items {
+            display: flex;
+            justify-content: space-evenly;
+            width: 100%;
+            border-left: 1px solid #a5c2cf;
+            border-right: 1px solid #a5c2cf;
+        }
+
+        .cottage-basic-items:nth-child(1) {
+            border-left: none;
+        }
+
+        .cottage-basic-items:nth-last-child(1) {
+            border-right: none;
+        }
+
+            .cottage-basic-items div {
+                font-size: 14px;
+            }
 
     .cottage-nav {
         position: relative;
@@ -1115,16 +1153,12 @@ textarea {
             position: relative;
             display: flex;
             justify-content: space-between;
-            /*border: 1px solid #a5c2cf;*/
-            border-radius: 0;
-            /*box-shadow: 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.20);*/
-            /*background-color: white;*/
         }
 
             .total-box div {
                 font-weight: 800;
             }
-
+        
         .booking-proceed {
             background-color: rgb(226, 138, 12);
             color: white;
@@ -1145,6 +1179,16 @@ textarea {
     padding: 16px;
 }
 
+    .contact-button-container {
+        display: flex;
+        position: relative;
+        justify-content: flex-end;
+    }
+
+        .contact-button-container button {
+            width: 50%;
+            height: 40px;
+        }
 /*------------- FOOTER ------------------*/
 footer {
     height: 64px;
