@@ -3,9 +3,15 @@ from app import db
 class Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     bookings = db.relationship('Booking', backref='customer')
-    name = db.Column(db.String(30))
+    first_name = db.Column(db.String(30))
+    last_name = db.Column(db.String(30))
     email_address = db.Column(db.String(30))
     phone_number = db.Column(db.String(20))
+    address_line_1 = db.Column(db.String(30))
+    address_line_2 = db.Column(db.String(30))
+    town_or_city = db.Column(db.String(30))
+    county_or_region = db.Column(db.String(30))
+    postcode = db.Column(db.String(30))
 
 class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)

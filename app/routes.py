@@ -26,9 +26,15 @@ def booking():
     booking_form_data = request.get_json()
 
     customer = Customer(
-        name = booking_form_data['name'],
+        fist_name = booking_form_data['firstName'],
+        last_name = booking_form_data['lastName'],
         email_address = booking_form_data['emailAddress'],
-        phone_number = booking_form_data['phoneNumber']
+        phone_number = booking_form_data['phoneNumber'],
+        address_line_1 = booking_form_data['addressLine1'],
+        address_line_2 = booking_form_data['addressLine2'],
+        town_or_city = booking_form_data['townOrCity'],
+        county_or_region = booking_form_data['countyOrRegion'],
+        postcode = booking_form_data['postcode']
     )
     booking = Booking(
         adults = int(booking_form_data['adults']),
@@ -53,3 +59,8 @@ def booking():
     db.session.commit()
 
     return { 'success': True }
+
+@app.route('/admin', methods=['GET', 'POST'])
+def admin():
+
+    return render_template('admin_login.html')

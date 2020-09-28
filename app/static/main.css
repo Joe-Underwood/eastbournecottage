@@ -795,6 +795,21 @@ svg {
                 font-size: 14px;
             }
 
+        .people-icon {
+            fill: grey;
+        }
+
+        .bedrooms-icon {
+            fill: grey;
+        }
+
+        .bathrooms-icon {
+            fill: grey;
+        }
+
+        .dogs-icon {
+            fill: grey;
+        }
     .cottage-nav {
         position: relative;
         width: 100%;
