@@ -26,8 +26,10 @@ class Booking(db.Model):
 class Date(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     booking_id = db.Column(db.Integer, db.ForeignKey('booking.id'))
-    date = db.Column(db.Date, unique=True)
-
+    is_arrival = db.Column(db.Boolean)
+    is_departure = db.Column(db.Boolean)
+    date = db.Column(db.Date)
+    
 class Price_List(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     start_date = db.Column(db.Date, unique=True)

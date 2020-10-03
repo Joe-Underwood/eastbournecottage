@@ -19,10 +19,6 @@ window.addEventListener('load', function() {
     var calendarSwiper;
     let closePartyOverlay = false;
 
-    
-
-    
-
 })
 
 // corrects hero image size, as most mobile browsers have inconsistent viewport dimensions

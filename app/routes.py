@@ -26,7 +26,7 @@ def booking():
     booking_form_data = request.get_json()
 
     customer = Customer(
-        fist_name = booking_form_data['firstName'],
+        first_name = booking_form_data['firstName'],
         last_name = booking_form_data['lastName'],
         email_address = booking_form_data['emailAddress'],
         phone_number = booking_form_data['phoneNumber'],
@@ -36,6 +36,7 @@ def booking():
         county_or_region = booking_form_data['countyOrRegion'],
         postcode = booking_form_data['postcode']
     )
+
     booking = Booking(
         adults = int(booking_form_data['adults']),
         children = int(booking_form_data['children']),
@@ -48,7 +49,17 @@ def booking():
     departure_date = datetime.strptime(booking_form_data['departureDate'][0:10], '%Y-%m-%d').date()
     date_delta = (departure_date - arrival_date).days
     for i in range(0, date_delta+1):
-        date = Date(date = (arrival_date + timedelta(days=i)))
+        if (i == 0):
+            arrival_is = True
+            departure_is = False
+        elif (i == date_delta+1):
+            arrival_is = False
+            departure_is = True
+        else:
+            arrival_is = False
+            departure_is = False
+
+        date = Date(is_arrival = arrival_is, is_departure = departure_is, date = (arrival_date + timedelta(days=i)))
         booking.dates.append(date)
         db.session.add(date)
 
