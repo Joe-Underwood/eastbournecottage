@@ -671,10 +671,9 @@ const vm = new Vue({
             }
             if (this.arrivalDateObject && this.departureDateObject) {
                 this.bookingFormData.price = this.calculatePrice(this.arrivalDateObject, this.departureDateObject);
-            } 
-            if (!this.arrivalDate || this.departureDate) {
-                this.bookingFormData.price = 0;
-                console.log(0);
+                return;
+            } else {
+                this.bookingFormData.price = this.bookingFormData.dogs * this.pricePerDog;;
             }
         },
         selectArrivalDate(element, date) {
@@ -765,6 +764,7 @@ const vm = new Vue({
             this.arrivalDateObject = undefined;
             this.hideInvalidDates();
             this.invalidDates = [];
+            this.bookingFormData.price = this.bookingFormData.dogs * this.pricePerDog;;
         },
         removeDepartureDate() {
             let departureDates = document.querySelectorAll('.departure-date');
@@ -774,6 +774,7 @@ const vm = new Vue({
             this.bookingFormData.departureDate = '';
             this.departureDateString = '';
             this.departureDateObject = undefined;
+            this.bookingFormData.price = this.bookingFormData.dogs * this.pricePerDog;;
         },
         refreshDateRange(element) {
             this.invalidDates = [];
@@ -917,20 +918,16 @@ const vm = new Vue({
             enableBodyScroll(document.querySelector('.party-container'));
         },
         //-----------------------BOOKING BOX ---------------------//
-        calculatePrice(arrival, departure) { //assuming that data is ordered by date
+        calculatePrice(arrDate, depDate) {
+            let price = this.bookingFormData.dogs * this.pricePerDog;
             for (let i = 0; i < priceList.length; i++) {
-                if (priceList[i]['startDate'] <= arrival && arrival < priceList[i]['endDate'] && arrival < departure) {
-                    let price = priceList[i]['price'];
-                    if (departure <= priceList[i]['endDate']) {
-                        return price;
-                    } else {
-                        for (let j = i + 1; j < priceList.length; j++) {
-                            if (departure > priceList[j]['startDate']) {
-                                price += priceList[j]['price'];
-                                if (departure <= priceList[j]['endDate']) {
-                                    return price; ///return applyDiscount(price, stayLength (departure - arrival))
-                                }
-                            }
+                if (priceList[i]['startDate'] <= arrDate && arrDate < priceList[i]['endDate']) {
+                    price += priceList[i]['price'];
+                    for (let j = i; j < priceList.length; j++) {
+                        if (depDate <= priceList[j]['endDate']) {
+                            return price;
+                        } else {
+                            price += priceList[j + 1]['price'];
                         }
                     }
                 }
@@ -1110,6 +1107,7 @@ const vm = new Vue({
                 document.querySelector('#dogs div').classList.remove('active');
                 document.querySelector('#dogs .party-decrease').classList.add('inactive');
             }
+            this.bookingFormData.price -= this.bookingFormData.dogs * this.pricePerDog;
         },
         dogsIncrease(e) {
             e.preventDefault();
@@ -1121,6 +1119,7 @@ const vm = new Vue({
                 document.querySelector('#dogs .party-increase').classList.add('inactive');
             }
             document.querySelector('#dogs div').classList.add('active');
+            this.bookingFormData.price += this.bookingFormData.dogs * this.pricePerDog;
         },
 
         //-----------personal details//
@@ -1191,20 +1190,19 @@ const vm = new Vue({
     delimiters: ['<%', '%>']
 })
 
-
 const priceList = [
-    { 'startDate': new Date(2020, 7, 15), 'endDate': new Date(2020, 7, 22), 'price': 1000.00 },
-    { 'startDate': new Date(2020, 7, 22), 'endDate': new Date(2020, 7, 29), 'price': 1000.00  },
-    { 'startDate': new Date(2020, 7, 29), 'endDate': new Date(2020, 8, 5), 'price': 1000.00},
-    { 'startDate': new Date(2020, 8, 5), 'endDate': new Date(2020, 8, 12), 'price': 1000.00 },
-    { 'startDate': new Date(2020, 8, 12), 'endDate': new Date(2020, 8, 19), 'price': 1000.00 },
-    { 'startDate': new Date(2020, 8, 19), 'endDate': new Date(2020, 8, 26), 'price': 1000.00 },
-    { 'startDate': new Date(2020, 8, 26), 'endDate': new Date(2020, 9, 3), 'price': 1000.00 },
-    { 'startDate': new Date(2020, 9, 3), 'endDate': new Date(2020, 9, 10), 'price': 1000.00 },
-    { 'startDate': new Date(2020, 9, 10), 'endDate': new Date(2020, 9, 17), 'price': 1000.00 },
-    { 'startDate': new Date(2020, 9, 17), 'endDate': new Date(2020, 9, 24), 'price': 1000.00 },
-    { 'startDate': new Date(2020, 9, 24), 'endDate': new Date(2020, 9, 31), 'price': 1000.00 },
-    { 'startDate': new Date(2020, 9, 31), 'endDate': new Date(2020, 10, 7), 'price': 1000.00 },
+    { 'startDate': new Date(2020, 7, 15), 'endDate': new Date(2020, 7, 22, 12), 'price': 1000.00 },
+    { 'startDate': new Date(2020, 7, 22), 'endDate': new Date(2020, 7, 29, 12), 'price': 1000.00  },
+    { 'startDate': new Date(2020, 7, 29), 'endDate': new Date(2020, 8, 5, 12), 'price': 1000.00},
+    { 'startDate': new Date(2020, 8, 5), 'endDate': new Date(2020, 8, 12, 12), 'price': 1000.00 },
+    { 'startDate': new Date(2020, 8, 12), 'endDate': new Date(2020, 8, 19, 12), 'price': 1000.00 },
+    { 'startDate': new Date(2020, 8, 19), 'endDate': new Date(2020, 8, 26, 12), 'price': 1000.00 },
+    { 'startDate': new Date(2020, 8, 26), 'endDate': new Date(2020, 9, 3, 12), 'price': 1000.00 },
+    { 'startDate': new Date(2020, 9, 3), 'endDate': new Date(2020, 9, 10, 12), 'price': 1000.00 },
+    { 'startDate': new Date(2020, 9, 10), 'endDate': new Date(2020, 9, 17, 12), 'price': 1000.00 },
+    { 'startDate': new Date(2020, 9, 17), 'endDate': new Date(2020, 9, 24, 12), 'price': 1000.00 },
+    { 'startDate': new Date(2020, 9, 24), 'endDate': new Date(2020, 9, 31, 12), 'price': 1000.00 },
+    { 'startDate': new Date(2020, 9, 31), 'endDate': new Date(2020, 10, 7, 12), 'price': 1000.00 },
 ]
 
 const bookedDates =
