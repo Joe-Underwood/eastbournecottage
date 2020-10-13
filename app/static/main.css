@@ -447,7 +447,7 @@ svg {
 /*---------------NAVIGATION-----------------*/
 .navbar {
     position: fixed;
-    grid-template-rows: 100%;
+    /*grid-template-rows: 100%;*/
     align-items: center;  
     height: 56px;
     width: 100%;
@@ -457,11 +457,41 @@ svg {
     -webkit-backdrop-filter: blur(6px);
     z-index: 3;
 
-    display: grid;
+    display: flex;
+    align-items: center;
+    /*display: grid;
     grid-template-columns: repeat(12, 1fr);
     column-gap: 8px;
-    justify-content: center;
+    justify-content: center;*/
+    justify-content: space-between;
+    
 }
+
+/*@media screen and (max-width: 899px) {
+    .navbar {
+        grid-template-columns: repeat(12, 1fr);
+    }
+}
+
+@media screen and (min-width: 900px) {
+    .navbar {
+        grid-template-columns: repeat(12, 1fr);
+    }
+}*/
+
+    .navbar-left {
+        display: flex;
+        justify-content: flex-start;
+        align-content: center;
+        height: 100%;
+    }
+
+    .navbar-right {
+        height: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-content: center;
+    }
 
     /*-----------HAMBURGER------------------*/
     .hamburger-container {
@@ -473,6 +503,18 @@ svg {
         width: 40px;
         margin-left: 6px;
         grid-column: 1 / span 2;
+    }
+
+    @media screen and (max-width: 899px) {
+        .hamburger-container {
+            display: flex;
+        }
+    }
+
+    @media screen and (min-width: 900px) {
+        .hamburger-container {
+            display: none;
+        }
     }
 
         .hamburger {
@@ -540,7 +582,21 @@ svg {
     /*------------------logo---------------------*/
     .navbar-logo {
         height: 30px;
-        grid-column: 3 / span 6;  
+        grid-column: 3 / span 5;  
+    }
+
+    @media screen and (max-width: 899px) {
+        .navbar-logo {
+            grid-column: 3 / span 5;
+            margin-left: 0px;
+        }
+    }
+
+    @media screen and (min-width: 900px) {
+        .navbar-logo {
+            grid-column: 1 / span 5;
+            margin-left: 16px;
+        }
     }
 
         .navbar-logo div:nth-child(1) {
@@ -559,8 +615,12 @@ svg {
         }
     
     /*--------------CTA button-------------------*/
-    .navbar button {
+    .nav-button {
         grid-column: 9 / span 4;
+        display: flex;
+        justify-content: flex-end;
+    }
+    .navbar button {
         background-color: rgb(226, 138, 12);
         color: white;
         margin-right: 16px;
@@ -568,9 +628,12 @@ svg {
         line-height: 100%;
         font-weight: 700;
         height: 36px;
+        max-width: 120px;
+        min-width: 85px;
         box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20);
         opacity: 1;
         transition: 0.4s;
+
     }
 
     .navbar button.hidden {
@@ -581,6 +644,30 @@ svg {
         box-shadow: 0 8px 10px 1px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.20);
     }
 
+/*--------------nav-links navbar (widescreen version)---*/
+.navbar-links {
+    display: flex;
+    grid-column: 8 / span 3;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .navbar-links div,
+    .navbar-links span {
+        color: white;
+    }
+
+@media screen and (max-width: 899px) {
+    .navbar-links {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 900px) {
+    .navbar-links {
+        display: flex;
+    }
+}
 /*--------------side menu--------------------*/
 .side-menu {
     margin-top: 56px;

@@ -783,7 +783,7 @@ const vm = new Vue({
             let validDate = true;
             for (let i = arrivalIndex; i < calendarDates.length; i++) {
                 let indexDate = new Date (calendarDates[i].__vue__._props.dateYear, calendarDates[i].__vue__._props.dateMonth, calendarDates[i].__vue__._props.dateDate);
-                if (calendarDates[i].classList.contains('booked') && !validDate) {
+                if (calendarDates[i].classList.contains('booked') && validDate) {
                     upperBound = calendarDates[i];
                     upperBoundDate = new Date (upperBound.__vue__._props.dateYear, upperBound.__vue__._props.dateMonth, upperBound.__vue__._props.dateDate);
                     validDate = false;
@@ -1188,7 +1188,7 @@ const vm = new Vue({
 
 const priceList = [
     { 'startDate': new Date(2020, 7, 15), 'endDate': new Date(2020, 7, 22, 12), 'price': 1000.00 },
-    { 'startDate': new Date(2020, 7, 22), 'endDate': new Date(2020, 7, 29, 12), 'price': 1000.00  },
+    { 'startDate': new Date(2020, 7, 22), 'endDate': new Date(2020, 7, 29, 12), 'price': 1000.00 },
     { 'startDate': new Date(2020, 7, 29), 'endDate': new Date(2020, 8, 5, 12), 'price': 1000.00},
     { 'startDate': new Date(2020, 8, 5), 'endDate': new Date(2020, 8, 12, 12), 'price': 1000.00 },
     { 'startDate': new Date(2020, 8, 12), 'endDate': new Date(2020, 8, 19, 12), 'price': 1000.00 },

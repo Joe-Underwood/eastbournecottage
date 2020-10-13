@@ -16,23 +16,38 @@
 
         <!--=============  NAVIGATION  ================-->
         <nav class="navbar">
-            <div class="hamburger-container" v-on:click="hamburgerAction()">
-                <div ref="hamburger" class="hamburger">
-                    <span v-for="i in 3"></span>
+
+            <div class="navbar-left">
+                <div class="hamburger-container" v-on:click="hamburgerAction()">
+                    <div ref="hamburger" class="hamburger">
+                        <span v-for="i in 3"></span>
+                    </div>
+                </div>
+
+                <div class="navbar-logo">
+                    <div>THE COTTAGE</div>
+                    <div>EASTBOURNE</div>
                 </div>
             </div>
+            
+            <div class="navbar-right">
+                <div class="navbar-links">
+                    <div>The Cottage <span>&#9662;</span></div>
+                    <div>Availability &amp; Booking</div>
+                    <div>Contact Us</div>
+                </div>
 
-            <div class="navbar-logo">
-                <div>THE COTTAGE</div>
-                <div>EASTBOURNE</div>
+                <div class="nav-button">
+                    <button type="button" v-on:click="bookCTAPress()">BOOK</button>
+                </div>
             </div>
-
-            <button type="button" v-on:click="bookCTAPress()">BOOK</button>
+            
+            
         </nav>
 
         <div ref="sideMenu" class="side-menu" v-on:touchstart="menuTouchstart($event)" v-on:touchmove="menuTouchmove($event)" v-on:touchend="menuTouchend($event)">
             <div class="nav-links">
-                <div>The Cottage <span></span></div>
+                <div>The Cottage</div>
                 <ul>
                     <li>Overview</li>
                     <li>Facilities</li>

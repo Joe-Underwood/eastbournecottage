@@ -1,6 +1,6 @@
 from app import app, db
 from app.forms import BookingForm
-from app.models import Customer, Booking, Date
+from app.models import Customer, Booking, Date, Price_List
 from flask import render_template, request, jsonify
 from datetime import datetime, date, timedelta
 from calendar import Calendar
@@ -20,6 +20,13 @@ def dates():
         booked_dates.append(date[0])
 
     return {'dates' : booked_dates }
+
+@app.route('/prices', methods=['POST'])
+def price_list():
+
+    price_list_query = db.session.query(Price_List).all()
+    
+    return { 'response' : 0 }
 
 @app.route('/booking', methods=['POST'])
 def booking():
@@ -52,14 +59,31 @@ def booking():
         if (i == 0):
             arrival_is = True
             departure_is = False
+
+            for start_date in db.session.query(Price_List.start_date).all():
+                if (start_date == arrival_date):
+                    changeover_is = True
+                    break
+
+            changeover_is = False
+                
         elif (i == date_delta+1):
             arrival_is = False
             departure_is = True
+
+            for end_date in db.session.query(Price_List.end_date).all():
+                if (end_date == departure_date):
+                    changeover_is = True
+                    break
+
+            changeover_is = False
+
         else:
             arrival_is = False
             departure_is = False
+            changeover_is = False
 
-        date = Date(is_arrival = arrival_is, is_departure = departure_is, date = (arrival_date + timedelta(days=i)))
+        date = Date(is_arrival = arrival_is, is_departure = departure_is, is_changeover = changeover_is, date = (arrival_date + timedelta(days=i)))
         booking.dates.append(date)
         db.session.add(date)
 
