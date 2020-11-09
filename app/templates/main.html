@@ -316,19 +316,31 @@
                             
                             <div class="calendar-controls">
                                 <div class="prev-month">&#60;</div>
-                                <div class="current-month">&#60;% selectedMonth.toLocaleString('default', { month: 'long' }) %> &#60;% selectedMonth.getFullYear() %></div>
                                 <div class="next-month">&#62;</div>
                             </div>
 
-                            <ul class="calendar-weekdays">
-                                <li>Mo</li>
-                                <li>Tu</li>
-                                <li>We</li>
-                                <li>Th</li>
-                                <li>Fr</li>
-                                <li>Sa</li>
-                                <li>Su</li>
-                            </ul>
+                            <div class="calendar-weekdays-both">
+                                <ul class="calendar-weekdays weekdays-1">
+                                    <li>Mo</li>
+                                    <li>Tu</li>
+                                    <li>We</li>
+                                    <li>Th</li>
+                                    <li>Fr</li>
+                                    <li>Sa</li>
+                                    <li>Su</li>
+                                </ul>
+    
+                                <ul class="calendar-weekdays weekdays-2">
+                                    <li>Mo</li>
+                                    <li>Tu</li>
+                                    <li>We</li>
+                                    <li>Th</li>
+                                    <li>Fr</li>
+                                    <li>Sa</li>
+                                    <li>Su</li>
+                                </ul>
+                            </div>
+                            
                             
                             <div class="swiper-container calendar-swiper">
                                 <div class="swiper-wrapper">

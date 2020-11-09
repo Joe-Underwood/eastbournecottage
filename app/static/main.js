@@ -68,6 +68,7 @@ heroResize();
 
 window.addEventListener('resize', heroResize);
 
+
 //------body scroll lock used when side menu open--------//
 const disableBodyScroll = bodyScrollLock.disableBodyScroll;
 const enableBodyScroll = bodyScrollLock.enableBodyScroll;
@@ -114,11 +115,21 @@ Vue.component('calendar-date', {
         },
         slide(element) {
             if (!element.classList.contains('invalid-date') && !element.classList.contains('booked')) {
-                if (element.classList.contains('prev-days')) {
-                    calendarSwiper.slidePrev();
-                } 
-                else if (element.classList.contains('next-days')) {
-                    calendarSwiper.slideNext();
+                if (calendarSwiper.params.slidesPerView === 1) {
+                    if (element.classList.contains('prev-days')) {
+                        calendarSwiper.slidePrev();
+                    } 
+                    else if (element.classList.contains('next-days')) {
+                        calendarSwiper.slideNext();
+                    }
+                }
+                else if (calendarSwiper.params.slidesPerView === 2) {
+                    if ((element.classList.contains('prev-days')) && calendarSwiper.slides[calendarSwiper.activeIndex].contains(element)) {
+                        calendarSwiper.slidePrev();
+                    } 
+                    else if ((element.classList.contains('next-days')) && calendarSwiper.slides[calendarSwiper.activeIndex + 1].contains(element)) {
+                        calendarSwiper.slideNext();
+                    }
                 }
             }
         }
@@ -137,7 +148,7 @@ const calendarMonth = Vue.extend({
     },
     methods: {
         weekRow(week) {
-            return `${this.instCalendarValues.indexOf(week) + 1} / span 1`;
+            return `${this.instCalendarValues.indexOf(week) + 3} / span 1`;
         },
         prevDateColumn(arr, date) {
             return `${arr.indexOf(date) + 1} / span 1`;
@@ -178,7 +189,9 @@ const calendarMonth = Vue.extend({
         }
     },
     template: `<div class="swiper-slide">
-                   <div class="calendar-month" style="{ display: 'grid', 'grid-template-rows': 'repeat(6, 1fr)' }">
+                   <div class="calendar-month" style="{ display: 'grid', 'grid-template-rows': 'repeat(8, 1fr)' }">
+                       <div class="current-month" :style="{ 'grid-row': '1', height: '48px', 'padding-top': '8px' }">{{ new Date(instYear, instMonth).toLocaleString('default', { month: 'long' }) }} {{ new Date(instYear, instMonth).getFullYear() }}</div>
+                       <div :style="{ 'grid-row': '2', height: '28px' }"></div>
                        <div class="calendar-week" v-for="week in instCalendarValues" :style="{ 'grid-row': weekRow(week), display: 'grid', 'grid-template-columns': 'repeat(7, 1fr)' }">
                            <calendar-date v-for="date in week.prevDays" class="prev-days" :style="{ 'grid-column': prevDateColumn(week.prevDays, date) }" :dateYear="prevYear(instYear, instMonth)" :dateMonth="prevMonth(instMonth - 1)" :dateDate="date"></calendar-date>
                            <calendar-date v-for="date in week.days" class="days" :style="{ 'grid-column': dateColumn(week.days, date, week) }" :dateYear="instYear" :dateMonth="instMonth" :dateDate="date"></calendar-date>
@@ -595,7 +608,7 @@ const vm = new Vue({
                     nextEl: '.next-month',
                     prevEl: '.prev-month',
                   },
-                  spaceBetween: 16
+                  spaceBetween: 16,
             });
             for (let i = 0; i < this.calendarRange; i++) {
                 const instance = new calendarMonth({
@@ -1213,3 +1226,19 @@ const bookedDates =
 let field = '';
 
 vm.initCalendar(vm.currentYear, vm.currentMonth, field);
+
+//------ toggle calendarSwiper slides per view (responsive)-------------//
+
+function toggleCalendarSlides(x) {
+    console.log(x);
+    if (x.matches) {
+      calendarSwiper.params.slidesPerView = 1;
+    } else {
+      calendarSwiper.params.slidesPerView = 2;
+    }
+    calendarSwiper.update();
+  }
+  
+  const x = window.matchMedia("(max-width: 735px)")
+  toggleCalendarSlides(x) // Call listener function at run time
+  x.addEventListener("change", toggleCalendarSlides) // Attach listener function on state changes 
