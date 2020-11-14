@@ -17,31 +17,32 @@
         <!--=============  NAVIGATION  ================-->
         <nav class="navbar">
 
-            <div class="navbar-left">
-                <div class="hamburger-container" v-on:click="hamburgerAction()">
-                    <div ref="hamburger" class="hamburger">
-                        <span v-for="i in 3"></span>
+            <div class="navbar-inner">
+                <div class="navbar-left">
+                    <div class="hamburger-container" v-on:click="hamburgerAction()">
+                        <div ref="hamburger" class="hamburger">
+                            <span v-for="i in 3"></span>
+                        </div>
+                    </div>
+    
+                    <div class="navbar-logo">
+                        <div>THE COTTAGE</div>
+                        <div>EASTBOURNE</div>
                     </div>
                 </div>
-
-                <div class="navbar-logo">
-                    <div>THE COTTAGE</div>
-                    <div>EASTBOURNE</div>
+                
+                <div class="navbar-right">
+                    <div class="navbar-links">
+                        <div>The Cottage <span>&#9662;</span></div>
+                        <div>Availability &amp; Booking</div>
+                        <div>Contact Us</div>
+                    </div>
+    
+                    <div class="nav-button">
+                        <button type="button" v-on:click="bookCTAPress()">BOOK</button>
+                    </div>
                 </div>
             </div>
-            
-            <div class="navbar-right">
-                <div class="navbar-links">
-                    <div>The Cottage <span>&#9662;</span></div>
-                    <div>Availability &amp; Booking</div>
-                    <div>Contact Us</div>
-                </div>
-
-                <div class="nav-button">
-                    <button type="button" v-on:click="bookCTAPress()">BOOK</button>
-                </div>
-            </div>
-            
             
         </nav>
 
@@ -273,7 +274,17 @@
                     </nav>
 
                     <div class="cottage-content">
-                        <div class="overview">overview</div>
+                        <div class="overview">
+                            <p>Located just a short walk from the seafront in the Meads Village area of Eastbourne, this pretty fisherman's cottage is an ideal escape for couples and families, with a choice of pubs, restaurants, and shops right on the doorstep.</p>
+                            <br>
+                            <p>This property is an authentic and pretty Victorian fisherman’s cottage in Meads Village; a super choice for a traditional seaside stay with family or a couple of friends (and the dog). Take a short stroll down to the seafront, also known as the Holywell Retreat, and relax into a mosaic of laid-back cafes, bars and beach huts and onto the dog-friendly shingle beach. Around a 10-minute walk takes you into the main part of Eastbourne where you can visit the classic Victorian Pier or the vibrant shopping centre for some retail therapy.</p>
+                            <br>
+                            <p>This classic English cottage enjoys attractive seaside shades, natural wood and a private courtyard garden with outdoor seating. The original features combine well with the chic colours to give the rooms a mix of character and contemporary, while the kitchen and two upstairs bathrooms offer every modern comfort needed to relax. After a day of beachcombing, wind your way up the cottage-style staircase for a soak in the bath, then retire for the night to one of the lovely three bedrooms. Wake refreshed and raring to go - perhaps morning coffee in the pretty walled courtyard would be a nice treat before the adventure begins again.</p>
+                            <br>
+                            <p>On the main beach at Eastbourne you will find the Lifeboat Museum and historic Wish Tower and, just 5 miles further along the coastline is Pevensey Bay with its stunning beach. If you want an interesting and historical day out, Pevensey Castle has history oozing from its ancient walls, dungeons to explore and beautiful grounds to meander through. There is a restaurant and even the occasional medieval joust too. Further afield, you can spend a day in Brighton (20 miles) or Hastings (15 miles) for boutique shopping and delicious lunches.</p>
+                            <br>
+                            <p>Dogs are charged at £20 each per full or part week.</p>
+                        </div>
                         <div class="facilities">facilities</div>
                         <div class="location">
 
