@@ -74,7 +74,7 @@ const disableBodyScroll = bodyScrollLock.disableBodyScroll;
 const enableBodyScroll = bodyScrollLock.enableBodyScroll;
 
 //-------------------- side menu close behavious ---------------//
-
+zenscroll.setup(500, 56);
 
 //---------------CALENDAR COMPONENTS---------------------------------------//
 
@@ -313,6 +313,49 @@ const vm = new Vue({
     },
     methods: {
         //-------------------- NAVBAR METHODS ------------------------//
+        scrollToTop() {
+            console.log('top');
+            zenscroll.toY(0);
+        },
+        goToCottage() {
+            zenscroll.to(document.querySelector('.cottage'));
+            if (document.querySelector('.side-menu').classList.contains('open')) {
+                this.toggleSideMenu();
+            }
+        },
+        goToCottageOverview() {
+            zenscroll.to(document.querySelector('.cottage-spacer'));
+            this.showOverview();
+            if (document.querySelector('.side-menu').classList.contains('open')) {
+                this.toggleSideMenu();
+            }
+        },
+        goToCottageFacilities() {
+            zenscroll.to(document.querySelector('.cottage-spacer'));
+            this.showFacilities();
+            if (document.querySelector('.side-menu').classList.contains('open')) {
+                this.toggleSideMenu();
+            }
+        },
+        goToCottageLocation() {
+            zenscroll.to(document.querySelector('.cottage-spacer'));
+            this.showLocation();
+            if (document.querySelector('.side-menu').classList.contains('open')) {
+                this.toggleSideMenu();
+            }
+        },
+        goToBooking() {
+            zenscroll.to(document.querySelector('.booking'));
+            if (document.querySelector('.side-menu').classList.contains('open')) {
+                this.toggleSideMenu();
+            }
+        },
+        goToContact() {
+            zenscroll.to(document.querySelector('.contact'));
+            if (document.querySelector('.side-menu').classList.contains('open')) {
+                this.toggleSideMenu();
+            }
+        },
         hamburgerAction() {
             if (!document.querySelector('.hamburger').classList.contains('back')) {
                 this.toggleSideMenu();

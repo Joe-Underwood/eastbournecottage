@@ -25,7 +25,7 @@
                         </div>
                     </div>
     
-                    <div class="navbar-logo">
+                    <div class="navbar-logo" v-on:click="scrollToTop()">
                         <div>THE COTTAGE</div>
                         <div>EASTBOURNE</div>
                     </div>
@@ -33,9 +33,18 @@
                 
                 <div class="navbar-right">
                     <div class="navbar-links">
-                        <div>The Cottage <span>&#9662;</span></div>
-                        <div>Availability &amp; Booking</div>
-                        <div>Contact Us</div>
+                        <div v-on:click="goToCottage()">The Cottage <span>&#9662;</span>
+                            <div class="cottage-dropdown">
+                                <ul>
+                                    <li v-on:click="goToCottage()">Gallery</li>
+                                    <li v-on:click="goToCottageOverview()">Overview</li>
+                                    <li v-on:click="goToCottageFacilities()">Facilities</li>
+                                    <li v-on:click="goToCottageLocation()">Location</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div v-on:click="goToBooking()">Availability &amp; Booking</div>
+                        <div v-on:click="goToContact()">Contact Us</div>
                     </div>
     
                     <div class="nav-button">
@@ -48,14 +57,15 @@
 
         <div ref="sideMenu" class="side-menu" v-on:touchstart="menuTouchstart($event)" v-on:touchmove="menuTouchmove($event)" v-on:touchend="menuTouchend($event)">
             <div class="nav-links">
-                <div>The Cottage</div>
+                <div v-on:click="goToCottage()">The Cottage</div>
                 <ul>
-                    <li>Overview</li>
-                    <li>Facilities</li>
-                    <li>Location</li>
+                    <li v-on:click="goToCottage()">Gallery</li>
+                    <li v-on:click="goToCottageOverview()">Overview</li>
+                    <li v-on:click="goToCottageFacilities()">Facilities</li>
+                    <li v-on:click="goToCottageLocation()">Location</li>
                 </ul>
-                <div>Availability &amp; Booking</div>
-                <div>Contact Us</div>
+                <div v-on:click="goToBooking()">Availability &amp; Booking</div>
+                <div v-on:click="goToContact()">Contact Us</div>
             </div>
         </div>
 
@@ -265,6 +275,9 @@
                             <div>1</div>
                         </div>
                     </div>
+
+                    <div class="cottage-spacer"></div>
+
                     <nav class="cottage-nav">
                         <ul class="cottage-nav-links">
                             <li class="overview-cottage-nav active-cottage-link" v-on:click="showOverview()">OVERVIEW</li>
@@ -459,6 +472,7 @@
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/vue-async-computed"></script>
 <script src="../static/body-scroll-lock/bodyScrollLock.js"></script>
+<script src="../static/zenscroll-min.js"></script>
 <script src="../static/swiper/swiper-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/glider-js@1/glider.min.js"></script>
 

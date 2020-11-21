@@ -808,6 +808,14 @@ svg {
         font-size: 14px;
     }
 
+    .cottage-dropdown {
+        display: block;
+        position: absolute;
+        background-color: white;
+        margin-top: 18px;
+        z-index: 3;
+    }
+
 @media screen and (max-width: 899px) {
     .navbar-links {
         display: none;
@@ -1027,7 +1035,6 @@ svg {
         position: relative;
         justify-content: space-evenly;
         width: calc(100% - 32px);
-        margin-bottom: 16px;
     }
 
         .cottage-basic-items {
@@ -1065,6 +1072,13 @@ svg {
         .dogs-icon {
             fill: grey;
         }
+
+    .cottage-spacer {
+        height: 16px;
+        position: relative;
+        display: block;
+    }
+
     .cottage-nav {
         position: relative;
         width: 100%;
