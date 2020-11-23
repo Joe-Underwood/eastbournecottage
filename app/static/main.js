@@ -369,7 +369,6 @@ const vm = new Vue({
             console.log('bookCTAPress');
             //goes to booking section when navbar cta button is pressed
             zenscroll.to(document.querySelector('.calendar-spacer'));
-            document.querySelector('.navbar button').classList.toggle('pressed');
             if (document.querySelector('.side-menu').classList.contains('open')) {
                 this.toggleSideMenu();
             }

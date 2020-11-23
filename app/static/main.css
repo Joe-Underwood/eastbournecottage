@@ -59,6 +59,12 @@ button {
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20); 
     border-radius: 4px;
     cursor: pointer;
+    transition: all 0.2s;
+}
+
+button:active {
+    box-shadow: 0 8px 10px 1px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.20);
+    background-color: rgb(237, 185, 113);
 }
 
 h1, h2 {
@@ -494,7 +500,11 @@ svg {
         .navbar-right {
             padding-right: 16px;
         }
-
+        
+        .nav-links {
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+        }
         .cottage-basic {
             padding-left: 16px;
             padding-right: 16px;
@@ -534,6 +544,11 @@ svg {
         .navbar-right {
             padding-right: 40px;
         } 
+
+        .nav-links {
+            padding-left: 40px !important;
+            padding-right: 40px !important;
+        }
 
         .cottage-basic {
             padding-left: 40px;
@@ -771,26 +786,18 @@ svg {
         padding-bottom: 10px;
     }
     .navbar button {
-        background-color: rgb(226, 138, 12);
-        color: white;
         font-size: 12px;
         line-height: 100%;
         font-weight: 700;
         height: 36px;
         max-width: 120px;
         min-width: 85px;
-        box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20);
         opacity: 1;
-        transition: 0.4s;
 
     }
 
     .navbar button.hidden {
         opacity: 0;
-    }
-
-    .navbar button.pressed {
-        box-shadow: 0 8px 10px 1px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.20);
     }
 
 /*--------------nav-links navbar (widescreen version)---*/
@@ -1019,8 +1026,6 @@ svg {
 
         .hero-message button {
             position: relative;
-            background-color: rgb(226, 138, 12);
-            color: white;
             margin-top: 16px;
             font-size: 12px;
             line-height: 100%;
@@ -1028,7 +1033,6 @@ svg {
             height: 40px;
             width: 100%;
             max-width: 480px;
-            box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20);
         }
 
         @media screen and (max-width: 899px) {
