@@ -58,6 +58,7 @@ button {
     height: 36px;
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20); 
     border-radius: 4px;
+    cursor: pointer;
 }
 
 h1, h2 {
@@ -595,8 +596,9 @@ svg {
         }
 
         .cottage-basic {
-            max-width: 1128px;
-            margin-left: auto;
+            max-width: 1128px;    .navbar-logo:hover {
+                background-color:rgba(0, 0, 0, 0.1);
+            }
             margin-right: auto;
             padding-left: 80px;
             padding-right: 80px;
@@ -646,6 +648,7 @@ svg {
         margin-left: 6px;
         margin-right: 6px;
         grid-column: 1 / span 2;
+        cursor: pointer;
     }
 
     @media screen and (max-width: 899px) {
@@ -727,7 +730,8 @@ svg {
         height: 56px;
         padding-top: 13px;
         padding-bottom: 13px;
-        grid-column: 3 / span 5;  
+        grid-column: 3 / span 5;
+        cursor: pointer;  
     }
 
     @media screen and (max-width: 899px) {
@@ -804,16 +808,59 @@ svg {
     }
 
     .navbar-links div {
-        padding-right: 24px;
         font-size: 14px;
+        line-height: 56px;
+        text-align: center;
+        padding-left: 24px;
+        padding-right: 24px;
+        cursor: pointer
+    }
+
+    .cottage-link span {
+        position: relative;
+        transition: all 0.4s;
+        width: 17px;
+        height: 100%; 
+        transform: rotate3d(0, 0, 1, 0);
+        display: inline-block;
+    }
+
+    .navbar-links div:hover {
+        background-color:rgba(0, 0, 0, 0.1);
+    }
+
+    .cottage-link:hover .cottage-link-span {
+        transform: rotate3d(0, 0, 1, 90deg);
+    }
+
+    .cottage-link:hover .cottage-dropdown {
+        display: block;
     }
 
     .cottage-dropdown {
-        display: block;
+        display: none;
         position: absolute;
         background-color: white;
-        margin-top: 18px;
         z-index: 3;
+        width: 143px;
+        transform: translate3d(-24px, -1px, 0);
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20);
+    }
+
+    .cottage-dropdown li {
+        width: 143px;
+        transform: translate3d(-24px, 0, 0);
+        position: relative;
+        cursor: pointer;
+    }
+
+    .cottage-dropdown:hover {
+        display: block;
+        background-color: white !important;
+    }
+
+    .cottage-dropdown li:hover {
+        background-color: rgba(0, 0, 0, 0.1);
     }
 
 @media screen and (max-width: 899px) {
@@ -922,7 +969,7 @@ svg {
     background-attachment: scroll;*/
     width: 100%;
     height: 100%;
-    z-index: -1;
+    z-index: 2;
 
     display: grid;
     grid-template-columns: repeat(12, 1fr);
@@ -979,7 +1026,8 @@ svg {
             line-height: 100%;
             font-weight: 700;
             height: 40px;
-            width: 480px;
+            width: 100%;
+            max-width: 480px;
             box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20);
         }
 
@@ -1178,7 +1226,6 @@ svg {
             position: relative;
             display: block;
             width: 100%;
-            margin-bottom: 32px;
 
         }
 
@@ -1189,6 +1236,12 @@ svg {
                 width: 100%;
                 height: 60px;
             }
+
+        .calendar-spacer {
+            height: 16px;
+            display: block;
+            position: relative;
+        }
 
         .calendar {
             background-color: white;

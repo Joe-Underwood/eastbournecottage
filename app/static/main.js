@@ -39,18 +39,19 @@ const heroResize = function () {
             newOrientation = 'portait';
         } else {
             heroHeight = window.screen.width;
-            newOrientation = 'landscape';
+            newOrientation = 'landscape';    
         }
     } else {
         if (window.screen.height < window.screen.width) {
             heroHeight = window.screen.height;
-            newOrientation = 'portait';
+            newOrientation = 'landscape';
         } else {
             heroHeight = window.screen.width;
             newOrientation = 'landscape';
         }
     }
     if (currentOrientation != newOrientation) {
+        console.log('change');
         offsetHeight = heroHeight - document.documentElement.offsetHeight;
         currentOrientation = newOrientation;
     }
@@ -317,7 +318,15 @@ const vm = new Vue({
             console.log('top');
             zenscroll.toY(0);
         },
-        goToCottage() {
+        goToCottage(e) {
+            if (e.target.classList.contains('cottage-link')) {
+                zenscroll.to(document.querySelector('.cottage'));
+                if (document.querySelector('.side-menu').classList.contains('open')) {
+                    this.toggleSideMenu();
+                }
+            }
+        },
+        goToCottageGallery() {
             zenscroll.to(document.querySelector('.cottage'));
             if (document.querySelector('.side-menu').classList.contains('open')) {
                 this.toggleSideMenu();
@@ -352,6 +361,15 @@ const vm = new Vue({
         },
         goToContact() {
             zenscroll.to(document.querySelector('.contact'));
+            if (document.querySelector('.side-menu').classList.contains('open')) {
+                this.toggleSideMenu();
+            }
+        },
+        bookCTAPress() {
+            console.log('bookCTAPress');
+            //goes to booking section when navbar cta button is pressed
+            zenscroll.to(document.querySelector('.calendar-spacer'));
+            document.querySelector('.navbar button').classList.toggle('pressed');
             if (document.querySelector('.side-menu').classList.contains('open')) {
                 this.toggleSideMenu();
             }
@@ -407,10 +425,7 @@ const vm = new Vue({
             document.querySelector('.hero-area').classList.toggle('open');
             document.querySelector('.side-menu').classList.toggle('open');          
         },
-        bookCTAPress() {
-            //goes to booking section when navbar cta button is pressed
-            document.querySelector('.navbar button').classList.toggle('pressed');
-        },
+        
 
         //----------------------- SIDE MENU METHODS -----------------------------//
         //-----------navigation links--------------//

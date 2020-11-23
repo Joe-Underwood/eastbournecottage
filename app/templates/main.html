@@ -33,10 +33,10 @@
                 
                 <div class="navbar-right">
                     <div class="navbar-links">
-                        <div v-on:click="goToCottage()">The Cottage <span>&#9662;</span>
+                        <div class="cottage-link" v-on:click="goToCottage($event)">The Cottage <span class="cottage-link-span">&#9662;</span>
                             <div class="cottage-dropdown">
                                 <ul>
-                                    <li v-on:click="goToCottage()">Gallery</li>
+                                    <li v-on:click="goToCottageGallery()">Gallery</li>
                                     <li v-on:click="goToCottageOverview()">Overview</li>
                                     <li v-on:click="goToCottageFacilities()">Facilities</li>
                                     <li v-on:click="goToCottageLocation()">Location</li>
@@ -59,7 +59,7 @@
             <div class="nav-links">
                 <div v-on:click="goToCottage()">The Cottage</div>
                 <ul>
-                    <li v-on:click="goToCottage()">Gallery</li>
+                    <li v-on:click="goToCottageGallery()">Gallery</li>
                     <li v-on:click="goToCottageOverview()">Overview</li>
                     <li v-on:click="goToCottageFacilities()">Facilities</li>
                     <li v-on:click="goToCottageLocation()">Location</li>
@@ -225,7 +225,7 @@
                         <h1>WELCOME TO</h1>
                         <h1>The Cottage</h1>
                         <p>A cosy holiday cottage situated in the seaside town of Eastbourne</p>
-                        <button>BOOK YOUR STAY</button>
+                        <button type="button" v-on:click="bookCTAPress()">BOOK YOUR STAY</button>
                     </div>
                 </header>
 
@@ -336,6 +336,8 @@
 
                             </div>
                         </div>
+
+                        <div class="calendar-spacer"></div>
                         <div class="calendar">
                             
                             <div class="calendar-controls">
