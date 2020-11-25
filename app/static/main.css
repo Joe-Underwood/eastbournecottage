@@ -478,7 +478,6 @@ svg {
         height: 100%;
     }
 
-
     .navbar-right {
         height: 100%;
         display: flex;
@@ -505,6 +504,15 @@ svg {
             padding-left: 16px !important;
             padding-right: 16px !important;
         }
+
+        .gallery {
+            margin-left: 0;
+            margin-right: 0;
+            padding-left: 16px;
+            padding-right: 16px;
+            max-width: none;
+        }
+
         .cottage-basic {
             padding-left: 16px;
             padding-right: 16px;
@@ -548,6 +556,14 @@ svg {
         .nav-links {
             padding-left: 40px !important;
             padding-right: 40px !important;
+        }
+
+        .gallery {
+            margin-left: 0;
+            margin-right: 0;
+            padding-left: 40px;
+            padding-right: 40px;
+            max-width: none;
         }
 
         .cottage-basic {
@@ -610,13 +626,23 @@ svg {
             padding-right: 80px;
         }
 
-        .cottage-basic {
-            max-width: 1128px;    .navbar-logo:hover {
-                background-color:rgba(0, 0, 0, 0.1);
-            }
+        .gallery {
+            margin-left: auto;
             margin-right: auto;
             padding-left: 80px;
             padding-right: 80px;
+            max-width: 1128px;
+        }
+
+        .cottage-basic {
+            max-width: 1128px;    
+            margin-right: auto;
+            padding-left: 80px;
+            padding-right: 80px;
+        }
+
+        .navbar-logo:hover {
+            background-color:rgba(0, 0, 0, 0.1);
         }
 
         .cottage-nav-links {
@@ -1063,15 +1089,12 @@ svg {
 
     .gallery {
         margin-bottom: 16px;
-        margin-right: 16px;
-        margin-left: 16px;
         position: relative;
     }
 
         .swiper-container {
             width: 100%;
-            max-width: 799px;
-            max-height: 550px;
+            max-height: 600px;
         }
 
             .fullscreen-toggle {
