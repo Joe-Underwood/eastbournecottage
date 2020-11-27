@@ -1110,7 +1110,7 @@ svg {
         display: flex;
         position: relative;
         justify-content: space-evenly;
-        width: calc(100% - 32px);
+        width: 100%;
     }
 
         .cottage-basic-items {
@@ -1131,9 +1131,10 @@ svg {
 
             .cottage-basic-items div {
                 font-size: 14px;
-                font-weight: 500;
+                font-weight: 700;
                 line-height: 24px;
                 margin-left: 8px;
+                color: rgb(128, 128, 128);
             }
 
             .cottage-basic-items svg {
@@ -1211,7 +1212,7 @@ svg {
         display: block;
         position: relative;
         background-color:white;
-        margin-top: 16px;
+        margin-top: 32px;
     }
 
         .overview {
@@ -1234,6 +1235,9 @@ svg {
             }
 
             .location-nearby {
+                margin-top: 16px;
+            }
+            .location-description {
                 margin-top: 16px;
             }
 
