@@ -637,6 +637,7 @@ svg {
         .cottage-basic {
             max-width: 1128px;    
             margin-right: auto;
+            margin-left: auto;
             padding-left: 80px;
             padding-right: 80px;
         }
@@ -1114,10 +1115,10 @@ svg {
 
         .cottage-basic-items {
             display: flex;
-            justify-content: space-evenly;
+            justify-content: center;
             width: 100%;
-            border-left: 1px solid #a5c2cf;
-            border-right: 1px solid #a5c2cf;
+            /*border-left: 1px solid #a5c2cf;
+            border-right: 1px solid #a5c2cf;*/
         }
 
         .cottage-basic-items:nth-child(1) {
@@ -1130,6 +1131,13 @@ svg {
 
             .cottage-basic-items div {
                 font-size: 14px;
+                font-weight: 500;
+                line-height: 24px;
+                margin-left: 8px;
+            }
+
+            .cottage-basic-items svg {
+                margin-right: 8px;
             }
 
         .people-icon {

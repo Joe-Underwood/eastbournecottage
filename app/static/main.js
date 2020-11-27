@@ -33,25 +33,28 @@ let newOrientation;
 
 
 const heroResize = function () {
-    if (document.documentElement.offsetHeight > document.documentElement.offsetWidth) {
-        if (window.screen.height > window.screen.width) {
+    if (window.screen.height > window.screen.width) {
+        if (document.documentElement.offsetHeight > document.documentElement.offsetWidth) {
             heroHeight = window.screen.height;
             newOrientation = 'portait';
-        } else {
-            heroHeight = window.screen.width;
-            newOrientation = 'landscape';    
         }
-    } else {
-        if (window.screen.height < window.screen.width) {
+        else {
+            heroHeight = window.screen.width;
+            newOrientation = 'landscape';
+        }
+    } 
+    else {
+        if (document.documentElement.offsetWidth > document.documentElement.offsetHeight) {
             heroHeight = window.screen.height;
             newOrientation = 'landscape';
-        } else {
+        }
+        else {
             heroHeight = window.screen.width;
-            newOrientation = 'landscape';
+            newOrientation = 'portait';
         }
     }
+
     if (currentOrientation != newOrientation) {
-        console.log('change');
         offsetHeight = heroHeight - document.documentElement.offsetHeight;
         currentOrientation = newOrientation;
     }
