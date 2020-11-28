@@ -1293,13 +1293,15 @@ svg {
             position: relative;
         }
 
-        @media screen and (max-width: 735px) {
+        @media screen and (max-width: 1065px) {
             .calendar {
                 max-width: 352px;
             }
+
+
         }
 
-        @media screen and (min-width: 736px) {
+        @media screen and (min-width: 1066px) {
             .calendar {
                 max-width: 704px;
             }
@@ -1377,7 +1379,7 @@ svg {
                     margin-left: 8px;
                 }
 
-            @media screen and (max-width: 735px) {
+            @media screen and (max-width: 1065px) {
                 .calendar-weekdays-both {
                     grid-template-columns: 1fr;
                 }
@@ -1391,7 +1393,7 @@ svg {
                 }
             }
 
-            @media screen and (min-width: 736px) {
+            @media screen and (min-width: 1066px) {
                 .calendar-weekdays-both {
                     grid-template-columns: 1fr 1fr;
                 }
@@ -1528,7 +1530,50 @@ svg {
             margin-bottom: 8px;
         }
 
+        .booking-main {
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .booking-summary {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            min-width: 250px;
+        }
+
+        @media screen and (max-width: 735px) {
+            .booking-main {
+                flex-direction: column;
+                justify-content: space-between;
+            }
+        }
+
+        @media screen and (min-width: 736px) {
+            .booking-main {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            .availability-form .input-container {
+                margin-bottom: 0;
+            }
+
+            .booking-summary {
+                margin-left: 16px;
+            }
+
+            .booking-proceed-box {
+                margin-top:auto;
+            }
+        }
+
         .availability-form {
+            width: 100%;
+        }
+
+        .booking-proceed-box {
             width: 100%;
         }
 

@@ -1299,6 +1299,6 @@ function toggleCalendarSlides(x) {
     calendarSwiper.update();
   }
   
-  const x = window.matchMedia("(max-width: 735px)")
+  const x = window.matchMedia("(max-width: 1065px)")
   toggleCalendarSlides(x) // Call listener function at run time
   x.addEventListener("change", toggleCalendarSlides) // Attach listener function on state changes 
