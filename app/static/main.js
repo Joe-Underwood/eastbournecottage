@@ -270,7 +270,9 @@ const vm = new Vue({
         //party-overlay
         partyScrimClose: false,
         initialY: undefined,
-        offsetY: undefined
+        offsetY: undefined,
+        //guests-dropdown
+        guestsDropdownOpen: false
 
     },
     computed: {
@@ -960,14 +962,22 @@ const vm = new Vue({
             document.querySelector('#guests').parentElement.classList.remove('focused');
         },
         displayPartyOverlay() {
+            const x = window.matchMedia("(max-width: 735px)");
             this.guestsFocus();
 
-            document.querySelector('.party-wrapper').classList.remove('closed');
-            document.querySelector('.party-wrapper').classList.add('open');
-            document.querySelector('.party-container').classList.add('open');
-            document.querySelector('.party-container').style.transform = 'translate3d(0, 0, 0)';
-
-            disableBodyScroll(document.querySelector('.party-container'));
+            if (x.matches) {
+                document.querySelector('.party-wrapper').classList.remove('closed');
+                document.querySelector('.party-wrapper').classList.add('open');
+                document.querySelector('.party-container').classList.add('open');
+                document.querySelector('.party-container').style.transform = 'translate3d(0, 0, 0)';
+    
+                disableBodyScroll(document.querySelector('.party-container'));
+            } 
+            else {
+                document.querySelector('.guests-dropdown').classList.add('open');
+                window.addEventListener('click', this.hideGuestsDropdown);
+            }
+            
         },
         hidePartyOverlay() {
             document.querySelector('#guests').focus();
@@ -985,6 +995,24 @@ const vm = new Vue({
                 }
             }
             enableBodyScroll(document.querySelector('.party-container'));
+        },
+        hideGuestsDropdown(e) {
+            if (!this.guestsDropdownOpen) {
+                this.guestsDropdownOpen = true;
+            }
+            else if (!document.querySelector('.guests-dropdown').contains(e.target)) {
+                document.querySelector('.guests-dropdown').classList.remove('open');
+                this.guestsBlur();
+                window.removeEventListener('click', this.hideGuestsDropdown);
+                this.guestsDropdownOpen = false;
+            }
+            /*if (!document.querySelector('.guests-dropdown').contains(e.target)) {
+                document.querySelector('.guests-dropdown').classList.remove('open');
+                document.querySelector('.guests-dropdown').blur();
+                this.guestsBlur();
+                window.removeEventListener('click', this.hideGuestsDropdown);
+            }*/
+            
         },
         //-----------------------BOOKING BOX ---------------------//
         calculatePrice(arrDate, depDate) {
@@ -1098,83 +1126,105 @@ const vm = new Vue({
             e.preventDefault();
             if (this.bookingFormData.adults > 0) {
                 this.bookingFormData.adults--;
-                document.querySelector('#adults .party-increase').classList.remove('inactive');
-                document.querySelector('#children .party-increase').classList.remove('inactive');
+                document.querySelectorAll('#adults .party-increase')[0].classList.remove('inactive');
+                document.querySelectorAll('#children .party-increase')[0].classList.remove('inactive');
+                document.querySelectorAll('#adults .party-increase')[1].classList.remove('inactive');
+                document.querySelectorAll('#children .party-increase')[1].classList.remove('inactive');
             }
             if (this.bookingFormData.adults === 0) {
-                document.querySelector('#adults div').classList.remove('active');
-                document.querySelector('#adults .party-decrease').classList.add('inactive');
+                document.querySelectorAll('#adults div')[0].classList.remove('active');
+                document.querySelectorAll('#adults .party-decrease')[0].classList.add('inactive');
+                document.querySelectorAll('#adults div')[1].classList.remove('active');
+                document.querySelectorAll('#adults .party-decrease')[1].classList.add('inactive');
             } 
         },
         adultsIncrease(e) {
             e.preventDefault();
             if (this.bookingFormData.adults + this.bookingFormData.children < this.partyMax) {
                 this.bookingFormData.adults++;  
-                document.querySelector('#adults .party-decrease').classList.remove('inactive');
+                document.querySelectorAll('#adults .party-decrease')[0].classList.remove('inactive');
+                document.querySelectorAll('#adults .party-decrease')[1].classList.remove('inactive');
             } 
             if (this.bookingFormData.adults + this.bookingFormData.children === this.partyMax) {
-                document.querySelector('#adults .party-increase').classList.add('inactive');
-                document.querySelector('#children .party-increase').classList.add('inactive'); 
-            } else {
-                
-            }
+                document.querySelectorAll('#adults .party-increase')[0].classList.add('inactive');
+                document.querySelectorAll('#children .party-increase')[0].classList.add('inactive'); 
+                document.querySelectorAll('#adults .party-increase')[1].classList.add('inactive');
+                document.querySelectorAll('#children .party-increase')[1].classList.add('inactive'); 
+            } 
             document.querySelector('#adults div').classList.add('active');
         },
         childrenDecrease(e) {
             e.preventDefault();
             if (this.bookingFormData.children > 0) {
                 this.bookingFormData.children--;
-                document.querySelector('#children .party-increase').classList.remove('inactive');
-                document.querySelector('#adults .party-increase').classList.remove('inactive');
+                document.querySelectorAll('#children .party-increase')[0].classList.remove('inactive');
+                document.querySelectorAll('#adults .party-increase')[0].classList.remove('inactive');
+                document.querySelectorAll('#children .party-increase')[1].classList.remove('inactive');
+                document.querySelectorAll('#adults .party-increase')[1].classList.remove('inactive');
             }
             if (this.bookingFormData.children === 0) {
-                document.querySelector('#children div').classList.remove('active');
-                document.querySelector('#children .party-decrease').classList.add('inactive');
+                document.querySelectorAll('#children div')[0].classList.remove('active');
+                document.querySelectorAll('#children .party-decrease')[0].classList.add('inactive');
+                document.querySelectorAll('#children div')[1].classList.remove('active');
+                document.querySelectorAll('#children .party-decrease')[1].classList.add('inactive');
             }
         },
         childrenIncrease(e) {
             e.preventDefault();
             if (this.bookingFormData.children + this.bookingFormData.adults < this.partyMax) {
                 this.bookingFormData.children++;  
-                document.querySelector('#children .party-decrease').classList.remove('inactive');
+                document.querySelectorAll('#children .party-decrease')[0].classList.remove('inactive');
+                document.querySelectorAll('#children .party-decrease')[1].classList.remove('inactive');
             } 
             if (this.bookingFormData.children + this.bookingFormData.adults === this.partyMax) {
-                document.querySelector('#children .party-increase').classList.add('inactive');
-                document.querySelector('#adults .party-increase').classList.add('inactive');
+                document.querySelectorAll('#children .party-increase')[0].classList.add('inactive');
+                document.querySelectorAll('#adults .party-increase')[0].classList.add('inactive');
+                document.querySelectorAll('#children .party-increase')[1].classList.add('inactive');
+                document.querySelectorAll('#adults .party-increase')[1].classList.add('inactive');
             }
-            document.querySelector('#children div').classList.add('active');
+            document.querySelectorAll('#children div')[0].classList.add('active');
+            document.querySelectorAll('#children div')[1].classList.add('active');
         },
         infantsDecrease(e) {
             e.preventDefault();
             if (this.bookingFormData.infants > 0) {
                 this.bookingFormData.infants--;
-                document.querySelector('#infants .party-increase').classList.remove('inactive');
+                document.querySelectorAll('#infants .party-increase')[0].classList.remove('inactive');
+                document.querySelectorAll('#infants .party-increase')[1].classList.remove('inactive');
             }
             if (this.bookingFormData.infants === 0) {
-                document.querySelector('#infants div').classList.remove('active');
-                document.querySelector('#infants .party-decrease').classList.add('inactive');
+                document.querySelectorAll('#infants div')[0].classList.remove('active');
+                document.querySelectorAll('#infants .party-decrease')[0].classList.add('inactive');
+                document.querySelectorAll('#infants div')[1].classList.remove('active');
+                document.querySelectorAll('#infants .party-decrease')[1].classList.add('inactive');
             }
         },
         infantsIncrease(e) {
             e.preventDefault();
             if (this.bookingFormData.infants < this.infantsMax) {
                 this.bookingFormData.infants++;
-                document.querySelector('#infants .party-decrease').classList.remove('inactive');
+                document.querySelectorAll('#infants .party-decrease')[0].classList.remove('inactive');
+                document.querySelectorAll('#infants .party-decrease')[1].classList.remove('inactive');
             }
             if (this.bookingFormData.infants === this.infantsMax) {
-                document.querySelector('#infants .party-increase').classList.add('inactive');
+                document.querySelectorAll('#infants .party-increase')[0].classList.add('inactive');
+                document.querySelectorAll('#infants .party-increase')[1].classList.add('inactive');
             }
-            document.querySelector('#infants div').classList.add('active');
+            document.querySelectorAll('#infants div')[0].classList.add('active');
+            document.querySelectorAll('#infants div')[1].classList.add('active');
         },
         dogsDecrease(e) {
             e.preventDefault();
             if (this.bookingFormData.dogs > 0) {
                 this.bookingFormData.dogs--;
-                document.querySelector('#dogs .party-increase').classList.remove('inactive');
+                document.querySelectorAll('#dogs .party-increase')[0].classList.remove('inactive');
+                document.querySelectorAll('#dogs .party-increase')[1].classList.remove('inactive');
             }
             if (this.bookingFormData.dogs === 0) {
-                document.querySelector('#dogs div').classList.remove('active');
-                document.querySelector('#dogs .party-decrease').classList.add('inactive');
+                document.querySelectorAll('#dogs div')[0].classList.remove('active');
+                document.querySelectorAll('#dogs .party-decrease')[0].classList.add('inactive');
+                document.querySelectorAll('#dogs div')[1].classList.remove('active');
+                document.querySelectorAll('#dogs .party-decrease')[1].classList.add('inactive');
             }
             this.bookingFormData.price -= this.bookingFormData.dogs * this.pricePerDog;
         },
@@ -1182,12 +1232,15 @@ const vm = new Vue({
             e.preventDefault();
             if (this.bookingFormData.dogs < this.dogsMax) {
                 this.bookingFormData.dogs++;
-                document.querySelector('#dogs .party-decrease').classList.remove('inactive');
+                document.querySelectorAll('#dogs .party-decrease')[0].classList.remove('inactive');
+                document.querySelectorAll('#dogs .party-decrease')[1].classList.remove('inactive');
             }
             if (this.bookingFormData.dogs === this.dogsMax) {
-                document.querySelector('#dogs .party-increase').classList.add('inactive');
+                document.querySelectorAll('#dogs .party-increase')[0].classList.add('inactive');
+                document.querySelectorAll('#dogs .party-increase')[1].classList.add('inactive');
             }
-            document.querySelector('#dogs div').classList.add('active');
+            document.querySelectorAll('#dogs div')[0].classList.add('active');
+            document.querySelectorAll('#dogs div')[1].classList.add('active');
             this.bookingFormData.price += this.bookingFormData.dogs * this.pricePerDog;
         },
 
@@ -1299,6 +1352,6 @@ function toggleCalendarSlides(x) {
     calendarSwiper.update();
   }
   
-  const x = window.matchMedia("(max-width: 1065px)")
+  const x = window.matchMedia("(max-width: 1081px)")
   toggleCalendarSlides(x) // Call listener function at run time
   x.addEventListener("change", toggleCalendarSlides) // Attach listener function on state changes 

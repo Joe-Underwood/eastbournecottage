@@ -389,7 +389,48 @@
         
                                         <div class="input-container">
                                             <label for="guests">Guests</label>
-                                            <div id="guests" v-on:focus="displayPartyOverlay()" v-on:blur="guestsBlur()" tabindex="0">&#60;% partyString %></div>
+                                            <div id="guests" v-on:click="displayPartyOverlay()" v-on:blur="guestsBlur()" tabindex="0"><p>&#60;% partyString %></p>
+                                                <div class="party-container guests-dropdown" tabindex="0">
+                                
+                                                    <div class="party-input-container">
+                                                        <label for="adults"><h5>Adults</h5>Ages 13 or above</label>
+                                
+                                                        <div class="party-input" id="adults">
+                                                            <button type="button" v-on:click="adultsDecrease($event)" class="party-decrease inactive">-</button>
+                                                            <div>&#60;% bookingFormData.adults %></div>
+                                                            <button type="button" v-on:click="adultsIncrease($event)" class="party-increase">+</button>
+                                                        </div>
+                                                    </div>
+                                
+                                                    <div class="party-input-container">
+                                                        <label for="children"><h5>Children</h5>Ages 2-12</label>
+                                                        <div class="party-input" id="children">
+                                                            <button type="button" v-on:click="childrenDecrease($event)" class="party-decrease inactive">-</button>
+                                                            <div>&#60;% bookingFormData.children %></div>
+                                                            <button type="button" v-on:click="childrenIncrease($event)" class="party-increase">+</button>
+                                                        </div>
+                                                    </div>
+                                
+                                                    <div class="party-input-container">
+                                                        <label for="infants"><h5>Infants</h5>Under 2</label>
+                                                        <div class="party-input" id="infants">
+                                                            <button type="button" v-on:click="infantsDecrease($event)" class="party-decrease inactive">-</button>
+                                                            <div>&#60;% bookingFormData.infants %></div>
+                                                            <button type="button" v-on:click="infantsIncrease($event)" class="party-increase">+</button>
+                                                        </div>
+                                                    </div>
+                                
+                                                    <div class="party-input-container">
+                                                        <label for="dogs"><h5>Dogs</h5>£20 each</label>
+                                                        <div class="party-input" id="dogs">
+                                                            <button type="button" v-on:click="dogsDecrease($event)" class="party-decrease inactive">-</button>
+                                                            <div>&#60;% bookingFormData.dogs %></div>
+                                                            <button type="button" v-on:click="dogsIncrease($event)" class="party-increase">+</button>
+                                                        </div>
+                                                    </div>
+                                                                            
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     

@@ -412,6 +412,7 @@ svg {
             .party-input-container label {
                 position: relative;
                 padding-left: 8px;
+                line-height: 16px;
             }
 
             .party-input {
@@ -1291,17 +1292,17 @@ svg {
             max-width: 352px;
             width: 100%;
             position: relative;
+            margin-left:auto;
+            margin-right:auto;
         }
 
-        @media screen and (max-width: 1065px) {
+        @media screen and (max-width: 1081px) {
             .calendar {
                 max-width: 352px;
             }
-
-
         }
 
-        @media screen and (min-width: 1066px) {
+        @media screen and (min-width: 1082px) {
             .calendar {
                 max-width: 704px;
             }
@@ -1379,7 +1380,7 @@ svg {
                     margin-left: 8px;
                 }
 
-            @media screen and (max-width: 1065px) {
+            @media screen and (max-width: 1081px) {
                 .calendar-weekdays-both {
                     grid-template-columns: 1fr;
                 }
@@ -1393,7 +1394,7 @@ svg {
                 }
             }
 
-            @media screen and (min-width: 1066px) {
+            @media screen and (min-width: 1082px) {
                 .calendar-weekdays-both {
                     grid-template-columns: 1fr 1fr;
                 }
@@ -1540,17 +1541,23 @@ svg {
             width: 100%;
             display: flex;
             flex-direction: column;
-            min-width: 250px;
+            min-width: 266px;
+            max-width: 500px;
+            margin-bottom: auto;
         }
 
-        @media screen and (max-width: 735px) {
+        @media screen and (max-width: 751px) {
             .booking-main {
                 flex-direction: column;
                 justify-content: space-between;
             }
+
+            .booking-summary {
+                margin-top: 16px;
+            }
         }
 
-        @media screen and (min-width: 736px) {
+        @media screen and (min-width: 752px) {
             .booking-main {
                 flex-direction: row;
                 justify-content: space-between;
@@ -1571,6 +1578,7 @@ svg {
 
         .availability-form {
             width: 100%;
+            z-index: 1;
         }
 
         .booking-proceed-box {
@@ -1581,7 +1589,6 @@ svg {
                 display: flex;
                 position: relative;
                 width: 100%;
-                margin-top: 16px;
             }
 
                 .date-fields .input-container {
@@ -1629,6 +1636,26 @@ svg {
                 #departure-date.focused,
                 #guests.focused {
                     border: 2px solid rgb(15, 72, 117);
+                }
+
+                #guests p {
+                    height: 36px;
+                }
+
+                .guests-dropdown {
+                    position: absolute;
+                    transform: translate3d(-17px, 8px, 0);
+                    border-radius: 0;
+                    display: none;
+                    padding-top: 8px;
+                    border: 1px solid #a5c2cf;
+                    border-radius: 4px;
+                    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20);
+                }
+
+                .guests-dropdown.open {
+                    display: block;
+                    transform: translate3d(-17px, 8px, 0);
                 }
                 
 
