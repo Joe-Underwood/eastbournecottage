@@ -612,9 +612,9 @@ svg {
     }
 
 
-    @media screen and (min-width: 1129px) {
+    @media screen and (min-width: 1158px) {
         .navbar-inner {
-            max-width: 1128px;
+            max-width: 1157px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -632,11 +632,11 @@ svg {
             margin-right: auto;
             padding-left: 80px;
             padding-right: 80px;
-            max-width: 1128px;
+            max-width: 1157px;
         }
 
         .cottage-basic {
-            max-width: 1128px;    
+            max-width: 1157px;    
             margin-right: auto;
             margin-left: auto;
             padding-left: 80px;
@@ -648,7 +648,7 @@ svg {
         }
 
         .cottage-nav-links {
-            max-width: 1128px;
+            max-width: 1157px;
             margin-left: auto;
             margin-right: auto;
             padding-left: 80px;
@@ -658,7 +658,7 @@ svg {
         .cottage-content {
             padding-left: 80px;
             padding-right: 80px;
-            max-width: 1128px;
+            max-width: 1157px;
             margin-left: auto;
             margin-right: auto
         }
@@ -666,13 +666,13 @@ svg {
         .booking-content {
             padding-left: 80px;
             padding-right: 80px;
-            max-width: 1128px;
+            max-width: 1157px;
             margin-left: auto;
             margin-right: auto;
         }
 
         .contact {
-            max-width: 1128px;
+            max-width: 1157px;
             margin-left: auto;
             margin-right: auto;
             padding-left: 80px;
@@ -1644,7 +1644,7 @@ svg {
 
                 .guests-dropdown {
                     position: absolute;
-                    transform: translate3d(-17px, 8px, 0);
+                    transform: translate3d(-18px, 8px, 0);
                     border-radius: 0;
                     display: none;
                     padding-top: 8px;
@@ -1655,7 +1655,7 @@ svg {
 
                 .guests-dropdown.open {
                     display: block;
-                    transform: translate3d(-17px, 8px, 0);
+                    transform: translate3d(-18px, 8px, 0);
                 }
                 
 
