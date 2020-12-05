@@ -1574,6 +1574,13 @@ svg {
             .booking-proceed-box {
                 margin-top:auto;
             }
+        }   
+
+        .booking-helper-text {
+            display: block;
+            padding-bottom: 8px;
+            padding-left: 8px;
+            position: relative;
         }
 
         .availability-form {
