@@ -948,12 +948,15 @@ const vm = new Vue({
         arrivalDateFocus() {
             document.querySelector('#departure-date').classList.remove('focused');
             document.querySelector('#departure-date').parentElement.classList.remove('focused');
+            document.querySelector('#departure-date').parentElement.children[0].classList.remove('focused');
 
             document.querySelector('#arrival-date').classList.add('focused');
             document.querySelector('#arrival-date').parentElement.classList.add('focused');
+            document.querySelector('#arrival-date').parentElement.children[0].classList.add('focused');
 
             document.querySelector('#guests').classList.remove('focused');
             document.querySelector('#guests').parentElement.classList.remove('focused');
+            document.querySelector('#guests').parentElement.children[0].classList.remove('focused');
 
             this.calendarSelector = 'arrival';
             this.hideInvalidDates();
@@ -961,6 +964,7 @@ const vm = new Vue({
         arrivalDateBlur() {
             document.querySelector('#arrival-date').classList.remove('focused');
             document.querySelector('#arrival-date').parentElement.classList.remove('focused');
+            document.querySelector('#arrival-date').parentElement.children[0].classList.remove('focused');
         },
         departureDateFocus() {
             if (!this.bookingFormData.arrivalDate && !this.bookingFormData.departureDate) {
@@ -969,12 +973,15 @@ const vm = new Vue({
             }
             document.querySelector('#arrival-date').classList.remove('focused');
             document.querySelector('#arrival-date').parentElement.classList.remove('focused');
+            document.querySelector('#arrival-date').parentElement.children[0].classList.remove('focused');
 
             document.querySelector('#departure-date').classList.add('focused');
             document.querySelector('#departure-date').parentElement.classList.add('focused');
+            document.querySelector('#departure-date').parentElement.children[0].classList.add('focused');
 
             document.querySelector('#guests').classList.remove('focused');
             document.querySelector('#guests').parentElement.classList.remove('focused');
+            document.querySelector('#guests').parentElement.children[0].classList.remove('focused');
 
             this.calendarSelector = 'departure';
             this.showInvalidDates();
@@ -982,20 +989,25 @@ const vm = new Vue({
         departureDateBlur() {
             document.querySelector('#departure-date').classList.remove('focused');
             document.querySelector('#departure-date').parentElement.classList.remove('focused');
+            document.querySelector('#departure-date').parentElement.children[0].classList.remove('focused');
         },
         guestsFocus() {
             document.querySelector('#guests').classList.add('focused');
             document.querySelector('#guests').parentElement.classList.add('focused');
+            document.querySelector('#guests').parentElement.children[0].classList.add('focused');
 
             document.querySelector('#arrival-date').classList.remove('focused');
             document.querySelector('#arrival-date').parentElement.classList.remove('focused');
+            document.querySelector('#arrival-date').parentElement.children[0].classList.remove('focused');
 
             document.querySelector('#departure-date').classList.remove('focused');
             document.querySelector('#departure-date').parentElement.classList.remove('focused');
+            document.querySelector('#departure-date').parentElement.children[0].classList.remove('focused');
         },
         guestsBlur() {
             document.querySelector('#guests').classList.remove('focused');
             document.querySelector('#guests').parentElement.classList.remove('focused');
+            document.querySelector('#guests').parentElement.children[0].classList.remove('focused');
         },
         displayPartyOverlay() {
             const x = window.matchMedia("(max-width: 735px)");
@@ -1302,13 +1314,13 @@ const vm = new Vue({
 
             e.target.parentElement.classList.add('focused');
 
-            e.target.parentElement.querySelector('.clear-icon').classList.add('visible');
+            /*e.target.parentElement.querySelector('.clear-icon').classList.add('visible');*/
         },
         inputBlur(e) {
             e.target.classList.remove('focused');
             e.target.labels[0].classList.remove('focused');
             e.target.parentElement.classList.remove('focused');
-            e.target.parentElement.querySelector('.clear-icon').classList.remove('visible');
+            /*e.target.parentElement.querySelector('.clear-icon').classList.remove('visible');*/
             
             if (e.target.value) {
                 e.target.classList.add('activated');
