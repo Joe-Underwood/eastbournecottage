@@ -441,10 +441,15 @@
         
                                     
                                 <div class="booking-proceed-box">
-                                    <div class="total-box">
-                                        <div>Total</div>
-                                        <div>£&#60;% bookingFormData.price %></div>
+                                    <div class="total-breakdown">
+                                        <div class="stay-length-total"></div>
+                                        <div class="dog-total"></div>
+                                        <div class="total-box">
+                                            <div>Total</div>
+                                            <div>£&#60;% bookingFormData.price %></div>
+                                        </div>
                                     </div>
+                                    
                                     
                                     <button class="booking-proceed" type="button" v-on:click="bookingProceed()">BOOK NOW</button>
                                 </div>

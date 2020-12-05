@@ -708,6 +708,20 @@ const vm = new Vue({
                 document.querySelector('.booking-helper-text').innerHTML = 'Dates available';
             }
         },
+        bookingShowTotal() {
+            if (this.bookingFormData.arrivalDate && this.bookingFormData.departureDate) {
+                document.querySelector('.total-breakdown').classList.add('show');
+                document.querySelector('.stay-length-total').innerHTML = '<div>1 week</div><div>£500.00</div>';
+                if (this.bookingFormData.dogs) {
+                    document.querySelector('.dog-total').classList.add('show');
+                    document.querySelector('.dog-total').innerHTML = '<div>1 dog</div><div>£20.00</div>';
+                }
+            }
+            else {
+                document.querySelector('.total-breakdown').classList.remove('show');
+                document.querySelector('.dog-total').classList.remove('show');
+            }
+        },
         selectDate(element, date) {
             if (element.classList.contains('available')) {
                 if (element.classList.contains('arrival-date')) {
@@ -717,6 +731,7 @@ const vm = new Vue({
                         this.hideDateRange();
                     } 
                     this.bookingHelperText();
+                    this.bookingShowTotal();
                     return;
                 } 
                 else if (element.classList.contains('departure-date')) {
@@ -725,6 +740,7 @@ const vm = new Vue({
                         this.hideDateRange();
                     }
                     this.bookingHelperText();
+                    this.bookingShowTotal();
                     return;
                 }
                 if (this.calendarSelector === 'arrival') {
@@ -759,11 +775,13 @@ const vm = new Vue({
             if (this.arrivalDateObject && this.departureDateObject) {
                 this.bookingFormData.price = this.calculatePrice(this.arrivalDateObject, this.departureDateObject);
                 this.bookingHelperText();
+                this.bookingShowTotal();
                 return;
             } else {
                 this.bookingFormData.price = this.bookingFormData.dogs * this.pricePerDog;;
             }
             this.bookingHelperText();
+            this.bookingShowTotal();
         },
         selectArrivalDate(element, date) {
             let arrivalDates = document.querySelectorAll('.arrival-date');
@@ -1156,6 +1174,7 @@ const vm = new Vue({
                 document.querySelectorAll('#adults .party-decrease')[1].classList.add('inactive');
             } 
             this.bookingHelperText();
+            this.bookingShowTotal();
         },
         adultsIncrease(e) {
             e.preventDefault();
@@ -1172,6 +1191,7 @@ const vm = new Vue({
             } 
             document.querySelector('#adults div').classList.add('active');
             this.bookingHelperText();
+            this.bookingShowTotal();
         },
         childrenDecrease(e) {
             e.preventDefault();
@@ -1188,6 +1208,7 @@ const vm = new Vue({
                 document.querySelectorAll('#children div')[1].classList.remove('active');
                 document.querySelectorAll('#children .party-decrease')[1].classList.add('inactive');
             }
+            this.bookingShowTotal();
         },
         childrenIncrease(e) {
             e.preventDefault();
@@ -1204,6 +1225,7 @@ const vm = new Vue({
             }
             document.querySelectorAll('#children div')[0].classList.add('active');
             document.querySelectorAll('#children div')[1].classList.add('active');
+            this.bookingShowTotal();
         },
         infantsDecrease(e) {
             e.preventDefault();
@@ -1218,6 +1240,7 @@ const vm = new Vue({
                 document.querySelectorAll('#infants div')[1].classList.remove('active');
                 document.querySelectorAll('#infants .party-decrease')[1].classList.add('inactive');
             }
+            this.bookingShowTotal();
         },
         infantsIncrease(e) {
             e.preventDefault();
@@ -1232,6 +1255,7 @@ const vm = new Vue({
             }
             document.querySelectorAll('#infants div')[0].classList.add('active');
             document.querySelectorAll('#infants div')[1].classList.add('active');
+            this.bookingShowTotal();
         },
         dogsDecrease(e) {
             e.preventDefault();
@@ -1247,6 +1271,7 @@ const vm = new Vue({
                 document.querySelectorAll('#dogs .party-decrease')[1].classList.add('inactive');
             }
             this.bookingFormData.price -= this.bookingFormData.dogs * this.pricePerDog;
+            this.bookingShowTotal();
         },
         dogsIncrease(e) {
             e.preventDefault();
@@ -1262,6 +1287,7 @@ const vm = new Vue({
             document.querySelectorAll('#dogs div')[0].classList.add('active');
             document.querySelectorAll('#dogs div')[1].classList.add('active');
             this.bookingFormData.price += this.bookingFormData.dogs * this.pricePerDog;
+            this.bookingShowTotal();
         },
 
         //-----------personal details//

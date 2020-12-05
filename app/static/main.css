@@ -1666,8 +1666,40 @@ svg {
                 }
                 
 
+        .total-breakdown {
+            display: none;
+            flex-direction: column;
+            padding-left: 8px;
+            padding-right: 8px;
+            padding-top: 16px;
+            padding-bottom: 8px;
+        }
+
+        .total-breakdown.show {
+            display: flex;
+        }
+
+            .stay-length-total {
+                display: flex;
+                position: relative;
+                justify-content: space-between;
+                padding-bottom: 8px;
+            }
+
+            .dog-total {
+                display: none;
+                position: relative;
+                justify-content: space-between;
+                padding-bottom: 8px;
+            }
+
+            .dog-total.show {
+                display: flex;
+            }
+
         .total-box {
-            margin-top: 16px;
+            padding-top: 8px;
+            border-top: 1px solid rgb(15, 72, 117);
             position: relative;
             display: flex;
             justify-content: space-between;
