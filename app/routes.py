@@ -98,4 +98,4 @@ def booking():
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
 
-    return render_template('admin_login.html')
+    return render_template('admin.html')

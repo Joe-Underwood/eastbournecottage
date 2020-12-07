@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="user-scalable=no, width=device-width, height=device-height, initial-scale=1.0" />
+    <title>The Cottage - Admin</title>
+    <link rel="stylesheet" href="../static/admin.css" />
+</head>
+
+<body>
+    <div id="root">
+        <!--=============  NAVIGATION  ================-->
+        <nav class="navbar">
+
+            <div class="navbar-inner">
+                <div class="navbar-left">
+                    <div class="hamburger-container" v-on:click="hamburgerAction()">
+                        <div ref="hamburger" class="hamburger">
+                            <span v-for="i in 3"></span>
+                        </div>
+                    </div>
+    
+                    <div class="navbar-logo" v-on:click="scrollToTop()">
+                        <div>THE COTTAGE</div>
+                        <div>ADMIN</div>
+                    </div>
+                </div>
+                
+                <div class="navbar-right">
+                    <div class="navbar-links">
+                        <div class="cottage-link" v-on:click="goToCottage($event)">The Cottage <span class="cottage-link-span">&#9662;</span>
+                            <div class="cottage-dropdown">
+                                <ul>
+                                    <li v-on:click="goToCottageGallery()">Gallery</li>
+                                    <li v-on:click="goToCottageOverview()">Overview</li>
+                                    <li v-on:click="goToCottageFacilities()">Facilities</li>
+                                    <li v-on:click="goToCottageLocation()">Location</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div v-on:click="goToBooking()">Availability &amp; Booking</div>
+                        <div v-on:click="goToContact()">Contact Us</div>
+                    </div>
+    
+                </div>
+            </div>
+            
+        </nav>
+
+        <div ref="sideMenu" class="side-menu" v-on:touchstart="menuTouchstart($event)" v-on:touchmove="menuTouchmove($event)" v-on:touchend="menuTouchend($event)">
+            <div class="nav-links">
+                <div v-on:click="goToCottage()">The Cottage</div>
+                <ul>
+                    <li v-on:click="goToCottageGallery()">Gallery</li>
+                    <li v-on:click="goToCottageOverview()">Overview</li>
+                    <li v-on:click="goToCottageFacilities()">Facilities</li>
+                    <li v-on:click="goToCottageLocation()">Location</li>
+                </ul>
+                <div v-on:click="goToBooking()">Availability &amp; Booking</div>
+                <div v-on:click="goToContact()">Contact Us</div>
+            </div>
+        </div>
+
+        <div class="page-content">
+
+            <div class="price-list-editor">
+                <h1>Price List Editor</h1>
+
+                <div class="list-view">
+                    <div class="price-list-segment" v-for="segment in priceList">
+                        <input type="date" :value="segment['startDate'].toISOString().slice(0, 10)" />
+                        <input type="number" step="0.01" :value="segment['price']" />
+                    </div>
+                </div>
+
+                <div class="price-list-settings">
+                    <label for="changeover-day">Changeover Day</label>
+                    <select id="changeover-day" name="changeover-day">
+                        <option value="monday">Monday</option>
+                        <option value="tuesday">Tuesday</option>
+                        <option value="wednesday">Wednesday</option>
+                        <option value="thursday">Thursday</option>
+                        <option value="friday">Friday</option>
+                        <option value="saturday">Saturday</option>
+                        <option value="sunday">Sunday</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="bookings-editor">
+                <h1>Bookings Editor</h1>
+                <div class="calendar-view">
+
+                </div>
+                <div class="list-view">
+                    <ul></ul>
+                </div>
+            </div>
+
+        </div>
+        
+
+
+    </div>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-async-computed"></script>
+<script src="../static/body-scroll-lock/bodyScrollLock.js"></script>
+<script src="../static/zenscroll-min.js"></script>
+<script src="../static/swiper/swiper-bundle.min.js"></script>
+
+<script src="../static/admin.js"></script>
+
+</html>
