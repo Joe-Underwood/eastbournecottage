@@ -19,14 +19,18 @@ def dates():
     for date in booked_dates_query:
         booked_dates.append(date[0])
 
-    return {'dates' : booked_dates }
+    return { 'dates' : booked_dates }
 
-@app.route('/prices', methods=['POST'])
-def price_list():
+@app.route('/get_prices', methods=['POST'])
+def get_prices():
 
-    price_list_query = db.session.query(Price_List).all()
-    
-    return { 'response' : 0 }
+    price_list_query = db.session.query(Price_List)
+    price_list = []
+    for row in price_list_query:
+        segment = { 'startDate': row.start_date.isoformat(), 'price': str(row.price), 'booked': row.booked }
+        price_list.append(segment)
+
+    return { 'priceList': price_list }
 
 @app.route('/booking', methods=['POST'])
 def booking():
@@ -99,3 +103,22 @@ def booking():
 def admin():
 
     return render_template('admin.html')
+
+@app.route('/update_prices', methods=['POST'])
+def update_prices():
+
+    db.session.query(Price_List).delete()
+
+    updated_price_list = request.get_json()
+
+    for segment in updated_price_list:
+        price_list_segment = Price_List(
+            start_date = datetime.strptime(segment['startDate'], '%Y-%m-%d').date(),
+            price = segment['price'],
+            booked = segment['booked']
+        )
+        db.session.add(price_list_segment)
+
+    db.session.commit()
+
+    return { 'success': True }

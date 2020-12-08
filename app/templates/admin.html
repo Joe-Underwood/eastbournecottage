@@ -69,11 +69,13 @@
                 <h1>Price List Editor</h1>
 
                 <div class="list-view">
-                    <div class="price-list-segment" v-for="segment in priceList">
-                        <input type="date" :value="segment['startDate'].toISOString().slice(0, 10)" />
-                        <input type="number" step="0.01" :value="segment['price']" />
+                    <div class="price-list-segment" v-for="segment in getPriceList">
+                        <input type="date" v-model="segment['startDate']" />
+                        <input type="number" step="0.01" v-model="segment['price']" />
                     </div>
                 </div>
+
+                <button v-on:click="updatePriceList()">UPDATE PRICE LIST</button>
 
                 <div class="price-list-settings">
                     <label for="changeover-day">Changeover Day</label>
@@ -86,7 +88,17 @@
                         <option value="saturday">Saturday</option>
                         <option value="sunday">Sunday</option>
                     </select>
+
+                    <label for="active-prices-range">Active Prices Range</label>
+                    <input id="price-list-range" type="number" />
+
+                    <label for="past-prices-range">Past Prices Range</label>
+                    <input id="past-prices-range" type="number" />
+
+                    <label for="future-prices-range">Future Prices Range</label>
+                    <input id="future-prices-range" type="number" />
                 </div>
+      
             </div>
 
             <div class="bookings-editor">

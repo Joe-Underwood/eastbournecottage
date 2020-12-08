@@ -50,5 +50,5 @@ class Date(db.Model):
 class Price_List(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     start_date = db.Column(db.Date, unique=True)
-    end_date = db.Column(db.Date, unique=True)
     price = db.Column(db.Numeric(10,2))
+    booked = db.Column(db.Boolean)
