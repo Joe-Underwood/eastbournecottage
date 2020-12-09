@@ -39,6 +39,16 @@ class Booking(db.Model):
     dogs = db.Column(db.Integer)
     price = db.Column(db.Numeric(10,2))
 
+"""class Past_Booking(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
+    dates = db.relationship('Date', backref='booking')
+    adults = db.Column(db.Integer)
+    children = db.Column(db.Integer)
+    infants = db.Column(db.Integer)
+    dogs = db.Column(db.Integer)
+    price = db.Column(db.Numeric(10,2))"""
+
 class Date(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     booking_id = db.Column(db.Integer, db.ForeignKey('booking.id'))
@@ -51,4 +61,19 @@ class Price_List(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     start_date = db.Column(db.Date, unique=True)
     price = db.Column(db.Numeric(10,2))
-    booked = db.Column(db.Boolean)
+    """price_2_week = db.Column(db.Numeric(10, 2))
+    price_3_week = db.Column(db.Numeric(10, 2))
+    price_4_week = db.Column(db.Numeric(10, 2))"""
+    booked = db.Column(db.Boolean, default=False)
+
+class Future_Price_List(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    start_date = db.Column(db.Date, unique=True)
+    price = db.Column(db.Numeric(10,2))
+
+class Past_Price_List(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    start_date = db.Column(db.Date, unique=True)
+    price = db.Column(db.Numeric(10,2))
+    booked = db.Column(db.Boolean, default=False)
+
