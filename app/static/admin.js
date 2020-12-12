@@ -55,7 +55,12 @@ const vm = new Vue({
             { 'startDate': '2022-01-05', 'price': '884.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false },
             { 'startDate': '2022-01-15', 'price': '519.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false },
             { 'startDate': '2022-01-22', 'price': '519.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false }, 
-        ]
+        ],
+        priceListSettings: {
+            discount2Weeks: 0,
+            discount3Weeks: 0,
+            discount4Weeks: 0
+        }
     },
     asyncComputed: {
         getPriceList: async function() {
@@ -82,6 +87,28 @@ const vm = new Vue({
                     'content-type': 'application/json'
                 })
             })
+        },
+        applyDiscounts() {
+            for (segment in this.getPriceList) {
+                try {
+                    this.getPriceList[segment]['price2Weeks'] = `${ (+this.getPriceList[segment]['price'] + +this.getPriceList[+segment + 1]['price']) * ((100 - +this.priceListSettings.discount2Weeks) / 100) }`;
+                }
+                catch {
+                    this.getPriceList[segment]['price2Weeks'] = '0';
+                }
+                try {
+                    this.getPriceList[segment]['price3Weeks'] = `${ (+this.getPriceList[segment]['price'] + +this.getPriceList[+segment + 1]['price'] + +this.getPriceList[+segment + 2]['price']) * ((100 - +this.priceListSettings.discount3Weeks) / 100) }`;
+                }    
+                catch {
+                    this.getPriceList[segment]['price3Weeks'] = '0';
+                }
+                try {
+                    this.getPriceList[segment]['price4Weeks'] = `${ (+this.getPriceList[segment]['price'] + +this.getPriceList[+segment + 1]['price'] + +this.getPriceList[+segment + 2]['price'] + +this.getPriceList[+segment + 3]['price']) * ((100 - +this.priceListSettings.discount4Weeks) / 100) }`;
+                }
+                catch {
+                    this.getPriceList[segment]['price4Weeks'] = '0';
+                }
+            }
         }
     },
     delimiters: ['<%', '%>']
