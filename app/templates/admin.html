@@ -88,35 +88,34 @@
 
                 <div class="price-list-settings">
                     <label for="changeover-day">Changeover Day</label>
-                    <select id="changeover-day" name="changeover-day">
-                        <option value="monday">Monday</option>
-                        <option value="tuesday">Tuesday</option>
-                        <option value="wednesday">Wednesday</option>
-                        <option value="thursday">Thursday</option>
-                        <option value="friday">Friday</option>
-                        <option value="saturday">Saturday</option>
-                        <option value="sunday">Sunday</option>
+                    <select id="changeover-day" v-model="getPriceListSettings['defaultChangeoverDay']" name="changeover-day">
+                        <option value="0">Monday</option>
+                        <option value="1">Tuesday</option>
+                        <option value="2">Wednesday</option>
+                        <option value="3">Thursday</option>
+                        <option value="4">Friday</option>
+                        <option value="5">Saturday</option>
+                        <option value="6">Sunday</option>
                     </select>
 
                     <label for="active-prices-range">Active Prices Range</label>
-                    <input id="price-list-range" type="number" />
+                    <input id="price-list-range" v-model="getPriceListSettings['activePricesRange']" type="date" />
 
                     <label for="future-prices-range">Future Prices Range</label>
-                    <input id="future-prices-range" type="number" />
-
-                    <label for="past-prices-range">Past Prices Range</label>
-                    <input id="past-prices-range" type="number" />
+                    <input id="future-prices-range" v-model="getPriceListSettings['futurePricesRange']" type="date" />
                     
                     <label for="discount-2-weeks">2 Weeks Discount</label>
-                    <input id="discount-2-weeks" v-model="priceListSettings.discount2Weeks" type="number" step="0.01" />
+                    <input id="discount-2-weeks" v-model="getPriceListSettings['discount2Weeks']" type="number" step="0.01" />
 
                     <label for="discount-3-weeks">3 Weeks Discount</label>
-                    <input id="discount-3-weeks" v-model="priceListSettings.discount3Weeks" type="number" step="0.01" />
+                    <input id="discount-3-weeks" v-model="getPriceListSettings['discount3Weeks']" type="number" step="0.01" />
 
                     <label for="discount-4-weeks">4 Weeks Discount</label>
-                    <input id="discount-4-weeks" v-model="priceListSettings.discount4Weeks" type="number" step="0.01" />
+                    <input id="discount-4-weeks" v-model="getPriceListSettings['discount4Weeks']" type="number" step="0.01" />
 
                     <button v-on:click="applyDiscounts()">APPLY DISCOUNTS</button>
+
+                    <button v-on:click="updatePriceListSettings()">UPDATE SETTINGS</button>
                 </div>
       
             </div>

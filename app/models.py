@@ -85,4 +85,4 @@ class Price_List_Settings(db.Model):
     active_prices_range = db.Column(db.Date)
     future_prices_range = db.Column(db.Date)
     default_changeover_day = db.Column(db.Integer)
-
+    active = db.Column(db.Boolean)

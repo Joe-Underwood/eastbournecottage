@@ -1,6 +1,6 @@
 from app import app, db
 from app.forms import BookingForm
-from app.models import Customer, Booking, Date, Price_List
+from app.models import User, Customer, Booking, Date, Price_List, Future_Price_List, Past_Price_List, Price_List_Settings
 from flask import render_template, request, jsonify
 from datetime import datetime, date, timedelta
 from calendar import Calendar
@@ -109,9 +109,9 @@ def update_prices():
 
     db.session.query(Price_List).delete()
 
-    updated_price_list = request.get_json()
+    request_price_list = request.get_json()
 
-    for segment in updated_price_list:
+    for segment in request_price_list:
         price_list_segment = Price_List(
             start_date = datetime.strptime(segment['startDate'], '%Y-%m-%d').date(),
             price = segment['price'],
@@ -126,3 +126,40 @@ def update_prices():
 
     print('prices updated')
     return { 'success': True }
+
+@app.route('/update_price_list_settings', methods=['POST'])
+def update_price_list_settings():
+
+    db.session.query(Price_List_Settings).delete()
+
+    request_settings = request.get_json()
+
+    updated_settings = Price_List_Settings(
+        discount_2_weeks = request_settings['discount2Weeks'],
+        discount_3_weeks = request_settings['discount3Weeks'],
+        discount_4_weeks = request_settings['discount4Weeks'],
+        active_prices_range = datetime.strptime(request_settings['activePricesRange'], '%Y-%m-%d').date(),
+        future_prices_range = datetime.strptime(request_settings['futurePricesRange'], '%Y-%m-%d').date(),
+        default_changeover_day = int(request_settings['defaultChangeoverDay']),
+        active = True
+    )
+
+    db.session.add(updated_settings)
+    db.session.commit()
+
+    print('price_list_settings updated')
+    return { 'success': True }
+
+@app.route('/get_price_list_settings', methods=['POST'])
+def get_price_list_settings():
+    settings_query = db.session.query(Price_List_Settings)
+    settings = { 
+        'discount2Weeks': str(settings_query[0].discount_2_weeks),
+        'discount3Weeks': str(settings_query[0].discount_3_weeks),
+        'discount4Weeks': str(settings_query[0].discount_4_weeks),
+        'activePricesRange': settings_query[0].active_prices_range.isoformat(),
+        'futurePricesRange': settings_query[0].future_prices_range.isoformat(),
+        'defaultChangeoverDay': str(settings_query[0].default_changeover_day)
+        }
+
+    return { 'priceListSettings': settings }

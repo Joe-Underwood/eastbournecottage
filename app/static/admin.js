@@ -59,7 +59,10 @@ const vm = new Vue({
         priceListSettings: {
             discount2Weeks: 0,
             discount3Weeks: 0,
-            discount4Weeks: 0
+            discount4Weeks: 0,
+            activePricesRange: '',
+            futurePricesRange: '',
+            defaultChangeoverDay: 5
         }
     },
     asyncComputed: {
@@ -70,16 +73,26 @@ const vm = new Vue({
                         return (response.json());
                     })
                     .then(json => {
-                        return (json['priceList'])
+                        return (json['priceList']);
                     })
             
             return (prices);
+        },
+        getPriceListSettings: async function() {
+            const settings = 
+            fetch('/get_price_list_settings', { method: 'post' })
+                .then(response => {
+                    return (response.json());
+                })
+                .then(json => {
+                    return (json['priceListSettings']);
+                })
+
+            return (settings);
         }
     },
     methods: {
         updatePriceList() {
-            console.log(JSON.stringify(this.getPriceList));
-
             fetch('/update_prices', {
                 method: 'post',
                 body: JSON.stringify(this.getPriceList),
@@ -88,22 +101,31 @@ const vm = new Vue({
                 })
             })
         },
+        updatePriceListSettings() {
+            fetch('/update_price_list_settings', {
+                method: 'post',
+                body: JSON.stringify(this.getPriceListSettings),
+                headers: new Headers({
+                    'content-type': 'application/json'
+                })
+            })
+        },
         applyDiscounts() {
             for (segment in this.getPriceList) {
                 try {
-                    this.getPriceList[segment]['price2Weeks'] = `${ Math.round(((+this.getPriceList[segment]['price'] + +this.getPriceList[+segment + 1]['price']) * ((100 - +this.priceListSettings.discount2Weeks) / 100)) * 100) / 100 }`;
+                    this.getPriceList[segment]['price2Weeks'] = `${ (((+this.getPriceList[segment]['price'] + +this.getPriceList[+segment + 1]['price']) * ((100 - +this.getPriceListSettings['discount2Weeks']) / 100))).toFixed(2) }`;
                 }
                 catch {
                     this.getPriceList[segment]['price2Weeks'] = '0';
                 }
                 try {
-                    this.getPriceList[segment]['price3Weeks'] = `${ Math.round(((+this.getPriceList[segment]['price'] + +this.getPriceList[+segment + 1]['price'] + +this.getPriceList[+segment + 2]['price']) * ((100 - +this.priceListSettings.discount3Weeks) / 100)) * 100) / 100 }`;
+                    this.getPriceList[segment]['price3Weeks'] = `${ (((+this.getPriceList[segment]['price'] + +this.getPriceList[+segment + 1]['price'] + +this.getPriceList[+segment + 2]['price']) * ((100 - +this.getPriceListSettings['discount3Weeks']) / 100))).toFixed(2) }`;
                 }    
                 catch {
                     this.getPriceList[segment]['price3Weeks'] = '0';
                 }
                 try {
-                    this.getPriceList[segment]['price4Weeks'] = `${ Math.round(((+this.getPriceList[segment]['price'] + +this.getPriceList[+segment + 1]['price'] + +this.getPriceList[+segment + 2]['price'] + +this.getPriceList[+segment + 3]['price']) * ((100 - +this.priceListSettings.discount4Weeks) / 100)) * 100) / 100 }`;
+                    this.getPriceList[segment]['price4Weeks'] = `${ (((+this.getPriceList[segment]['price'] + +this.getPriceList[+segment + 1]['price'] + +this.getPriceList[+segment + 2]['price'] + +this.getPriceList[+segment + 3]['price']) * ((100 - +this.getPriceListSettings['discount4Weeks']) / 100))).toFixed(2) }`;
                 }
                 catch {
                     this.getPriceList[segment]['price4Weeks'] = '0';
