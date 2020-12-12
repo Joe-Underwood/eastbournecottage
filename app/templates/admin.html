@@ -72,10 +72,18 @@
                     <div class="price-list-segment" v-for="segment in getPriceList">
                         <input type="date" v-model="segment['startDate']" />
                         <input type="number" step="0.01" v-model="segment['price']" />
+                        <input type="number" step="0.01" v-model="segment['price2Weeks']" />
+                        <input type="number" step="0.01" v-model="segment['price3Weeks']" />
+                        <input type="number" step="0.01" v-model="segment['price4Weeks']" />
                     </div>
                 </div>
 
-                <button v-on:click="updatePriceList()">UPDATE PRICE LIST</button>
+                <div class="price-list-controls">
+                    <button>REFRESH</button>
+                    <button>ADD SEGMENT</button>
+                    <button>REMOVE SEGMENT</button>
+                    <button v-on:click="updatePriceList()">UPDATE PRICE LIST</button>
+                </div>
 
                 <div class="price-list-settings">
                     <label for="changeover-day">Changeover Day</label>
@@ -97,6 +105,15 @@
 
                     <label for="past-prices-range">Past Prices Range</label>
                     <input id="past-prices-range" type="number" />
+                    
+                    <label for="discount-2-weeks">2 Weeks Discount</label>
+                    <input id="discount-2-weeks" />
+
+                    <label for="discount-3-weeks">3 Weeks Discount</label>
+                    <input id="discount-3-weeks" />
+
+                    <label for="discount-4-weeks">4 Weeks Discount</label>
+                    <input id="discount-4-weeks" />
                 </div>
       
             </div>
@@ -113,8 +130,6 @@
 
         </div>
         
-
-
     </div>
 </body>
 

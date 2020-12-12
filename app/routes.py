@@ -27,7 +27,7 @@ def get_prices():
     price_list_query = db.session.query(Price_List)
     price_list = []
     for row in price_list_query:
-        segment = { 'startDate': row.start_date.isoformat(), 'price': str(row.price), 'booked': row.booked }
+        segment = { 'startDate': row.start_date.isoformat(), 'price': str(row.price), 'price2Weeks': str(row.price_2_weeks), 'price3Weeks': str(row.price_3_weeks), 'price4Weeks': str(row.price_4_weeks), 'booked': row.booked }
         price_list.append(segment)
 
     return { 'priceList': price_list }
@@ -115,10 +115,14 @@ def update_prices():
         price_list_segment = Price_List(
             start_date = datetime.strptime(segment['startDate'], '%Y-%m-%d').date(),
             price = segment['price'],
+            price_2_weeks = segment['price2Weeks'],
+            price_3_weeks = segment['price3Weeks'],
+            price_4_weeks = segment['price4Weeks'],
             booked = segment['booked']
         )
         db.session.add(price_list_segment)
 
     db.session.commit()
 
+    print('prices updated')
     return { 'success': True }

@@ -767,7 +767,6 @@ svg {
     padding-top: 56px;
 }
 /*----------- PRICE-LIST-EDITOR ----------------------------*/
-.price-list-tabs,
-.bookings-tabs {
+.price-list-controls {
     display: flex;
 }
