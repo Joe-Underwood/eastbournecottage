@@ -91,19 +91,19 @@ const vm = new Vue({
         applyDiscounts() {
             for (segment in this.getPriceList) {
                 try {
-                    this.getPriceList[segment]['price2Weeks'] = `${ (+this.getPriceList[segment]['price'] + +this.getPriceList[+segment + 1]['price']) * ((100 - +this.priceListSettings.discount2Weeks) / 100) }`;
+                    this.getPriceList[segment]['price2Weeks'] = `${ Math.round(((+this.getPriceList[segment]['price'] + +this.getPriceList[+segment + 1]['price']) * ((100 - +this.priceListSettings.discount2Weeks) / 100)) * 100) / 100 }`;
                 }
                 catch {
                     this.getPriceList[segment]['price2Weeks'] = '0';
                 }
                 try {
-                    this.getPriceList[segment]['price3Weeks'] = `${ (+this.getPriceList[segment]['price'] + +this.getPriceList[+segment + 1]['price'] + +this.getPriceList[+segment + 2]['price']) * ((100 - +this.priceListSettings.discount3Weeks) / 100) }`;
+                    this.getPriceList[segment]['price3Weeks'] = `${ Math.round(((+this.getPriceList[segment]['price'] + +this.getPriceList[+segment + 1]['price'] + +this.getPriceList[+segment + 2]['price']) * ((100 - +this.priceListSettings.discount3Weeks) / 100)) * 100) / 100 }`;
                 }    
                 catch {
                     this.getPriceList[segment]['price3Weeks'] = '0';
                 }
                 try {
-                    this.getPriceList[segment]['price4Weeks'] = `${ (+this.getPriceList[segment]['price'] + +this.getPriceList[+segment + 1]['price'] + +this.getPriceList[+segment + 2]['price'] + +this.getPriceList[+segment + 3]['price']) * ((100 - +this.priceListSettings.discount4Weeks) / 100) }`;
+                    this.getPriceList[segment]['price4Weeks'] = `${ Math.round(((+this.getPriceList[segment]['price'] + +this.getPriceList[+segment + 1]['price'] + +this.getPriceList[+segment + 2]['price'] + +this.getPriceList[+segment + 3]['price']) * ((100 - +this.priceListSettings.discount4Weeks) / 100)) * 100) / 100 }`;
                 }
                 catch {
                     this.getPriceList[segment]['price4Weeks'] = '0';

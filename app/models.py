@@ -77,3 +77,12 @@ class Past_Price_List(db.Model):
     price = db.Column(db.Numeric(10,2))
     booked = db.Column(db.Boolean, default=False)
 
+class Price_List_Settings(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    discount_2_weeks = db.Column(db.Numeric(10, 2))
+    discount_3_weeks = db.Column(db.Numeric(10, 2))
+    discount_4_weeks = db.Column(db.Numeric(10, 2))
+    active_prices_range = db.Column(db.Date)
+    future_prices_range = db.Column(db.Date)
+    default_changeover_day = db.Column(db.Integer)
+
