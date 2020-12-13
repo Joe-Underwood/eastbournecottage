@@ -138,8 +138,8 @@ def update_price_list_settings():
         discount_2_weeks = request_settings['discount2Weeks'],
         discount_3_weeks = request_settings['discount3Weeks'],
         discount_4_weeks = request_settings['discount4Weeks'],
-        active_prices_range = datetime.strptime(request_settings['activePricesRange'], '%Y-%m-%d').date(),
-        future_prices_range = datetime.strptime(request_settings['futurePricesRange'], '%Y-%m-%d').date(),
+        active_prices_range = int(request_settings['activePricesRange']),
+        future_prices_range = int(request_settings['futurePricesRange']),
         default_changeover_day = int(request_settings['defaultChangeoverDay']),
         active = True
     )
@@ -157,8 +157,8 @@ def get_price_list_settings():
         'discount2Weeks': str(settings_query[0].discount_2_weeks),
         'discount3Weeks': str(settings_query[0].discount_3_weeks),
         'discount4Weeks': str(settings_query[0].discount_4_weeks),
-        'activePricesRange': settings_query[0].active_prices_range.isoformat(),
-        'futurePricesRange': settings_query[0].future_prices_range.isoformat(),
+        'activePricesRange': str(settings_query[0].active_prices_range),
+        'futurePricesRange': str(settings_query[0].future_prices_range),
         'defaultChangeoverDay': str(settings_query[0].default_changeover_day)
         }
 

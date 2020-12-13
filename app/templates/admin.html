@@ -80,7 +80,7 @@
                 </div>
 
                 <div class="price-list-controls">
-                    <button>REFRESH</button>
+                    <button v-on:click="refreshPriceList()">REFRESH</button>
                     <button>ADD SEGMENT</button>
                     <button>REMOVE SEGMENT</button>
                     <button v-on:click="updatePriceList()">UPDATE PRICE LIST</button>
@@ -89,20 +89,20 @@
                 <div class="price-list-settings">
                     <label for="changeover-day">Changeover Day</label>
                     <select id="changeover-day" v-model="getPriceListSettings['defaultChangeoverDay']" name="changeover-day">
-                        <option value="0">Monday</option>
-                        <option value="1">Tuesday</option>
-                        <option value="2">Wednesday</option>
-                        <option value="3">Thursday</option>
-                        <option value="4">Friday</option>
-                        <option value="5">Saturday</option>
-                        <option value="6">Sunday</option>
+                        <option value="1">Monday</option>
+                        <option value="2">Tuesday</option>
+                        <option value="3">Wednesday</option>
+                        <option value="4">Thursday</option>
+                        <option value="5">Friday</option>
+                        <option value="6">Saturday</option>
+                        <option value="0">Sunday</option>
                     </select>
 
                     <label for="active-prices-range">Active Prices Range</label>
-                    <input id="price-list-range" v-model="getPriceListSettings['activePricesRange']" type="date" />
+                    <input id="price-list-range" v-model="getPriceListSettings['activePricesRange']" type="number" />
 
                     <label for="future-prices-range">Future Prices Range</label>
-                    <input id="future-prices-range" v-model="getPriceListSettings['futurePricesRange']" type="date" />
+                    <input id="future-prices-range" v-model="getPriceListSettings['futurePricesRange']" type="number" />
                     
                     <label for="discount-2-weeks">2 Weeks Discount</label>
                     <input id="discount-2-weeks" v-model="getPriceListSettings['discount2Weeks']" type="number" step="0.01" />
@@ -112,6 +112,8 @@
 
                     <label for="discount-4-weeks">4 Weeks Discount</label>
                     <input id="discount-4-weeks" v-model="getPriceListSettings['discount4Weeks']" type="number" step="0.01" />
+
+                    <button v-on:click="adjustRanges()">ADJUST RANGES</button>
 
                     <button v-on:click="applyDiscounts()">APPLY DISCOUNTS</button>
 

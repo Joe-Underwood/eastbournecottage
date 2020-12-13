@@ -57,11 +57,11 @@ const vm = new Vue({
             { 'startDate': '2022-01-22', 'price': '519.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false }, 
         ],
         priceListSettings: {
-            discount2Weeks: 0,
-            discount3Weeks: 0,
-            discount4Weeks: 0,
-            activePricesRange: '',
-            futurePricesRange: '',
+            discount2Weeks: 4,
+            discount3Weeks: 6,
+            discount4Weeks: 7,
+            activePricesRange: '12',
+            futurePricesRange: '6',
             defaultChangeoverDay: 5
         }
     },
@@ -87,12 +87,15 @@ const vm = new Vue({
                 .then(json => {
                     return (json['priceListSettings']);
                 })
-
             return (settings);
         }
     },
     methods: {
+        refreshPriceList() {
+            this.getPriceList.sort((a, b) => new Date(a['startDate']) - new Date(b['startDate']));
+        },
         updatePriceList() {
+            this.refreshPriceList();
             fetch('/update_prices', {
                 method: 'post',
                 body: JSON.stringify(this.getPriceList),
@@ -131,6 +134,25 @@ const vm = new Vue({
                     this.getPriceList[segment]['price4Weeks'] = '0';
                 }
             }
+        },
+        adjustRanges() {
+            this.refreshPriceList();
+            let rangeStartDate = new Date(this.getPriceList[0]['startDate']);
+            let rangeEndDate = rangeStartDate;
+            rangeEndDate.setDate(rangeStartDate.getDate() + 7 * +this.getPriceListSettings['activePricesRange']);
+
+            if (new Date(this.getPriceList[this.getPriceList.length - 1]['startDate']) > rangeEndDate) {
+                console.log('remove rows');
+            }
+            else {
+                console.log('add rows');
+            }
+            
+        },
+        nextChangeoverDay(weekOffset=0) {
+            let date = new Date();
+            date.setDate((date.getDate() + weekOffset * 7) + (+this.getPriceListSettings['defaultChangeoverDay'] + (7 - date.getDay())) % 7);
+            return(date);
         }
     },
     delimiters: ['<%', '%>']
