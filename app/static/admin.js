@@ -141,16 +141,34 @@ const vm = new Vue({
             let rangeEndDate = rangeStartDate;
             rangeEndDate.setDate(rangeStartDate.getDate() + 7 * +this.getPriceListSettings['activePricesRange']);
 
-            if (new Date(this.getPriceList[this.getPriceList.length - 1]['startDate']) > rangeEndDate) {
-                console.log('remove rows');
+            let lastDateString = this.getPriceList[this.getPriceList.length - 1]['startDate'];
+
+            if (new Date(lastDateString) < rangeEndDate) {
+                let numWeeks = 1;
+                while (this.nextChangeoverDay(lastDateString, numWeeks) <= rangeEndDate) {
+                    this.getPriceList.push({
+                        'startDate': `${this.nextChangeoverDay(lastDateString, numWeeks).toISOString().slice(0, 10)}`,
+                        'price': '0.00',
+                        'price2Weeks': '0.00',
+                        'price3Weeks': '0.00',
+                        'price4Weeks': '0.00',
+                        'booked': false
+                    })
+                    numWeeks++;
+                }
             }
+
             else {
-                console.log('add rows');
+                for (let i = this.getPriceList.length - 1; i >= 0; i--) {
+                    if (new Date(this.getPriceList[i]['startDate']) > rangeEndDate) {
+                        this.getPriceList.splice(i, 1);
+                    }
+                }
             }
             
         },
-        nextChangeoverDay(weekOffset=0) {
-            let date = new Date();
+        nextChangeoverDay(dateString, weekOffset=0) {
+            let date = new Date(dateString);
             date.setDate((date.getDate() + weekOffset * 7) + (+this.getPriceListSettings['defaultChangeoverDay'] + (7 - date.getDay())) % 7);
             return(date);
         }
