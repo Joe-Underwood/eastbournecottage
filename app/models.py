@@ -70,6 +70,9 @@ class Future_Price_List(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     start_date = db.Column(db.Date, unique=True)
     price = db.Column(db.Numeric(10,2))
+    price_2_weeks = db.Column(db.Numeric(10, 2))
+    price_3_weeks = db.Column(db.Numeric(10, 2))
+    price_4_weeks = db.Column(db.Numeric(10, 2))
 
 class Past_Price_List(db.Model):
     id = db.Column(db.Integer, primary_key=True)

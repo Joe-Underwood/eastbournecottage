@@ -108,8 +108,9 @@ def admin():
 def update_prices():
 
     db.session.query(Price_List).delete()
+    db.session.query(Future_Price_List).delete()
 
-    request_price_list = request.get_json()
+    request_price_list = request.get_json()['priceList']
 
     for segment in request_price_list:
         price_list_segment = Price_List(
@@ -122,8 +123,19 @@ def update_prices():
         )
         db.session.add(price_list_segment)
 
-    db.session.commit()
+    request_future_price_list = request.get_json()['futurePriceList']
 
+    for segment in request_future_price_list:
+        future_price_list_segment = Future_Price_List(
+            start_date = datetime.strptime(segment['startDate'], '%Y-%m-%d').date(),
+            price = segment['price'],
+            price_2_weeks = segment['price2Weeks'],
+            price_3_weeks = segment['price3Weeks'],
+            price_4_weeks = segment['price4Weeks']
+        )
+        db.session.add(future_price_list_segment)
+
+    db.session.commit()
     print('prices updated')
     return { 'success': True }
 
@@ -163,3 +175,13 @@ def get_price_list_settings():
         }
 
     return { 'priceListSettings': settings }
+
+@app.route('/get_future_prices', methods=['POST'])
+def get_future_prices():
+    future_price_list_query = db.session.query(Future_Price_List)
+    future_price_list = []
+    for row in future_price_list_query:
+        segment = { 'startDate': row.start_date.isoformat(), 'price': str(row.price), 'price2Weeks': str(row.price_2_weeks), 'price3Weeks': str(row.price_3_weeks), 'price4Weeks': str(row.price_4_weeks) }
+        future_price_list.append(segment)
+
+    return { 'futurePriceList': future_price_list }

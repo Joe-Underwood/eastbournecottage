@@ -54,7 +54,7 @@ const vm = new Vue({
             { 'startDate': '2021-12-29', 'price': '884.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false },
             { 'startDate': '2022-01-05', 'price': '884.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false },
             { 'startDate': '2022-01-15', 'price': '519.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false },
-            { 'startDate': '2022-01-22', 'price': '519.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false }, 
+            { 'startDate': '2022-01-22', 'price': '519.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false }
         ],
         priceListSettings: {
             discount2Weeks: 4,
@@ -63,7 +63,25 @@ const vm = new Vue({
             activePricesRange: '12',
             futurePricesRange: '6',
             defaultChangeoverDay: 5
-        }
+        },
+        tempFuturePriceList: [
+            { 'startDate': '2022-01-29', 'price': '645.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false },
+            { 'startDate': '2022-02-05', 'price': '645.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false },
+            { 'startDate': '2022-02-12', 'price': '668.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false },
+            { 'startDate': '2022-02-19', 'price': '671.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false },
+            { 'startDate': '2022-02-26', 'price': '529.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false },
+            { 'startDate': '2022-03-05', 'price': '529.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false },
+            { 'startDate': '2022-03-12', 'price': '529.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false },
+            { 'startDate': '2022-03-19', 'price': '529.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false },
+            { 'startDate': '2022-03-26', 'price': '529.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false },
+            { 'startDate': '2022-04-02', 'price': '529.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false },
+            { 'startDate': '2022-04-09', 'price': '546.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false },
+            { 'startDate': '2022-04-16', 'price': '884.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false },
+            { 'startDate': '2022-04-23', 'price': '884.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false },
+            { 'startDate': '2022-04-30', 'price': '884.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false },
+            { 'startDate': '2022-05-07', 'price': '519.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false },
+            { 'startDate': '2022-05-14', 'price': '519.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false }
+        ]
     },
     asyncComputed: {
         getPriceList: async function() {
@@ -77,6 +95,17 @@ const vm = new Vue({
                     })
             
             return (prices);
+        },
+        getFuturePriceList: async function() {
+            const futurePrices = 
+                fetch('/get_future_prices', { method: 'post' })
+                    .then(response => {
+                        return (response.json());
+                    })
+                    .then(json => {
+                        return (json['futurePriceList']);
+                    })
+            return (futurePrices);
         },
         getPriceListSettings: async function() {
             const settings = 
@@ -94,11 +123,15 @@ const vm = new Vue({
         refreshPriceList() {
             this.getPriceList.sort((a, b) => new Date(a['startDate']) - new Date(b['startDate']));
         },
+        refreshFuturePriceList() {
+            this.getFuturePriceList.sort((a, b) => new Date(a['startDate']) - new Date(b['startDate']));
+        },
         updatePriceList() {
             this.refreshPriceList();
+            this.refreshFuturePriceList();
             fetch('/update_prices', {
                 method: 'post',
-                body: JSON.stringify(this.getPriceList),
+                body: JSON.stringify({'priceList': this.getPriceList, 'futurePriceList': this.getFuturePriceList}),
                 headers: new Headers({
                     'content-type': 'application/json'
                 })

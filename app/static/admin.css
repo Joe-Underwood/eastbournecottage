@@ -754,3 +754,7 @@ svg {
 .price-list-controls {
     display: flex;
 }
+
+.future-price-list-segment {
+    background-color: grey;
+}
