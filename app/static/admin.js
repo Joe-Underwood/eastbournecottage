@@ -174,34 +174,50 @@ const vm = new Vue({
             let rangeEndDate = rangeStartDate;
             rangeEndDate.setDate(rangeStartDate.getDate() + 7 * +this.getPriceListSettings['activePricesRange']);
 
-            let lastDateString = this.getPriceList[this.getPriceList.length - 1]['startDate'];
-
-            if (new Date(lastDateString) < rangeEndDate) {
-                let numWeeks = 1;
-                while (this.nextChangeoverDay(lastDateString, numWeeks) <= rangeEndDate) {
-                    this.getPriceList.push({
-                        'startDate': `${this.nextChangeoverDay(lastDateString, numWeeks).toISOString().slice(0, 10)}`,
-                        'price': '0.00',
-                        'price2Weeks': '0.00',
-                        'price3Weeks': '0.00',
-                        'price4Weeks': '0.00',
-                        'booked': false
-                    })
-                    numWeeks++;
-                }
+            while (new Date(this.getPriceList[this.getPriceList.length - 1]['startDate']) < rangeEndDate) {
+                this.getPriceList.push(this.getFuturePriceList[0]);
+                this.getFuturePriceList.splice(0, 1);
+                
+                this.getFuturePriceList.push({
+                    'startDate': `${this.nextChangeoverDay(this.getFuturePriceList[this.getFuturePriceList.length - 1]['startDate']).toISOString().slice(0, 10)}`,
+                    'price': '0.00',
+                    'price2Weeks': '0.00',
+                    'price3Weeks': '0.00',
+                    'price4Weeks': '0.00',
+                    'booked': false
+                })  
             }
 
-            else {
-                for (let i = this.getPriceList.length - 1; i >= 0; i--) {
-                    if (new Date(this.getPriceList[i]['startDate']) > rangeEndDate) {
-                        this.getPriceList.splice(i, 1);
-                    }
-                }
+            while (new Date(this.getPriceList[this.getPriceList.length - 1]['startDate']) > rangeEndDate) {
+                this.getFuturePriceList.unshift(this.getPriceList[this.getPriceList.length - 1]);
+                this.getFuturePriceList.pop();
+                this.getPriceList.pop();
             }
             
+            let futureRangeStartDate = new Date(this.getFuturePriceList[0]['startDate']);
+            let futureRangeEndDate = futureRangeStartDate;
+            futureRangeEndDate.setDate(rangeStartDate.getDate() + 7 * +this.getPriceListSettings['futurePricesRange']);
+
+            while (new Date(this.getFuturePriceList[this.getFuturePriceList.length - 1]['startDate']) < futureRangeEndDate) {
+                this.getFuturePriceList.push({
+                    'startDate': `${this.nextChangeoverDay(this.getFuturePriceList[this.getFuturePriceList.length - 1]['startDate']).toISOString().slice(0, 10)}`,
+                    'price': '0.00',
+                    'price2Weeks': '0.00',
+                    'price3Weeks': '0.00',
+                    'price4Weeks': '0.00',
+                    'booked': false
+                })
+            }
+
+            while (new Date(this.getFuturePriceList[this.getFuturePriceList.length - 1]['startDate']) > futureRangeEndDate) {
+                this.getFuturePriceList.pop();
+            }
         },
         nextChangeoverDay(dateString, weekOffset=0) {
             let date = new Date(dateString);
+            if (date.getDay() === +this.getPriceListSettings['defaultChangeoverDay']) {
+                weekOffset++;
+            }
             date.setDate((date.getDate() + weekOffset * 7) + (+this.getPriceListSettings['defaultChangeoverDay'] + (7 - date.getDay())) % 7);
             return(date);
         }

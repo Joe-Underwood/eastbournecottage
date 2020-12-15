@@ -131,7 +131,8 @@ def update_prices():
             price = segment['price'],
             price_2_weeks = segment['price2Weeks'],
             price_3_weeks = segment['price3Weeks'],
-            price_4_weeks = segment['price4Weeks']
+            price_4_weeks = segment['price4Weeks'],
+            booked = segment['booked']
         )
         db.session.add(future_price_list_segment)
 
@@ -181,7 +182,7 @@ def get_future_prices():
     future_price_list_query = db.session.query(Future_Price_List)
     future_price_list = []
     for row in future_price_list_query:
-        segment = { 'startDate': row.start_date.isoformat(), 'price': str(row.price), 'price2Weeks': str(row.price_2_weeks), 'price3Weeks': str(row.price_3_weeks), 'price4Weeks': str(row.price_4_weeks) }
+        segment = { 'startDate': row.start_date.isoformat(), 'price': str(row.price), 'price2Weeks': str(row.price_2_weeks), 'price3Weeks': str(row.price_3_weeks), 'price4Weeks': str(row.price_4_weeks), 'booked': row.booked }
         future_price_list.append(segment)
 
     return { 'futurePriceList': future_price_list }
