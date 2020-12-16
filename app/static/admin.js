@@ -167,6 +167,27 @@ const vm = new Vue({
                     this.getPriceList[segment]['price4Weeks'] = '0';
                 }
             }
+
+            for (segment in this.getFuturePriceList) {
+                try {
+                    this.getFuturePriceList[segment]['price2Weeks'] = `${ (((+this.getFuturePriceList[segment]['price'] + +this.getFuturePriceList[+segment + 1]['price']) * ((100 - +this.getPriceListSettings['discount2Weeks']) / 100))).toFixed(2) }`;
+                }
+                catch {
+                    this.getFuturePriceList[segment]['price2Weeks'] = '0';
+                }
+                try {
+                    this.getFuturePriceList[segment]['price3Weeks'] = `${ (((+this.getFuturePriceList[segment]['price'] + +this.getFuturePriceList[+segment + 1]['price'] + +this.getFuturePriceList[+segment + 2]['price']) * ((100 - +this.getPriceListSettings['discount3Weeks']) / 100))).toFixed(2) }`;
+                }    
+                catch {
+                    this.getFuturePriceList[segment]['price3Weeks'] = '0';
+                }
+                try {
+                    this.getFuturePriceList[segment]['price4Weeks'] = `${ (((+this.getFuturePriceList[segment]['price'] + +this.getFuturePriceList[+segment + 1]['price'] + +this.getFuturePriceList[+segment + 2]['price'] + +this.getFuturePriceList[+segment + 3]['price']) * ((100 - +this.getPriceListSettings['discount4Weeks']) / 100))).toFixed(2) }`;
+                }
+                catch {
+                    this.getFuturePriceList[segment]['price4Weeks'] = '0';
+                }
+            }
         },
         adjustRanges() {
             this.refreshPriceList();
@@ -180,7 +201,7 @@ const vm = new Vue({
                 
                 this.getFuturePriceList.push({
                     'startDate': `${this.nextChangeoverDay(this.getFuturePriceList[this.getFuturePriceList.length - 1]['startDate']).toISOString().slice(0, 10)}`,
-                    'price': '0.00',
+                    'price': this.generatePrice(`${this.nextChangeoverDay(this.getFuturePriceList[this.getFuturePriceList.length - 1]['startDate']).toISOString().slice(0, 10)}`),
                     'price2Weeks': '0.00',
                     'price3Weeks': '0.00',
                     'price4Weeks': '0.00',
@@ -201,7 +222,7 @@ const vm = new Vue({
             while (new Date(this.getFuturePriceList[this.getFuturePriceList.length - 1]['startDate']) < futureRangeEndDate) {
                 this.getFuturePriceList.push({
                     'startDate': `${this.nextChangeoverDay(this.getFuturePriceList[this.getFuturePriceList.length - 1]['startDate']).toISOString().slice(0, 10)}`,
-                    'price': '0.00',
+                    'price': this.generatePrice(`${this.nextChangeoverDay(this.getFuturePriceList[this.getFuturePriceList.length - 1]['startDate']).toISOString().slice(0, 10)}`),
                     'price2Weeks': '0.00',
                     'price3Weeks': '0.00',
                     'price4Weeks': '0.00',
@@ -212,6 +233,7 @@ const vm = new Vue({
             while (new Date(this.getFuturePriceList[this.getFuturePriceList.length - 1]['startDate']) > futureRangeEndDate) {
                 this.getFuturePriceList.pop();
             }
+            this.applyDiscounts();
         },
         nextChangeoverDay(dateString, weekOffset=0) {
             let date = new Date(dateString);
@@ -220,6 +242,29 @@ const vm = new Vue({
             }
             date.setDate((date.getDate() + weekOffset * 7) + (+this.getPriceListSettings['defaultChangeoverDay'] + (7 - date.getDay())) % 7);
             return(date);
+        },
+        generatePrice(dateString) {
+            const previousYear = new Date(new Date(dateString).setFullYear(new Date(dateString).getFullYear() - 1));
+            this.refreshPriceList();
+            this.refreshFuturePriceList();
+            for (let i = 0; i < this.getPriceList.length; i++) {
+                if (new Date(this.getPriceList[i]['startDate']) === previousYear) {
+                    return (this.getPriceList[i]['price']);
+                }
+                else if (new Date(this.getPriceList[i]['startDate']) > previousYear) {
+                    if (i === 0) {
+                        return (0);
+                    }
+                    const forwardDateDifference = Math.abs((new Date(this.getPriceList[i]['startDate']) - previousYear));
+                    const backwardDateDifference = Math.abs((new Date(this.getPriceList[i-1]['startDate']) - previousYear));
+                    if (forwardDateDifference >= backwardDateDifference) {
+                        return (this.getPriceList[i-1]['price']);
+                    }
+                    else{
+                        return (this.getPriceList[i]['price']);
+                    }
+                }
+            }
         }
     },
     delimiters: ['<%', '%>']
