@@ -154,7 +154,7 @@ def update_price_list_settings():
         active_prices_range = int(request_settings['activePricesRange']),
         future_prices_range = int(request_settings['futurePricesRange']),
         default_changeover_day = int(request_settings['defaultChangeoverDay']),
-        active = True
+        max_segment_length = int(request_settings['maxSegmentLength'])
     )
 
     db.session.add(updated_settings)
@@ -172,10 +172,24 @@ def get_price_list_settings():
         'discount4Weeks': str(settings_query[0].discount_4_weeks),
         'activePricesRange': str(settings_query[0].active_prices_range),
         'futurePricesRange': str(settings_query[0].future_prices_range),
-        'defaultChangeoverDay': str(settings_query[0].default_changeover_day)
+        'defaultChangeoverDay': str(settings_query[0].default_changeover_day),
+        'maxSegmentLength': str(settings_query[0].max_segment_length)
         }
 
     return { 'priceListSettings': settings }
+
+@app.route('/get_public_price_list_settings', methods=['POST'])
+def get_public_price_list_settings():
+    settings_query = db.session.query(Price_List_Settings)
+    settings = { 
+        'discount2Weeks': str(settings_query[0].discount_2_weeks),
+        'discount3Weeks': str(settings_query[0].discount_3_weeks),
+        'discount4Weeks': str(settings_query[0].discount_4_weeks),
+        'activePricesRange': str(settings_query[0].active_prices_range),
+        'maxSegmentLength': str(settings_query[0].max_segment_length)
+        }
+
+    return { 'publicPriceListSettings': settings }
 
 @app.route('/get_future_prices', methods=['POST'])
 def get_future_prices():

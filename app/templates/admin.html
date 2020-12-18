@@ -123,6 +123,9 @@
                     <label for="discount-4-weeks">4 Weeks Discount</label>
                     <input id="discount-4-weeks" v-model="getPriceListSettings['discount4Weeks']" type="number" step="0.01" />
 
+                    <label for="max-segment-length">Max Segment Length</label>
+                    <input id="max-segment-length" v-model="getPriceListSettings['maxSegmentLength']" type="number" step="1" />
+
                     <button v-on:click="adjustRanges()">ADJUST RANGES</button>
 
                     <button v-on:click="applyDiscounts()">APPLY DISCOUNTS</button>

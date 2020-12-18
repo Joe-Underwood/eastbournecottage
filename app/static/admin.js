@@ -62,7 +62,8 @@ const vm = new Vue({
             discount4Weeks: 7,
             activePricesRange: '12',
             futurePricesRange: '6',
-            defaultChangeoverDay: 5
+            defaultChangeoverDay: 5,
+            maxSegmentLength: 7
         },
         tempFuturePriceList: [
             { 'startDate': '2022-01-29', 'price': '645.00', 'price2Weeks': '0.00', 'price3Weeks': '0.00', 'price4Weeks': '0.00', 'booked': false },

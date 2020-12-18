@@ -89,4 +89,4 @@ class Price_List_Settings(db.Model):
     active_prices_range = db.Column(db.Integer)
     future_prices_range = db.Column(db.Integer)
     default_changeover_day = db.Column(db.Integer)
-    active = db.Column(db.Boolean)
+    max_segment_length = db.Column(db.Integer, default=7)

@@ -272,7 +272,8 @@ const vm = new Vue({
         initialY: undefined,
         offsetY: undefined,
         //guests-dropdown
-        guestsDropdownOpen: false
+        guestsDropdownOpen: false,
+        getPriceList: []
 
     },
     computed: {
@@ -315,6 +316,32 @@ const vm = new Vue({
             }
 
             return partyString;
+        }
+    },
+    asyncComputed: {
+        getPriceList: async function() {
+            const prices = 
+                fetch('/get_prices', { method: 'post' })
+                    .then(response => {
+                        return (response.json());
+                    })
+                    .then(json => {
+                        return (json['priceList']);
+                    })
+            
+            return (prices);
+        },
+        getPublicPriceListSettings: async function() {
+            const publicPriceListSettings = 
+                fetch('/get_public_price_list_settings', { method: 'post' })
+                    .then(response => {
+                        return (response.json());
+                    })
+                    .then(json => {
+                        return (json['publicPriceListSettings']);
+                    })
+            
+            return (publicPriceListSettings);
         }
     },
     methods: {
@@ -665,14 +692,12 @@ const vm = new Vue({
         
 
         initCalendar(year, month, inputField) {
-            calendarSwiper = new Swiper('.calendar-swiper', {
-                navigation: {
-                    nextEl: '.next-month',
-                    prevEl: '.prev-month',
-                  },
-                  spaceBetween: 16,
-            });
-            for (let i = 0; i < this.calendarRange; i++) {
+            const endDate = new Date(this.getPriceList[this.getPriceList.length - 1]['startDate']);
+            endDate.setDate(endDate.getDate() + 7);
+            const startDate = new Date(year, month);
+            let monthRange = (endDate.getMonth() - startDate.getMonth()) + 12 * (endDate.getFullYear() - startDate.getFullYear());
+
+            for (let i = 0; i <= monthRange; i++) {
                 const instance = new calendarMonth({
                     data: {
                         field: inputField,
@@ -773,12 +798,12 @@ const vm = new Vue({
                 }
             }
             if (this.arrivalDateObject && this.departureDateObject) {
-                this.bookingFormData.price = this.calculatePrice(this.arrivalDateObject, this.departureDateObject);
+                /*this.bookingFormData.price = this.calculatePrice(this.arrivalDateObject, this.departureDateObject);*/
                 this.bookingHelperText();
                 this.bookingShowTotal();
                 return;
             } else {
-                this.bookingFormData.price = this.bookingFormData.dogs * this.pricePerDog;;
+                /*this.bookingFormData.price = this.bookingFormData.dogs * this.pricePerDog;*/
             }
             this.bookingHelperText();
             this.bookingShowTotal();
@@ -881,7 +906,7 @@ const vm = new Vue({
             this.bookingFormData.departureDate = '';
             this.departureDateString = '';
             this.departureDateObject = undefined;
-            this.bookingFormData.price = this.bookingFormData.dogs * this.pricePerDog;;
+            this.bookingFormData.price = this.bookingFormData.dogs * this.pricePerDog;
         },
         refreshDateRange(element) {
             this.invalidDates = [];
@@ -1061,22 +1086,6 @@ const vm = new Vue({
                 window.removeEventListener('click', this.hideGuestsDropdown);
             }*/
             
-        },
-        //-----------------------BOOKING BOX ---------------------//
-        calculatePrice(arrDate, depDate) {
-            let price = this.bookingFormData.dogs * this.pricePerDog;
-            for (let i = 0; i < priceList.length; i++) {
-                if (priceList[i]['startDate'] <= arrDate && arrDate < priceList[i]['endDate']) {
-                    price += priceList[i]['price'];
-                    for (let j = i; j < priceList.length; j++) {
-                        if (depDate <= priceList[j]['endDate']) {
-                            return price;
-                        } else {
-                            price += priceList[j + 1]['price'];
-                        }
-                    }
-                }
-            }
         },
 
         //------------------CHECKOUT BUTTONS-------------------------//
@@ -1353,37 +1362,10 @@ const vm = new Vue({
                         console.log('request unsuccessful');
                     }
                 })
-        },
-        viewFullScreen() {
-            const element = this.$refs.galleryView;
-            if (element.requestFullscreen) {
-                element.requestFullscreen();
-            } else if (element.mozRequestFullScreen) { /* Firefox */
-                element.mozRequestFullScreen();
-            } else if (element.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
-                element.webkitRequestFullscreen();
-            } else if (element.msRequestFullscreen) { /* IE/Edge */
-                element.msRequestFullscreen();
-            }
-        },
+        }
     },
     delimiters: ['<%', '%>']
 })
-
-const priceList = [
-    { 'startDate': new Date(2020, 7, 15), 'endDate': new Date(2020, 7, 22, 12), 'price': 1000.00 },
-    { 'startDate': new Date(2020, 7, 22), 'endDate': new Date(2020, 7, 29, 12), 'price': 1000.00 },
-    { 'startDate': new Date(2020, 7, 29), 'endDate': new Date(2020, 8, 5, 12), 'price': 1000.00},
-    { 'startDate': new Date(2020, 8, 5), 'endDate': new Date(2020, 8, 12, 12), 'price': 1000.00 },
-    { 'startDate': new Date(2020, 8, 12), 'endDate': new Date(2020, 8, 19, 12), 'price': 1000.00 },
-    { 'startDate': new Date(2020, 8, 19), 'endDate': new Date(2020, 8, 26, 12), 'price': 1000.00 },
-    { 'startDate': new Date(2020, 8, 26), 'endDate': new Date(2020, 9, 3, 12), 'price': 1000.00 },
-    { 'startDate': new Date(2020, 9, 3), 'endDate': new Date(2020, 9, 10, 12), 'price': 1000.00 },
-    { 'startDate': new Date(2020, 9, 10), 'endDate': new Date(2020, 9, 17, 12), 'price': 1000.00 },
-    { 'startDate': new Date(2020, 9, 17), 'endDate': new Date(2020, 9, 24, 12), 'price': 1000.00 },
-    { 'startDate': new Date(2020, 9, 24), 'endDate': new Date(2020, 9, 31, 12), 'price': 1000.00 },
-    { 'startDate': new Date(2020, 9, 31), 'endDate': new Date(2020, 10, 7, 12), 'price': 1000.00 },
-]
 
 const bookedDates =
     fetch('/dates', { method: 'post' })
@@ -1396,12 +1378,32 @@ const bookedDates =
 
 let field = '';
 
-vm.initCalendar(vm.currentYear, vm.currentMonth, field);
+calendarSwiper = new Swiper('.calendar-swiper', {
+    navigation: {
+        nextEl: '.next-month',
+        prevEl: '.prev-month',
+      },
+      spaceBetween: 16,
+});
+
+fetch('/get_prices', { method: 'post' })
+    .then(response => {
+        return (response.json());
+    })
+    .then(json => {
+        return (json['priceList']);
+    })
+    .then(priceList => {
+        vm.getPriceList = priceList;
+    })
+    .then(() => {
+        vm.initCalendar(vm.currentYear, vm.currentMonth, field);
+    })
+
 
 //------ toggle calendarSwiper slides per view (responsive)-------------//
 
 function toggleCalendarSlides(x) {
-    console.log(x);
     if (x.matches) {
       calendarSwiper.params.slidesPerView = 1;
     } else {
