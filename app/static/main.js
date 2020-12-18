@@ -273,7 +273,8 @@ const vm = new Vue({
         offsetY: undefined,
         //guests-dropdown
         guestsDropdownOpen: false,
-        getPriceList: []
+        getPriceList: [],
+        getPublicPriceListSettings: []
 
     },
     computed: {
@@ -319,30 +320,6 @@ const vm = new Vue({
         }
     },
     asyncComputed: {
-        getPriceList: async function() {
-            const prices = 
-                fetch('/get_prices', { method: 'post' })
-                    .then(response => {
-                        return (response.json());
-                    })
-                    .then(json => {
-                        return (json['priceList']);
-                    })
-            
-            return (prices);
-        },
-        getPublicPriceListSettings: async function() {
-            const publicPriceListSettings = 
-                fetch('/get_public_price_list_settings', { method: 'post' })
-                    .then(response => {
-                        return (response.json());
-                    })
-                    .then(json => {
-                        return (json['publicPriceListSettings']);
-                    })
-            
-            return (publicPriceListSettings);
-        }
     },
     methods: {
         //-------------------- NAVBAR METHODS ------------------------//
@@ -692,8 +669,9 @@ const vm = new Vue({
         
 
         initCalendar(year, month, inputField) {
+
             const endDate = new Date(this.getPriceList[this.getPriceList.length - 1]['startDate']);
-            endDate.setDate(endDate.getDate() + 7);
+            endDate.setDate(endDate.getDate() + +this.getPublicPriceListSettings['maxSegmentLength']);
             const startDate = new Date(year, month);
             let monthRange = (endDate.getMonth() - startDate.getMonth()) + 12 * (endDate.getFullYear() - startDate.getFullYear());
 
@@ -705,7 +683,7 @@ const vm = new Vue({
                     propsData: {
                         instYear: year,
                         instMonth: month + i,
-                    }
+                    }    
                 });
                 let mountPoint = document.createElement('div');
                 calendarSwiper.appendSlide(mountPoint);
@@ -1386,19 +1364,42 @@ calendarSwiper = new Swiper('.calendar-swiper', {
       spaceBetween: 16,
 });
 
-fetch('/get_prices', { method: 'post' })
-    .then(response => {
-        return (response.json());
-    })
-    .then(json => {
-        return (json['priceList']);
-    })
-    .then(priceList => {
-        vm.getPriceList = priceList;
-    })
-    .then(() => {
-        vm.initCalendar(vm.currentYear, vm.currentMonth, field);
-    })
+async function getPriceListData() {
+    try {
+        const data = await Promise.all([
+            fetch('/get_prices', { method: 'post' })
+                .then(response => {
+                    return (response.json());
+                })
+                .then(json => {
+                    return (json['priceList']);
+                })
+                .then(priceList => {
+                    vm.getPriceList = priceList;
+                }),
+            fetch('/get_public_price_list_settings', { method: 'post' })
+                .then(response => {
+                    return (response.json());
+                })
+                .then(json => {
+                    return (json['publicPriceListSettings']);
+                })
+                .then((settings) => {
+                    vm.getPublicPriceListSettings = settings;
+                })
+        ])
+        .then(() => {
+            console.log(vm.getPriceList);
+            console.log(vm.getPublicPriceListSettings);
+            vm.initCalendar(vm.currentYear, vm.currentMonth, field);
+        })
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
+getPriceListData();
 
 
 //------ toggle calendarSwiper slides per view (responsive)-------------//
