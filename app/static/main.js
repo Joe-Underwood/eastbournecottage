@@ -83,7 +83,7 @@ zenscroll.setup(500, 56);
 //---------------CALENDAR COMPONENTS---------------------------------------//
 
 Vue.component('calendar-date', {
-    props: ['dateYear', 'dateMonth', 'dateDate'],
+    props: ['dateYear', 'dateMonth', 'dateDate', 'isChangeoverData'],
     computed: {
         selfDate: function () {
             return new Date(this.dateYear, this.dateMonth, this.dateDate, 12);
@@ -98,6 +98,11 @@ Vue.component('calendar-date', {
             const monthString = this.isoDate.slice(5, 7);
             const dateString = this.isoDate.slice(8, 10);
             return `${dateString}-${monthString}-${yearString}`;
+        },
+        isChangeover: function () {
+            if (this.isChangeoverData) {
+                return 'changeover-date';
+            }
         }
     },
     asyncComputed: {
@@ -138,13 +143,13 @@ Vue.component('calendar-date', {
             }
         }
     },
-    template: `<div :class="['calendar-date', availability]" v-on:click="selectDate(_vnode.elm, selfDate); slide(_vnode.elm);">
+    template: `<div :class="['calendar-date', availability, isChangeover]" v-on:click="selectDate(_vnode.elm, selfDate); slide(_vnode.elm);">
                    <div>{{ dateDate }}</div>
                </div>`
 })
 
 const calendarMonth = Vue.extend({
-    props: ['instYear', 'instMonth'],
+    props: ['instYear', 'instMonth', 'instChangeoverDates'],
     computed: {           
         instCalendarValues: function () {
             return (vm.calendarValues(this.instYear, this.instMonth));
@@ -190,6 +195,33 @@ const calendarMonth = Vue.extend({
             } else {
                 return month;
             }
+        },
+        changeoverData(year, month, date) {
+            const calendarDate = new Date(year, month, date, 12);
+            for (segment in this.instChangeoverDates) {
+                if (calendarDate.toISOString().slice(0, 10) === this.instChangeoverDates[segment]['startDate']) {
+                    return this.instChangeoverDates[segment];
+                } 
+            }
+            return false;
+        },
+        prevChangeoverData(year, month, date) {
+            const calendarDate = new Date(this.prevYear(year, month), this.prevMonth(month - 1), date, 12);
+            for (segment in this.instChangeoverDates) {
+                if (calendarDate.toISOString().slice(0, 10) === this.instChangeoverDates[segment]['startDate']) {
+                    return this.instChangeoverDates[segment];
+                } 
+            }
+            return false;
+        },
+        nextChangeoverData(year, month, date) {
+            const calendarDate = new Date(this.nextYear(year, month), this.nextMonth(month + 1), date, 12);
+            for (segment in this.instChangeoverDates) {
+                if (calendarDate.toISOString().slice(0, 10) === this.instChangeoverDates[segment]['startDate']) {
+                    return this.instChangeoverDates[segment];
+                } 
+            }
+            return false;
         }
     },
     template: `<div class="swiper-slide">
@@ -197,9 +229,9 @@ const calendarMonth = Vue.extend({
                        <div class="current-month" :style="{ 'grid-row': '1', height: '48px', 'padding-top': '8px' }">{{ new Date(instYear, instMonth).toLocaleString('default', { month: 'long' }) }} {{ new Date(instYear, instMonth).getFullYear() }}</div>
                        <div :style="{ 'grid-row': '2', height: '28px' }"></div>
                        <div class="calendar-week" v-for="week in instCalendarValues" :style="{ 'grid-row': weekRow(week), display: 'grid', 'grid-template-columns': 'repeat(7, 1fr)' }">
-                           <calendar-date v-for="date in week.prevDays" class="prev-days" :style="{ 'grid-column': prevDateColumn(week.prevDays, date) }" :dateYear="prevYear(instYear, instMonth)" :dateMonth="prevMonth(instMonth - 1)" :dateDate="date"></calendar-date>
-                           <calendar-date v-for="date in week.days" class="days" :style="{ 'grid-column': dateColumn(week.days, date, week) }" :dateYear="instYear" :dateMonth="instMonth" :dateDate="date"></calendar-date>
-                           <calendar-date v-for="date in week.nextDays" class="next-days" :style="{ 'grid-column': nextDateColumn(week.nextDays, date, week) }" :dateYear="nextYear(instYear, instMonth)" :dateMonth="nextMonth(instMonth + 1)" :dateDate="date"></calendar-date>
+                           <calendar-date v-for="date in week.prevDays" class="prev-days" :style="{ 'grid-column': prevDateColumn(week.prevDays, date) }" :dateYear="prevYear(instYear, instMonth)" :dateMonth="prevMonth(instMonth - 1)" :dateDate="date" :isChangeoverData="prevChangeoverData(instYear, instMonth, date)"></calendar-date>
+                           <calendar-date v-for="date in week.days" class="days" :style="{ 'grid-column': dateColumn(week.days, date, week) }" :dateYear="instYear" :dateMonth="instMonth" :dateDate="date" :isChangeoverData="changeoverData(instYear, instMonth, date)"></calendar-date>
+                           <calendar-date v-for="date in week.nextDays" class="next-days" :style="{ 'grid-column': nextDateColumn(week.nextDays, date, week) }" :dateYear="nextYear(instYear, instMonth)" :dateMonth="nextMonth(instMonth + 1)" :dateDate="date" :isChangeoverData="nextChangeoverData(instYear, instMonth, date)"></calendar-date>
                        </div>
                    </div>
                </div>`
@@ -669,7 +701,6 @@ const vm = new Vue({
         
 
         initCalendar(year, month, inputField) {
-
             const endDate = new Date(this.getPriceList[this.getPriceList.length - 1]['startDate']);
             endDate.setDate(endDate.getDate() + +this.getPublicPriceListSettings['maxSegmentLength']);
             const startDate = new Date(year, month);
@@ -683,6 +714,7 @@ const vm = new Vue({
                     propsData: {
                         instYear: year,
                         instMonth: month + i,
+                        instChangeoverDates: this.getPriceList
                     }    
                 });
                 let mountPoint = document.createElement('div');
@@ -695,6 +727,7 @@ const vm = new Vue({
                 this.slideCount = calendarSwiper.activeIndex;
             })
         },
+
         
         //---------------------------- SELECT DATE FROM CALENDAR ---------------------------------------//
         bookingHelperText() {
@@ -1389,8 +1422,6 @@ async function getPriceListData() {
                 })
         ])
         .then(() => {
-            console.log(vm.getPriceList);
-            console.log(vm.getPublicPriceListSettings);
             vm.initCalendar(vm.currentYear, vm.currentMonth, field);
         })
     }

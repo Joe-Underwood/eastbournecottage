@@ -261,7 +261,7 @@ const vm = new Vue({
                     if (forwardDateDifference >= backwardDateDifference) {
                         return (this.getPriceList[i-1]['price']);
                     }
-                    else{
+                    else {
                         return (this.getPriceList[i]['price']);
                     }
                 }

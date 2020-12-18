@@ -1492,6 +1492,10 @@ svg {
                     color: grey;
                 }
 
+                .changeover-date {
+                    border: 1px solid palevioletred !important;
+                }
+
                     .prev-days div {
                         color: grey !important;
                         background-color: white !important;
