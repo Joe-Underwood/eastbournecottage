@@ -283,6 +283,10 @@ const vm = new Vue({
         arrivalDateObject: undefined,
         departureDateString: '',
         departureDateObject: undefined,
+        departure1Week: [],
+        departure2Week: [],
+        departure3Week: [],
+        departure4Week: [],
         //side menu open parameters
         scrollY: 0,
         scrimClose: false,
@@ -765,6 +769,7 @@ const vm = new Vue({
                         this.removeArrivalDate();
                         this.arrivalDateFocus();
                         this.hideDateRange();
+                        this.hideValidDepartureDates();
                     } 
                     this.bookingHelperText();
                     this.bookingShowTotal();
@@ -780,27 +785,31 @@ const vm = new Vue({
                     return;
                 }
                 if (this.calendarSelector === 'arrival') {
-                    if (!this.bookingFormData.departureDate) {
-                        this.selectArrivalDate(element, date);
-                        this.refreshDateRange(element, date);
-                        this.showInvalidDates();
-                        this.calendarSelector = 'departure';
-                        this.departureDateFocus();
-                    } else {
-                        this.selectArrivalDate(element, date);
-                        this.refreshDateRange(element, date);
-                        this.showInvalidDates();
-                        if (date >= this.departureDateObject || !this.isValidRange()) {
-                            this.removeDepartureDate();
-                            this.hideDateRange();
+                    if (element.classList.contains('changeover-date')) {
+                        if (!this.bookingFormData.departureDate) {
+                            this.selectArrivalDate(element, date);
+                            this.refreshDateRange(element, date);
+                            this.showInvalidDates();
+                            this.calendarSelector = 'departure';
+                            this.departureDateFocus();
+                            this.showValidDepartureDates(element);
                         } else {
-                            this.hideDateRange();
-                            this.displayDateRange();
+                            this.selectArrivalDate(element, date);
+                            this.refreshDateRange(element, date);
+                            this.showInvalidDates();
+                            if (date >= this.departureDateObject || !this.isValidRange()) {
+                                this.removeDepartureDate();
+                                this.hideDateRange();
+                            } else {
+                                this.hideDateRange();
+                                this.displayDateRange();
+                            }
+                            this.calendarSelector = 'departure';
+                            this.departureDateFocus();
+                            this.showValidDepartureDates(element);
                         }
-                        this.calendarSelector = 'departure';
-                        this.departureDateFocus();
                     }
-                } else {
+                } else if (element.classList.contains('valid-departure-date')) {
                     if (this.bookingFormData.departureDate) {
                         this.hideDateRange();
                     }
@@ -818,6 +827,64 @@ const vm = new Vue({
             }
             this.bookingHelperText();
             this.bookingShowTotal();
+        },
+        showValidDepartureDates(arrivalElement) {
+            const changeoverData = arrivalElement.__vue__._props.isChangeoverData;
+            const changeoverArray = Array.from(document.querySelectorAll('.changeover-date'));
+            let lastDepartureElement;
+            if (+changeoverData.price) {
+                lastDepartureElement = this.addNextValidDepartureDate(arrivalElement, 1);
+            }
+            if (+changeoverData.price2Weeks) {
+                lastDepartureElement = this.addNextValidDepartureDate(lastDepartureElement, 2);
+            }
+            if (+changeoverData.price3Weeks) {
+                lastDepartureElement = this.addNextValidDepartureDate(lastDepartureElement, 3);
+            }
+            if (+changeoverData.price4Weeks) {
+                this.addNextValidDepartureDate(lastDepartureElement, 4)
+            }
+        },
+        addNextValidDepartureDate(element, week) {
+            const changeoverArray = Array.from(document.querySelectorAll('.changeover-date'));
+            let prevElementIndex = changeoverArray.indexOf(element);
+            let newElement = changeoverArray[prevElementIndex + 1];
+            newElement.classList.add('valid-departure-date');
+            if (week === 1) {
+                this.departure1Week.push(newElement);
+            }
+            else if (week === 2) {
+                this.departure2Week.push(newElement);
+            }
+            else if (week === 3) {
+                this.departure3Week.push(newElement);
+            }
+            else if (week === 4) {
+                this.departure4Week.push(newElement);
+            }
+            if (!newElement.classList.contains('days')) {
+                return (this.addNextValidDepartureDate(newElement, week));
+            } 
+            else {
+                return(newElement);
+            }
+        },
+        showPreviousValidDepartureDates(departureElement) {
+
+        },
+        addPreviousValidDepartureDate(element, week) {
+
+        },
+        hideValidDepartureDates() {
+            this.departure1Week.length = 0;
+            this.departure2Week.length = 0;
+            this.departure3Week.length = 0;
+            this.departure4Week.length = 0;
+            const validDepartureNodeList = document.querySelectorAll('.valid-departure-date');
+            const validDepartureArray = Array.from(validDepartureNodeList);
+            for (let i = 0; i < validDepartureArray.length; i++) {
+                validDepartureNodeList[i].classList.remove('valid-departure-date');
+            }
         },
         selectArrivalDate(element, date) {
             let arrivalDates = document.querySelectorAll('.arrival-date');

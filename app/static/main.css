@@ -1462,6 +1462,7 @@ svg {
                 width: 100%;
                 position: relative;
                 display: block;
+                background-color:rgb(229, 229, 229);
             }
             
             .calendar-date::before {
@@ -1494,16 +1495,17 @@ svg {
 
                 .changeover-date {
                     border: 1px solid palevioletred !important;
+                    background-color:white !important;
                 }
 
                     .prev-days div {
                         color: grey !important;
-                        background-color: white !important;
+                        background-color: rgb(229, 229, 229);
                     }
 
                     .next-days div {
                         color: grey !important;
-                        background-color: white !important;
+                        background-color: rgb(229, 229, 229);
                     }
 
                 .booked div {
