@@ -781,13 +781,11 @@ const vm = new Vue({
                     if (element.classList.contains('changeover-date')) {
                         if (!this.bookingFormData.departureDate) {
                             this.selectArrivalDate(element, date);
-                            this.refreshDateRange(element, date);
                             this.showInvalidDates();
                             this.calendarSelector = 'departure';
                             this.departureDateFocus();
-                        } else {
+                        } else if (element.classList.contains('valid-arrival-date')) {
                             this.selectArrivalDate(element, date);
-                            this.refreshDateRange(element, date);
                             this.showInvalidDates();
                             if (date >= this.departureDateObject || !this.isValidRange()) {
                                 this.removeDepartureDate();
@@ -810,20 +808,33 @@ const vm = new Vue({
             }
             if (this.arrivalDateObject && this.departureDateObject) {
                 /*this.bookingFormData.price = this.calculatePrice(this.arrivalDateObject, this.departureDateObject);*/
+                this.hideValidArrivalDates();
                 this.hideValidDepartureDates();
-                this.showValidDepartureDates(document.querySelector('.arrival-date.days'));
+                this.showValidDepartureDates(document.querySelector('.arrival-date'));
             } 
             else if (this.arrivalDateObject && !this.departureDateObject) {
+                this.hideValidArrivalDates();
                 this.hideValidDepartureDates();
-                this.showValidDepartureDates(document.querySelector('.arrival-date.days'));
+                this.showValidDepartureDates(document.querySelector('.arrival-date'));
                 /*this.bookingFormData.price = this.bookingFormData.dogs * this.pricePerDog;*/
             } 
             else if (!this.arrivalDateObject && this.departureDateObject) {
+                this.hideValidArrivalDates();
                 this.hideValidDepartureDates();
-                this.showPreviousValidDepartureDates(document.querySelector('.departure-date.days'));
+                let departureDateArray = Array.from(document.querySelectorAll('.departure-date'));
+                this.showValidArrivalDates(departureDateArray[departureDateArray.length - 1]);
+                this.showValidArrivalDates(document.querySelector('.departure-date.days'));
+            }
+            else {
+                this.hideValidArrivalDates();
+                this.hideValidDepartureDates();
             }
             this.bookingHelperText();
             this.bookingShowTotal();
+            if (this.arrivalDateObject) {
+                this.refreshDateRange();
+            }
+            
         },
         showValidDepartureDates(arrivalElement) {
             const changeoverData = arrivalElement.__vue__._props.isChangeoverData;
@@ -831,51 +842,105 @@ const vm = new Vue({
             if (+changeoverData.price) {
                 lastDepartureElement = this.addNextValidDepartureDate(arrivalElement, 1);
             }
-            if (+changeoverData.price2Weeks) {
+            if (+changeoverData.price2Weeks && lastDepartureElement) {
                 lastDepartureElement = this.addNextValidDepartureDate(lastDepartureElement, 2);
             }
-            if (+changeoverData.price3Weeks) {
+            if (+changeoverData.price3Weeks && lastDepartureElement) {
                 lastDepartureElement = this.addNextValidDepartureDate(lastDepartureElement, 3);
             }
-            if (+changeoverData.price4Weeks) {
+            if (+changeoverData.price4Weeks && lastDepartureElement) {
                 lastDepartureElement = this.addNextValidDepartureDate(lastDepartureElement, 4)
             }
             const validDepartureArray = Array.from(document.querySelectorAll('.valid-departure-date'));
-            for (date in validDepartureArray) {
-                if (new Date(validDepartureArray[date].__vue__._props.dateYear, validDepartureArray[date].__vue__._props.dateMonth, validDepartureArray[date].__vue__._props.dateDate) > new Date(lastDepartureElement.__vue__._props.dateYear, lastDepartureElement.__vue__._props.dateMonth, lastDepartureElement.__vue__._props.dateDate)) {
-                    validDepartureArray[date].classList.remove('valid-departure-date');
+            if (lastDepartureElement) {
+                for (date in validDepartureArray) {
+                    if (new Date(validDepartureArray[date].__vue__._props.dateYear, validDepartureArray[date].__vue__._props.dateMonth, validDepartureArray[date].__vue__._props.dateDate) > new Date(lastDepartureElement.__vue__._props.dateYear, lastDepartureElement.__vue__._props.dateMonth, lastDepartureElement.__vue__._props.dateDate)) {
+                        validDepartureArray[date].classList.remove('valid-departure-date');
+                    }
                 }
             }
         },
         addNextValidDepartureDate(element, week) {
             const changeoverArray = Array.from(document.querySelectorAll('.changeover-date'));
             let prevElementIndex = changeoverArray.indexOf(element);
-            let newElement = changeoverArray[prevElementIndex + 1];
-            newElement.classList.add('valid-departure-date');
-            if (week === 1) {
-                this.departure1Week.push(newElement);
+            if (changeoverArray[prevElementIndex + 1]) {
+                let newElement = changeoverArray[prevElementIndex + 1];
+                if (newElement.classList.contains('arrival-date')) {
+                    return (this.addNextValidDepartureDate(newElement));
+                }
+                newElement.classList.add('valid-departure-date');
+                if (week === 1) {
+                    this.departure1Week.push(newElement);
+                }
+                else if (week === 2) {
+                    this.departure2Week.push(newElement);
+                }
+                else if (week === 3) {
+                    this.departure3Week.push(newElement);
+                }
+                else if (week === 4) {
+                    this.departure4Week.push(newElement);
+                }
+                if (!newElement.classList.contains('days')) {
+                    return (this.addNextValidDepartureDate(newElement, week));
+                } 
+                else {
+                    return(newElement);
+                }
             }
-            else if (week === 2) {
-                this.departure2Week.push(newElement);
-            }
-            else if (week === 3) {
-                this.departure3Week.push(newElement);
-            }
-            else if (week === 4) {
-                this.departure4Week.push(newElement);
-            }
-            if (!newElement.classList.contains('days')) {
-                return (this.addNextValidDepartureDate(newElement, week));
-            } 
             else {
-                return(newElement);
+                return false;
+            }
+            
+        },
+        showValidArrivalDates(departureElement) {
+            let prevArrivalDate = departureElement;
+            for (let i = 1; i <= 4; i++) {
+                if (prevArrivalDate) {
+                    prevArrivalDate = this.checkPreviousValidArrivalDate(prevArrivalDate, i);
+                }
+                else {
+                    break;
+                }
+            }
+            let validArrivalArray = Array.from(document.querySelectorAll('.valid-arrival-date'));
+            for (date in validArrivalArray) {
+                if (new Date(validArrivalArray[date].__vue__._props.dateYear, validArrivalArray[date].__vue__._props.dateMonth, validArrivalArray[date].__vue__._props.dateDate) >= new Date(departureElement.__vue__._props.dateYear, departureElement.__vue__._props.dateMonth, departureElement.__vue__._props.dateDate)) {
+                    validArrivalArray[date].classList.remove('valid-arrival-date');
+                }
             }
         },
-        showPreviousValidDepartureDates(departureElement) {
-            console.log('showPreviousValid');
-        },
-        addPreviousValidDepartureDate(element, week) {
-
+        checkPreviousValidArrivalDate(prevElement, week) {
+            const changeoverArray = Array.from(document.querySelectorAll('.changeover-date'));
+            if (changeoverArray[changeoverArray.indexOf(prevElement) - 1]) {
+                let element = changeoverArray[changeoverArray.indexOf(prevElement) - 1];
+                if (element.classList.contains('departure-date')) {
+                    return (this.checkPreviousValidArrivalDate(element, week));
+                }
+                if (week === 1 && element.__vue__._props.isChangeoverData.price) {
+                    element.classList.add('valid-arrival-date');
+                }
+                else if (week === 2 && element.__vue__._props.isChangeoverData.price2Weeks) {
+                    element.classList.add('valid-arrival-date');
+                }
+                else if (week === 3 && element.__vue__._props.isChangeoverData.price3Weeks) {
+                    element.classList.add('valid-arrival-date');
+                }
+                else if (week === 4 && element.__vue__._props.isChangeoverData.price4Weeks) {
+                    element.classList.add('valid-arrival-date');
+                }
+                else {
+                    return false;
+                }
+                if (!element.classList.contains('days')) {
+                    return (this.checkPreviousValidArrivalDate(element, week));
+                }
+                return element;
+            }
+            else {
+                return false;
+            }
+            
         },
         hideValidDepartureDates() {
             this.departure1Week.length = 0;
@@ -886,6 +951,13 @@ const vm = new Vue({
             const validDepartureArray = Array.from(validDepartureNodeList);
             for (let i = 0; i < validDepartureArray.length; i++) {
                 validDepartureNodeList[i].classList.remove('valid-departure-date');
+            }
+        },
+        hideValidArrivalDates() {
+            const validArrivalNodeList = document.querySelectorAll('.valid-arrival-date');
+            const validArrivalArray = Array.from(validArrivalNodeList);
+            for (let i = 0; i < validArrivalArray.length; i++) {
+                validArrivalNodeList[i].classList.remove('valid-arrival-date');
             }
         },
         selectArrivalDate(element, date) {
@@ -988,7 +1060,8 @@ const vm = new Vue({
             this.departureDateObject = undefined;
             this.bookingFormData.price = this.bookingFormData.dogs * this.pricePerDog;
         },
-        refreshDateRange(element) {
+        refreshDateRange() {
+            let element = document.querySelector('.arrival-date');
             this.invalidDates = [];
             let calendarDates = Array.from(document.querySelectorAll('.calendar-date'));
             let arrivalIndex = calendarDates.indexOf(element);
