@@ -258,6 +258,9 @@ const vm = new Vue({
             townOrCity: '',
             countyOrRegion: '',
             postcode: '',
+            stayPrice: 0,
+            dogPrice: 0,
+            stayDiscount: 0,
             price: 0
         },
 
@@ -703,7 +706,6 @@ const vm = new Vue({
             return(calendar);
         },
         
-
         initCalendar(year, month, inputField) {
             const endDate = new Date(this.getPriceList[this.getPriceList.length - 1]['startDate']);
             endDate.setDate(endDate.getDate() + +this.getPublicPriceListSettings['maxSegmentLength']);
@@ -806,17 +808,33 @@ const vm = new Vue({
                     this.displayDateRange();                
                 }
             }
+
+            
             if (this.arrivalDateObject && this.departureDateObject) {
-                /*this.bookingFormData.price = this.calculatePrice(this.arrivalDateObject, this.departureDateObject);*/
                 this.hideValidArrivalDates();
                 this.hideValidDepartureDates();
                 this.showValidDepartureDates(document.querySelector('.arrival-date'));
+                
+
+                if (this.departure1Week.includes(document.querySelector('.departure-date'))) {
+                    this.bookingFormData.stayPrice = +document.querySelector('.arrival-date').__vue__._props.isChangeoverData.price;    
+                }
+                else if (this.departure2Week.includes(document.querySelector('.departure-date'))) {
+                    this.bookingFormData.stayPrice = +document.querySelector('.arrival-date').__vue__._props.isChangeoverData.price2Weeks;
+                }
+                else if (this.departure3Week.includes(document.querySelector('.departure-date'))) {
+                    this.bookingFormData.stayPrice = +document.querySelector('.arrival-date').__vue__._props.isChangeoverData.price3Weeks;
+                }
+                else if (this.departure4Week.includes(document.querySelector('.departure-date'))) {
+                    this.bookingFormData.stayPrice = +document.querySelector('.arrival-date').__vue__._props.isChangeoverData.price4Weeks;
+                }
+                
             } 
             else if (this.arrivalDateObject && !this.departureDateObject) {
                 this.hideValidArrivalDates();
                 this.hideValidDepartureDates();
                 this.showValidDepartureDates(document.querySelector('.arrival-date'));
-                /*this.bookingFormData.price = this.bookingFormData.dogs * this.pricePerDog;*/
+                this.bookingFormData.stayPrice = 0;
             } 
             else if (!this.arrivalDateObject && this.departureDateObject) {
                 this.hideValidArrivalDates();
@@ -824,16 +842,20 @@ const vm = new Vue({
                 let departureDateArray = Array.from(document.querySelectorAll('.departure-date'));
                 this.showValidArrivalDates(departureDateArray[departureDateArray.length - 1]);
                 this.showValidArrivalDates(document.querySelector('.departure-date.days'));
+                this.bookingFormData.stayPrice = 0;
             }
             else {
                 this.hideValidArrivalDates();
                 this.hideValidDepartureDates();
+                this.bookingFormData.stayPrice = 0;
             }
             this.bookingHelperText();
             this.bookingShowTotal();
             if (this.arrivalDateObject) {
                 this.refreshDateRange();
             }
+            this.bookingFormData.price = (+this.bookingFormData.stayPrice + +this.bookingFormData.dogPrice).toFixed(2);
+            
             
         },
         showValidDepartureDates(arrivalElement) {
@@ -866,7 +888,7 @@ const vm = new Vue({
             if (changeoverArray[prevElementIndex + 1]) {
                 let newElement = changeoverArray[prevElementIndex + 1];
                 if (newElement.classList.contains('arrival-date')) {
-                    return (this.addNextValidDepartureDate(newElement));
+                    return (this.addNextValidDepartureDate(newElement, week));
                 }
                 newElement.classList.add('valid-departure-date');
                 if (week === 1) {
@@ -1048,7 +1070,6 @@ const vm = new Vue({
             this.arrivalDateObject = undefined;
             this.hideInvalidDates();
             this.invalidDates = [];
-            this.bookingFormData.price = this.bookingFormData.dogs * this.pricePerDog;;
         },
         removeDepartureDate() {
             let departureDates = document.querySelectorAll('.departure-date');
@@ -1058,7 +1079,6 @@ const vm = new Vue({
             this.bookingFormData.departureDate = '';
             this.departureDateString = '';
             this.departureDateObject = undefined;
-            this.bookingFormData.price = this.bookingFormData.dogs * this.pricePerDog;
         },
         refreshDateRange() {
             let element = document.querySelector('.arrival-date');
@@ -1444,7 +1464,8 @@ const vm = new Vue({
                 document.querySelectorAll('#dogs div')[1].classList.remove('active');
                 document.querySelectorAll('#dogs .party-decrease')[1].classList.add('inactive');
             }
-            this.bookingFormData.price -= this.bookingFormData.dogs * this.pricePerDog;
+            this.bookingFormData.dogPrice = +this.bookingFormData.dogs * +this.pricePerDog;
+            this.bookingFormData.price = (+this.bookingFormData.stayPrice + +this.bookingFormData.dogPrice).toFixed(2);
             this.bookingShowTotal();
         },
         dogsIncrease(e) {
@@ -1460,7 +1481,8 @@ const vm = new Vue({
             }
             document.querySelectorAll('#dogs div')[0].classList.add('active');
             document.querySelectorAll('#dogs div')[1].classList.add('active');
-            this.bookingFormData.price += this.bookingFormData.dogs * this.pricePerDog;
+            this.bookingFormData.dogPrice = +this.bookingFormData.dogs * +this.pricePerDog;
+            this.bookingFormData.price = (+this.bookingFormData.stayPrice + +this.bookingFormData.dogPrice).toFixed(2);
             this.bookingShowTotal();
         },
 
