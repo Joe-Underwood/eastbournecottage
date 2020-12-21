@@ -751,12 +751,13 @@ const vm = new Vue({
             }
         },
         bookingShowTotal() {
-            if (this.bookingFormData.arrivalDate && this.bookingFormData.departureDate) {
+            if (this.bookingFormData.arrivalDate && this.bookingFormData.departureDate && this.bookingFormData.price) {
+                const stayLength = (this.departureDateObject - this.arrivalDateObject) / (1000 * 60 * 60 * 24);
                 document.querySelector('.total-breakdown').classList.add('show');
-                document.querySelector('.stay-length-total').innerHTML = '<div>1 week</div><div>£500.00</div>';
+                document.querySelector('.stay-length-total').innerHTML = `<div>${stayLength} nights</div><div>£${this.bookingFormData.stayPrice}</div>`;
                 if (this.bookingFormData.dogs) {
                     document.querySelector('.dog-total').classList.add('show');
-                    document.querySelector('.dog-total').innerHTML = '<div>1 dog</div><div>£20.00</div>';
+                    document.querySelector('.dog-total').innerHTML = `<div>${this.bookingFormData.dogs} dog</div><div>£${this.bookingFormData.dogPrice}</div>`;
                 }
             }
             else {
@@ -817,16 +818,16 @@ const vm = new Vue({
                 
 
                 if (this.departure1Week.includes(document.querySelector('.departure-date'))) {
-                    this.bookingFormData.stayPrice = +document.querySelector('.arrival-date').__vue__._props.isChangeoverData.price;    
+                    this.bookingFormData.stayPrice = (+document.querySelector('.arrival-date').__vue__._props.isChangeoverData.price).toFixed(2);    
                 }
                 else if (this.departure2Week.includes(document.querySelector('.departure-date'))) {
-                    this.bookingFormData.stayPrice = +document.querySelector('.arrival-date').__vue__._props.isChangeoverData.price2Weeks;
+                    this.bookingFormData.stayPrice = (+document.querySelector('.arrival-date').__vue__._props.isChangeoverData.price2Weeks).toFixed(2);
                 }
                 else if (this.departure3Week.includes(document.querySelector('.departure-date'))) {
-                    this.bookingFormData.stayPrice = +document.querySelector('.arrival-date').__vue__._props.isChangeoverData.price3Weeks;
+                    this.bookingFormData.stayPrice = (+document.querySelector('.arrival-date').__vue__._props.isChangeoverData.price3Weeks).toFixed(2);
                 }
                 else if (this.departure4Week.includes(document.querySelector('.departure-date'))) {
-                    this.bookingFormData.stayPrice = +document.querySelector('.arrival-date').__vue__._props.isChangeoverData.price4Weeks;
+                    this.bookingFormData.stayPrice = (+document.querySelector('.arrival-date').__vue__._props.isChangeoverData.price4Weeks).toFixed(2);
                 }
                 
             } 
@@ -1464,7 +1465,7 @@ const vm = new Vue({
                 document.querySelectorAll('#dogs div')[1].classList.remove('active');
                 document.querySelectorAll('#dogs .party-decrease')[1].classList.add('inactive');
             }
-            this.bookingFormData.dogPrice = +this.bookingFormData.dogs * +this.pricePerDog;
+            this.bookingFormData.dogPrice = (+this.bookingFormData.dogs * +this.pricePerDog).toFixed(2);
             this.bookingFormData.price = (+this.bookingFormData.stayPrice + +this.bookingFormData.dogPrice).toFixed(2);
             this.bookingShowTotal();
         },
@@ -1481,7 +1482,7 @@ const vm = new Vue({
             }
             document.querySelectorAll('#dogs div')[0].classList.add('active');
             document.querySelectorAll('#dogs div')[1].classList.add('active');
-            this.bookingFormData.dogPrice = +this.bookingFormData.dogs * +this.pricePerDog;
+            this.bookingFormData.dogPrice = (+this.bookingFormData.dogs * +this.pricePerDog).toFixed(2);
             this.bookingFormData.price = (+this.bookingFormData.stayPrice + +this.bookingFormData.dogPrice).toFixed(2);
             this.bookingShowTotal();
         },
