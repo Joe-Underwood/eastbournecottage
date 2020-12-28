@@ -105,17 +105,6 @@ Vue.component('calendar-date', {
             }
         }
     },
-    asyncComputed: {
-        availability: async function () {
-            let dates = await bookedDates;
-            for (date in dates) {
-                if (this.isoDate === dates[date]) {
-                    return 'booked';
-                }
-            }
-            return 'available';
-        }
-    },
     methods: {
         selectDate(element, date) {
             if (this.dateDate) {
@@ -143,7 +132,7 @@ Vue.component('calendar-date', {
             }
         }
     },
-    template: `<div :class="['calendar-date', availability, isChangeover]" v-on:click="selectDate(_vnode.elm, selfDate); slide(_vnode.elm);">
+    template: `<div :class="['calendar-date', isChangeover]" class="available" v-on:click="selectDate(_vnode.elm, selfDate); slide(_vnode.elm);">
                    <div>{{ dateDate }}</div>
                </div>`
 })
@@ -752,7 +741,7 @@ const vm = new Vue({
         },
         bookingShowTotal() {
             if (this.bookingFormData.arrivalDate && this.bookingFormData.departureDate && this.bookingFormData.price) {
-                const stayLength = (this.departureDateObject - this.arrivalDateObject) / (1000 * 60 * 60 * 24);
+                const stayLength = Math.round((this.departureDateObject - this.arrivalDateObject) / (1000 * 60 * 60 * 24));
                 document.querySelector('.total-breakdown').classList.add('show');
                 document.querySelector('.stay-length-total').innerHTML = `<div>${stayLength} nights</div><div>£${this.bookingFormData.stayPrice}</div>`;
                 if (this.bookingFormData.dogs) {
@@ -1543,15 +1532,6 @@ const vm = new Vue({
     delimiters: ['<%', '%>']
 })
 
-const bookedDates =
-    fetch('/dates', { method: 'post' })
-        .then(response => {
-            return (response.json());
-        })
-        .then(json => {
-            return (json['dates']);
-        })
-
 let field = '';
 
 calendarSwiper = new Swiper('.calendar-swiper', {
@@ -1609,6 +1589,6 @@ function toggleCalendarSlides(x) {
     calendarSwiper.update();
   }
   
-  const x = window.matchMedia("(max-width: 1081px)")
+  const x = window.matchMedia("(max-width: 1019px)")
   toggleCalendarSlides(x) // Call listener function at run time
   x.addEventListener("change", toggleCalendarSlides) // Attach listener function on state changes 

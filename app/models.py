@@ -32,30 +32,26 @@ class Customer(db.Model):
 class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
-    dates = db.relationship('Date', backref='booking')
+    date_segments = db.relationship('Price_List', backref='booking')
+    arrival_date = db.Column(db.Date)
+    departure_date = db.Column(db.Date)
     adults = db.Column(db.Integer)
     children = db.Column(db.Integer)
     infants = db.Column(db.Integer)
     dogs = db.Column(db.Integer)
+    stay_price = db.Column(db.Numeric(10, 2))
+    dog_price = db.Column(db.Numeric(10, 2))
     price = db.Column(db.Numeric(10,2))
 
 """class Past_Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
-    dates = db.relationship('Date', backref='booking')
+    date_segments = db.relationship('Past_Price_List', backref='booking')
     adults = db.Column(db.Integer)
     children = db.Column(db.Integer)
     infants = db.Column(db.Integer)
     dogs = db.Column(db.Integer)
     price = db.Column(db.Numeric(10,2))"""
-
-class Date(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    booking_id = db.Column(db.Integer, db.ForeignKey('booking.id'))
-    is_arrival = db.Column(db.Boolean)
-    is_departure = db.Column(db.Boolean)
-    is_changeover = db.Column(db.Boolean)
-    date = db.Column(db.Date)
     
 class Price_List(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -65,6 +61,7 @@ class Price_List(db.Model):
     price_3_weeks = db.Column(db.Numeric(10, 2))
     price_4_weeks = db.Column(db.Numeric(10, 2))
     booked = db.Column(db.Boolean, default=False)
+    booking_id = db.Column(db.Integer, db.ForeignKey('booking.id'))
 
 class Future_Price_List(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -75,11 +72,15 @@ class Future_Price_List(db.Model):
     price_4_weeks = db.Column(db.Numeric(10, 2))
     booked = db.Column(db.Boolean, default=False)
 
-class Past_Price_List(db.Model):
+"""class Past_Price_List(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     start_date = db.Column(db.Date, unique=True)
     price = db.Column(db.Numeric(10,2))
+    price_2_weeks = db.Column(db.Numeric(10, 2))
+    price_3_weeks = db.Column(db.Numeric(10, 2))
+    price_4_weeks = db.Column(db.Numeric(10, 2))
     booked = db.Column(db.Boolean, default=False)
+    booking_id = db.Column(db.Integer, db.ForeignKey('booking.id'))"""
 
 class Price_List_Settings(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -90,3 +91,7 @@ class Price_List_Settings(db.Model):
     future_prices_range = db.Column(db.Integer)
     default_changeover_day = db.Column(db.Integer)
     max_segment_length = db.Column(db.Integer, default=7)
+    price_per_dog = db.Column(db.Numeric(10, 2))
+    max_dogs = db.Column(db.Integer)
+    max_infants = db.Column(db.Integer)
+    max_guests = db.Column(db.Integer)

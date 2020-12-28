@@ -1,6 +1,6 @@
 from app import app, db
 from app.forms import BookingForm
-from app.models import User, Customer, Booking, Date, Price_List, Future_Price_List, Past_Price_List, Price_List_Settings
+from app.models import User, Customer, Booking, Price_List, Future_Price_List, Price_List_Settings
 from flask import render_template, request, jsonify
 from datetime import datetime, date, timedelta
 from calendar import Calendar
@@ -10,16 +10,6 @@ from decimal import Decimal
 def landing_page():
     booking_form = BookingForm()
     return render_template('main.html', booking_form=booking_form)
-
-@app.route('/dates', methods=['POST'])
-def dates():
-
-    booked_dates_query = db.session.query(Date.date).all()
-    booked_dates = []
-    for date in booked_dates_query:
-        booked_dates.append(date[0])
-
-    return { 'dates' : booked_dates }
 
 @app.route('/get_prices', methods=['POST'])
 def get_prices():
@@ -36,6 +26,77 @@ def get_prices():
 def booking():
     booking_form_data = request.get_json()
 
+    #----VALIDATION-------#
+    price_list_settings = db.session.query(Price_List_Settings)
+    price_list = db.session.query(Price_List)
+    arrival_date = datetime.strptime(booking_form_data['arrivalDate'][0:10], '%Y-%m-%d').date()
+    departure_date = datetime.strptime(booking_form_data['departureDate'][0:10], '%Y-%m-%d').date()
+    price_segment = False
+
+    for index, segment in enumerate(price_list):
+        if (not price_segment and segment.start_date > arrival_date):
+            price_segment = price_list[index - 1]
+            segment_interval = 0
+            print('price_segment: ' + str(price_segment))
+        if (price_segment):
+            segment_interval += 1
+            print('segment_interval: ' + str(segment_interval))
+            print('departure date: ' + str(departure_date))
+            print('segment start date: ' + str(segment.start_date))
+            if (departure_date <= segment.start_date):
+                print(segment_interval)
+                break
+            
+    if (not (price_segment and segment_interval)):
+        return { 'success': False }
+    else:
+        if (segment_interval == 1):
+            correct_price = price_segment.price
+        elif (segment_interval == 2):
+            correct_price = price_segment.price_2_weeks
+        elif (segment_interval == 3):
+            correct_price = price_segment.price_3_weeks
+        elif (segment_interval == 4):
+            correct_price = price_segment.price_4_weeks
+        else:
+            print('Stay length exceeds maximum allowed')
+            return { 'success': False }
+        
+        if (Decimal(booking_form_data['stayPrice']) != Decimal(correct_price)):
+            print('submitted stay price:' + str(booking_form_data['stayPrice']))
+            print('database stay_price:' + str(correct_price))
+            print('Submitted price does not match with databse, resubmit correct_price to user for confirmation')
+            return { 'success': False }
+
+    print(price_list_settings[0].max_guests)
+    if (int(booking_form_data['adults']) + int(booking_form_data['children']) > price_list_settings[0].max_guests):
+        print('Number of guests exceeds maximum allowed')
+        return { 'success': False }
+    if (int(booking_form_data['infants']) > price_list_settings[0].max_infants):
+        print('Number of infants exceeds maximum allowed')
+        return { 'success': False }
+    if (int(booking_form_data['dogs']) > price_list_settings[0].max_dogs):
+        print('Number of dogs exceeds maximum allowed')
+        return { 'success': False }
+    if (Decimal(booking_form_data['dogPrice']) != int(booking_form_data['dogs']) * price_list_settings[0].price_per_dog):
+        print('Incorrect dog price')
+        return { 'success': False }
+    if (Decimal(booking_form_data['price']) != Decimal(booking_form_data['stayPrice']) + Decimal(booking_form_data['dogPrice'])):
+        print('Prices do not add up to total, resubmit correct prices to user for confirmation')
+        return { 'success': False }
+    
+    #-------VALIDATION END-------------------#
+
+    booking = Booking(
+        adults = int(booking_form_data['adults']),
+        children = int(booking_form_data['children']),
+        infants = int(booking_form_data['infants']),
+        dogs = int(booking_form_data['dogs']),
+        stay_price = Decimal(booking_form_data['stayPrice']),
+        dog_price = Decimal(booking_form_data['dogPrice']),
+        price = Decimal(booking_form_data['price'])
+    )
+
     customer = Customer(
         first_name = booking_form_data['firstName'],
         last_name = booking_form_data['lastName'],
@@ -48,17 +109,7 @@ def booking():
         postcode = booking_form_data['postcode']
     )
 
-    booking = Booking(
-        adults = int(booking_form_data['adults']),
-        children = int(booking_form_data['children']),
-        infants = int(booking_form_data['infants']),
-        dogs = int(booking_form_data['dogs']),
-        price = Decimal(booking_form_data['price'])
-    )
-
-    arrival_date = datetime.strptime(booking_form_data['arrivalDate'][0:10], '%Y-%m-%d').date()
-    departure_date = datetime.strptime(booking_form_data['departureDate'][0:10], '%Y-%m-%d').date()
-    date_delta = (departure_date - arrival_date).days
+    """
     for i in range(0, date_delta+1):
         if (i == 0):
             arrival_is = True
@@ -89,13 +140,15 @@ def booking():
 
         date = Date(is_arrival = arrival_is, is_departure = departure_is, is_changeover = changeover_is, date = (arrival_date + timedelta(days=i)))
         booking.dates.append(date)
-        db.session.add(date)
-
+        db.session.add(date)"""
+    """booking.price_list_segments.append(segment)
     customer.bookings.append(booking)
 
     db.session.add(customer)
     db.session.add(booking)
-    db.session.commit()
+    db.session.commit()"""
+    print(customer)
+    print(booking)
 
     return { 'success': True }
 
@@ -154,7 +207,11 @@ def update_price_list_settings():
         active_prices_range = int(request_settings['activePricesRange']),
         future_prices_range = int(request_settings['futurePricesRange']),
         default_changeover_day = int(request_settings['defaultChangeoverDay']),
-        max_segment_length = int(request_settings['maxSegmentLength'])
+        max_segment_length = int(request_settings['maxSegmentLength']),
+        price_per_dog = Decimal(request_settings['pricePerDog']),
+        max_dogs = int(request_settings['maxDogs']),
+        max_infants = int(request_settings['maxInfants']),
+        max_guests = int(request_settings['maxGuests'])
     )
 
     db.session.add(updated_settings)
@@ -173,7 +230,11 @@ def get_price_list_settings():
         'activePricesRange': str(settings_query[0].active_prices_range),
         'futurePricesRange': str(settings_query[0].future_prices_range),
         'defaultChangeoverDay': str(settings_query[0].default_changeover_day),
-        'maxSegmentLength': str(settings_query[0].max_segment_length)
+        'maxSegmentLength': str(settings_query[0].max_segment_length),
+        'pricePerDog': str(settings_query[0].price_per_dog),
+        'maxDogs': str(settings_query[0].max_dogs),
+        'maxInfants': str(settings_query[0].max_infants),
+        'maxGuests': str(settings_query[0].max_guests)
         }
 
     return { 'priceListSettings': settings }

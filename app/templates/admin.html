@@ -126,6 +126,18 @@
                     <label for="max-segment-length">Max Segment Length</label>
                     <input id="max-segment-length" v-model="getPriceListSettings['maxSegmentLength']" type="number" step="1" />
 
+                    <label for="price-per-dog">Price per Dog</label>
+                    <input id="price-per-dog" v-model="getPriceListSettings['pricePerDog']" type="number" step="0.01" />
+
+                    <label for="max-dogs">Max Dogs</label>
+                    <input id="max-dogs" v-model="getPriceListSettings['maxDogs']" type="number" step="1" />
+
+                    <label for="max-infants">Max Infants</label>
+                    <input id="max-infants" v-model="getPriceListSettings['maxInfants']" type="number" step="1" />
+
+                    <label for="max-guests">Max Guests</label>
+                    <input id="max-guests" v-model="getPriceListSettings['maxGuests']" type="number" step="1" />
+
                     <button v-on:click="adjustRanges()">ADJUST RANGES</button>
 
                     <button v-on:click="applyDiscounts()">APPLY DISCOUNTS</button>
