@@ -16,13 +16,14 @@ def get_prices():
     price_list_query = db.session.query(Price_List)
     price_list = []
     for row in price_list_query:
+
         segment = { 
             'startDate': row.start_date.isoformat(), 
             'price': str(row.price), 
             'price2Weeks': str(row.price_2_weeks), 
             'price3Weeks': str(row.price_3_weeks), 
             'price4Weeks': str(row.price_4_weeks), 
-            'bookingId': str(row.booking_id) 
+            'bookingId': row.booking_id
             }
         price_list.append(segment)
 
@@ -101,7 +102,10 @@ def booking():
             print('Submitted price does not match with databse, resubmit correct_price to user for confirmation')
             return { 'success': False }
 
-    if (0 < (int(booking_form_data['adults']) + int(booking_form_data['children'])) <= price_list_settings[0].max_guests):
+    if (int(booking_form_data['adults']) <= 0):
+        print('Number of adults must be at least 1')
+        return { 'success': False }
+    if ((int(booking_form_data['adults']) + int(booking_form_data['children'])) > price_list_settings[0].max_guests):
         print('Number of guests exceeds maximum allowed')
         return { 'success': False }
     if (int(booking_form_data['infants']) > price_list_settings[0].max_infants):

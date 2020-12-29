@@ -103,6 +103,15 @@ Vue.component('calendar-date', {
             if (this.isChangeoverData) {
                 return 'changeover-date';
             }
+        },
+        isAvailable: function() {
+            if (this.isChangeoverData) {
+                if (this.isChangeoverData['bookingId']) {
+                    return 'booked';
+                } else {
+                    return 'available';
+                }
+            } 
         }
     },
     methods: {
@@ -132,7 +141,7 @@ Vue.component('calendar-date', {
             }
         }
     },
-    template: `<div :class="['calendar-date', isChangeover]" class="available" v-on:click="selectDate(_vnode.elm, selfDate); slide(_vnode.elm);">
+    template: `<div :class="['calendar-date', isChangeover, isAvailable]" v-on:click="selectDate(_vnode.elm, selfDate); slide(_vnode.elm);">
                    <div>{{ dateDate }}</div>
                </div>`
 })
@@ -799,7 +808,6 @@ const vm = new Vue({
                 }
             }
 
-            
             if (this.arrivalDateObject && this.departureDateObject) {
                 this.hideValidArrivalDates();
                 this.hideValidDepartureDates();
@@ -876,6 +884,9 @@ const vm = new Vue({
             let prevElementIndex = changeoverArray.indexOf(element);
             if (changeoverArray[prevElementIndex + 1]) {
                 let newElement = changeoverArray[prevElementIndex + 1];
+                if (newElement.classList.contains('booked')) {
+                    return false;
+                }
                 if (newElement.classList.contains('arrival-date')) {
                     return (this.addNextValidDepartureDate(newElement, week));
                 }
@@ -925,6 +936,9 @@ const vm = new Vue({
             const changeoverArray = Array.from(document.querySelectorAll('.changeover-date'));
             if (changeoverArray[changeoverArray.indexOf(prevElement) - 1]) {
                 let element = changeoverArray[changeoverArray.indexOf(prevElement) - 1];
+                if (element.classList.contains('booked')) {
+                    return false;
+                }
                 if (element.classList.contains('departure-date')) {
                     return (this.checkPreviousValidArrivalDate(element, week));
                 }
