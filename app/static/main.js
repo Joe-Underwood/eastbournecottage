@@ -803,8 +803,7 @@ const vm = new Vue({
             if (this.arrivalDateObject && this.departureDateObject) {
                 this.hideValidArrivalDates();
                 this.hideValidDepartureDates();
-                this.showValidDepartureDates(document.querySelector('.arrival-date'));
-                
+                this.showValidDepartureDates(document.querySelector('.arrival-date.days'));
 
                 if (this.departure1Week.includes(document.querySelector('.departure-date'))) {
                     this.bookingFormData.stayPrice = (+document.querySelector('.arrival-date').__vue__._props.isChangeoverData.price).toFixed(2);    
@@ -823,7 +822,7 @@ const vm = new Vue({
             else if (this.arrivalDateObject && !this.departureDateObject) {
                 this.hideValidArrivalDates();
                 this.hideValidDepartureDates();
-                this.showValidDepartureDates(document.querySelector('.arrival-date'));
+                this.showValidDepartureDates(document.querySelector('.arrival-date.days'));
                 this.bookingFormData.stayPrice = 0;
             } 
             else if (!this.arrivalDateObject && this.departureDateObject) {
@@ -984,6 +983,34 @@ const vm = new Vue({
             this.bookingFormData.arrivalDate = date.toISOString().slice(0, 10);
             this.arrivalDateString = date.toDateString();
             this.arrivalDateObject = date;
+            /*else if (date > departureDateObject) {
+                this.removeArrivalDate();
+            }*/
+            if (!element.classList.contains('days')) {
+                let calendarDates = Array.from(document.querySelectorAll('.calendar-date'));
+                let arrivalDateIndex = calendarDates.indexOf(element);
+                let arrivalDate = new Date(element.__vue__._props.dateYear, element.__vue__._props.dateMonth, element.__vue__._props.dateDate);
+                
+                if (element.classList.contains('next-days')) {
+                    for (let i = arrivalDateIndex + 1; i < calendarDates.length; i++) {
+                        let indexDate = new Date (calendarDates[i].__vue__._props.dateYear, calendarDates[i].__vue__._props.dateMonth, calendarDates[i].__vue__._props.dateDate);
+                        if (+indexDate === +arrivalDate) {
+                            calendarDates[i].classList.add('arrival-date');
+                            return;
+                        }
+                    }
+                }
+
+                if (element.classList.contains('prev-days')) {
+                    for (let i = arrivalDateIndex - 1; i >= 0; i--) {
+                        let indexDate = new Date (calendarDates[i].__vue__._props.dateYear, calendarDates[i].__vue__._props.dateMonth, calendarDates[i].__vue__._props.dateDate);
+                        if (+indexDate === +arrivalDate) {
+                            calendarDates[i].classList.add('arrival-date');
+                            return;
+                        }
+                    }
+                }
+            }
         },
         selectDepartureDate(element, date) {
             if (!element.classList.contains('invalid-date')) {

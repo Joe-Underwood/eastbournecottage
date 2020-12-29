@@ -118,6 +118,17 @@ const vm = new Vue({
                     return (json['priceListSettings']);
                 })
             return (settings);
+        },
+        getBookings: async function() {
+            const bookings = 
+            fetch('/get_bookings', {method: 'post' })
+                .then(response => {
+                    return (response.json());
+                })
+                .then(json => {
+                    return(json['bookings']);
+                })
+            return (bookings);
         }
     },
     methods: {

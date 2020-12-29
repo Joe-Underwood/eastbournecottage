@@ -60,8 +60,7 @@ class Price_List(db.Model):
     price_2_weeks = db.Column(db.Numeric(10, 2))
     price_3_weeks = db.Column(db.Numeric(10, 2))
     price_4_weeks = db.Column(db.Numeric(10, 2))
-    booked = db.Column(db.Boolean, default=False)
-    booking_id = db.Column(db.Integer, db.ForeignKey('booking.id'))
+    booking_id = db.Column(db.Integer, db.ForeignKey('booking.id', ondelete='SET NULL'), default=None)
 
 class Future_Price_List(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -70,7 +69,7 @@ class Future_Price_List(db.Model):
     price_2_weeks = db.Column(db.Numeric(10, 2))
     price_3_weeks = db.Column(db.Numeric(10, 2))
     price_4_weeks = db.Column(db.Numeric(10, 2))
-    booked = db.Column(db.Boolean, default=False)
+    booking_id = db.Column(db.Integer, default=None)
 
 """class Past_Price_List(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -76,6 +76,7 @@
                         <input type="number" step="0.01" v-model="segment['price2Weeks']" />
                         <input type="number" step="0.01" v-model="segment['price3Weeks']" />
                         <input type="number" step="0.01" v-model="segment['price4Weeks']" />
+                        <input v-model="segment['bookingId']" />
                         <input class="real-checkbox" type="checkbox" />
                     </div>
 
@@ -148,12 +149,30 @@
             </div>
 
             <div class="bookings-editor">
-                <h1>Bookings Editor</h1>
-                <div class="calendar-view">
 
-                </div>
-                <div class="list-view">
-                    <ul></ul>
+                <div class="bookings-list-view">
+                    <div class="booking" v-for="booking in getBookings">
+
+                        <input id="arrival-date" v-model="booking['arrivalDate']" type="date" />
+
+                        <input id="departure-date" v-model="booking['departureDate']" type="date" />
+
+                        <input id="customer" v-model="booking['customerId']" />
+
+                        <input id="adults" v-model="booking['adults']" type="number" step="1" />
+
+                        <input id="children" v-model="booking['children']" type="number" step="1" />
+
+                        <input id="infants" v-model="booking['infants']" type="number" step="1" />
+
+                        <input id="dogs" v-model="booking['dogs']" type="number" step="1" />
+
+                        <input id="stay-price" v-model="booking['stayPrice']" type="number" step="0.01" />
+
+                        <input id="dog-price" v-model="booking['dogPrice']" type="number" step="0.01" />
+
+                        <input id="price" v-model="booking['price']" type="number" step="0.01" />
+                    </div>
                 </div>
             </div>
 

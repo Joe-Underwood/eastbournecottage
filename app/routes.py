@@ -13,14 +13,45 @@ def landing_page():
 
 @app.route('/get_prices', methods=['POST'])
 def get_prices():
-
     price_list_query = db.session.query(Price_List)
     price_list = []
     for row in price_list_query:
-        segment = { 'startDate': row.start_date.isoformat(), 'price': str(row.price), 'price2Weeks': str(row.price_2_weeks), 'price3Weeks': str(row.price_3_weeks), 'price4Weeks': str(row.price_4_weeks), 'booked': row.booked }
+        segment = { 
+            'startDate': row.start_date.isoformat(), 
+            'price': str(row.price), 
+            'price2Weeks': str(row.price_2_weeks), 
+            'price3Weeks': str(row.price_3_weeks), 
+            'price4Weeks': str(row.price_4_weeks), 
+            'bookingId': str(row.booking_id) 
+            }
         price_list.append(segment)
 
     return { 'priceList': price_list }
+
+@app.route('/get_bookings', methods=['POST'])
+def get_bookings():
+    bookings_query = db.session.query(Booking)
+    print(bookings_query)
+    for row in bookings_query:
+        print(row.price)
+        print(row.arrival_date)
+    bookings = []
+    for row in bookings_query:
+        booking = {
+            'customerId': str(row.customer_id),
+            'arrivalDate': row.arrival_date.isoformat(),
+            'departureDate': row.departure_date.isoformat(),
+            'adults': str(row.adults),
+            'children': str(row.children),
+            'infants': str(row.infants),
+            'dogs': str(row.dogs),
+            'stayPrice': str(row.stay_price),
+            'dogPrice': str(row.dog_price),
+            'price': str(row.price)
+        }
+        bookings.append(booking)
+    
+    return { 'bookings': bookings }
 
 @app.route('/booking', methods=['POST'])
 def booking():
@@ -31,33 +62,35 @@ def booking():
     price_list = db.session.query(Price_List)
     arrival_date = datetime.strptime(booking_form_data['arrivalDate'][0:10], '%Y-%m-%d').date()
     departure_date = datetime.strptime(booking_form_data['departureDate'][0:10], '%Y-%m-%d').date()
-    price_segment = False
+    date_segments = []
 
     for index, segment in enumerate(price_list):
-        if (not price_segment and segment.start_date > arrival_date):
-            price_segment = price_list[index - 1]
-            segment_interval = 0
-            print('price_segment: ' + str(price_segment))
-        if (price_segment):
-            segment_interval += 1
-            print('segment_interval: ' + str(segment_interval))
-            print('departure date: ' + str(departure_date))
-            print('segment start date: ' + str(segment.start_date))
+        if (not date_segments and segment.start_date > arrival_date):
+            if (price_list[index - 1].booking_id):
+                print('date segment is already booked')
+                return { 'sucess': False }
+            date_segments.append(price_list[index - 1])
+        
+        if (date_segments):
+            if (segment.booking_id):
+                print('date segment is already booked')
+                return { 'sucess': False }
             if (departure_date <= segment.start_date):
-                print(segment_interval)
                 break
+            date_segments.append(price_list[index])
             
-    if (not (price_segment and segment_interval)):
+    if (not (date_segments)):
         return { 'success': False }
     else:
-        if (segment_interval == 1):
-            correct_price = price_segment.price
-        elif (segment_interval == 2):
-            correct_price = price_segment.price_2_weeks
-        elif (segment_interval == 3):
-            correct_price = price_segment.price_3_weeks
-        elif (segment_interval == 4):
-            correct_price = price_segment.price_4_weeks
+        print(date_segments)
+        if (len(date_segments) == 1):
+            correct_price = date_segments[0].price
+        elif (len(date_segments) == 2):
+            correct_price = date_segments[0].price_2_weeks
+        elif (len(date_segments) == 3):
+            correct_price = date_segments[0].price_3_weeks
+        elif (len(date_segments) == 4):
+            correct_price = date_segments[0].price_4_weeks
         else:
             print('Stay length exceeds maximum allowed')
             return { 'success': False }
@@ -68,8 +101,7 @@ def booking():
             print('Submitted price does not match with databse, resubmit correct_price to user for confirmation')
             return { 'success': False }
 
-    print(price_list_settings[0].max_guests)
-    if (int(booking_form_data['adults']) + int(booking_form_data['children']) > price_list_settings[0].max_guests):
+    if (0 < (int(booking_form_data['adults']) + int(booking_form_data['children'])) <= price_list_settings[0].max_guests):
         print('Number of guests exceeds maximum allowed')
         return { 'success': False }
     if (int(booking_form_data['infants']) > price_list_settings[0].max_infants):
@@ -88,6 +120,8 @@ def booking():
     #-------VALIDATION END-------------------#
 
     booking = Booking(
+        arrival_date = arrival_date,
+        departure_date = departure_date,
         adults = int(booking_form_data['adults']),
         children = int(booking_form_data['children']),
         infants = int(booking_form_data['infants']),
@@ -109,52 +143,20 @@ def booking():
         postcode = booking_form_data['postcode']
     )
 
-    """
-    for i in range(0, date_delta+1):
-        if (i == 0):
-            arrival_is = True
-            departure_is = False
+    for segment in date_segments:
+        segment.booked = True
+        booking.date_segments.append(segment)
 
-            for start_date in db.session.query(Price_List.start_date).all():
-                if (start_date == arrival_date):
-                    changeover_is = True
-                    break
-
-            changeover_is = False
-                
-        elif (i == date_delta+1):
-            arrival_is = False
-            departure_is = True
-
-            for end_date in db.session.query(Price_List.end_date).all():
-                if (end_date == departure_date):
-                    changeover_is = True
-                    break
-
-            changeover_is = False
-
-        else:
-            arrival_is = False
-            departure_is = False
-            changeover_is = False
-
-        date = Date(is_arrival = arrival_is, is_departure = departure_is, is_changeover = changeover_is, date = (arrival_date + timedelta(days=i)))
-        booking.dates.append(date)
-        db.session.add(date)"""
-    """booking.price_list_segments.append(segment)
+    print(booking.arrival_date)
     customer.bookings.append(booking)
-
     db.session.add(customer)
     db.session.add(booking)
-    db.session.commit()"""
-    print(customer)
-    print(booking)
+    db.session.commit()
 
     return { 'success': True }
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
-
     return render_template('admin.html')
 
 @app.route('/update_prices', methods=['POST'])
@@ -172,7 +174,6 @@ def update_prices():
             price_2_weeks = segment['price2Weeks'],
             price_3_weeks = segment['price3Weeks'],
             price_4_weeks = segment['price4Weeks'],
-            booked = segment['booked']
         )
         db.session.add(price_list_segment)
 
@@ -185,7 +186,6 @@ def update_prices():
             price_2_weeks = segment['price2Weeks'],
             price_3_weeks = segment['price3Weeks'],
             price_4_weeks = segment['price4Weeks'],
-            booked = segment['booked']
         )
         db.session.add(future_price_list_segment)
 
@@ -257,7 +257,13 @@ def get_future_prices():
     future_price_list_query = db.session.query(Future_Price_List)
     future_price_list = []
     for row in future_price_list_query:
-        segment = { 'startDate': row.start_date.isoformat(), 'price': str(row.price), 'price2Weeks': str(row.price_2_weeks), 'price3Weeks': str(row.price_3_weeks), 'price4Weeks': str(row.price_4_weeks), 'booked': row.booked }
+        segment = {
+            'startDate': row.start_date.isoformat(), 
+            'price': str(row.price), 
+            'price2Weeks': str(row.price_2_weeks), 
+            'price3Weeks': str(row.price_3_weeks), 
+            'price4Weeks': str(row.price_4_weeks), 
+            }
         future_price_list.append(segment)
 
     return { 'futurePriceList': future_price_list }

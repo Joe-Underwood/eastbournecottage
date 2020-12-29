@@ -758,3 +758,8 @@ svg {
 .future-price-list-segment {
     background-color: grey;
 }
+
+.booking {
+    display: flex;
+}
+
