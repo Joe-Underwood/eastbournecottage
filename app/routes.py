@@ -113,10 +113,6 @@ def set_price_list_settings():
 @app.route('/get_bookings', methods=['POST'])
 def get_bookings():
     bookings_query = db.session.query(Booking)
-    print(bookings_query)
-    for row in bookings_query:
-        print(row.price)
-        print(row.arrival_date)
     bookings = []
     for row in bookings_query:
         booking = {
@@ -137,6 +133,7 @@ def get_bookings():
 
 @app.route('/set_bookings', methods=['POST'])
 def set_bookings():
+
     return { 'success': True }
 
 @app.route('/booking', methods=['POST'])
@@ -236,7 +233,6 @@ def booking():
         segment.booked = True
         booking.date_segments.append(segment)
 
-    print(booking.arrival_date)
     customer.bookings.append(booking)
     db.session.add(customer)
     db.session.add(booking)
@@ -244,6 +240,30 @@ def booking():
 
     return { 'success': True }
 
+@app.route('/get_customers', methods=['POST'])
+def get_customers():
+    customers_query = db.session.query(Customer)
+    customers = []
+    for row in customers_query:
+        customer = {
+            'firstName': str(row.first_name),
+            'lastName': str(row.last_name),
+            'emailAddress': str(row.email_address),
+            'phoneNumber': str(row.phone_number),
+            'addressLine1': str(row.address_line_1),
+            'addressLine2': str(row.address_line_2),
+            'townOrCity': str(row.town_or_city),
+            'countyOrRegion': str(row.county_or_region),
+            'postcode': str(row.postcode)
+        }
+        customers.append(customer)
+    
+    return { 'customers': customer }
+
+@app.route('/set_customers', methods=['POST'])
+def set_customers():
+    return { 'success': True 
+    }
 @app.route('/get_price_list_settings', methods=['POST'])
 def get_price_list_settings():
     settings_query = db.session.query(Price_List_Settings)

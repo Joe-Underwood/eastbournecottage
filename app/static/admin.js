@@ -121,7 +121,7 @@ const vm = new Vue({
         },
         getBookings: async function() {
             const bookings = 
-            fetch('/get_bookings', {method: 'post' })
+            fetch('/get_bookings', { method: 'post' })
                 .then(response => {
                     return (response.json());
                 })
@@ -129,6 +129,17 @@ const vm = new Vue({
                     return(json['bookings']);
                 })
             return (bookings);
+        },
+        getCustomers: async function() {
+            const customers = 
+            fetch('/get_customers', { method: 'post '})
+                .then(response => {
+                    return (response.json());
+                })
+                .then(json => {
+                    return (json['customers']);
+                })
+            return (customers)
         }
     },
     methods: {
@@ -153,6 +164,24 @@ const vm = new Vue({
             fetch('/set_price_list_settings', {
                 method: 'post',
                 body: JSON.stringify(this.getPriceListSettings),
+                headers: new Headers({
+                    'content-type': 'application/json'
+                })
+            })
+        },
+        setBookings() {
+            fetch('/set_bookings', {
+                method: 'post',
+                body: JSON.stringify(this.getBookings),
+                headers: new Headers({
+                    'content-type': 'application/json'
+                })
+            })
+        },
+        setCustomers() {
+            fetch('/set_customers', {
+                method: 'post',
+                body: JSON.stringify(this.getCustomers),
                 headers: new Headers({
                     'content-type': 'application/json'
                 })
