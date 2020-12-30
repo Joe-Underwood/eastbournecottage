@@ -11,8 +11,12 @@ def landing_page():
     booking_form = BookingForm()
     return render_template('main.html', booking_form=booking_form)
 
-@app.route('/get_prices', methods=['POST'])
-def get_prices():
+@app.route('/admin', methods=['GET', 'POST'])
+def admin():
+    return render_template('admin.html')
+
+@app.route('/get_price_list', methods=['POST'])
+def get_price_list():
     price_list_query = db.session.query(Price_List)
     price_list = []
     for row in price_list_query:
@@ -28,6 +32,83 @@ def get_prices():
         price_list.append(segment)
 
     return { 'priceList': price_list }
+
+@app.route('/get_future_price_list', methods=['POST'])
+def get_future_prices():
+    future_price_list_query = db.session.query(Future_Price_List)
+    future_price_list = []
+    for row in future_price_list_query:
+        segment = {
+            'startDate': row.start_date.isoformat(), 
+            'price': str(row.price), 
+            'price2Weeks': str(row.price_2_weeks), 
+            'price3Weeks': str(row.price_3_weeks), 
+            'price4Weeks': str(row.price_4_weeks), 
+            }
+        future_price_list.append(segment)
+
+    return { 'futurePriceList': future_price_list }
+
+@app.route('/set_price_list', methods=['POST'])
+def set_price_list():
+
+    db.session.query(Price_List).delete()
+    db.session.query(Future_Price_List).delete()
+
+    request_price_list = request.get_json()['priceList']
+
+    for segment in request_price_list:
+        price_list_segment = Price_List(
+            start_date = datetime.strptime(segment['startDate'], '%Y-%m-%d').date(),
+            price = segment['price'],
+            price_2_weeks = segment['price2Weeks'],
+            price_3_weeks = segment['price3Weeks'],
+            price_4_weeks = segment['price4Weeks'],
+        )
+        db.session.add(price_list_segment)
+
+    request_future_price_list = request.get_json()['futurePriceList']
+
+    for segment in request_future_price_list:
+        future_price_list_segment = Future_Price_List(
+            start_date = datetime.strptime(segment['startDate'], '%Y-%m-%d').date(),
+            price = segment['price'],
+            price_2_weeks = segment['price2Weeks'],
+            price_3_weeks = segment['price3Weeks'],
+            price_4_weeks = segment['price4Weeks'],
+        )
+        db.session.add(future_price_list_segment)
+
+    db.session.commit()
+    print('prices updated')
+    return { 'success': True }
+
+@app.route('/set_price_list_settings', methods=['POST'])
+def set_price_list_settings():
+
+    db.session.query(Price_List_Settings).delete()
+
+    request_settings = request.get_json()
+
+    updated_settings = Price_List_Settings(
+        discount_2_weeks = request_settings['discount2Weeks'],
+        discount_3_weeks = request_settings['discount3Weeks'],
+        discount_4_weeks = request_settings['discount4Weeks'],
+        active_prices_range = int(request_settings['activePricesRange']),
+        future_prices_range = int(request_settings['futurePricesRange']),
+        default_changeover_day = int(request_settings['defaultChangeoverDay']),
+        max_segment_length = int(request_settings['maxSegmentLength']),
+        price_per_dog = Decimal(request_settings['pricePerDog']),
+        max_dogs = int(request_settings['maxDogs']),
+        max_infants = int(request_settings['maxInfants']),
+        max_guests = int(request_settings['maxGuests'])
+    )
+
+    db.session.add(updated_settings)
+    db.session.commit()
+
+    print('price_list_settings updated')
+    return { 'success': True }
 
 @app.route('/get_bookings', methods=['POST'])
 def get_bookings():
@@ -53,6 +134,10 @@ def get_bookings():
         bookings.append(booking)
     
     return { 'bookings': bookings }
+
+@app.route('/set_bookings', methods=['POST'])
+def set_bookings():
+    return { 'success': True }
 
 @app.route('/booking', methods=['POST'])
 def booking():
@@ -159,71 +244,6 @@ def booking():
 
     return { 'success': True }
 
-@app.route('/admin', methods=['GET', 'POST'])
-def admin():
-    return render_template('admin.html')
-
-@app.route('/update_prices', methods=['POST'])
-def update_prices():
-
-    db.session.query(Price_List).delete()
-    db.session.query(Future_Price_List).delete()
-
-    request_price_list = request.get_json()['priceList']
-
-    for segment in request_price_list:
-        price_list_segment = Price_List(
-            start_date = datetime.strptime(segment['startDate'], '%Y-%m-%d').date(),
-            price = segment['price'],
-            price_2_weeks = segment['price2Weeks'],
-            price_3_weeks = segment['price3Weeks'],
-            price_4_weeks = segment['price4Weeks'],
-        )
-        db.session.add(price_list_segment)
-
-    request_future_price_list = request.get_json()['futurePriceList']
-
-    for segment in request_future_price_list:
-        future_price_list_segment = Future_Price_List(
-            start_date = datetime.strptime(segment['startDate'], '%Y-%m-%d').date(),
-            price = segment['price'],
-            price_2_weeks = segment['price2Weeks'],
-            price_3_weeks = segment['price3Weeks'],
-            price_4_weeks = segment['price4Weeks'],
-        )
-        db.session.add(future_price_list_segment)
-
-    db.session.commit()
-    print('prices updated')
-    return { 'success': True }
-
-@app.route('/update_price_list_settings', methods=['POST'])
-def update_price_list_settings():
-
-    db.session.query(Price_List_Settings).delete()
-
-    request_settings = request.get_json()
-
-    updated_settings = Price_List_Settings(
-        discount_2_weeks = request_settings['discount2Weeks'],
-        discount_3_weeks = request_settings['discount3Weeks'],
-        discount_4_weeks = request_settings['discount4Weeks'],
-        active_prices_range = int(request_settings['activePricesRange']),
-        future_prices_range = int(request_settings['futurePricesRange']),
-        default_changeover_day = int(request_settings['defaultChangeoverDay']),
-        max_segment_length = int(request_settings['maxSegmentLength']),
-        price_per_dog = Decimal(request_settings['pricePerDog']),
-        max_dogs = int(request_settings['maxDogs']),
-        max_infants = int(request_settings['maxInfants']),
-        max_guests = int(request_settings['maxGuests'])
-    )
-
-    db.session.add(updated_settings)
-    db.session.commit()
-
-    print('price_list_settings updated')
-    return { 'success': True }
-
 @app.route('/get_price_list_settings', methods=['POST'])
 def get_price_list_settings():
     settings_query = db.session.query(Price_List_Settings)
@@ -256,18 +276,3 @@ def get_public_price_list_settings():
 
     return { 'publicPriceListSettings': settings }
 
-@app.route('/get_future_prices', methods=['POST'])
-def get_future_prices():
-    future_price_list_query = db.session.query(Future_Price_List)
-    future_price_list = []
-    for row in future_price_list_query:
-        segment = {
-            'startDate': row.start_date.isoformat(), 
-            'price': str(row.price), 
-            'price2Weeks': str(row.price_2_weeks), 
-            'price3Weeks': str(row.price_3_weeks), 
-            'price4Weeks': str(row.price_4_weeks), 
-            }
-        future_price_list.append(segment)
-
-    return { 'futurePriceList': future_price_list }

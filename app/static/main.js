@@ -1586,7 +1586,7 @@ calendarSwiper = new Swiper('.calendar-swiper', {
 async function getPriceListData() {
     try {
         const data = await Promise.all([
-            fetch('/get_prices', { method: 'post' })
+            fetch('/get_price_list', { method: 'post' })
                 .then(response => {
                     return (response.json());
                 })

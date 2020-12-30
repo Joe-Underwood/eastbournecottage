@@ -87,7 +87,7 @@ const vm = new Vue({
     asyncComputed: {
         getPriceList: async function() {
             const prices = 
-                fetch('/get_prices', { method: 'post' })
+                fetch('/get_price_list', { method: 'post' })
                     .then(response => {
                         return (response.json());
                     })
@@ -99,7 +99,7 @@ const vm = new Vue({
         },
         getFuturePriceList: async function() {
             const futurePrices = 
-                fetch('/get_future_prices', { method: 'post' })
+                fetch('/get_future_price_liste', { method: 'post' })
                     .then(response => {
                         return (response.json());
                     })
@@ -138,10 +138,10 @@ const vm = new Vue({
         refreshFuturePriceList() {
             this.getFuturePriceList.sort((a, b) => new Date(a['startDate']) - new Date(b['startDate']));
         },
-        updatePriceList() {
+        setPriceList() {
             this.refreshPriceList();
             this.refreshFuturePriceList();
-            fetch('/update_prices', {
+            fetch('/set_price_list', {
                 method: 'post',
                 body: JSON.stringify({'priceList': this.getPriceList, 'futurePriceList': this.getFuturePriceList}),
                 headers: new Headers({
@@ -149,8 +149,8 @@ const vm = new Vue({
                 })
             })
         },
-        updatePriceListSettings() {
-            fetch('/update_price_list_settings', {
+        setPriceListSettings() {
+            fetch('/set_price_list_settings', {
                 method: 'post',
                 body: JSON.stringify(this.getPriceListSettings),
                 headers: new Headers({
