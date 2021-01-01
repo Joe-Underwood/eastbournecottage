@@ -20,14 +20,15 @@ def get_price_list():
     price_list_query = db.session.query(Price_List)
     price_list = []
     for row in price_list_query:
-
-        segment = { 
+        segment = {
+            'id': row.id,
             'startDate': row.start_date.isoformat(), 
             'price': str(row.price), 
             'price2Weeks': str(row.price_2_weeks), 
             'price3Weeks': str(row.price_3_weeks), 
             'price4Weeks': str(row.price_4_weeks), 
-            'bookingId': row.booking_id
+            'bookingId': row.booking_id,
+            'updateFlag': False
             }
         price_list.append(segment)
 
@@ -39,11 +40,13 @@ def get_future_prices():
     future_price_list = []
     for row in future_price_list_query:
         segment = {
+            'id': row.id,
             'startDate': row.start_date.isoformat(), 
             'price': str(row.price), 
             'price2Weeks': str(row.price_2_weeks), 
             'price3Weeks': str(row.price_3_weeks), 
             'price4Weeks': str(row.price_4_weeks), 
+            'updateFlag': False
             }
         future_price_list.append(segment)
 
@@ -51,63 +54,66 @@ def get_future_prices():
 
 @app.route('/set_price_list', methods=['POST'])
 def set_price_list():
-
-    db.session.query(Price_List).delete()
-    db.session.query(Future_Price_List).delete()
-
-    request_price_list = request.get_json()['priceList']
-
-    for segment in request_price_list:
-        price_list_segment = Price_List(
-            start_date = datetime.strptime(segment['startDate'], '%Y-%m-%d').date(),
-            price = segment['price'],
-            price_2_weeks = segment['price2Weeks'],
-            price_3_weeks = segment['price3Weeks'],
-            price_4_weeks = segment['price4Weeks'],
-        )
-        db.session.add(price_list_segment)
-
-    request_future_price_list = request.get_json()['futurePriceList']
-
-    for segment in request_future_price_list:
-        future_price_list_segment = Future_Price_List(
-            start_date = datetime.strptime(segment['startDate'], '%Y-%m-%d').date(),
-            price = segment['price'],
-            price_2_weeks = segment['price2Weeks'],
-            price_3_weeks = segment['price3Weeks'],
-            price_4_weeks = segment['price4Weeks'],
-        )
-        db.session.add(future_price_list_segment)
-
+    json_request = request.get_json()
+    query = db.session.query(Price_List)
+    for segment in json_request:
+        if (segment['updateFlag']):
+            if (query.filter(Price_List.id == segment['id'])):
+                query.filter(Price_List.id == segment['id']).update({
+                    Price_List.start_date: datetime.strptime(segment['startDate'], '%Y-%m-%d').date(),
+                    Price_List.price: Decimal(segment['price']),
+                    Price_List.price_2_weeks: Decimal(segment['price2Weeks']),
+                    Price_List.price_3_weeks: Decimal(segment['price3Weeks']),
+                    Price_List.price_4_weeks: Decimal(segment['price4Weeks'])
+                },
+                synchronize_session = False
+                )
     db.session.commit()
-    print('prices updated')
+    print('Price_List updated')
+    return { 'success': True }
+
+@app.route('/set_future_price_list', methods=['POST'])
+def set_future_price_list():
+    json_request = request.get_json()
+    query = db.session.query(Future_Price_List)
+    for segment in json_request:
+        if (segment['updateFlag']):
+            if (query.filter(Future_Price_List.id == segment['id'])):
+                query.filter(Future_Price_List.id == segment['id']).update({
+                    Future_Price_List.start_date: datetime.strptime(segment['startDate'], '%Y-%m-%d').date(),
+                    Future_Price_List.price: Decimal(segment['price']),
+                    Future_Price_List.price_2_weeks: Decimal(segment['price2Weeks']),
+                    Future_Price_List.price_3_weeks: Decimal(segment['price3Weeks']),
+                    Future_Price_List.price_4_weeks: Decimal(segment['price4Weeks'])
+                },
+                synchronize_session = False
+                )
+    db.session.commit()
+    print('Future_Price_List updated')
     return { 'success': True }
 
 @app.route('/set_price_list_settings', methods=['POST'])
 def set_price_list_settings():
-
-    db.session.query(Price_List_Settings).delete()
-
-    request_settings = request.get_json()
-
-    updated_settings = Price_List_Settings(
-        discount_2_weeks = request_settings['discount2Weeks'],
-        discount_3_weeks = request_settings['discount3Weeks'],
-        discount_4_weeks = request_settings['discount4Weeks'],
-        active_prices_range = int(request_settings['activePricesRange']),
-        future_prices_range = int(request_settings['futurePricesRange']),
-        default_changeover_day = int(request_settings['defaultChangeoverDay']),
-        max_segment_length = int(request_settings['maxSegmentLength']),
-        price_per_dog = Decimal(request_settings['pricePerDog']),
-        max_dogs = int(request_settings['maxDogs']),
-        max_infants = int(request_settings['maxInfants']),
-        max_guests = int(request_settings['maxGuests'])
-    )
-
-    db.session.add(updated_settings)
+    json_request = request.get_json()
+    query = db.session.query(Price_List_Settings)
+    if (json_request['updateFlag']):
+        query.filter(Price_List_Settings.id == json_request['id']).update({
+            Price_List_Settings.discount_2_weeks: json_request['discount2Weeks'],
+            Price_List_Settings.discount_3_weeks: json_request['discount3Weeks'],
+            Price_List_Settings.discount_4_weeks: json_request['discount4Weeks'],
+            Price_List_Settings.active_prices_range: json_request['activePricesRange'],
+            Price_List_Settings.future_prices_range: json_request['futurePricesRange'],
+            Price_List_Settings.default_changeover_day: json_request['defaultChangeoverDay'],
+            Price_List_Settings.max_segment_length: json_request['maxSegmentLength'],
+            Price_List_Settings.price_per_dog: json_request['pricePerDog'],
+            Price_List_Settings.max_dogs: json_request['maxDogs'],
+            Price_List_Settings.max_infants: json_request['maxInfants'],
+            Price_List_Settings.max_guests: json_request['maxGuests']
+        },
+        synchronize_session = False
+        )
     db.session.commit()
-
-    print('price_list_settings updated')
+    print('Price_List_Settings updated')
     return { 'success': True }
 
 @app.route('/get_bookings', methods=['POST'])
@@ -116,16 +122,18 @@ def get_bookings():
     bookings = []
     for row in bookings_query:
         booking = {
-            'customerId': str(row.customer_id),
+            'id': row.id,
+            'customerId': row.customer_id,
             'arrivalDate': row.arrival_date.isoformat(),
             'departureDate': row.departure_date.isoformat(),
-            'adults': str(row.adults),
-            'children': str(row.children),
-            'infants': str(row.infants),
-            'dogs': str(row.dogs),
+            'adults': row.adults,
+            'children': row.children,
+            'infants': row.infants,
+            'dogs': row.dogs,
             'stayPrice': str(row.stay_price),
             'dogPrice': str(row.dog_price),
-            'price': str(row.price)
+            'price': str(row.price),
+            'updateFlag': False
         }
         bookings.append(booking)
     
@@ -133,7 +141,27 @@ def get_bookings():
 
 @app.route('/set_bookings', methods=['POST'])
 def set_bookings():
-
+    json_request = request.get_json()
+    query = db.session.query(Booking)
+    for booking in json_request:
+        if (booking['updateFlag']):
+            if (query.filter(Booking.id == booking['id'])):
+                query.filter(Booking.id == booking['id']).update({
+                    Booking.customer_id: booking['customerId'],
+                    Booking.arrival_date: datetime.strptime(booking['arrivalDate'], '%Y-%m-%d').date(),
+                    Booking.departure_date: datetime.strptime(booking['departureDate'], '%Y-%m-%d').date(),
+                    Booking.adults: int(booking['adults']),
+                    Booking.children: int(booking['children']),
+                    Booking.infants: int(booking['infants']),
+                    Booking.dogs: int(booking['dogs']),
+                    Booking.stay_price: Decimal(booking['stayPrice']),
+                    Booking.dog_price: Decimal(booking['dogPrice']),
+                    Booking.price: Decimal(booking['price'])
+                },
+                synchronize_session = False
+                )
+    db.session.commit()
+    print('Booking updated')
     return { 'success': True }
 
 @app.route('/booking', methods=['POST'])
@@ -165,7 +193,6 @@ def booking():
     if (not (date_segments)):
         return { 'success': False }
     else:
-        print(date_segments)
         if (len(date_segments) == 1):
             correct_price = date_segments[0].price
         elif (len(date_segments) == 2):
@@ -246,6 +273,7 @@ def get_customers():
     customers = []
     for row in customers_query:
         customer = {
+            'id': row.id,
             'firstName': str(row.first_name),
             'lastName': str(row.last_name),
             'emailAddress': str(row.email_address),
@@ -254,31 +282,54 @@ def get_customers():
             'addressLine2': str(row.address_line_2),
             'townOrCity': str(row.town_or_city),
             'countyOrRegion': str(row.county_or_region),
-            'postcode': str(row.postcode)
+            'postcode': str(row.postcode),
+            'updateFlag': False
         }
         customers.append(customer)
     
-    return { 'customers': customer }
+    return { 'customers': customers }
 
 @app.route('/set_customers', methods=['POST'])
 def set_customers():
-    return { 'success': True 
-    }
+    json_request = request.get_json()
+    query = db.session.query(Booking)
+    for customer in json_request:
+        if (customer['updateFlag']):
+            if (query.filter(Customer.id == customer['id'])):
+                query.filter(Customer.id == customer['id']).update({
+                    Customer.first_name: str(customer['firstName']),
+                    Customer.last_name: str(customer['lastName']),
+                    Customer.email_address: str(customer['emailAddress']),
+                    Customer.phone_number: str(customer['phoneNumber']),
+                    Customer.address_line_1: str(customer['addressLine1']),
+                    Customer.address_line_2: str(customer['addressLine2']),
+                    Customer.town_or_city: str(customer['townOrCity']),
+                    Customer.county_or_region: str(customer['countyOrRegion']),
+                    Customer.postcode: str(customer['postcode']),
+                },
+                synchronize_session = False
+                )
+    db.session.commit()
+    print('Customer updated')
+    return { 'success': True }
+    
 @app.route('/get_price_list_settings', methods=['POST'])
 def get_price_list_settings():
     settings_query = db.session.query(Price_List_Settings)
     settings = { 
+        'id': settings_query[0].id,
         'discount2Weeks': str(settings_query[0].discount_2_weeks),
         'discount3Weeks': str(settings_query[0].discount_3_weeks),
         'discount4Weeks': str(settings_query[0].discount_4_weeks),
-        'activePricesRange': str(settings_query[0].active_prices_range),
-        'futurePricesRange': str(settings_query[0].future_prices_range),
-        'defaultChangeoverDay': str(settings_query[0].default_changeover_day),
-        'maxSegmentLength': str(settings_query[0].max_segment_length),
+        'activePricesRange': settings_query[0].active_prices_range,
+        'futurePricesRange': settings_query[0].future_prices_range,
+        'defaultChangeoverDay': settings_query[0].default_changeover_day,
+        'maxSegmentLength': settings_query[0].max_segment_length,
         'pricePerDog': str(settings_query[0].price_per_dog),
-        'maxDogs': str(settings_query[0].max_dogs),
-        'maxInfants': str(settings_query[0].max_infants),
-        'maxGuests': str(settings_query[0].max_guests)
+        'maxDogs': settings_query[0].max_dogs,
+        'maxInfants': settings_query[0].max_infants,
+        'maxGuests': settings_query[0].max_guests,
+        'updateFlag': False
         }
 
     return { 'priceListSettings': settings }
