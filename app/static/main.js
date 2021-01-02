@@ -356,8 +356,6 @@ const vm = new Vue({
             return partyString;
         }
     },
-    asyncComputed: {
-    },
     methods: {
         //-------------------- NAVBAR METHODS ------------------------//
         scrollToTop() {

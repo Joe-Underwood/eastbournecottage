@@ -28,7 +28,8 @@ def get_price_list():
             'price3Weeks': str(row.price_3_weeks), 
             'price4Weeks': str(row.price_4_weeks), 
             'bookingId': row.booking_id,
-            'updateFlag': False
+            'updateFlag': False,
+            'removeFlag': False
             }
         price_list.append(segment)
 
@@ -46,7 +47,8 @@ def get_future_prices():
             'price2Weeks': str(row.price_2_weeks), 
             'price3Weeks': str(row.price_3_weeks), 
             'price4Weeks': str(row.price_4_weeks), 
-            'updateFlag': False
+            'updateFlag': False,
+            'removeFlag': False
             }
         future_price_list.append(segment)
 
@@ -133,7 +135,8 @@ def get_bookings():
             'stayPrice': str(row.stay_price),
             'dogPrice': str(row.dog_price),
             'price': str(row.price),
-            'updateFlag': False
+            'updateFlag': False,
+            'removeFlag': False
         }
         bookings.append(booking)
     
@@ -145,9 +148,9 @@ def set_bookings():
     query = db.session.query(Booking)
     for booking in json_request:
         if (booking['updateFlag']):
-            if (query.filter(Booking.id == booking['id'])):
+            if (booking['id']):
                 query.filter(Booking.id == booking['id']).update({
-                    Booking.customer_id: booking['customerId'],
+                    Booking.customer_id: int(booking['customerId']),
                     Booking.arrival_date: datetime.strptime(booking['arrivalDate'], '%Y-%m-%d').date(),
                     Booking.departure_date: datetime.strptime(booking['departureDate'], '%Y-%m-%d').date(),
                     Booking.adults: int(booking['adults']),
@@ -160,6 +163,20 @@ def set_bookings():
                 },
                 synchronize_session = False
                 )
+            else:
+                new_booking = Booking(
+                    customer_id = int(booking['customerId']),
+                    arrival_date = datetime.strptime(booking['arrivalDate'], '%Y-%m-%d').date(),
+                    departure_date = datetime.strptime(booking['departureDate'], '%Y-%m-%d').date(),
+                    adults = int(booking['adults']),
+                    children = int(booking['children']),
+                    infants = int(booking['infants']),
+                    dogs = int(booking['dogs']),
+                    stay_price = Decimal(booking['stayPrice']),
+                    dog_price = Decimal(booking['dogPrice']),
+                    price = Decimal(booking['price'])
+                )
+                db.session.add(new_booking)
     db.session.commit()
     print('Booking updated')
     return { 'success': True }
@@ -283,10 +300,10 @@ def get_customers():
             'townOrCity': str(row.town_or_city),
             'countyOrRegion': str(row.county_or_region),
             'postcode': str(row.postcode),
-            'updateFlag': False
+            'updateFlag': False,
+            'removeFlag': False
         }
         customers.append(customer)
-    
     return { 'customers': customers }
 
 @app.route('/set_customers', methods=['POST'])
@@ -295,7 +312,7 @@ def set_customers():
     query = db.session.query(Booking)
     for customer in json_request:
         if (customer['updateFlag']):
-            if (query.filter(Customer.id == customer['id'])):
+            if (customer['id']): #maybe check if there are any mismatches
                 query.filter(Customer.id == customer['id']).update({
                     Customer.first_name: str(customer['firstName']),
                     Customer.last_name: str(customer['lastName']),
@@ -309,6 +326,19 @@ def set_customers():
                 },
                 synchronize_session = False
                 )
+            else: 
+                new_customer = Customer(
+                    first_name = str(customer['firstName']),
+                    last_name = str(customer['lastName']),
+                    email_address = str(customer['emailAddress']),
+                    phone_number = str(customer['phoneNumber']),
+                    address_line_1 = str(customer['addressLine1']),
+                    address_line_2 = str(customer['addressLine2']),
+                    town_or_city = str(customer['townOrCity']),
+                    county_or_region = str(customer['countyOrRegion']),
+                    postcode = str(customer['postcode'])
+                )
+                db.session.add(new_customer)
     db.session.commit()
     print('Customer updated')
     return { 'success': True }

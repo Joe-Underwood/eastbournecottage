@@ -79,6 +79,12 @@
                             <input v-model="segment['bookingId']" />
                             <input class="real-checkbox" type="checkbox" />
                         </div>
+                        <div class="price-list-controls">
+                            <button v-on:click="refreshPriceList()">REFRESH</button>
+                            <button>ADD SEGMENT</button>
+                            <button>REMOVE SEGMENT</button>
+                            <button v-on:click="setPriceList()">UPDATE PRICE LIST</button>
+                        </div>
                     </template>
                     <template v-else>
                         <p>LOADING...</p>
@@ -93,21 +99,19 @@
                             <input type="number" step="0.01" v-model="segment['price4Weeks']" />
                             <input class="real-checkbox" type="checkbox" />
                         </div>
+                        <div class="price-list-controls">
+                            <button v-on:click="refreshFuturePriceList();">REFRESH</button>
+                            <button>ADD SEGMENT</button>
+                            <button>REMOVE SEGMENT</button>
+                            <button v-on:click="setFuturePriceList();">UPDATE PRICE LIST</button>
+                        </div>
                     </template>
                     <template v-else>
                         <p>LOADING...</p>
                     </template>
                     
-                </div>
-
-                <div class="price-list-controls">
-                    <button v-on:click="refreshPriceList(); refreshFuturePriceList();">REFRESH</button>
-                    <button>ADD SEGMENT</button>
-                    <button>REMOVE SEGMENT</button>
-                    <button v-on:click="setPriceList(); setFuturePriceList();">UPDATE PRICE LIST</button>
-                </div>
-
-                
+                </div>          
+  
                 <div class="price-list-settings">
                     <template v-if="priceListSettings">
                         <label for="changeover-day">Changeover Day</label>
@@ -150,17 +154,19 @@
     
                         <label for="max-guests">Max Guests</label>
                         <input id="max-guests" v-model="priceListSettings['maxGuests']" type="number" step="1" />
+
+                        <button v-on:click="adjustRanges()">ADJUST RANGES</button>
+
+                        <button v-on:click="applyDiscounts()">APPLY DISCOUNTS</button>
+
+                        <button v-on:click="setPriceListSettings()">UPDATE SETTINGS</button>
                     </template>
                     <template v-else>
                         <p>LOADING...</p>
                     </template>
                     
 
-                    <button v-on:click="adjustRanges()">ADJUST RANGES</button>
-
-                    <button v-on:click="applyDiscounts()">APPLY DISCOUNTS</button>
-
-                    <button v-on:click="setPriceListSettings()">UPDATE SETTINGS</button>
+                    
                 </div>
       
             </div>
@@ -171,10 +177,12 @@
                 <template v-if="bookings">
                     <div class="bookings-list-view">
                         <div class="booking" v-for="booking in bookings">
-    
+                            
+                            <select id="customer-id" v-model="booking['customerId']" name="customer-id">
+                                <option v-for="customer in customers" :value="customer['id']"><% customer['firstName'] %> <% customer['lastName'] %></option>
+                            </select>
                             <input id="arrival-date" v-model="booking['arrivalDate']" type="date"  />
                             <input id="departure-date" v-model="booking['departureDate']" type="date" />
-                            <input id="customer" v-model="booking['customerId']" />
                             <input id="adults" v-model="booking['adults']" type="number" step="1" />
                             <input id="children" v-model="booking['children']" type="number" step="1" />
                             <input id="infants" v-model="booking['infants']" type="number" step="1" />
@@ -185,13 +193,15 @@
     
                         </div>
                     </div>
+                    <button v-on:click="addBooking()">ADD BOOKING</button>
+                    <button v-on:click="setBookings()">Update Bookings</button>
                 </template>
                 <template v-else>
                     <p>LOADING...</p>>
                 </template>
                 
 
-                <button v-on:click="setBookings()">Update Bookings</button>
+                
             </div>
 
         </div>
@@ -216,12 +226,14 @@
     
                     </div>
                 </div>
+                <button v-on:click="addCustomer()">ADD CUSTOMER</button>
+                <button v-on:click="setCustomers()">Update Customers</button>
             </template>
             <template v-else>
                 <p>LOADING...</p>
             </template>
             
-            <button v-on:click="setCustomers()">Update Customers</button>
+            
         </div>
         
     </div>

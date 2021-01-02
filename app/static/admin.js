@@ -155,6 +155,23 @@ const vm = new Vue({
                 })
             })
         },
+        addBooking() {
+            this.bookings.push({
+                'id': null,
+                'customerId': null,
+                'arrivalDate': null,
+                'departureDate': null,
+                'adults': 0,
+                'children': 0,
+                'infants': 0,
+                'dogs': 0,
+                'stayPrice': 0,
+                'dogPrice': 0,
+                'price': 0,
+                'updateFlag': true,
+                'removeFlag': false
+            })
+        },
         setCustomers() {
             fetch('/set_customers', {
                 method: 'post',
@@ -162,6 +179,21 @@ const vm = new Vue({
                 headers: new Headers({
                     'content-type': 'application/json'
                 })
+            })
+        },
+        addCustomer() {
+            this.customers.push({
+                'id': null,
+                'firstName': null,
+                'lastName': null,
+                'emailAddress': null,
+                'phoneNumber': null,
+                'addressLine1': null,
+                'addressLine2': null,
+                'townOrCity': null,
+                'countyOrRegion': null,
+                'postcode': null,
+                'updateFlag': true
             })
         },
         applyDiscounts() {
