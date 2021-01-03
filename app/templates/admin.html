@@ -69,28 +69,38 @@
                 <h1>Price List Editor</h1>
 
                 <div class="list-view">
-                    <template v-if="priceList">
-                        <div class="price-list-segment" v-for="segment in priceList">
+                    <template v-if="activePriceList">
+                        <div class="price-list-segment" v-for="segment in activePriceList">
                             <input type="date" v-model="segment['startDate']" />
                             <input type="number" step="0.01" v-model="segment['price']" />
                             <input type="number" step="0.01" v-model="segment['price2Weeks']" />
                             <input type="number" step="0.01" v-model="segment['price3Weeks']" />
                             <input type="number" step="0.01" v-model="segment['price4Weeks']" />
-                            <input type="checkbox" checked v-model="segment['isPast']" readonly/>
-                            <input type="checkbox" checked v-model="segment['isActive']" readonly/>
-                            <input type="checkbox" checked v-model="segment['isFuture']" readonly/>
                         </div>
-                        <div class="price-list-controls">
-                            <button v-on:click="refreshPriceList()">REFRESH</button>
-                            <button>ADD SEGMENT</button>
-                            <button>REMOVE SEGMENT</button>
-                            <button v-on:click="setPriceList()">UPDATE PRICE LIST</button>
+                    </template>
+                    <template v-else>
+                        <p>LOADING...</p>
+                    </template>
+
+                    <template v-if="futurePriceList">
+                        <div class="future-price-list-segment" v-for="segment in futurePriceList">
+                            <input type="date" v-model="segment['startDate']" />
+                            <input type="number" step="0.01" v-model="segment['price']" />
+                            <input type="number" step="0.01" v-model="segment['price2Weeks']" />
+                            <input type="number" step="0.01" v-model="segment['price3Weeks']" />
+                            <input type="number" step="0.01" v-model="segment['price4Weeks']" />
                         </div>
                     </template>
                     <template v-else>
                         <p>LOADING...</p>
                     </template>
                     
+                    <div class="price-list-controls">
+                        <button v-on:click="refreshActivePriceList(); refreshFuturePriceList();">REFRESH</button>
+                        <button>ADD SEGMENT</button>
+                        <button>REMOVE SEGMENT</button>
+                        <button v-on:click="setPriceList()">UPDATE PRICE LIST</button>
+                    </div>
                 </div>          
   
                 <div class="price-list-settings">

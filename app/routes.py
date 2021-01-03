@@ -15,9 +15,29 @@ def landing_page():
 def admin():
     return render_template('admin.html')
 
+@app.route('/get_past_price_list', methods=['POST'])
+def get_past_price_list():
+    query = db.session.query(Price_List).filter(Price_List.is_past == True)
+    past_price_list = []
+    for row in query:
+        segment = {
+            'id': row.id,
+            'startDate': row.start_date.isoformat(), 
+            'price': str(row.price), 
+            'price2Weeks': str(row.price_2_weeks), 
+            'price3Weeks': str(row.price_3_weeks), 
+            'price4Weeks': str(row.price_4_weeks), 
+            'bookingId': row.booking_id,
+            'updateFlag': False,
+            'removeFlag': False
+            }
+        past_price_list.append(segment)
+
+    return { 'pastPriceList': past_price_list }
+        
 @app.route('/get_active_price_list', methods=['POST'])
 def get_active_price_list():
-    query = db.session.query(Price_List).filter(Price_List.is_active == true)
+    query = db.session.query(Price_List).filter(Price_List.is_active == True)
     active_price_list = []
     for row in query:
         segment = {
@@ -27,16 +47,39 @@ def get_active_price_list():
             'price2Weeks': str(row.price_2_weeks), 
             'price3Weeks': str(row.price_3_weeks), 
             'price4Weeks': str(row.price_4_weeks), 
-            'bookingId': row.booking_id
+            'bookingId': row.booking_id,
+            'updateFlag': False,
+            'removeFlag': False
             }
         active_price_list.append(segment)
 
     return { 'activePriceList': active_price_list }
+
+@app.route('/get_future_price_list', methods=['POST'])
+def get_future_price_list():
+    query = db.session.query(Price_List).filter(Price_List.is_future == True)
+    future_price_list = []
+    for row in query:
+        segment = {
+            'id': row.id,
+            'startDate': row.start_date.isoformat(), 
+            'price': str(row.price), 
+            'price2Weeks': str(row.price_2_weeks), 
+            'price3Weeks': str(row.price_3_weeks), 
+            'price4Weeks': str(row.price_4_weeks), 
+            'bookingId': row.booking_id,
+            'updateFlag': False,
+            'removeFlag': False
+            }
+        future_price_list.append(segment)
+
+    return { 'futurePriceList': future_price_list }
+
 @app.route('/get_price_list', methods=['POST'])
 def get_price_list():
-    price_list_query = db.session.query(Price_List)
+    query = db.session.query(Price_List)
     price_list = []
-    for row in price_list_query:
+    for row in query:
         segment = {
             'id': row.id,
             'startDate': row.start_date.isoformat(), 
@@ -59,18 +102,19 @@ def get_price_list():
 def set_price_list():
     json_request = request.get_json()
     query = db.session.query(Price_List)
-    for segment in json_request:
-        if (segment['updateFlag']):
-            if (query.filter(Price_List.id == segment['id'])):
-                query.filter(Price_List.id == segment['id']).update({
-                    Price_List.start_date: datetime.strptime(segment['startDate'], '%Y-%m-%d').date(),
-                    Price_List.price: Decimal(segment['price']),
-                    Price_List.price_2_weeks: Decimal(segment['price2Weeks']),
-                    Price_List.price_3_weeks: Decimal(segment['price3Weeks']),
-                    Price_List.price_4_weeks: Decimal(segment['price4Weeks'])
-                },
-                synchronize_session = False
-                )
+    for price_list in json_request:
+        for segment in price_list:
+            if (segment['updateFlag']):
+                if (query.filter(Price_List.id == segment['id'])):
+                    query.filter(Price_List.id == segment['id']).update({
+                        Price_List.start_date: datetime.strptime(segment['startDate'], '%Y-%m-%d').date(),
+                        Price_List.price: Decimal(segment['price']),
+                        Price_List.price_2_weeks: Decimal(segment['price2Weeks']),
+                        Price_List.price_3_weeks: Decimal(segment['price3Weeks']),
+                        Price_List.price_4_weeks: Decimal(segment['price4Weeks'])
+                    },
+                    synchronize_session = False
+                    )
     db.session.commit()
     print('Price_List updated')
     return { 'success': True }
