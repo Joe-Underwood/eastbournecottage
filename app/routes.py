@@ -1,6 +1,6 @@
 from app import app, db
 from app.forms import BookingForm
-from app.models import User, Customer, Booking, Price_List, Future_Price_List, Price_List_Settings
+from app.models import User, Customer, Booking, Price_List, Price_List_Settings
 from flask import render_template, request, jsonify
 from datetime import datetime, date, timedelta
 from calendar import Calendar
@@ -15,6 +15,23 @@ def landing_page():
 def admin():
     return render_template('admin.html')
 
+@app.route('/get_active_price_list', methods=['POST'])
+def get_active_price_list():
+    query = db.session.query(Price_List).filter(Price_List.is_active == true)
+    active_price_list = []
+    for row in query:
+        segment = {
+            'id': row.id,
+            'startDate': row.start_date.isoformat(), 
+            'price': str(row.price), 
+            'price2Weeks': str(row.price_2_weeks), 
+            'price3Weeks': str(row.price_3_weeks), 
+            'price4Weeks': str(row.price_4_weeks), 
+            'bookingId': row.booking_id
+            }
+        active_price_list.append(segment)
+
+    return { 'activePriceList': active_price_list }
 @app.route('/get_price_list', methods=['POST'])
 def get_price_list():
     price_list_query = db.session.query(Price_List)
@@ -28,31 +45,15 @@ def get_price_list():
             'price3Weeks': str(row.price_3_weeks), 
             'price4Weeks': str(row.price_4_weeks), 
             'bookingId': row.booking_id,
+            'isPast': row.is_past,
+            'isActive': row.is_active,
+            'isFuture': row.is_future,
             'updateFlag': False,
             'removeFlag': False
             }
         price_list.append(segment)
 
     return { 'priceList': price_list }
-
-@app.route('/get_future_price_list', methods=['POST'])
-def get_future_prices():
-    future_price_list_query = db.session.query(Future_Price_List)
-    future_price_list = []
-    for row in future_price_list_query:
-        segment = {
-            'id': row.id,
-            'startDate': row.start_date.isoformat(), 
-            'price': str(row.price), 
-            'price2Weeks': str(row.price_2_weeks), 
-            'price3Weeks': str(row.price_3_weeks), 
-            'price4Weeks': str(row.price_4_weeks), 
-            'updateFlag': False,
-            'removeFlag': False
-            }
-        future_price_list.append(segment)
-
-    return { 'futurePriceList': future_price_list }
 
 @app.route('/set_price_list', methods=['POST'])
 def set_price_list():
@@ -72,26 +73,6 @@ def set_price_list():
                 )
     db.session.commit()
     print('Price_List updated')
-    return { 'success': True }
-
-@app.route('/set_future_price_list', methods=['POST'])
-def set_future_price_list():
-    json_request = request.get_json()
-    query = db.session.query(Future_Price_List)
-    for segment in json_request:
-        if (segment['updateFlag']):
-            if (query.filter(Future_Price_List.id == segment['id'])):
-                query.filter(Future_Price_List.id == segment['id']).update({
-                    Future_Price_List.start_date: datetime.strptime(segment['startDate'], '%Y-%m-%d').date(),
-                    Future_Price_List.price: Decimal(segment['price']),
-                    Future_Price_List.price_2_weeks: Decimal(segment['price2Weeks']),
-                    Future_Price_List.price_3_weeks: Decimal(segment['price3Weeks']),
-                    Future_Price_List.price_4_weeks: Decimal(segment['price4Weeks'])
-                },
-                synchronize_session = False
-                )
-    db.session.commit()
-    print('Future_Price_List updated')
     return { 'success': True }
 
 @app.route('/set_price_list_settings', methods=['POST'])

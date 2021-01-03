@@ -1584,12 +1584,12 @@ calendarSwiper = new Swiper('.calendar-swiper', {
 async function getPriceListData() {
     try {
         const data = await Promise.all([
-            fetch('/get_price_list', { method: 'post' })
+            fetch('/get_active_price_list', { method: 'post' })
                 .then(response => {
                     return (response.json());
                 })
                 .then(json => {
-                    return (json['priceList']);
+                    return (json['activePriceList']);
                 })
                 .then(priceList => {
                     vm.getPriceList = priceList;

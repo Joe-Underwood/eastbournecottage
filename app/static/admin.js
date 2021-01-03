@@ -9,7 +9,6 @@ const vm = new Vue({
     },
     created: function() {
         this.getPriceList();
-        this.getFuturePriceList();
         this.getPriceListSettings();
         this.getBookings();
         this.getCustomers();
