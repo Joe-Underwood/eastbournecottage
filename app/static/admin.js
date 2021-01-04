@@ -1,55 +1,69 @@
 const vm = new Vue({
     el: '#root',
     data: {
-        activePriceList: null,
-        futurePriceList: null,
+        priceList: null,
         priceListSettings: null,
         bookings: null,
         customers: null,
     },
+    computed: {
+        activePriceList: function() {
+            if (this.priceList) {
+                return (this.priceList.filter(segment => segment['isActive']));
+            }
+            else {
+                return null;
+            }
+        },
+        futurePriceList: function() {
+            if (this.priceList) {
+                return (this.priceList.filter(segment => segment['isFuture']));
+            }
+            else {
+                return null;
+            }
+        },
+        pastPriceList: function () {
+            if (this.priceList) {
+                return (this.priceList.filter(segment => segment['isPast']));
+            }
+            else {
+                return null;
+            }
+        },
+        newPriceList: function() {
+            if (this.priceList) {
+                return (this.priceList.filter(segment => !segment['id']));
+            }
+            else {
+                return null;
+            }
+        }
+    },
     created: function() {
-        this.getActivePriceList();
-        this.getFuturePriceList();
+        this.getPriceList();
         this.getPriceListSettings();
         this.getBookings();
         this.getCustomers();
     },
     methods: {
-        getActivePriceList() {
-            fetch('/get_active_price_list', { method: 'post' })
+        getPriceList() {
+            fetch('/get_price_list', { method: 'post' })
                 .then(response => {
                     return response.json();
                 })
                 .then(json => {
-                    this.activePriceList = json['activePriceList'];
+                    this.priceList = json['priceList'];
                 })
                 .then(() => {
-                    for (let i = 0; i < this.activePriceList.length; i++) {
+                    for (let i = 0; i < this.priceList.length; i++) {
                         this.$watch(function() {
-                            return this.activePriceList[i];
+                            return this.priceList[i];
                         },
                         function() {
-                            this.activePriceList[i]['updateFlag'] = true;
-                        },
-                        { deep: true })
-                    }
-                })
-        },
-        getFuturePriceList() {
-            fetch('/get_future_price_list', { method: 'post' })
-                .then(response => {
-                    return response.json();
-                })
-                .then(json => {
-                    this.futurePriceList = json['futurePriceList'];
-                })
-                .then(() => {
-                    for (let i = 0; i < this.futurePriceList.length; i++) {
-                        this.$watch(function() {
-                            return this.futurePriceList[i];
-                        },
-                        function() {
-                            this.futurePriceList[i]['updateFlag'] = true;
+                            this.priceList[i]['updateFlag'] = true;
+                            //sort properly in pricelist 
+                            //attach correct flags isActive, isFuture, etc.
                         },
                         { deep: true })
                     }
@@ -111,20 +125,33 @@ const vm = new Vue({
                     }
                 })
         },
-        refreshActivePriceList() {
-            this.activePriceList.sort((a, b) => new Date(a['startDate']) - new Date(b['startDate']));
-        },
-        refreshFuturePriceList() {
-            this.futurePriceList.sort((a, b) => new Date(a['startDate']) - new Date(b['startDate']));
+        refreshPriceList() {
+            this.priceList.sort((a, b) => new Date(a['startDate']) - new Date(b['startDate']));
         },
         setPriceList() {
-            this.refreshActivePriceList();
+            this.refreshPriceList();
             fetch('/set_price_list', {
                 method: 'post',
-                body: JSON.stringify([this.activePriceList, this.futurePriceList]),
+                body: JSON.stringify(this.priceList),
                 headers: new Headers({
                     'content-type': 'application/json'
                 })
+            })
+        },
+        addPriceListSegment() {
+            this.priceList.push({
+                'id': null,
+                'startDate': null,
+                'price': null,
+                'price2Weeks': null,
+                'price3Weeks': null,
+                'price4Weeks': null,
+                'bookingId': null,
+                'isPast': false,
+                'isActive': false,
+                'isFuture': false,
+                'updateFlag': true,
+                'removeFlag': false
             })
         },
         setPriceListSettings() {
@@ -187,50 +214,51 @@ const vm = new Vue({
             })
         },
         applyDiscounts() {
-            for (segment in this.activePriceList) {
-                try {
-                    this.activePriceList[segment]['price2Weeks'] = `${ (((+this.activePriceList[segment]['price'] + +this.activePriceList[+segment + 1]['price']) * ((100 - +this.priceListSettings['discount2Weeks']) / 100))).toFixed(2) }`;
+            for (segment in this.priceList) {
+                if (segment['isActive']) {
+                    try {
+                        this.activePriceList[segment]['price2Weeks'] = `${ (((+this.activePriceList[segment]['price'] + +this.activePriceList[+segment + 1]['price']) * ((100 - +this.priceListSettings['discount2Weeks']) / 100))).toFixed(2) }`;
+                    }
+                    catch {
+                        this.activePriceList[segment]['price2Weeks'] = '0';
+                    }
+                    try {
+                        this.activePriceList[segment]['price3Weeks'] = `${ (((+this.activePriceList[segment]['price'] + +this.activePriceList[+segment + 1]['price'] + +this.activePriceList[+segment + 2]['price']) * ((100 - +this.priceListSettings['discount3Weeks']) / 100))).toFixed(2) }`;
+                    }    
+                    catch {
+                        this.activePriceList[segment]['price3Weeks'] = '0';
+                    }
+                    try {
+                        this.activePriceList[segment]['price4Weeks'] = `${ (((+this.activePriceList[segment]['price'] + +this.activePriceList[+segment + 1]['price'] + +this.activePriceList[+segment + 2]['price'] + +this.activePriceList[+segment + 3]['price']) * ((100 - +this.priceListSettings['discount4Weeks']) / 100))).toFixed(2) }`;
+                    }
+                    catch {
+                        this.activePriceList[segment]['price4Weeks'] = '0';
+                    }
                 }
-                catch {
-                    this.activePriceList[segment]['price2Weeks'] = '0';
-                }
-                try {
-                    this.activePriceList[segment]['price3Weeks'] = `${ (((+this.activePriceList[segment]['price'] + +this.activePriceList[+segment + 1]['price'] + +this.activePriceList[+segment + 2]['price']) * ((100 - +this.priceListSettings['discount3Weeks']) / 100))).toFixed(2) }`;
-                }    
-                catch {
-                    this.activePriceList[segment]['price3Weeks'] = '0';
-                }
-                try {
-                    this.activePriceList[segment]['price4Weeks'] = `${ (((+this.activePriceList[segment]['price'] + +this.activePriceList[+segment + 1]['price'] + +this.activePriceList[+segment + 2]['price'] + +this.activePriceList[+segment + 3]['price']) * ((100 - +this.priceListSettings['discount4Weeks']) / 100))).toFixed(2) }`;
-                }
-                catch {
-                    this.activePriceList[segment]['price4Weeks'] = '0';
-                }
-            }
-
-            for (segment in this.futurePriceList) {
-                try {
-                    this.futurePriceList[segment]['price2Weeks'] = `${ (((+this.futurePriceList[segment]['price'] + +this.futurePriceList[+segment + 1]['price']) * ((100 - +this.priceListSettings['discount2Weeks']) / 100))).toFixed(2) }`;
-                }
-                catch {
-                    this.futurePriceList[segment]['price2Weeks'] = '0';
-                }
-                try {
-                    this.futurePriceList[segment]['price3Weeks'] = `${ (((+this.futurePriceList[segment]['price'] + +this.futurePriceList[+segment + 1]['price'] + +this.futurePriceList[+segment + 2]['price']) * ((100 - +this.priceListSettings['discount3Weeks']) / 100))).toFixed(2) }`;
-                }    
-                catch {
-                    this.futurePriceList[segment]['price3Weeks'] = '0';
-                }
-                try {
-                    this.futurePriceList[segment]['price4Weeks'] = `${ (((+this.futurePriceList[segment]['price'] + +this.futurePriceList[+segment + 1]['price'] + +this.futurePriceList[+segment + 2]['price'] + +this.futurePriceList[+segment + 3]['price']) * ((100 - +this.priceListSettings['discount4Weeks']) / 100))).toFixed(2) }`;
-                }
-                catch {
-                    this.futurePriceList[segment]['price4Weeks'] = '0';
+                else if (segment['isFuture']) {
+                    try {
+                        this.futurePriceList[segment]['price2Weeks'] = `${ (((+this.futurePriceList[segment]['price'] + +this.futurePriceList[+segment + 1]['price']) * ((100 - +this.priceListSettings['discount2Weeks']) / 100))).toFixed(2) }`;
+                    }
+                    catch {
+                        this.futurePriceList[segment]['price2Weeks'] = '0';
+                    }
+                    try {
+                        this.futurePriceList[segment]['price3Weeks'] = `${ (((+this.futurePriceList[segment]['price'] + +this.futurePriceList[+segment + 1]['price'] + +this.futurePriceList[+segment + 2]['price']) * ((100 - +this.priceListSettings['discount3Weeks']) / 100))).toFixed(2) }`;
+                    }    
+                    catch {
+                        this.futurePriceList[segment]['price3Weeks'] = '0';
+                    }
+                    try {
+                        this.futurePriceList[segment]['price4Weeks'] = `${ (((+this.futurePriceList[segment]['price'] + +this.futurePriceList[+segment + 1]['price'] + +this.futurePriceList[+segment + 2]['price'] + +this.futurePriceList[+segment + 3]['price']) * ((100 - +this.priceListSettings['discount4Weeks']) / 100))).toFixed(2) }`;
+                    }
+                    catch {
+                        this.futurePriceList[segment]['price4Weeks'] = '0';
+                    }
                 }
             }
         },
-        adjustRanges() {
-            this.refreshActivePriceList();
+        /*adjustRanges() {
+            this.refreshPriceList();
             let rangeStartDate = new Date(this.activePriceList[0]['startDate']);
             let rangeEndDate = rangeStartDate;
             rangeEndDate.setDate(rangeStartDate.getDate() + 7 * +this.priceListSettings['activePricesRange']);
@@ -305,7 +333,7 @@ const vm = new Vue({
                     }
                 }
             }
-        }
+        }*/
     },
     delimiters: ['<%', '%>']
 })
