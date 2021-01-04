@@ -171,9 +171,42 @@ def get_bookings():
 def set_bookings():
     json_request = request.get_json()
     query = db.session.query(Booking)
+    price_list = db.session.query(Price_List)
+
     for booking in json_request:
+        arrival_date = datetime.strptime(booking['arrivalDate'], '%Y-%m-%d').date()
+        departure_date = datetime.strptime(booking['departureDate'], '%Y-%m-%d').date()
+        date_segments = []
         if (booking['updateFlag']):
+            #match with price_list segment if possible
+            #find arrival date segment first, then departure date segment
+            def checkDateSegments():
+                arrivalSegmentFound = False
+                for index, segment in enumerate(price_list):
+                    if (arrival_date < segment.start_date and not arrivalSegmentFound):
+                        arrivalSegmentFound = True
+                        if (index > 0):
+                            if (price_list[index - 1].booking_id):
+                                if (price_list[index - 1].booking_id != booking['id']):
+                                    return False                    
+                            date_segments.append(price_list[index - 1])
+                    if (arrivalSegmentFound):
+                        if (departure_date > segment.start_date):
+                            if (segment.booking_id):
+                                if (segment.booking_id != booking['id']):
+                                    return False
+                            date_segments.append(segment)
+                        else:
+                            return True
+            
+            if not checkDateSegments():
+                print('dates overlap with preexisiting booking, new_booking is invalid')
+                print(booking['arrivalDate'])
+                continue
+
+            #checking date segments do not overlap with pre existing bookings
             if (booking['id']):
+                booking_to_update = query.get(booking['id'])
                 query.filter(Booking.id == booking['id']).update({
                     Booking.customer_id: int(booking['customerId']),
                     Booking.arrival_date: datetime.strptime(booking['arrivalDate'], '%Y-%m-%d').date(),
@@ -188,6 +221,10 @@ def set_bookings():
                 },
                 synchronize_session = False
                 )
+                for existing_segment in booking_to_update.date_segments:
+                    existing_segment.booking_id = None
+                for segment in date_segments:
+                    segment.booking_id = booking['id']
             else:
                 new_booking = Booking(
                     customer_id = int(booking['customerId']),
@@ -201,6 +238,8 @@ def set_bookings():
                     dog_price = Decimal(booking['dogPrice']),
                     price = Decimal(booking['price'])
                 )
+                for segment in date_segments:
+                    new_booking.date_segments.append(segment)
                 db.session.add(new_booking)
     db.session.commit()
     print('Booking updated')
