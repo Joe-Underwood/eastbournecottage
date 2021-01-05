@@ -142,10 +142,10 @@ const vm = new Vue({
             this.priceList.push({
                 'id': null,
                 'startDate': null,
-                'price': null,
-                'price2Weeks': null,
-                'price3Weeks': null,
-                'price4Weeks': null,
+                'price': 0,
+                'price2Weeks': 0,
+                'price3Weeks': 0,
+                'price4Weeks': 0,
                 'bookingId': null,
                 'isPast': false,
                 'isActive': false,
@@ -153,6 +153,18 @@ const vm = new Vue({
                 'updateFlag': true,
                 'removeFlag': false
             })
+            const lastSegment = this.priceList[this.priceList.length - 1];
+            this.$watch(function() {
+                return lastSegment;
+            },
+            function() {
+                //place in correct range (isPast. isActive, isFuture)
+                const year = lastSegment['startDate'].substr(0, 4);
+                const month = lastSegment['startDate'].substr(5, 2);
+                const date = lastSegment['startDate'].substr(8, 2);
+                const startDate = new Date(year, month - 1, date);
+            },
+            { deep: true })
         },
         setPriceListSettings() {
             fetch('/set_price_list_settings', {
