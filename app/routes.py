@@ -82,42 +82,55 @@ def get_price_list():
 @app.route('/set_price_list', methods=['POST'])
 def set_price_list():
     json_request = request.get_json()
-    query = db.session.query(Price_List).order_by(Price_List.start_date.asc())
+    base_query = db.session.query(Price_List)
+    query = base_query.order_by(Price_List.start_date.asc())
     price_list_settings = db.session.query(Price_List_Settings).first()
 
     for segment in json_request:
         if (segment['updateFlag']):
             start_date = datetime.strptime(segment['startDate'], '%Y-%m-%d').date()
-            activeEndDate = (datetime.today() + timedelta(weeks = price_list_settings.active_prices_range)).date()
-            futureEndDate = (datetime.today() + timedelta(weeks = price_list_settings.future_prices_range)).date()
+            activeEndDatetime = datetime.today() + timedelta(weeks = price_list_settings.active_prices_range)
+            futureEndDatetime = activeEndDatetime + timedelta(weeks = price_list_settings.future_prices_range)
             is_past = False
             is_active = False
             is_future = False
+            db_segment = base_query.filter(Price_List.id == segment['id']).first()
+            if (db_segment):
+                booking_id = db_segment.booking_id
+            else:
+                booking_id = None
+            
             #check proper flag isActive, isFuture etc.
             if (start_date < date.today()):
                 is_past = True
-            elif (start_date < activeEndDate):
+                print('is_past')
+            elif (start_date < activeEndDatetime.date()):
                 is_active = True
-            elif (start_date < futureEndDate):
+                print('is_active')
+            elif (start_date < futureEndDatetime.date()):
                 is_future = True
+                print('is_future')
             else:
                 print('date too far into future, change price_list_settings.future_prices_range')
                 continue
             
             #check if booking_id needs to be set, or if there is an overlap with previously booked segment
             if (query.filter(Price_List.start_date == start_date).first()):
+                #works
                 print('date already taken')
                 continue
             else:
-                reverse_query = query.order_by(Price_List.start_date.desc())
-                prev_segment = reverse_query.filter(Price_List.start_date < start_date).first()
-                if prev_segment:
+                prev_segment = base_query.filter(Price_List.start_date < start_date).order_by(Price_List.start_date.desc()).first()
+                if prev_segment: #may need to add some validation for updating existing segment
                     if prev_segment.booking_id:
                         prev_segment_booking = db.session.query(Booking).get(prev_segment.booking_id)
                         if (start_date == prev_segment_booking.arrival_date):
-                            segment['bookingId'] = prev_segment.booking_id
+                            #works
+                            booking_id = prev_segment.booking_id
                             prev_segment.booking_id = None
+                            print('booking assignment changed')
                         elif (prev_segment_booking.arrival_date < start_date < prev_segment_booking.departure_date):
+                            #works
                             print('invalid, new segment date overlaps with preexisting booking')
                             continue
 
@@ -128,6 +141,7 @@ def set_price_list():
                     Price_List.price_2_weeks: Decimal(segment['price2Weeks']),
                     Price_List.price_3_weeks: Decimal(segment['price3Weeks']),
                     Price_List.price_4_weeks: Decimal(segment['price4Weeks']),
+                    Price_List.booking_id: booking_id,
                     Price_List.is_past: is_past,
                     Price_List.is_active: is_active,
                     Price_List.is_future: is_future
@@ -141,13 +155,13 @@ def set_price_list():
                     price_2_weeks = Decimal(segment['price2Weeks']),
                     price_3_weeks = Decimal(segment['price3Weeks']),
                     price_4_weeks = Decimal(segment['price4Weeks']),
+                    booking_id = booking_id,
                     is_past = is_past,
                     is_active = is_active,
                     is_future = is_future
                 )
                 db.session.add(new_segment)
 
-    return { 'success': 'aborted' }
     db.session.commit()
     print('Price_List updated')
     return { 'success': True }

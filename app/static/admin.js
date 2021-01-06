@@ -54,16 +54,21 @@ const vm = new Vue({
                 })
                 .then(json => {
                     this.priceList = json['priceList'];
+                    return json['priceList'];
                 })
-                .then(() => {
+                .then((data) => {
+                    const obj = this.clone(data);
                     for (let i = 0; i < this.priceList.length; i++) {
                         this.$watch(function() {
                             return this.priceList[i];
                         },
                         function() {
-                            this.priceList[i]['updateFlag'] = true;
-                            //sort properly in pricelist 
-                            //attach correct flags isActive, isFuture, etc.
+                            if (this.isDeepEqual(this.priceList[i], obj[i])) {
+                                this.priceList[i]['updateFlag'] = false;
+                            }
+                            else {
+                                this.priceList[i]['updateFlag'] = true;
+                            }
                         },
                         { deep: true })
                     }
@@ -76,11 +81,18 @@ const vm = new Vue({
                 })
                 .then(json => {
                     this.priceListSettings = json['priceListSettings'];
+                    return json['priceListSettings'];
                 })
-                .then(() => {
+                .then((data) => {
+                    const obj = this.clone(data);
                     this.$watch('priceListSettings',
                     function() {
-                        this.priceListSettings['updateFlag'] = true;
+                        if (this.isDeepEqual(this.priceListSettings, obj)) {
+                            this.priceListSettings['updateFlag'] = false;
+                        }
+                        else {
+                            this.priceListSettings['updateFlag'] = true;
+                        }
                     },
                     { deep: true })
                 })
@@ -92,14 +104,21 @@ const vm = new Vue({
                 })
                 .then(json => {
                     this.bookings = json['bookings'];
+                    return json['bookings'];
                 })
-                .then(() => {
+                .then((data) => {
+                    const obj = this.clone(data);
                     for (let i = 0; i < this.bookings.length; i++) {
                         this.$watch(function() {
                             return this.bookings[i];
                         },
                         function() {
-                            this.bookings[i]['updateFlag'] = true;
+                            if (this.isDeepEqual(this.bookings[i], obj[i])) {
+                                this.bookings[i]['updateFlag'] = false;
+                            }
+                            else {
+                                this.bookings[i]['updateFlag'] = true;
+                            }
                         },
                         { deep: true })
                     }
@@ -112,14 +131,21 @@ const vm = new Vue({
                 })
                 .then(json => {
                     this.customers = json['customers'];
+                    return json['customers'];
                 })
-                .then(() => {
+                .then((data) => {
+                    const obj = this.clone(data);
                     for (let i = 0; i < this.customers.length; i++) {
                         this.$watch(function() {
                             return this.customers[i];
                         },
                         function() {
-                            this.customers[i]['updateFlag'] = true;
+                            if (this.isDeepEqual(this.customers[i], obj[i])) {
+                                this.customers[i]['updateFlag'] = false;
+                            }
+                            else {
+                                this.customers[i]['updateFlag'] = true;
+                            }
                         },
                         { deep: true })
                     }
@@ -269,6 +295,28 @@ const vm = new Vue({
                 }
             }
         },
+        isDeepEqual(obj1, obj2) {
+            //assumes same object type
+            if (Object.keys(obj1).length !== Object.keys(obj2).length) {
+                return false;
+            }
+            for (key in obj1) {
+                if (obj1[key] !== obj2[key]) {
+                    return false;
+                }
+            }
+            return true;
+        },
+        clone(obj){
+            if(obj == null || typeof(obj) != 'object')
+                return obj;
+        
+            var temp = new obj.constructor(); 
+            for(var key in obj)
+                temp[key] = this.clone(obj[key]);
+        
+            return temp;
+        }
         /*adjustRanges() {
             this.refreshPriceList();
             let rangeStartDate = new Date(this.activePriceList[0]['startDate']);

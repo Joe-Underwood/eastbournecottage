@@ -70,7 +70,7 @@
 
                 <div class="list-view">
                     <template v-if="activePriceList">
-                        <div class="price-list-segment" v-for="segment in activePriceList">
+                        <div class="price-list-segment" v-for="segment in activePriceList" :class="{ 'update-flag': segment.updateFlag }">
                             <input type="date" v-model="segment['startDate']" />
                             <input type="number" step="0.01" v-model="segment['price']" />
                             <input type="number" step="0.01" v-model="segment['price2Weeks']" />
@@ -83,7 +83,7 @@
                     </template>
 
                     <template v-if="futurePriceList">
-                        <div class="future-price-list-segment" v-for="segment in futurePriceList">
+                        <div class="future-price-list-segment" v-for="segment in futurePriceList" :class="{ 'update-flag': segment.updateFlag }">
                             <input type="date" v-model="segment['startDate']" />
                             <input type="number" step="0.01" v-model="segment['price']" />
                             <input type="number" step="0.01" v-model="segment['price2Weeks']" />
@@ -96,7 +96,7 @@
                     </template>
 
                     <template v-if="newPriceList">
-                        <div class="new-price-list-segment" v-for="segment in newPriceList">
+                        <div class="new-price-list-segment" v-for="segment in newPriceList" :class="{ 'update-flag': segment.updateFlag }">
                             <input type="date" v-model="segment['startDate']" />
                             <input type="number" step="0.01" v-model="segment['price']" />
                             <input type="number" step="0.01" v-model="segment['price2Weeks']" />
@@ -180,7 +180,7 @@
                 <h1>Bookings</h1>
                 <template v-if="bookings">
                     <div class="bookings-list-view">
-                        <div class="booking" v-for="booking in bookings">
+                        <div class="booking" v-for="booking in bookings" :class="{ 'update-flag': booking.updateFlag }">
                             
                             <select id="customer-id" v-model="booking['customerId']" name="customer-id">
                                 <option v-for="customer in customers" :value="customer['id']"><% customer['firstName'] %> <% customer['lastName'] %></option>
@@ -216,7 +216,7 @@
             <h1>Customers</h1>
             <template v-if="customers">
                 <div class="customers-list-view">
-                    <div class="customer" v-for="customer in customers">
+                    <div class="customer" v-for="customer in customers" :class="{ 'update-flag': customer.updateFlag }">
     
                         <input id="first-name" v-model="customer['firstName']" />
                         <input id="last-name" v-model="customer['lastName']" />
