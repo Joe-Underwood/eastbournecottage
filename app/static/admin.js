@@ -177,7 +177,7 @@ const vm = new Vue({
                 'isActive': false,
                 'isFuture': false,
                 'updateFlag': true,
-                'removeFlag': false
+                'deleteFlag': false
             })
             const lastSegment = this.priceList[this.priceList.length - 1];
             this.$watch(function() {
@@ -224,7 +224,7 @@ const vm = new Vue({
                 'dogPrice': 0,
                 'price': 0,
                 'updateFlag': true,
-                'removeFlag': false
+                'deleteFlag': false
             })
         },
         setCustomers() {
@@ -248,7 +248,8 @@ const vm = new Vue({
                 'townOrCity': null,
                 'countyOrRegion': null,
                 'postcode': null,
-                'updateFlag': true
+                'updateFlag': true,
+                'deleteFlag': false
             })
         },
         applyDiscounts() {

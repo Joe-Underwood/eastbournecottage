@@ -1,6 +1,6 @@
 from app import app, db
 from app.forms import BookingForm
-from app.models import User, Customer, Booking, Price_List, Price_List_Settings
+from app.models import User, Customer, Booking, Price_List, Price_List_Settings, Delete_Price_List, Delete_Booking, Delete_Customer
 from flask import render_template, request, jsonify
 from datetime import datetime, date, timedelta
 from datetime import timedelta
@@ -73,7 +73,7 @@ def get_price_list():
             'isActive': row.is_active,
             'isFuture': row.is_future,
             'updateFlag': False,
-            'removeFlag': False
+            'deleteFlag': False
             }
         price_list.append(segment)
 
@@ -87,7 +87,38 @@ def set_price_list():
     price_list_settings = db.session.query(Price_List_Settings).first()
 
     for segment in json_request:
-        if (segment['updateFlag']):
+        if (segment['deleteFlag']):
+            db_segment = base_query.filter(Price_List.id == segment['id']).first()
+            if (db_segment):
+                if (db_segment.booking_id):
+                    db_prev_segment = base_query.filter(Price_List.start_date < db_segment.start_date).order_by(Price_List.start_date.desc()).first()
+                    if (db_prev_segment):
+                        if (not db_prev_segment.booking_id):
+                            db_prev_segment.booking_id = db_segment.booking_id
+                            #delete db_segment
+                        elif (db_prev_segment.booking_id != db_segment.booking_id):
+                            print('cannot delete segment, as it would cause a clash of bookings in previous segment')
+                            continue
+            
+            else:
+                print('segment flagged for deletion does not exist')
+                continue
+            
+            delete_segment = Delete_Price_List(
+                start_date = db_segment.start_date,
+                price = db_segment.price,
+                price_2_weeks = db_segment.price_2_weeks,
+                price_3_weeks = db_segment.price_3_weeks,
+                price_4_weeks = db_segment.price_4_weeks,
+                booking_id = db_segment.booking_id,
+                is_past = False,
+                is_active = False,
+                is_future = False
+            )
+            db.session.add(delete_segment)
+            db.session.delete(db_segment)
+
+        elif (segment['updateFlag']):
             start_date = datetime.strptime(segment['startDate'], '%Y-%m-%d').date()
             activeEndDatetime = datetime.today() + timedelta(weeks = price_list_settings.active_prices_range)
             futureEndDatetime = activeEndDatetime + timedelta(weeks = price_list_settings.future_prices_range)
@@ -161,7 +192,7 @@ def set_price_list():
                     is_future = is_future
                 )
                 db.session.add(new_segment)
-
+    return {'success': 'prevented'}
     db.session.commit()
     print('Price_List updated')
     return { 'success': True }
@@ -208,7 +239,7 @@ def get_bookings():
             'dogPrice': str(row.dog_price),
             'price': str(row.price),
             'updateFlag': False,
-            'removeFlag': False
+            'deleteFlag': False
         }
         bookings.append(booking)
     
@@ -224,7 +255,31 @@ def set_bookings():
         arrival_date = datetime.strptime(booking['arrivalDate'], '%Y-%m-%d').date()
         departure_date = datetime.strptime(booking['departureDate'], '%Y-%m-%d').date()
         date_segments = []
-        if (booking['updateFlag']):
+        if (booking['deleteFlag']):
+            db_booking = query.filter(Booking.id == booking['id']).first()
+            if (db_booking):
+                delete_booking = Delete_Booking(
+                    customer_id = int(booking['customerId']),
+                    arrival_date = datetime.strptime(booking['arrivalDate'], '%Y-%m-%d').date(),
+                    departure_date = datetime.strptime(booking['departureDate'], '%Y-%m-%d').date(),
+                    adults = int(booking['adults']),
+                    children = int(booking['children']),
+                    infants = int(booking['infants']),
+                    dogs = int(booking['dogs']),
+                    stay_price = Decimal(booking['stayPrice']),
+                    dog_price = Decimal(booking['dogPrice']),
+                    price = Decimal(booking['price'])
+                )
+                db.session.add(delete_booking)
+                for segment in db_booking.date_segments:
+                    segment.booking_id = None
+                #remove references to booking from related customer
+                db.session.delete(db_booking)
+                print('booking deleted')   
+            else:
+                print('booking marked for deletion does not exist')
+                continue
+        elif (booking['updateFlag']):
             #match with price_list segment if possible
             #find arrival date segment first, then departure date segment
             def checkDateSegments():
@@ -412,7 +467,7 @@ def get_customers():
             'countyOrRegion': str(row.county_or_region),
             'postcode': str(row.postcode),
             'updateFlag': False,
-            'removeFlag': False
+            'deleteFlag': False
         }
         customers.append(customer)
     return { 'customers': customers }
@@ -420,9 +475,31 @@ def get_customers():
 @app.route('/set_customers', methods=['POST'])
 def set_customers():
     json_request = request.get_json()
-    query = db.session.query(Booking)
+    query = db.session.query(Customer)
     for customer in json_request:
-        if (customer['updateFlag']):
+        if (customer['deleteFlag']):
+            db_customer = query.filter(Customer.id == customer['id']).first()
+            if (db_customer):
+                delete_customer = Delete_Customer(
+                    first_name = str(customer['firstName']),
+                    last_name = str(customer['lastName']),
+                    email_address = str(customer['emailAddress']),
+                    phone_number = str(customer['phoneNumber']),
+                    address_line_1 = str(customer['addressLine1']),
+                    address_line_2 = str(customer['addressLine2']),
+                    town_or_city = str(customer['townOrCity']),
+                    county_or_region = str(customer['countyOrRegion']),
+                    postcode = str(customer['postcode'])
+                )
+                db.session.add(delete_customer)
+                for booking in db_customer.bookings:
+                    booking.customer_id = None
+                db.session.delete(db_customer)
+                print('customer deleted')
+            else:
+                print('customer marked for deletion does not exist')
+                continue
+        elif (customer['updateFlag']):
             if (customer['id']): #maybe check if there are any mismatches
                 query.filter(Customer.id == customer['id']).update({
                     Customer.first_name: str(customer['firstName']),
@@ -437,6 +514,7 @@ def set_customers():
                 },
                 synchronize_session = False
                 )
+                print('customer updated')
             else: 
                 new_customer = Customer(
                     first_name = str(customer['firstName']),
@@ -450,6 +528,7 @@ def set_customers():
                     postcode = str(customer['postcode'])
                 )
                 db.session.add(new_customer)
+                print('customer added')
     db.session.commit()
     print('Customer updated')
     return { 'success': True }
