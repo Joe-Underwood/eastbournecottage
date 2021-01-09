@@ -39,12 +39,9 @@ const vm = new Vue({
                 return null;
             }
         }
-    },
+    }, 
     created: function() {
-        this.getPriceList();
-        this.getPriceListSettings();
-        this.getBookings();
-        this.getCustomers();
+        document.querySelector('.hello').style.color = 'green';
     },
     methods: {
         getPriceList() {
@@ -97,6 +94,7 @@ const vm = new Vue({
                     { deep: true })
                 })
         },
+        
         getBookings() {
             fetch('/get_bookings', { method: 'post' })
                 .then(response => {
@@ -317,9 +315,8 @@ const vm = new Vue({
                 temp[key] = this.clone(obj[key]);
         
             return temp;
-        }
-        //adjustRanges IS BUGGED, WILL CAUSE VUE INSTANCE TO NOT RENDER ON MOBILE DEVEICES ---- NEEDS INVESTIGATION (probably should be a server side function)
-        /*adjustRanges() {
+        },
+        adjustRanges() {
             this.refreshPriceList();
             let rangeStartDate = new Date(this.activePriceList[0]['startDate']);
             let rangeEndDate = rangeStartDate;
@@ -395,7 +392,7 @@ const vm = new Vue({
                     }
                 }
             }
-        }*/
+        }
     },
     delimiters: ['<%', '%>']
 })

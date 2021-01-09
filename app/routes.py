@@ -14,6 +14,7 @@ def landing_page():
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
+    print('admin page requested')
     return render_template('admin.html')
 
 @app.route('/get_past_price_list', methods=['POST'])
@@ -58,6 +59,7 @@ def get_active_price_list():
 
 @app.route('/get_price_list', methods=['POST'])
 def get_price_list():
+    print('price_list_requested')
     query = db.session.query(Price_List).order_by(Price_List.start_date.asc())
     price_list = []
     for row in query:
@@ -95,10 +97,14 @@ def set_price_list():
                     if (db_prev_segment):
                         if (not db_prev_segment.booking_id):
                             db_prev_segment.booking_id = db_segment.booking_id
+                            print('prev_segment will absorb booking')
                             #delete db_segment
                         elif (db_prev_segment.booking_id != db_segment.booking_id):
                             print('cannot delete segment, as it would cause a clash of bookings in previous segment')
                             continue
+                    else:
+                        print('no prev_segment to absorb booking')
+                        continue
             
             else:
                 print('segment flagged for deletion does not exist')
@@ -117,6 +123,8 @@ def set_price_list():
             )
             db.session.add(delete_segment)
             db.session.delete(db_segment)
+            print('segment deleted')
+            #works
 
         elif (segment['updateFlag']):
             start_date = datetime.strptime(segment['startDate'], '%Y-%m-%d').date()
@@ -192,7 +200,6 @@ def set_price_list():
                     is_future = is_future
                 )
                 db.session.add(new_segment)
-    return {'success': 'prevented'}
     db.session.commit()
     print('Price_List updated')
     return { 'success': True }
@@ -252,14 +259,25 @@ def set_bookings():
     price_list = db.session.query(Price_List)
 
     for booking in json_request:
-        arrival_date = datetime.strptime(booking['arrivalDate'], '%Y-%m-%d').date()
-        departure_date = datetime.strptime(booking['departureDate'], '%Y-%m-%d').date()
+        if (booking['arrivalDate'] and booking['departureDate']):
+            arrival_date = datetime.strptime(booking['arrivalDate'], '%Y-%m-%d').date()
+            departure_date = datetime.strptime(booking['departureDate'], '%Y-%m-%d').date()
+        else:
+            print('booking must have arrival date and departure date')
+            continue
+        
+        if (booking['customerId']):
+            customer_id = int(booking['customerId'])
+        else:
+            print('warning: booking not assigned to customer')
+            customer_id = None
+        
         date_segments = []
         if (booking['deleteFlag']):
             db_booking = query.filter(Booking.id == booking['id']).first()
             if (db_booking):
                 delete_booking = Delete_Booking(
-                    customer_id = int(booking['customerId']),
+                    customer_id = customer_id,
                     arrival_date = datetime.strptime(booking['arrivalDate'], '%Y-%m-%d').date(),
                     departure_date = datetime.strptime(booking['departureDate'], '%Y-%m-%d').date(),
                     adults = int(booking['adults']),
@@ -282,6 +300,12 @@ def set_bookings():
         elif (booking['updateFlag']):
             #match with price_list segment if possible
             #find arrival date segment first, then departure date segment
+            if (not departure_date > arrival_date):
+                print('departure date must be after arrival date')
+                continue
+            if (not int(booking['adults']) >= 1):
+                print('no. of adults must be at least 1')
+                continue
             def checkDateSegments():
                 arrivalSegmentFound = False
                 for index, segment in enumerate(price_list):
@@ -310,7 +334,7 @@ def set_bookings():
             if (booking['id']):
                 booking_to_update = query.get(booking['id'])
                 query.filter(Booking.id == booking['id']).update({
-                    Booking.customer_id: int(booking['customerId']),
+                    Booking.customer_id: customer_id,
                     Booking.arrival_date: datetime.strptime(booking['arrivalDate'], '%Y-%m-%d').date(),
                     Booking.departure_date: datetime.strptime(booking['departureDate'], '%Y-%m-%d').date(),
                     Booking.adults: int(booking['adults']),
@@ -329,7 +353,7 @@ def set_bookings():
                     segment.booking_id = booking['id']
             else:
                 new_booking = Booking(
-                    customer_id = int(booking['customerId']),
+                    customer_id = customer_id,
                     arrival_date = datetime.strptime(booking['arrivalDate'], '%Y-%m-%d').date(),
                     departure_date = datetime.strptime(booking['departureDate'], '%Y-%m-%d').date(),
                     adults = int(booking['adults']),

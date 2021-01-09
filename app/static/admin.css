@@ -753,7 +753,7 @@ svg {
     display: flex;
 }
 
-.future-price-list-segment {
+.future {
     background-color: grey;
 }
 
@@ -764,4 +764,20 @@ svg {
 .update-flag {
     background-color: blue;
 }
+
+.price-list-segment {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+    .segment-start-date {
+        min-width: 140px;
+        padding-right: 8px;
+    }
+
+    .segment-price {
+        min-width:137px;
+        padding-right: 8px;
+    }
 

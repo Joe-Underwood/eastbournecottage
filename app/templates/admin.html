@@ -64,11 +64,24 @@
         </div>
 
         <div class="page-content">
+            <h1 class="hello">HELLO THERE</h1>
 
             <div class="price-list-editor">
                 <h1>Price List Editor</h1>
 
                 <div class="list-view">
+                    <template v-if="activePriceList">
+                        <div class="price-list-segment" v-for="segment in activePriceList" :class="{ 'update-flag': segment.updateFlag }">
+                            <input type="date" class="segment-start-date" v-model="segment['startDate']" />
+                            <input type="number" class="segment-price" step="0.01" v-model="segment['price']" />
+                            <input type="checkbox" class="delete-flag" v-model="segment['deleteFlag']" />
+                        </div>
+                    </template>
+                    <template v-else>
+                        <p>LOADING...</p>
+                    </template>
+                    
+                    <!--
                     <template v-if="activePriceList">
                         <div class="price-list-segment" v-for="segment in activePriceList" :class="{ 'update-flag': segment.updateFlag }">
                             <input type="date" v-model="segment['startDate']" />
@@ -81,8 +94,19 @@
                     </template>
                     <template v-else>
                         <p>LOADING...</p>
-                    </template>
+                    </template>-->
 
+                    <template v-if="futurePriceList">
+                        <div class="price-list-segment future" v-for="segment in futurePriceList" :class="{ 'update-flag': segment.updateFlag }">
+                            <input type="date" class="segment-start-date"v-model="segment['startDate']" />
+                            <input type="number" class="segment-price" step="0.01" v-model="segment['price']" />
+                            <input type="checkbox" v-model="segment['deleteFlag']" />
+                        </div>
+                    </template>
+                    <template v-else>
+                        <p>LOADING...</p>
+                    </template>
+                    <!--
                     <template v-if="futurePriceList">
                         <div class="future-price-list-segment" v-for="segment in futurePriceList" :class="{ 'update-flag': segment.updateFlag }">
                             <input type="date" v-model="segment['startDate']" />
@@ -95,8 +119,19 @@
                     </template>
                     <template v-else>
                         <p>LOADING...</p>
-                    </template>
+                    </template>-->
 
+                    <template v-if="newPriceList">
+                        <div class="price-list-segment" v-for="segment in newPriceList" :class="{ 'update-flag': segment.updateFlag }">
+                            <input type="date" class="segment-start-date" v-model="segment['startDate']" />
+                            <input type="number" class="segment-price" step="0.01" v-model="segment['price']" />
+                            <input type="checkbox" v-model="segment['deleteFlag']" />
+                        </div>
+                    </template>
+                    <template v-else>
+                        <p>LOADING...</p>
+                    </template>
+                    <!--
                     <template v-if="newPriceList">
                         <div class="new-price-list-segment" v-for="segment in newPriceList" :class="{ 'update-flag': segment.updateFlag }">
                             <input type="date" v-model="segment['startDate']" />
@@ -109,12 +144,11 @@
                     </template>
                     <template v-else>
                         <p>LOADING...</p>
-                    </template>
+                    </template>-->
                     
                     <div class="price-list-controls">
                         <button v-on:click="refreshPriceList()">REFRESH</button>
                         <button v-on:click="addPriceListSegment()">ADD SEGMENT</button>
-                        <button>REMOVE SEGMENT</button>
                         <button v-on:click="setPriceList()">UPDATE PRICE LIST</button>
                     </div>
                 </div>          
@@ -190,6 +224,27 @@
                             </select>
                             <input id="arrival-date" v-model="booking['arrivalDate']" type="date"  />
                             <input id="departure-date" v-model="booking['departureDate']" type="date" />
+                            <input id="price" v-model="booking['price']" type="number" step="0.01" />
+                            <input type="checkbox" v-model="booking['deleteFlag']" />
+    
+                        </div>
+                    </div>
+                    <button v-on:click="addBooking()">ADD BOOKING</button>
+                    <button v-on:click="setBookings()">Update Bookings</button>
+                </template>
+                <template v-else>
+                    <p>LOADING...</p>>
+                </template>
+                <!--
+                <template v-if="bookings">
+                    <div class="bookings-list-view">
+                        <div class="booking" v-for="booking in bookings" :class="{ 'update-flag': booking.updateFlag }">
+                            
+                            <select id="customer-id" v-model="booking['customerId']" name="customer-id">
+                                <option v-for="customer in customers" :value="customer['id']"><% customer['firstName'] %> <% customer['lastName'] %></option>
+                            </select>
+                            <input id="arrival-date" v-model="booking['arrivalDate']" type="date"  />
+                            <input id="departure-date" v-model="booking['departureDate']" type="date" />
                             <input id="adults" v-model="booking['adults']" type="number" step="1" />
                             <input id="children" v-model="booking['children']" type="number" step="1" />
                             <input id="infants" v-model="booking['infants']" type="number" step="1" />
@@ -206,7 +261,7 @@
                 </template>
                 <template v-else>
                     <p>LOADING...</p>>
-                </template>
+                </template>-->
                 
             </div>
         </div>
@@ -214,6 +269,25 @@
         <div class="customers">
 
             <h1>Customers</h1>
+            <template v-if="customers">
+                <div class="customers-list-view">
+                    <div class="customer" v-for="customer in customers" :class="{ 'update-flag': customer.updateFlag }">
+    
+                        <input id="first-name" v-model="customer['firstName']" />
+                        <input id="last-name" v-model="customer['lastName']" />
+                        <input id="email-address" v-model="customer['emailAddress']" />
+                        <input id="phone-number" v-model="customer['phoneNumber']" />
+                        <input type="checkbox" v-model="customer['deleteFlag']"/>
+    
+                    </div>
+                </div>
+                <button v-on:click="addCustomer()">ADD CUSTOMER</button>
+                <button v-on:click="setCustomers()">Update Customers</button>
+            </template>
+            <template v-else>
+                <p>LOADING...</p>
+            </template>
+            <!--
             <template v-if="customers">
                 <div class="customers-list-view">
                     <div class="customer" v-for="customer in customers" :class="{ 'update-flag': customer.updateFlag }">
@@ -236,7 +310,7 @@
             </template>
             <template v-else>
                 <p>LOADING...</p>
-            </template>
+            </template>-->
                
         </div>
         
@@ -244,10 +318,6 @@
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://unpkg.com/vue-async-computed"></script>
-<script src="../static/body-scroll-lock/bodyScrollLock.js"></script>
-<script src="../static/zenscroll-min.js"></script>
-<script src="../static/swiper/swiper-bundle.min.js"></script>
 
 <script src="../static/admin.js"></script>
 
