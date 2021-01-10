@@ -63,10 +63,24 @@
             </div>
         </div>
 
-        <div class="page-content">
-            <h1 class="hello">HELLO THERE</h1>
+        <div class="tabs">
+            <div class="price-list-tab-outer" v-on:click="goToPriceList()">
+                <div class="price-list-tab-inner">Price List</div>
+            </div>
+            <div class="bookings-tab-outer" v-on:click="goToBookings()">
+                <div class="bookings-tab-inner">Bookings</div>
+            </div>
+            <div class="customers-tab-outer" v-on:click="goToCustomers()">
+                <div class="customers-tab-inner">Customers</div>
+            </div>
+            <div class="settings-tab-outer" v-on:click="goToSettings()">
+                <div class="settings-tab-inner">Settings</div>
+            </div>
+        </div>
 
-            <div class="price-list-editor">
+        <div class="page-content">
+
+            <div class="price-list">
                 <h1>Price List Editor</h1>
 
                 <div class="list-view">
@@ -153,78 +167,20 @@
                     </div>
                 </div>          
   
-                <div class="price-list-settings">
-                    <template v-if="priceListSettings">
-                        <label for="changeover-day">Changeover Day</label>
-                        <select id="changeover-day" v-model="priceListSettings['defaultChangeoverDay']" name="changeover-day">
-                            <option value="1">Monday</option>
-                            <option value="2">Tuesday</option>
-                            <option value="3">Wednesday</option>
-                            <option value="4">Thursday</option>
-                            <option value="5">Friday</option>
-                            <option value="6">Saturday</option>
-                            <option value="0">Sunday</option>
-                        </select>
-    
-                        <label for="active-prices-range">Active Prices Range</label>
-                        <input id="price-list-range" v-model="priceListSettings['activePricesRange']" type="number" />
-    
-                        <label for="future-prices-range">Future Prices Range</label>
-                        <input id="future-prices-range" v-model="priceListSettings['futurePricesRange']" type="number" />
-                        
-                        <label for="discount-2-weeks">2 Weeks Discount</label>
-                        <input id="discount-2-weeks" v-model="priceListSettings['discount2Weeks']" type="number" step="0.01" />
-    
-                        <label for="discount-3-weeks">3 Weeks Discount</label>
-                        <input id="discount-3-weeks" v-model="priceListSettings['discount3Weeks']" type="number" step="0.01" />
-    
-                        <label for="discount-4-weeks">4 Weeks Discount</label>
-                        <input id="discount-4-weeks" v-model="priceListSettings['discount4Weeks']" type="number" step="0.01" />
-    
-                        <label for="max-segment-length">Max Segment Length</label>
-                        <input id="max-segment-length" v-model="priceListSettings['maxSegmentLength']" type="number" step="1" />
-    
-                        <label for="price-per-dog">Price per Dog</label>
-                        <input id="price-per-dog" v-model="priceListSettings['pricePerDog']" type="number" step="0.01" />
-    
-                        <label for="max-dogs">Max Dogs</label>
-                        <input id="max-dogs" v-model="priceListSettings['maxDogs']" type="number" step="1" />
-    
-                        <label for="max-infants">Max Infants</label>
-                        <input id="max-infants" v-model="priceListSettings['maxInfants']" type="number" step="1" />
-    
-                        <label for="max-guests">Max Guests</label>
-                        <input id="max-guests" v-model="priceListSettings['maxGuests']" type="number" step="1" />
-
-                        <button v-on:click="adjustRanges()">ADJUST RANGES</button>
-
-                        <button v-on:click="applyDiscounts()">APPLY DISCOUNTS</button>
-
-                        <button v-on:click="setPriceListSettings()">UPDATE SETTINGS</button>
-                    </template>
-                    <template v-else>
-                        <p>LOADING...</p>
-                    </template>
-                    
-
-                    
-                </div>
-      
             </div>
 
-            <div class="bookings-editor">
-
+            <div class="bookings hidden">
                 <h1>Bookings</h1>
                 <template v-if="bookings">
                     <div class="bookings-list-view">
                         <div class="booking" v-for="booking in bookings" :class="{ 'update-flag': booking.updateFlag }">
                             
-                            <select id="customer-id" v-model="booking['customerId']" name="customer-id">
-                                <option v-for="customer in customers" :value="customer['id']"><% customer['firstName'] %> <% customer['lastName'] %></option>
-                            </select>
-                            <input id="arrival-date" v-model="booking['arrivalDate']" type="date"  />
-                            <input id="departure-date" v-model="booking['departureDate']" type="date" />
-                            <input id="price" v-model="booking['price']" type="number" step="0.01" />
+                            <div class="customer-id"><% relatedCustomer(booking['customerId'])['firstName'] %> <% relatedCustomer(booking['customerId'])['lastName'] %></div>
+                            <div class="guests-total"><% booking['adults'] + booking['children'] %> guests</div>
+                            <div class="arrival-date"><% booking['arrivalDate'] %></div>
+                            <div class="departure-date"><% booking['departureDate'] %></div>
+                            <div class="price">£<% booking['price'] %></div>
+                            <div class="booking-status">Status</div>
                             <input type="checkbox" v-model="booking['deleteFlag']" />
     
                         </div>
@@ -266,17 +222,25 @@
             </div>
         </div>
 
-        <div class="customers">
+        <div class="customers hidden">
 
             <h1>Customers</h1>
             <template v-if="customers">
                 <div class="customers-list-view">
                     <div class="customer" v-for="customer in customers" :class="{ 'update-flag': customer.updateFlag }">
-    
-                        <input id="first-name" v-model="customer['firstName']" />
-                        <input id="last-name" v-model="customer['lastName']" />
-                        <input id="email-address" v-model="customer['emailAddress']" />
-                        <input id="phone-number" v-model="customer['phoneNumber']" />
+
+                        <div class="customer-name"><% customer['firstName'] %> <% customer['lastName'] %></div>
+                        <div class="customer-email-address"><% customer['emailAddress'] %></div>
+                        <div class="customer-phone-number"><% customer['phoneNumber'] %></div>
+                        <div class="customer-address">
+                            <% customer['addressLine1'] %> <br>
+                            <template v-if="customer['addressLine2']">
+                                <% customer['addressLine2'] %> <br>
+                            </template>
+                            <% customer['townOrCity'] %> <br>
+                            <% customer['countyOrRegion'] %> <br>
+                            <% customer['postCode'] %>
+                        </div>
                         <input type="checkbox" v-model="customer['deleteFlag']"/>
     
                     </div>
@@ -312,6 +276,63 @@
                 <p>LOADING...</p>
             </template>-->
                
+        </div>
+
+        <div class="settings hidden">
+            <template v-if="priceListSettings">
+                <label for="changeover-day">Changeover Day</label>
+                <select id="changeover-day" v-model="priceListSettings['defaultChangeoverDay']" name="changeover-day">
+                    <option value="1">Monday</option>
+                    <option value="2">Tuesday</option>
+                    <option value="3">Wednesday</option>
+                    <option value="4">Thursday</option>
+                    <option value="5">Friday</option>
+                    <option value="6">Saturday</option>
+                    <option value="0">Sunday</option>
+                </select>
+
+                <label for="active-prices-range">Active Prices Range</label>
+                <input id="price-list-range" v-model="priceListSettings['activePricesRange']" type="number" />
+
+                <label for="future-prices-range">Future Prices Range</label>
+                <input id="future-prices-range" v-model="priceListSettings['futurePricesRange']" type="number" />
+                
+                <label for="discount-2-weeks">2 Weeks Discount</label>
+                <input id="discount-2-weeks" v-model="priceListSettings['discount2Weeks']" type="number" step="0.01" />
+
+                <label for="discount-3-weeks">3 Weeks Discount</label>
+                <input id="discount-3-weeks" v-model="priceListSettings['discount3Weeks']" type="number" step="0.01" />
+
+                <label for="discount-4-weeks">4 Weeks Discount</label>
+                <input id="discount-4-weeks" v-model="priceListSettings['discount4Weeks']" type="number" step="0.01" />
+
+                <label for="max-segment-length">Max Segment Length</label>
+                <input id="max-segment-length" v-model="priceListSettings['maxSegmentLength']" type="number" step="1" />
+
+                <label for="price-per-dog">Price per Dog</label>
+                <input id="price-per-dog" v-model="priceListSettings['pricePerDog']" type="number" step="0.01" />
+
+                <label for="max-dogs">Max Dogs</label>
+                <input id="max-dogs" v-model="priceListSettings['maxDogs']" type="number" step="1" />
+
+                <label for="max-infants">Max Infants</label>
+                <input id="max-infants" v-model="priceListSettings['maxInfants']" type="number" step="1" />
+
+                <label for="max-guests">Max Guests</label>
+                <input id="max-guests" v-model="priceListSettings['maxGuests']" type="number" step="1" />
+
+                <button v-on:click="adjustRanges()">ADJUST RANGES</button>
+
+                <button v-on:click="applyDiscounts()">APPLY DISCOUNTS</button>
+
+                <button v-on:click="setPriceListSettings()">UPDATE SETTINGS</button>
+            </template>
+            <template v-else>
+                <p>LOADING...</p>
+            </template>
+            
+
+            
         </div>
         
     </div>

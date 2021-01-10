@@ -251,7 +251,32 @@ const vm = new Vue({
                 'updateFlag': true,
                 'deleteFlag': false
             })
-        },/*
+        },
+        goToPriceList() {
+            document.querySelector('.price-list').classList.remove('hidden');
+            document.querySelector('.bookings').classList.add('hidden');
+            document.querySelector('.customers').classList.add('hidden');
+            document.querySelector('.settings').classList.add('hidden');
+        },
+        goToBookings() {
+            document.querySelector('.price-list').classList.add('hidden');
+            document.querySelector('.bookings').classList.remove('hidden');
+            document.querySelector('.customers').classList.add('hidden');
+            document.querySelector('.settings').classList.add('hidden');
+        },
+        goToCustomers() {
+            document.querySelector('.price-list').classList.add('hidden');
+            document.querySelector('.bookings').classList.add('hidden');
+            document.querySelector('.customers').classList.remove('hidden');
+            document.querySelector('.settings').classList.add('hidden');
+        },
+        goToSettings() {
+            document.querySelector('.price-list').classList.add('hidden');
+            document.querySelector('.bookings').classList.add('hidden');
+            document.querySelector('.customers').classList.add('hidden');
+            document.querySelector('.settings').classList.remove('hidden');
+        },
+        /*
         applyDiscounts() {
             for (segment in this.priceList) {
                 if (segment['isActive']) {
@@ -317,6 +342,11 @@ const vm = new Vue({
                 temp[key] = this.clone(obj[key]);
         
             return temp;
+        },
+        relatedCustomer(id) {
+            return this.customers.find(customer => {
+                return(customer.id === id);
+            });
         }
         //adjustRanges IS BUGGED, WILL CAUSE VUE INSTANCE TO NOT RENDER ON MOBILE DEVEICES ---- NEEDS INVESTIGATION (probably should be a server side function)
         /*adjustRanges() {
