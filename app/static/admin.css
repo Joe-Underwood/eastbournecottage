@@ -47,7 +47,13 @@ body,
     width: 100%;
     height: 100%;
     position: relative;
+    overflow-x: hidden;
 }
+
+#root.fullscreen {
+    overflow: hidden;
+}
+
 
 button {
     background-color: rgb(15, 72, 117);
@@ -743,10 +749,6 @@ svg {
 .content-wrapper.closed {
     display: none;
 }
-
-.page-content {
-    padding-top: 56px;
-}
 /*----------- PRICE-LIST-EDITOR ----------------------------*/
 .page-content {
     background-color: rgb(246, 249, 250);
@@ -855,6 +857,7 @@ svg {
 
 .bookings {
     background-color: rgb(246, 249, 250);
+    z-index: 1;
 }
 
     .bookings-list-view {
@@ -863,48 +866,106 @@ svg {
         width:100%;
     }
 
-        .booking {
+        .booking .card {
             display: grid;
-            grid-template-columns: 50% 50%;
+            grid-template-columns: 1fr 1fr;
             grid-template-rows: 1fr 1fr 1fr;
             background-color: white;
             z-index: 1;
             position: relative;
-            margin-bottom: 16px;
-            padding-top: 8px;
+            margin-bottom: 8px;
+            padding-top: 16px;
             padding-bottom: 8px;
+            padding-left: 16px;
+            padding-right: 16px;
+            box-shadow: 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.20);
+            transition: all 0.4s;
+            width: 100%;
         }
 
             .customer-id {
                 grid-column: 1 / span 1;
                 grid-row: 1 / span 1;
+                font-size: 14px;
             }
 
             .guests-total {
                 grid-column: 2 / span 1;
                 grid-row: 1 / span 1;
+                font-size: 14px;
             }
 
             .arrival-date {
                 grid-column: 1 / span 1;
                 grid-row: 2 / span 1;
+                font-size: 14px;
             }
 
             .departure-date {
                 grid-column: 2 / span 1;
                 grid-row: 2 / span 1;
+                font-size: 14px;
             }
 
             .price {
                 grid-column: 1 / span 1;
                 grid-row: 3 / span 1;
+                font-size: 14px;
             }
 
             .booking-status {
                 grid-column: 2 / span 1;
                 grid-row: 3 / span 1;
+                font-size: 14px;
             }
 
+        .booking .page {
+            display: none;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            z-index: 5;
+            box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.20);
+            background-color: white;
+        }
+
+            .page-close-container {
+                margin-right: 8px;
+                margin-top: 8px;
+                margin-bottom: 8px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                height: 40px;
+                width: 40px;
+            }
+
+                .page-close {
+                    width: 20px;
+                    height: 20px;
+                    display: block;
+                    position: relative;
+                }
+
+                    .page-close span {
+                        display: block;
+                        position: absolute;
+                        height: 2px;
+                        width: 100%;
+                        background-color: rgb(15, 72, 117);
+                        border-radius: 3px;
+                    }
+
+                    .page-close span:nth-child(1) {
+                        transform: translate3d(0, 9px, 0) rotate3d(0, 0, 1, 45deg);
+                    }
+
+                    .page-close span:nth-child(2) {
+                        transform: translate3d(0, 9px, 0) rotate3d(0, 0, 1, -45deg);
+                    }
 
 .customers {
     background-color: rgb(246, 249, 250);
@@ -916,6 +977,55 @@ svg {
         width:100%;
     }
 
-        .customer {
+        .customer .card {
             display: grid; 
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+            background-color: white;
+            box-shadow: 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.20);
+            z-index: 1;
+            padding-top: 16px;
+            padding-bottom: 8px;
+            padding-left: 16px;
+            padding-right: 16px;
+            margin-bottom: 8px;
+            transition: all 0.4s;
+            position: relative;
+            width: 100%;
+        }
+
+            .customer-name {
+                grid-column: 1 / span 1;
+                grid-row: 1 / span 1;
+                font-size: 14px;
+            }
+
+            .customer-email-address {
+                grid-column: 1 / span 1;
+                grid-row: 2 / span 1;
+                font-size: 14px;
+            }
+
+            .customer-phone-number {
+                grid-column: 1 / span 1;
+                grid-row: 3 / span 1;
+                font-size: 14px;
+            }
+
+            .customer-address {
+                grid-column: 2 / span 1;
+                grid-row: 1 / span 3;
+                font-size: 12px;
+            }
+
+        .customer .page {
+            background-color: white;
+            display: none;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            z-index: 5;
+            box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.20);
         }

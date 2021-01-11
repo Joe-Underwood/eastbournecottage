@@ -347,6 +347,41 @@ const vm = new Vue({
             return this.customers.find(customer => {
                 return(customer.id === id);
             });
+        },
+        goFullscreen(e) {
+            function cardLevelElement(el) {
+                if (el.classList.contains('card')) {
+                    return el;
+                } else {
+                    return cardLevelElement(el.parentElement);
+                }
+            }
+
+            const cardElement = cardLevelElement(e.target);
+            const pageElement = cardElement.previousElementSibling;
+
+            document.querySelector('#root').classList.add('fullscreen');
+
+            cardElement.style.display = 'none';
+            pageElement.style.display = 'block';
+
+        },
+        exitFullscreen(e) {
+            function pageLevelElement(el) {
+                if (el.classList.contains('page')) {
+                    return el;
+                } else {
+                    return pageLevelElement(el.parentElement);
+                }
+            }
+            
+            const pageElement = pageLevelElement(e.target);
+            const cardElement = pageElement.nextElementSibling;
+
+            document.querySelector('#root').classList.remove('fullscreen');
+
+            pageElement.style.display = 'none';
+            cardElement.style.display = 'grid';
         }
         //adjustRanges IS BUGGED, WILL CAUSE VUE INSTANCE TO NOT RENDER ON MOBILE DEVEICES ---- NEEDS INVESTIGATION (probably should be a server side function)
         /*adjustRanges() {
