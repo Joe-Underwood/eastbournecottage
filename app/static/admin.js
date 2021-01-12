@@ -4,7 +4,9 @@ const vm = new Vue({
         priceList: null,
         priceListSettings: null,
         bookings: null,
-        customers: null
+        customers: null,
+        cardSelect: false,
+        cardSelection: []
     },
     computed: {
         activePriceList: function() {
@@ -42,9 +44,9 @@ const vm = new Vue({
     },
     created: function() {
         this.getPriceList();
-        this.getPriceListSettings();
         this.getBookings();
         this.getCustomers();
+        this.getPriceListSettings();
     },
     methods: {
         getPriceList() {
@@ -258,24 +260,28 @@ const vm = new Vue({
             document.querySelector('.bookings').classList.add('hidden');
             document.querySelector('.customers').classList.add('hidden');
             document.querySelector('.settings').classList.add('hidden');
+            this.cardSelectOff();
         },
         goToBookings() {
             document.querySelector('.price-list').classList.add('hidden');
             document.querySelector('.bookings').classList.remove('hidden');
             document.querySelector('.customers').classList.add('hidden');
             document.querySelector('.settings').classList.add('hidden');
+            this.cardSelectOff();
         },
         goToCustomers() {
             document.querySelector('.price-list').classList.add('hidden');
             document.querySelector('.bookings').classList.add('hidden');
             document.querySelector('.customers').classList.remove('hidden');
             document.querySelector('.settings').classList.add('hidden');
+            this.cardSelectOff();
         },
         goToSettings() {
             document.querySelector('.price-list').classList.add('hidden');
             document.querySelector('.bookings').classList.add('hidden');
             document.querySelector('.customers').classList.add('hidden');
             document.querySelector('.settings').classList.remove('hidden');
+            this.cardSelectOff();
         },
         bookingUpdate(booking) {
             booking['updateFlag'] = true;
@@ -401,6 +407,65 @@ const vm = new Vue({
             else {
                 return 'No customer';
             }
+        },
+        cardSelectOn() {
+            this.cardSelect = true;
+        },
+        cardSelectOff() {
+            this.cardSelect = false;
+            for (let i = 0; i < this.cardSelection.length; i++) {
+                this.cardSelection[i]['selectFlag'] = false;
+            }
+            this.cardSelection = [];
+        },
+        cardClick(obj, e) {
+            if (this.cardSelect) {
+                if (obj['selectFlag']) {
+                    this.cardSelection.splice(this.cardSelection.indexOf(obj), 1);
+                    obj['selectFlag'] = false;
+                } 
+                else {
+                    this.cardSelection.push(obj);
+                    obj['selectFlag'] = true;
+                }
+            }
+            else {
+                this.goFullscreen(e);
+            }
+        },
+        bookingSelectionDelete() {
+            //prompt for user confirmation before deletion
+            for (let i = 0; i < this.cardSelection.length; i++) {
+                this.cardSelection[i]['deleteFlag'] = true;
+            }
+            this.setBookings().then(success => {
+                if (success) {
+                    this.getPriceList();
+                    this.getBookings();
+                    this.getCustomers();
+                }
+                else {
+                    console.log('failed to delete bookings');
+                }
+            })
+            this.cardSelectOff();
+        },
+        customerSelectionDelete() {
+            //prompt for user confirmation before deletion
+            for (let i = 0; i < this.cardSelection.length; i++) {
+                this.cardSelection[i]['deleteFlag'] = true;
+            }
+            this.setCustomers().then(success => {
+                if (success) {
+                    this.getPriceList();
+                    this.getBookings();
+                    this.getCustomers();
+                }
+                else {
+                    console.log('failed to delete customers');
+                }
+            })
+            this.cardSelectOff();
         },
         goFullscreen(e) {
             function cardLevelElement(el) {

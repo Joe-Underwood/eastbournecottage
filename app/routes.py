@@ -246,7 +246,8 @@ def get_bookings():
             'dogPrice': str(row.dog_price),
             'price': str(row.price),
             'updateFlag': False,
-            'deleteFlag': False
+            'deleteFlag': False,
+            'selectFlag': False
         }
         bookings.append(booking)
     
@@ -491,7 +492,8 @@ def get_customers():
             'countyOrRegion': str(row.county_or_region),
             'postcode': str(row.postcode),
             'updateFlag': False,
-            'deleteFlag': False
+            'deleteFlag': False,
+            'selectFlag': False
         }
         customers.append(customer)
     return { 'customers': customers }
