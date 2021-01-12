@@ -173,7 +173,7 @@
                 <h1>Bookings</h1>
                 <template v-if="bookings">
                     <div class="bookings-list-view">
-                        <div class="booking" v-for="booking in bookings"  >
+                        <div class="booking" v-for="booking in bookings" >
 
                             <div class="page">
                                 <div class="page-close-container" v-on:click="exitFullscreen($event)">
@@ -187,23 +187,60 @@
                                     <option v-for="customer in customers" :value="customer['id']"><% customer['firstName'] %> <% customer['lastName'] %></option>
                                 </select>
 
-                                <label for="arrival-date">Arrival Date</label>
-                                <input id="arrival-date" v-model="booking['arrivalDate']" type="date"  />
+                                <div class="booking-dates">
 
-                                <label for="departure-date">Departure Date</label>
-                                <input id="departure-date" v-model="booking['departureDate']" type="date" />
+                                    <div class="input-container">
+                                        <label for="arrival-date">Arrival Date</label>
+                                        <input id="arrival-date" v-model="booking['arrivalDate']" type="date"  />
+                                    </div>
+                                    
+                                    <div class="input-container">
+                                        <label for="departure-date">Departure Date</label>
+                                        <input id="departure-date" v-model="booking['departureDate']" type="date" />
+                                    </div>
+    
+                                </div>
+                                
 
-                                <label for="adults">Adults</label>
-                                <input id="adults" v-model="booking['adults']" type="number" step="1" />
+                                <div class="party-container">
+                                    <div class="party-input-container">
 
-                                <label for="children">Children</label>
-                                <input id="children" v-model="booking['children']" type="number" step="1" />
+                                        <label for="adults"><h5>Adults</h5>Ages 13 or above</label>
 
-                                <label for="infants">Infants</label>
-                                <input id="infants" v-model="booking['infants']" type="number" step="1" />
+                                        <div class="party-input" class="adults">
+                                            <button type="button" class="party-decrease">-</button>
+                                            <div>&#60;% booking['adults'] %></div>
+                                            <button type="button" class="party-increase">+</button>
+                                        </div>
+                                    </div>
 
-                                <label for="dogs">Dogs</label>
-                                <input id="dogs" v-model="booking['dogs']" type="number" step="1" />
+                                    <div class="party-input-container">
+                                        <label for="children"><h5>Children</h5>Ages 2-12</label>
+                                        <div class="party-input" class="children">
+                                            <button type="button" class="party-decrease">-</button>
+                                            <div>&#60;% booking['children'] %></div>
+                                            <button type="button" class="party-increase">+</button>
+                                        </div>
+                                    </div>
+                
+                                    <div class="party-input-container">
+                                        <label for="infants"><h5>Infants</h5>Under 2</label>
+                                        <div class="party-input" class="infants">
+                                            <button type="button" class="party-decrease">-</button>
+                                            <div>&#60;% booking['infants'] %></div>
+                                            <button type="button" class="party-increase">+</button>
+                                        </div>
+                                    </div>
+                
+                                    <div class="party-input-container">
+                                        <label for="dogs"><h5>Dogs</h5>£20 each</label>
+                                        <div class="party-input" class="dogs">
+                                            <button type="button" class="party-decrease">-</button>
+                                            <div>&#60;% booking['dogs'] %></div>
+                                            <button type="button" class="party-increase">+</button>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <label for="stay-price">Stay Price</label>
                                 <input id="stay-price" v-model="booking['stayPrice']" type="number" step="0.01" />
@@ -218,7 +255,7 @@
                                 <button class="page-update" v-on:click="bookingUpdate(booking)">UPDATE</button>
                             </div>
 
-                            <div class="card" v-on:click="cardClick(booking, $event)" :class="{ 'select-flag': booking.selectFlag }">
+                            <div class="card" v-on:click="cardClick(booking, $event)" :class="{ 'select-flag': booking['selectFlag'] }">
                                 <div class="customer-id"><% customerName(booking['customerId']) %></div>
                                 <div class="guests-total"><% booking['adults'] + booking['children'] %> guests</div>
                                 <div class="arrival-date"><% booking['arrivalDate'] %></div>
@@ -230,9 +267,9 @@
                         </div>
                     </div>
                     <button class="cards-add" v-on:click="addBooking()">+</button>
-                    <button class="cards-select" v-on:click="cardSelectOn()">SELECT</button>
-                    <button class="cards-cancel" v-on:click="cardSelectOff()">CANCEL</button>
-                    <button class="cards-delete" v-on:click="bookingSelectionDelete()">DELETE (<% cardSelection.length %>)</button>
+                    <button class="cards-select" v-on:click="bookingCardSelectOn()">SELECT</button>
+                    <button class="cards-cancel hidden" v-on:click="bookingCardSelectOff()">CANCEL</button>
+                    <button class="cards-delete hidden" v-on:click="bookingSelectionDelete()">DELETE (<% cardSelection.length %>)</button>
                 </template>
                 <template v-else>
                     <p>LOADING...</p>>
@@ -304,9 +341,9 @@
                         </div>
                     </div>
                     <button class="cards-add" v-on:click="addCustomer()">+</button>
-                    <button class="cards-select" v-on:click="cardSelectOn()">SELECT</button>
-                    <button class="cards-cancel" v-on:click="cardSelectOff()">CANCEL</button>
-                    <button class="cards-delete" v-on:click="customerSelectionDelete()">DELETE (<% cardSelection.length %>)</button>
+                    <button class="cards-select" v-on:click="customerCardSelectOn()">SELECT</button>
+                    <button class="cards-cancel hidden" v-on:click="customerCardSelectOff()">CANCEL</button>
+                    <button class="cards-delete hidden" v-on:click="customerSelectionDelete()">DELETE (<% cardSelection.length %>)</button>
                 </template>
                 <template v-else>
                     <p>LOADING...</p>
