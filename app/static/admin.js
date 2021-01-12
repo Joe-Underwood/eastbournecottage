@@ -48,31 +48,34 @@ const vm = new Vue({
     },
     methods: {
         getPriceList() {
-            fetch('/get_price_list', { method: 'post' })
-                .then(response => {
-                    return response.json();
-                })
-                .then(json => {
-                    this.priceList = json['priceList'];
-                    return json['priceList'];
-                })
-                .then((data) => {
-                    const obj = this.clone(data);
-                    for (let i = 0; i < this.priceList.length; i++) {
-                        this.$watch(function() {
-                            return this.priceList[i];
-                        },
-                        function() {
-                            if (this.isDeepEqual(this.priceList[i], obj[i])) {
-                                this.priceList[i]['updateFlag'] = false;
-                            }
-                            else {
-                                this.priceList[i]['updateFlag'] = true;
-                            }
-                        },
-                        { deep: true })
-                    }
-                })
+            const response =
+                fetch('/get_price_list', { method: 'post' })
+                    .then(response => {
+                        return response.json();
+                    })
+                    .then(json => {
+                        this.priceList = json['priceList'];
+                        return json['priceList'];
+                    })
+                    .then((data) => {
+                        const obj = this.clone(data);
+                        for (let i = 0; i < this.priceList.length; i++) {
+                            this.$watch(function() {
+                                return this.priceList[i];
+                            },
+                            function() {
+                                if (this.isDeepEqual(this.priceList[i], obj[i])) {
+                                    this.priceList[i]['updateFlag'] = false;
+                                }
+                                else {
+                                    this.priceList[i]['updateFlag'] = true;
+                                }
+                            },
+                            { deep: true })
+                        }
+                    })
+            
+            return response;
         },
         getPriceListSettings() {
             fetch('/get_price_list_settings', { method: 'post' })
@@ -98,71 +101,52 @@ const vm = new Vue({
                 })
         },
         getBookings() {
-            fetch('/get_bookings', { method: 'post' })
-                .then(response => {
-                    return response.json();
-                })
-                .then(json => {
-                    this.bookings = json['bookings'];
-                    return json['bookings'];
-                })
-                .then((data) => {
-                    const obj = this.clone(data);
-                    for (let i = 0; i < this.bookings.length; i++) {
-                        this.$watch(function() {
-                            return this.bookings[i];
-                        },
-                        function() {
-                            if (this.isDeepEqual(this.bookings[i], obj[i])) {
-                                this.bookings[i]['updateFlag'] = false;
-                            }
-                            else {
-                                this.bookings[i]['updateFlag'] = true;
-                            }
-                        },
-                        { deep: true })
-                    }
-                })
+            const response = 
+                fetch('/get_bookings', { method: 'post' })
+                    .then(response => {
+                        return response.json();
+                    })
+                    .then(json => {
+                        this.bookings = json['bookings'];
+                        return json['bookings'];
+                    })
+
+            return response;
         },
         getCustomers() {
-            fetch('/get_customers', { method: 'post' })
-                .then(response => {
-                    return response.json();
-                })
-                .then(json => {
-                    this.customers = json['customers'];
-                    return json['customers'];
-                })
-                .then((data) => {
-                    const obj = this.clone(data);
-                    for (let i = 0; i < this.customers.length; i++) {
-                        this.$watch(function() {
-                            return this.customers[i];
-                        },
-                        function() {
-                            if (this.isDeepEqual(this.customers[i], obj[i])) {
-                                this.customers[i]['updateFlag'] = false;
-                            }
-                            else {
-                                this.customers[i]['updateFlag'] = true;
-                            }
-                        },
-                        { deep: true })
-                    }
-                })
+            const response = 
+                fetch('/get_customers', { method: 'post' })
+                    .then(response => {
+                        return response.json();
+                    })
+                    .then(json => {
+                        this.customers = json['customers'];
+                        return json['customers'];
+                    })
+
+            return response;
         },
         refreshPriceList() {
             this.priceList.sort((a, b) => new Date(a['startDate']) - new Date(b['startDate']));
         },
         setPriceList() {
             this.refreshPriceList();
-            fetch('/set_price_list', {
-                method: 'post',
-                body: JSON.stringify(this.priceList),
-                headers: new Headers({
-                    'content-type': 'application/json'
+            const response = 
+                fetch('/set_price_list', {
+                    method: 'post',
+                    body: JSON.stringify(this.priceList),
+                    headers: new Headers({
+                        'content-type': 'application/json'
+                    })
                 })
-            })
+                .then(response => {
+                    return response.json();
+                })
+                .then(json => {
+                    return json['success'];
+                })
+
+            return response;
         },
         addPriceListSegment() {
             this.priceList.push({
@@ -202,13 +186,22 @@ const vm = new Vue({
             })
         },
         setBookings() {
-            fetch('/set_bookings', {
-                method: 'post',
-                body: JSON.stringify(this.bookings),
-                headers: new Headers({
-                    'content-type': 'application/json'
+            const response =
+                fetch('/set_bookings', {
+                    method: 'post',
+                    body: JSON.stringify(this.bookings),
+                    headers: new Headers({
+                        'content-type': 'application/json'
+                    })
                 })
-            })
+                .then(response => {
+                    return response.json();
+                })
+                .then(json => {
+                    return json['success'];
+                })
+
+            return response;
         },
         addBooking() {
             this.bookings.push({
@@ -228,13 +221,21 @@ const vm = new Vue({
             })
         },
         setCustomers() {
-            fetch('/set_customers', {
+            const response = fetch('/set_customers', {
                 method: 'post',
                 body: JSON.stringify(this.customers),
                 headers: new Headers({
                     'content-type': 'application/json'
                 })
             })
+                .then(response => {
+                    return response.json();
+                })
+                .then(json => {
+                    return json['success'];
+                })
+
+            return response;
         },
         addCustomer() {
             this.customers.push({
@@ -275,6 +276,53 @@ const vm = new Vue({
             document.querySelector('.bookings').classList.add('hidden');
             document.querySelector('.customers').classList.add('hidden');
             document.querySelector('.settings').classList.remove('hidden');
+        },
+        bookingUpdate(booking) {
+            booking['updateFlag'] = true;
+            this.setBookings();
+        },
+        bookingDelete(booking, e) {
+            booking['deleteFlag'] = true;
+            this.setBookings().then(success => {
+                if (success) {
+                    this.exitFullscreen(e);
+                }
+                else {
+                    console.log('error updating bookings');
+                }
+                return success;
+            })
+            .then(success => {
+                if (success) {
+                    this.getPriceList();
+                    this.getBookings();
+                    this.getCustomers();
+                }
+            })
+            //if successful, delete from view/ refresh to show change
+        },
+        customerUpdate(customer) {
+            customer['updateFlag'] = true;
+            this.setCustomers();
+        },
+        customerDelete(customer, e) {
+            customer['deleteFlag'] = true;
+            this.setCustomers().then(success => {
+                if (success) {
+                    this.exitFullscreen(e);
+                } else {
+                    console.log('error updating customers');
+                }
+                return success;
+            })
+            .then(success => {
+                if (success) {
+                    this.getPriceList();
+                    this.getBookings();
+                    this.getCustomers();
+                }
+            })
+            //if successful, delete from view/ refresh to show change
         },
         /*
         applyDiscounts() {
@@ -343,10 +391,16 @@ const vm = new Vue({
         
             return temp;
         },
-        relatedCustomer(id) {
-            return this.customers.find(customer => {
-                return(customer.id === id);
-            });
+        customerName(id) {
+            if (id) {
+                const customer = this.customers.find(customer => {
+                    return(customer.id === id);
+                });
+                return `${customer['firstName']} ${customer['lastName']}`;
+            }
+            else {
+                return 'No customer';
+            }
         },
         goFullscreen(e) {
             function cardLevelElement(el) {

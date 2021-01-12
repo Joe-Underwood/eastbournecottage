@@ -194,11 +194,12 @@
                                 <input id="stay-price" v-model="booking['stayPrice']" type="number" step="0.01" />
                                 <input id="dog-price" v-model="booking['dogPrice']" type="number" step="0.01" />
                                 <input id="price" v-model="booking['price']" type="number" step="0.01" />
-                                <input type="checkbox" v-model="booking['deleteFlag']" />
+                                <button class="page-delete" v-on:click="bookingDelete(booking, $event)">DELETE</button>
+                                <button class="page-update" v-on:click="bookingUpdate(booking)">UPDATE</button>
                             </div>
 
                             <div class="card" v-on:click="goFullscreen($event)">
-                                <div class="customer-id"><% relatedCustomer(booking['customerId'])['firstName'] %> <% relatedCustomer(booking['customerId'])['lastName'] %></div>
+                                <div class="customer-id"><% customerName(booking['customerId']) %></div>
                                 <div class="guests-total"><% booking['adults'] + booking['children'] %> guests</div>
                                 <div class="arrival-date"><% booking['arrivalDate'] %></div>
                                 <div class="departure-date"><% booking['departureDate'] %></div>
@@ -239,7 +240,8 @@
                                 <input id="town-or-city" v-model="customer['townOrCity']" />
                                 <input id="county-or-region" v-model="customer['countyOrRegion']" />
                                 <input id="postcode" v-model="customer['postcode']" />
-                                <input type="checkbox" v-model="customer['deleteFlag']"/>
+                                <button class="page-delete" v-on:click="customerDelete(customer, $event)">DELETE</button>
+                                <button class="page-update" v-on:click="customerUpdate(customer)">UPDATE</button>
                             </div>
 
                             <div class="card" v-on:click="goFullscreen($event)">
