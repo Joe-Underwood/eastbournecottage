@@ -283,9 +283,10 @@ const vm = new Vue({
             document.querySelector('.settings').classList.remove('hidden');
             //this.cardSelectOff();
         },
-        bookingUpdate(booking) {
+        bookingUpdate(booking, e) {
             booking['updateFlag'] = true;
             this.setBookings();
+            //prompt result, with(out) closing page
         },
         bookingDelete(booking, e) {
             booking['deleteFlag'] = true;
@@ -307,9 +308,10 @@ const vm = new Vue({
             })
             //if successful, delete from view/ refresh to show change
         },
-        customerUpdate(customer) {
+        customerUpdate(customer, e) {
             customer['updateFlag'] = true;
             this.setCustomers();
+            //prompt result, with(out) closing page
         },
         customerDelete(customer, e) {
             customer['deleteFlag'] = true;
@@ -531,6 +533,54 @@ const vm = new Vue({
 
             pageElement.style.display = 'none';
             cardElement.style.display = 'grid';
+        },
+        adultsDecrease(booking, e) {
+            e.preventDefault();
+            if(booking['adults'] > 0) {
+                booking['adults']--;
+            }
+        },
+        adultsIncrease(booking, e) {
+            e.preventDefault();
+            if (booking['adults'] + booking['children'] < this.priceListSettings['maxGuests']) {
+                booking['adults']++;
+            }
+        },
+        childrenDecrease(booking, e) {
+            e.preventDefault();
+            if (booking['children'] > 0) {
+                booking['children']--;
+            }
+        },
+        childrenIncrease(booking, e) {
+            e.preventDefault();
+            if (booking['adults'] + booking['children'] < this.priceListSettings['maxGuests']) {
+                booking['children']++;
+            }
+        },
+        infantsDecrease(booking, e) {
+            e.preventDefault();
+            if (booking['infants'] > 0) {
+                booking['infants']--;
+            }
+        },
+        infantsIncrease(booking, e) {
+            e.preventDefault();
+            if (booking['infants'] < this.priceListSettings['maxInfants']) {
+                booking['infants']++;
+            }
+        },
+        dogsDecrease(booking, e) {
+            e.preventDefault();
+            if (booking['dogs'] > 0) {
+                booking['dogs']--;
+            }
+        },
+        dogsIncrease(booking, e) {
+            e.preventDefault();
+            if (booking['dogs'] < this.priceListSettings['maxDogs']) {
+                booking['dogs']++;
+            }
         }
         //adjustRanges IS BUGGED, WILL CAUSE VUE INSTANCE TO NOT RENDER ON MOBILE DEVEICES ---- NEEDS INVESTIGATION (probably should be a server side function)
         /*adjustRanges() {

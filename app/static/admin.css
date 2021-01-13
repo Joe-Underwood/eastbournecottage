@@ -809,6 +809,13 @@ svg {
     display: flex;
     width: 100%;
     align-items: center;
+    height: 40px;
+    background-color: white;
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.20);
+    padding-top: 16px;
+    padding-bottom: 8px;
+    padding-left: 16px;
+    padding-right: 16px;
 }
 
     .segment-start-date {
@@ -1166,9 +1173,10 @@ svg {
                     width: 40px;
                     background-color: white;
                     text-align: center;
-                    color: rgb(113, 113, 113);
+                    transition: all 0.2s;
+                    color: rgb(15, 72, 117);
                 }
 
-                .party-input div.active {
-                    color: rgb(15, 72, 117);
+                .party-input div.inactive {
+                    color: rgb(113, 113, 113);
                 }
