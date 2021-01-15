@@ -12,7 +12,10 @@ const vm = new Vue({
         priceListListView: false,
         rangeMonths: null,
         cardSelect: false,
-        cardSelection: []
+        cardSelection: [],
+
+        monthSwiper: null,
+        monthTabGlider: null
     },
     computed: {
         activePriceList: function() {
@@ -61,9 +64,12 @@ const vm = new Vue({
                 this.priceListMonth = this.rangeMonths[0];
             })
             .then(() => {
-                this.initMonthSwiper()
+                this.initMonthSwiper();
+                this.$nextTick(function() {
+                    document.querySelector('.tab').classList.add('current-month-tab');
+                    this.initMonthTabGlider();
+                })
             })
-        
     },
     methods: {
         getPriceList() {
@@ -310,8 +316,27 @@ const vm = new Vue({
         },
         initMonthSwiper() {
             const monthSwiper = new Swiper('.month-swiper', {
-                spaceBetween: 16
-            });   
+                spaceBetween: 16,
+                on: {
+                    slideChange: function() {
+                        document.querySelectorAll('.tab').forEach(tab => {
+                            tab.classList.remove('current-month-tab');
+                        })
+                        document.querySelectorAll('.tab')[this.activeIndex].classList.add('current-month-tab');
+                        vm.monthTabGlider.scrollItem(this.activeIndex);
+                    }
+                }
+            });  
+
+            this.monthSwiper = monthSwiper;
+        },
+        initMonthTabGlider() {
+            const monthTabGlider = new Glider(document.querySelector('.month-tabs'), {
+                slidesToShow: 4,
+                duration: 0.5,
+                scrollLock: true
+            })
+            this.monthTabGlider = monthTabGlider;
         },
         segmentMonthFilter(segment, month, index) {
             if (index === this.rangeMonths.length - 1) {

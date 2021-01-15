@@ -864,8 +864,13 @@ svg {
 
 
 .month-tabs {
-    display: flex;
+    height: 48px;
 }
+
+    .current-month-tab {
+        background-color:rgb(113, 113, 113);
+    }
+    
 .bookings {
     background-color: rgb(246, 249, 250);
     z-index: 1;
