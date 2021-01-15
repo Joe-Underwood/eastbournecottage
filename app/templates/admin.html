@@ -6,6 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="user-scalable=no, width=device-width, height=device-height, initial-scale=1.0" />
     <title>The Cottage - Admin</title>
+    <link rel="stylesheet" href="../static/swiper/swiper-bundle.min.css">
     <link rel="stylesheet" href="../static/admin.css" />
 </head>
 
@@ -81,9 +82,43 @@
         <div class="page-content">
 
             <div class="price-list">
-                <h1>Price List Editor</h1>
 
-                <div class="list-view">
+                <template v-if="priceListMonthView && rangeMonths">
+                    <h1>Price List</h1>
+                    <div>Settings</div>
+                    <div class="swiper-container month-swiper">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide month" v-for="(month, index) in rangeMonths">
+                                <div class="header-date"><% month.toLocaleString('default', { month: 'long' }) %></div>
+                                <div class="price-list-segments">
+                                    <template v-if="priceList">
+                                        <div class="price-list-segment" v-for="segment in priceList.filter(segment => segmentMonthFilter(segment, month, index))">
+                                            <div class="segment-start-date"><% segment['startDate'] %></div>
+                                            <div class="segment-price"><% segment['price'] %></div>
+                                        </div>
+                                    </template>
+                                    <template v-else>
+                                        <p>LOADING...</p>
+                                    </template>
+                                    <!---
+                                    <template v-if="activePriceList">
+                                        <div class="price-list-segment" v-for="segment in activePriceList" :class="{ 'update-flag': segment.updateFlag }">
+                                            <div class="segment-start-date"><% segment['startDate'] %></div>
+                                            <div class="segment-price"><% segment['price'] %></div>
+                                        </div>
+                                    </template>
+                                    <template v-else>
+                                        <p>LOADING...</p>
+                                    </template>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                        
+                    </div>
+                </template>
+
+                <!--<div class="list-view">
                     <template v-if="activePriceList">
                         <div class="price-list-segment" v-for="segment in activePriceList" :class="{ 'update-flag': segment.updateFlag }">
                             <div class="segment-start-date"><% segment['startDate'] %></div>
@@ -94,7 +129,7 @@
                         <p>LOADING...</p>
                     </template>
                     
-                    <!--
+                    
                     <template v-if="activePriceList">
                         <div class="price-list-segment" v-for="segment in activePriceList" :class="{ 'update-flag': segment.updateFlag }">
                             <input type="date" v-model="segment['startDate']" />
@@ -107,7 +142,7 @@
                     </template>
                     <template v-else>
                         <p>LOADING...</p>
-                    </template>-->
+                    </template>
 
                     <template v-if="futurePriceList">
                         <div class="price-list-segment future" v-for="segment in futurePriceList" :class="{ 'update-flag': segment.updateFlag }">
@@ -118,7 +153,7 @@
                     <template v-else>
                         <p>LOADING...</p>
                     </template>
-                    <!--
+                    
                     <template v-if="futurePriceList">
                         <div class="future-price-list-segment" v-for="segment in futurePriceList" :class="{ 'update-flag': segment.updateFlag }">
                             <input type="date" v-model="segment['startDate']" />
@@ -131,7 +166,7 @@
                     </template>
                     <template v-else>
                         <p>LOADING...</p>
-                    </template>-->
+                    </template>
 
                     <template v-if="newPriceList">
                         <div class="price-list-segment" v-for="segment in newPriceList" :class="{ 'update-flag': segment.updateFlag }">
@@ -142,7 +177,7 @@
                     <template v-else>
                         <p>LOADING...</p>
                     </template>
-                    <!--
+                    
                     <template v-if="newPriceList">
                         <div class="new-price-list-segment" v-for="segment in newPriceList" :class="{ 'update-flag': segment.updateFlag }">
                             <input type="date" v-model="segment['startDate']" />
@@ -413,7 +448,8 @@
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-
+<script src="../static/zenscroll-min.js"></script>
+<script src="../static/swiper/swiper-bundle.min.js"></script>
 <script src="../static/admin.js"></script>
 
 </html>

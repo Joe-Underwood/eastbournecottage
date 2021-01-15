@@ -593,3 +593,6 @@ def get_public_price_list_settings():
 
     return { 'publicPriceListSettings': settings }
 
+@app.route('/get_server_date', methods=['POST'])
+def get_server_date():
+    return { 'serverDate': date.today().isoformat() }

@@ -5,6 +5,12 @@ const vm = new Vue({
         priceListSettings: null,
         bookings: null,
         customers: null,
+
+        serverDate: null,
+        priceListMonthView: true,
+        priceListMonth: null,
+        priceListListView: false,
+        rangeMonths: null,
         cardSelect: false,
         cardSelection: []
     },
@@ -46,7 +52,18 @@ const vm = new Vue({
         this.getPriceList();
         this.getBookings();
         this.getCustomers();
-        this.getPriceListSettings();
+        this.getPriceListSettings()
+            .then(() => {
+                return this.getServerDate();
+            })
+            .then((serverDate) => {
+                this.addRangeMonths(serverDate);
+                this.priceListMonth = this.rangeMonths[0];
+            })
+            .then(() => {
+                this.initMonthSwiper()
+            })
+        
     },
     methods: {
         getPriceList() {
@@ -80,27 +97,30 @@ const vm = new Vue({
             return response;
         },
         getPriceListSettings() {
-            fetch('/get_price_list_settings', { method: 'post' })
-                .then(response => {
-                    return response.json();
-                })
-                .then(json => {
-                    this.priceListSettings = json['priceListSettings'];
-                    return json['priceListSettings'];
-                })
-                .then((data) => {
-                    const obj = this.clone(data);
-                    this.$watch('priceListSettings',
-                    function() {
-                        if (this.isDeepEqual(this.priceListSettings, obj)) {
-                            this.priceListSettings['updateFlag'] = false;
-                        }
-                        else {
-                            this.priceListSettings['updateFlag'] = true;
-                        }
-                    },
-                    { deep: true })
-                })
+            const response = 
+                fetch('/get_price_list_settings', { method: 'post' })
+                    .then(response => {
+                        return response.json();
+                    })
+                    .then(json => {
+                        this.priceListSettings = json['priceListSettings'];
+                        return json['priceListSettings'];
+                    })
+                    .then((data) => {
+                        const obj = this.clone(data);
+                        this.$watch('priceListSettings',
+                        function() {
+                            if (this.isDeepEqual(this.priceListSettings, obj)) {
+                                this.priceListSettings['updateFlag'] = false;
+                            }
+                            else {
+                                this.priceListSettings['updateFlag'] = true;
+                            }
+                        },
+                        { deep: true })
+                    })
+
+            return response;
         },
         getBookings() {
             const response = 
@@ -149,6 +169,39 @@ const vm = new Vue({
                 })
 
             return response;
+        },
+        getServerDate() {
+            const response = 
+                fetch('/get_server_date', { method: 'post' })
+                    .then(response => {
+                        return response.json();
+                    })
+                    .then(json => {
+                        const year = json['serverDate'].substr(0, 4);
+                        const month = json['serverDate'].substr(5, 2);
+                        const date = json['serverDate'].substr(8, 2);
+                        const serverDate = new Date(year, month - 1, date);
+
+                        this.serverDate = serverDate;
+                        return serverDate;
+                    })
+                
+            return response;
+        },
+        addRangeMonths(startDate) {
+            //expects startDate is a date object, returns array of date objects, one for each month including and between current date and end of future price list range
+            let rangeEndDate = new Date(+startDate);
+            rangeEndDate.setDate(startDate.getDate() + 7 * (this.priceListSettings['activePricesRange'] + this.priceListSettings['futurePricesRange']));
+
+            const rangeMonths = [];
+            const monthAmount = ((rangeEndDate.getMonth() + 1) - (startDate.getMonth() + 1)) + 1 + (12 * (rangeEndDate.getFullYear() - startDate.getFullYear()));
+            
+            for (let i = 0; i < monthAmount; i++) {
+                let month = new Date(startDate.getFullYear(), startDate.getMonth() + i);
+                rangeMonths.push(month);
+            }
+
+            this.rangeMonths = rangeMonths;
         },
         addPriceListSegment() {
             this.priceList.push({
@@ -254,6 +307,19 @@ const vm = new Vue({
                 'updateFlag': true,
                 'deleteFlag': false
             })
+        },
+        initMonthSwiper() {
+            const monthSwiper = new Swiper('.month-swiper', {
+                spaceBetween: 16
+            });   
+        },
+        segmentMonthFilter(segment, month, index) {
+            if (index === this.rangeMonths.length - 1) {
+                return (month <= new Date(segment['startDate']));
+            } 
+            else {
+                return (month <= new Date(segment['startDate']) && new Date(segment['startDate']) <= this.rangeMonths[index + 1]);
+            }
         },
         goToPriceList() {
             document.querySelector('.price-list').classList.remove('hidden');
@@ -389,7 +455,7 @@ const vm = new Vue({
             }
             return true;
         },
-        clone(obj){
+        clone(obj) {
             if(obj == null || typeof(obj) != 'object')
                 return obj;
         

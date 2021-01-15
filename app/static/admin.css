@@ -863,6 +863,9 @@ svg {
         }
 
 
+.month-tabs {
+    display: flex;
+}
 .bookings {
     background-color: rgb(246, 249, 250);
     z-index: 1;
