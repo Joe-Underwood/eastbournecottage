@@ -752,9 +752,6 @@ svg {
 /*----------- PRICE-LIST-EDITOR ----------------------------*/
 .page-content {
     background-color: rgb(246, 249, 250);
-    padding-left: 16px;
-    padding-right: 16px;
-    padding-bottom: 128px;
 }
 
 .price-list {
@@ -765,8 +762,63 @@ svg {
     display: none;
 }
 
+.hidden {
+    display: none !important;
+}
+
+    .price-list-header {
+        background-color: white;
+        display: block;
+        padding-left: 16px;
+        padding-right: 16px;
+        position: relative;
+        padding-top: 16px;
+    }
+
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+
+    .price-list-main {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+        .price-list-segments {
+            margin-top: 16px;
+            margin-bottom: 32px;
+        }
+
+            .price-list-segment {
+                margin-top: 8px;
+                display: flex;
+                width: 100%;
+                align-items: center;
+                height: 40px;
+                background-color: white;
+                box-shadow: 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.20);
+                padding-top: 16px;
+                padding-bottom: 8px;
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .segment-start-date {
+                min-width: 140px;
+                padding-right: 8px;
+            }
+        
+            .segment-price {
+                min-width:137px;
+                padding-right: 8px;
+            }
+
 .bookings {
     display: block;
+    padding-left: 16px;
+    padding-right: 16px;
 }
 
 .bookings.hidden {
@@ -775,6 +827,8 @@ svg {
 
 .customers {
     display: block;
+    padding-left: 16px;
+    padding-right: 16px;
 }
 
 .customers.hidden {
@@ -783,6 +837,8 @@ svg {
 
 .settings {
     display: block;
+    padding-left: 16px;
+    padding-right: 16px;
 }
 
 .settings.hidden {
@@ -804,29 +860,6 @@ svg {
 .update-flag {
     background-color: blue;
 }
-
-.price-list-segment {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    height: 40px;
-    background-color: white;
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.20);
-    padding-top: 16px;
-    padding-bottom: 8px;
-    padding-left: 16px;
-    padding-right: 16px;
-}
-
-    .segment-start-date {
-        min-width: 140px;
-        padding-right: 8px;
-    }
-
-    .segment-price {
-        min-width:137px;
-        padding-right: 8px;
-    }
 
 .tabs {
     position: fixed;
@@ -869,6 +902,10 @@ svg {
 
     .current-month-tab {
         background-color:rgb(113, 113, 113);
+    }
+
+    .header-date {
+        position: relative;
     }
     
 .bookings {

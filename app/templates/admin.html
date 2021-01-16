@@ -75,8 +75,8 @@
             <div class="customers-tab-outer" v-on:click="goToCustomers()">
                 <div class="customers-tab-inner">Customers</div>
             </div>
-            <div class="settings-tab-outer" v-on:click="goToSettings()">
-                <div class="settings-tab-inner">Settings</div>
+            <div class="settings-tab-outer">
+                <div class="settings-tab-inner">Calendar</div>
             </div>
         </div>
 
@@ -84,135 +84,107 @@
 
             <div class="price-list">
 
-                <template v-if="priceListMonthView && rangeMonths">
-                    <h1>Price List</h1>
-                    <div>Settings</div>
+                <div class="price-list-header">
+                    <div class="header-flex">
+                        <h1>Price List</h1>
+                        <button v-on:click="openPriceListSettings()">SETTINGS</button>
+                    </div>
+                    <button v-on:click="toggleMonthListView()">SWITCH VIEW</button>
 
-                    <template v-if="monthSwiper">
-                        <div class="month-tabs">
-                            <div class="tab" v-for="(month, index) in rangeMonths" v-on:click="monthSwiper.slideTo(index)">
-                                <% month.toLocaleString('default', { month: 'short' }) %> '<% month.getFullYear().toString().substr(-2) %>
-                                <template v-if="priceList.filter(segment => segmentMonthFilter(segment, month, index)).length > 0">
-                                    <div>*</div>
-                                </template>
-                            </div>
-                        </div>
-                    </template>
-                   
-                    <div class="swiper-container month-swiper">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide month" v-for="(month, index) in rangeMonths">
-                                <div class="header-date"><% month.toLocaleString('default', { month: 'long' }) %></div>
-                                <div class="price-list-segments">
-                                    <template v-if="priceList">
-                                        <div class="price-list-segment" v-for="segment in priceList.filter(segment => segmentMonthFilter(segment, month, index))">
-                                            <div class="segment-start-date"><% segment['startDate'] %></div>
-                                            <div class="segment-price"><% segment['price'] %></div>
-                                        </div>
+                    <div :class="{ hidden: !priceListMonthView }">
+                        <template v-if="monthSwiper">
+                            <div class="month-tabs">
+                                <div class="tab" v-for="(month, index) in rangeMonths" v-on:click="monthSwiper.slideTo(index)">
+                                    <% month.toLocaleString('default', { month: 'short' }) %>
+                                    <template v-if="priceList.filter(segment => segmentMonthFilter(segment, month, index)).length > 0">
+                                        <div>*</div>
                                     </template>
-                                    <template v-else>
-                                        <p>LOADING...</p>
-                                    </template>
-                                    <!---
-                                    <template v-if="activePriceList">
-                                        <div class="price-list-segment" v-for="segment in activePriceList" :class="{ 'update-flag': segment.updateFlag }">
-                                            <div class="segment-start-date"><% segment['startDate'] %></div>
-                                            <div class="segment-price"><% segment['price'] %></div>
-                                        </div>
-                                    </template>
-                                    <template v-else>
-                                        <p>LOADING...</p>
-                                    </template>-->
                                 </div>
                             </div>
-                        </div>
-                    </div> 
+                        </template>
+                    </div>
+                    
+                </div>
+
+                <div class="price-list-main">
+
+                    <div :class="{ hidden: !priceListMonthView }">
+    
+                        <template v-if="rangeMonths">
+            
+                            <div class="swiper-container month-swiper">
+                                <div class="swiper-wrapper">
+                                    <div class="swiper-slide month" v-for="(month, index) in rangeMonths">
+                                        <div class="price-list-segments">
+                                            <template v-if="priceList">
+                                                <div class="price-list-segment" v-for="segment in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :class="{ active: segment['isActive'], future: segment['isFuture'] }">
+                                                    <div class="segment-start-date"><% segment['startDate'] %></div>
+                                                    <div class="segment-price"><% segment['price'] %></div>
+                                                </div>
+                                            </template>
+                                            <template v-else>
+                                                <p>LOADING...</p>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                                        
+                        </template>
+                    </div>
+                    
+                    <div :class="{ hidden: priceListMonthView }">
                         
+                        <div class="price-list-segments">
+                            <template v-if="priceList">
+                                <div class="price-list-segment" v-for="segment in priceList" :class="{ active: segment['isActive'], future: segment['isFuture'] }">
+                                    <div class="segment-start-date"><% segment['startDate'] %></div>
+                                    <div class="segment-price"><% segment['price'] %></div>
+                                </div>
+                            </template>
+                            <template v-else>
+                                <p>LOADING...</p>
+                            </template>
+                        </div>
+        
                     </div>
-                </template>
 
-                <!--<div class="list-view">
-                    <template v-if="activePriceList">
-                        <div class="price-list-segment" v-for="segment in activePriceList" :class="{ 'update-flag': segment.updateFlag }">
-                            <div class="segment-start-date"><% segment['startDate'] %></div>
-                            <div class="segment-price"><% segment['price'] %></div>
-                        </div>
-                    </template>
-                    <template v-else>
-                        <p>LOADING...</p>
-                    </template>
+                    <button class="cards-add">+</button>
+                    <button class="cards-select">SELECT</button>
+                    <button class="cards-cancel hidden">CANCEL</button>
+                    <button class="cards-delete hidden">DELETE (<% cardSelection.length %>)</button>
                     
-                    
-                    <template v-if="activePriceList">
-                        <div class="price-list-segment" v-for="segment in activePriceList" :class="{ 'update-flag': segment.updateFlag }">
-                            <input type="date" v-model="segment['startDate']" />
-                            <input type="number" step="0.01" v-model="segment['price']" />
-                            <input type="number" step="0.01" v-model="segment['price2Weeks']" />
-                            <input type="number" step="0.01" v-model="segment['price3Weeks']" />
-                            <input type="number" step="0.01" v-model="segment['price4Weeks']" />
-                            <input type="checkbox" v-model="segment['deleteFlag']" />
+                </div>
+                
+            
+                    <!--
+                        
+                        
+                        <template v-if="activePriceList">
+                            <div class="price-list-segment" v-for="segment in activePriceList" :class="{ 'update-flag': segment.updateFlag }">
+                                <input type="date" v-model="segment['startDate']" />
+                                <input type="number" step="0.01" v-model="segment['price']" />
+                                <input type="number" step="0.01" v-model="segment['price2Weeks']" />
+                                <input type="number" step="0.01" v-model="segment['price3Weeks']" />
+                                <input type="number" step="0.01" v-model="segment['price4Weeks']" />
+                                <input type="checkbox" v-model="segment['deleteFlag']" />
+                            </div>
+                        </template>
+                        <template v-else>
+                            <p>LOADING...</p>
+                        </template>
+    
+                        
+                        <div class="price-list-controls">
+                            <button v-on:click="refreshPriceList()">REFRESH</button>
+                            <button v-on:click="addPriceListSegment()">ADD SEGMENT</button>
+                            <button v-on:click="setPriceList()">UPDATE PRICE LIST</button>
                         </div>
-                    </template>
-                    <template v-else>
-                        <p>LOADING...</p>
-                    </template>
-
-                    <template v-if="futurePriceList">
-                        <div class="price-list-segment future" v-for="segment in futurePriceList" :class="{ 'update-flag': segment.updateFlag }">
-                            <div class="segment-start-date"><% segment['startDate'] %></div>
-                            <div class="segment-price"><% segment['price'] %></div>
-                        </div>
-                    </template>
-                    <template v-else>
-                        <p>LOADING...</p>
-                    </template>
-                    
-                    <template v-if="futurePriceList">
-                        <div class="future-price-list-segment" v-for="segment in futurePriceList" :class="{ 'update-flag': segment.updateFlag }">
-                            <input type="date" v-model="segment['startDate']" />
-                            <input type="number" step="0.01" v-model="segment['price']" />
-                            <input type="number" step="0.01" v-model="segment['price2Weeks']" />
-                            <input type="number" step="0.01" v-model="segment['price3Weeks']" />
-                            <input type="number" step="0.01" v-model="segment['price4Weeks']" />
-                            <input type="checkbox" v-model="segment['deleteFlag']" />
-                        </div>
-                    </template>
-                    <template v-else>
-                        <p>LOADING...</p>
-                    </template>
-
-                    <template v-if="newPriceList">
-                        <div class="price-list-segment" v-for="segment in newPriceList" :class="{ 'update-flag': segment.updateFlag }">
-                            <div class="segment-start-date"><% segment['startDate'] %></div>
-                            <div class="segment-price"><% segment['price'] %></div>
-                        </div>
-                    </template>
-                    <template v-else>
-                        <p>LOADING...</p>
-                    </template>
-                    
-                    <template v-if="newPriceList">
-                        <div class="new-price-list-segment" v-for="segment in newPriceList" :class="{ 'update-flag': segment.updateFlag }">
-                            <input type="date" v-model="segment['startDate']" />
-                            <input type="number" step="0.01" v-model="segment['price']" />
-                            <input type="number" step="0.01" v-model="segment['price2Weeks']" />
-                            <input type="number" step="0.01" v-model="segment['price3Weeks']" />
-                            <input type="number" step="0.01" v-model="segment['price4Weeks']" />
-                            <input type="checkbox" v-model="segment['deleteFlag']" />
-                        </div>
-                    </template>
-                    <template v-else>
-                        <p>LOADING...</p>
-                    </template>-->
-                    
-                    <div class="price-list-controls">
-                        <button v-on:click="refreshPriceList()">REFRESH</button>
-                        <button v-on:click="addPriceListSegment()">ADD SEGMENT</button>
-                        <button v-on:click="setPriceList()">UPDATE PRICE LIST</button>
-                    </div>
-                </div>          
-  
+                    </div>    -->      
+      
+                </div>
             </div>
+                
 
             <div class="bookings hidden">
                 <h1>Bookings</h1>
@@ -398,6 +370,13 @@
     
             <div class="settings hidden">
                 <template v-if="priceListSettings">
+
+                    <div class="page-close-container" v-on:click="exitPriceListSettings()">
+                        <div class="page-close">
+                            <span v-for="i in 2"></span>
+                        </div>
+                    </div>
+
                     <label for="changeover-day">Changeover Day</label>
                     <select id="changeover-day" v-model="priceListSettings['defaultChangeoverDay']" name="changeover-day">
                         <option value="1">Monday</option>

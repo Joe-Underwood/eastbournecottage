@@ -8,14 +8,12 @@ const vm = new Vue({
 
         serverDate: null,
         priceListMonthView: true,
-        priceListMonth: null,
-        priceListListView: false,
         rangeMonths: null,
         cardSelect: false,
         cardSelection: [],
 
         monthSwiper: null,
-        monthTabGlider: null
+        monthTabGlider: null,
     },
     computed: {
         activePriceList: function() {
@@ -333,10 +331,21 @@ const vm = new Vue({
         initMonthTabGlider() {
             const monthTabGlider = new Glider(document.querySelector('.month-tabs'), {
                 slidesToShow: 4,
-                duration: 0.5,
+                duration: 2,
                 scrollLock: true
             })
             this.monthTabGlider = monthTabGlider;
+        },
+        toggleMonthListView() {
+            if (this.priceListMonthView) {
+                this.priceListMonthView = false;
+                this.monthSwiper.update();
+            }
+            else {
+                this.priceListMonthView = true;
+                this.initMonthTabGlider();
+                this.monthSwiper.update();
+            }
         },
         segmentMonthFilter(segment, month, index) {
             if (index === this.rangeMonths.length - 1) {
@@ -353,7 +362,18 @@ const vm = new Vue({
             document.querySelector('.settings').classList.add('hidden');
             //this.cardSelectOff();
         },
+        openPriceListSettings() {
+            document.querySelector('.price-list').classList.add('hidden');
+            document.querySelector('.bookings').classList.add('hidden');
+            document.querySelector('.customers').classList.add('hidden');
+            document.querySelector('.settings').classList.remove('hidden');
+            //this.cardSelectOff();
+        },
+        exitPriceListSettings() {
+            this.goToPriceList();
+        },
         goToBookings() {
+            
             document.querySelector('.price-list').classList.add('hidden');
             document.querySelector('.bookings').classList.remove('hidden');
             document.querySelector('.customers').classList.add('hidden');
@@ -368,11 +388,7 @@ const vm = new Vue({
             this.customerCardSelectOff();
         },
         goToSettings() {
-            document.querySelector('.price-list').classList.add('hidden');
-            document.querySelector('.bookings').classList.add('hidden');
-            document.querySelector('.customers').classList.add('hidden');
-            document.querySelector('.settings').classList.remove('hidden');
-            //this.cardSelectOff();
+            
         },
         bookingUpdate(booking, e) {
             booking['updateFlag'] = true;
