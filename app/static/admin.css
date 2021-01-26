@@ -142,7 +142,7 @@ label.invalid {
 }
 
 input {
-    height: 19px;
+    height: 40px;
     padding-left: 16px;
     border-radius: 4px;
     outline: none;
@@ -786,34 +786,78 @@ svg {
         padding-right: 16px;
     }
 
-        .price-list-segments {
+        .price-list-table {
             margin-top: 16px;
             margin-bottom: 32px;
+            padding-left: 126px;
         }
 
-            .price-list-segment {
+            .start-date-column {
+                position: absolute;
+                z-index: 5;
+                left: 0;
+            }
+
+            .price-table-column {
+                display: flex;
+                flex-direction: column;
+            }
+
+            /*.price-list-segment {
                 margin-top: 8px;
                 display: flex;
+                flex-direction: column;
                 width: 100%;
                 align-items: center;
-                height: 40px;
+                min-height: 48px;
+                height: 48px;
                 background-color: white;
                 box-shadow: 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.20);
-                padding-top: 16px;
-                padding-bottom: 8px;
+                padding-top: 0;
+                padding-bottom: 0;
                 padding-left: 16px;
                 padding-right: 16px;
             }
 
-            .segment-start-date {
-                min-width: 140px;
-                padding-right: 8px;
-            }
-        
-            .segment-price {
-                min-width:137px;
-                padding-right: 8px;
-            }
+                .price-list-segment.expand {
+                    height: auto;
+                }
+
+                .segment-card {
+                    display: flex;
+                    width: 100%;
+                    height: 100%;
+                    align-items: center;
+                }
+
+                .segment-expand {
+                    display: flex;
+                    flex-direction: column;
+                    max-width: 100%;
+                }
+
+                    .segment-expand-card {
+                        display: flex;
+                        width: 100%;
+                        height: 100%;
+                        align-items: center;
+                    }
+
+                        .segment-start-date {
+                            min-width: 140px;
+                            padding-right: 8px;
+                        }
+                    
+                        .segment-price {
+                            max-width: calc(100% - 180px);
+                            padding-right: 8px;
+                        }
+
+                        .segment-expand-button {
+                            width: 40px;
+                            height: 40px;
+                        }*/
+
 
 .bookings {
     display: block;

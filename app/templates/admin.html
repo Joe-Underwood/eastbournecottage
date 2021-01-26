@@ -115,12 +115,65 @@
                             <div class="swiper-container month-swiper">
                                 <div class="swiper-wrapper">
                                     <div class="swiper-slide month" v-for="(month, index) in rangeMonths">
-                                        <div class="price-list-segments">
+                                        <div class="price-list-table">
+                                            
                                             <template v-if="priceList">
-                                                <div class="price-list-segment" v-for="segment in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :class="{ active: segment['isActive'], future: segment['isFuture'] }">
-                                                    <div class="segment-start-date"><% segment['startDate'] %></div>
-                                                    <div class="segment-price"><% segment['price'] %></div>
+
+                                                <div class="start-date-column price-table-column">
+                                                    <div class="price-table-header">Start Date</div>
+                                                    <input class="segment-start-date" v-for="segment in priceList.filter(segment => segmentMonthFilter(segment, month, index))" type="date" v-model="segment['startDate']" />
                                                 </div>
+                                                
+                                                <div class="swiper-container price-table-swiper">
+                                                    <div class="swiper-wrapper">
+
+                                                        <div class="swiper-slide price-column price-table-column">
+                                                            <div class="price-table-header">Price</div>
+                                                            <input class="segment-price" v-for="segment in priceList.filter(segment => segmentMonthFilter(segment, month, index))" type="number" step="0.01" v-model="segment['price']" />
+                                                        </div>
+
+                                                        <div class="swiper-slide price-2-weeks-column price-table-column">
+                                                            <div class="price-table-header">2 Weeks</div>
+                                                            <input class="segment-price-2-weeks" v-for="segment in priceList.filter(segment => segmentMonthFilter(segment, month, index))" type="number" step="0.01" v-model="segment['price2Weeks']" />
+                                                        </div>
+
+                                                        <div class="swiper-slide price-3-weeks-column price-table-column">
+                                                            <div class="price-table-header">3 Weeks</div>
+                                                            <input class="segment-price-3-weeks" v-for="segment in priceList.filter(segment => segmentMonthFilter(segment, month, index))" type="number" step="0.01" v-model="segment['price3Weeks']" />
+                                                        </div>
+
+                                                        <div class="swiper-slide price-4-weeks-column price-table-column">
+                                                            <div class="price-table-header">4 Weeks</div>
+                                                            <input class="segment-price-4-weeks" v-for="segment in priceList.filter(segment => segmentMonthFilter(segment, month, index))" type="number" step="0.01" v-model="segment['price4Weeks']" />
+                                                        </div>
+
+                                                        <!--<div class="swiper-slide customer-column price-table-column">
+                                                            <div class="price-table-header">Customer</div>
+                                                            <div class="segment-customer"><% customers.filter(customer => {customer['id'] === bookings.filter(booking => {booking['id'] === priceList.filter(segment => segmentMonthFilter(segment, month, index))['bookingId']})['customerId']})['firstName'] %> <% customers.filter(customer => {customer['id'] === bookings.filter(booking => {booking['id'] === priceList.filter(segment => segmentMonthFilter(segment, month, index))['bookingId']})['customerId']})['lastName'] %></div>
+                                                        </div>-->
+
+                                                    </div>
+                                                </div>
+                                                <!--
+                                                <div class="price-list-headers price-list-segment">
+                                                    <div class="segment-start-date">Start Date</div>
+                                                    <div class="segment-price">Price</div>
+                                                    <div class="segment-price-2-weeks">2 Weeks</div>
+                                                    <div class="segment-price-3-weeks">3 Weeks</div>
+                                                    <div class="segment-price-4-weeks">4 Weeks</div>
+                                                    <div class="segment-customer">Customer</div>
+                                                </div>
+                                                <div class="price-list-segment" v-for="segment in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :class="{ active: segment['isActive'], future: segment['isFuture'] }">
+
+                                                    <input class="segment-start-date" type="date" v-model="segment['startDate']"/>
+                                                    <input class="segment-price" type="number" step="0.01" v-model="segment['price']" />
+                                                    <input class="segment-price-2-weeks" type="number" step="0.01" v-model="segment['price2Weeks']" />
+                                                    <input class="segment-price-3-weeks" type="number" step="0.01" v-model="segment['price3Weeks']" />
+                                                    <input class="segment-price-4-weeks" type="number" step="0.01" v-model="segment['price4Weeks']" />
+                                                    <div class="segment-customer"><% customers.filter(customer => {customer['id'] === bookings.filter(booking => {booking['id'] === segment['bookingId']})['customerId']})['firstName'] %> <% customers.filter(customer => {customer['id'] === bookings.filter(booking => {booking['id'] === segment['bookingId']})['customerId']})['lastName'] %></div>
+                                                    
+                                                </div>-->
+
                                             </template>
                                             <template v-else>
                                                 <p>LOADING...</p>
@@ -140,6 +193,13 @@
                                 <div class="price-list-segment" v-for="segment in priceList" :class="{ active: segment['isActive'], future: segment['isFuture'] }">
                                     <div class="segment-start-date"><% segment['startDate'] %></div>
                                     <div class="segment-price"><% segment['price'] %></div>
+                                    <div class="hidden">
+                                        <input type="date" v-model="segment['startDate']" />
+                                        <input type="number" step="0.01" v-model="segment['price']" />
+                                        <input type="number" step="0.01" v-model="segment['price2Weeks']" />
+                                        <input type="number" step="0.01" v-model="segment['price3Weeks']" />
+                                        <input type="number" step="0.01" v-model="segment['price4Weeks']" />
+                                    </div>
                                 </div>
                             </template>
                             <template v-else>
@@ -158,8 +218,6 @@
                 
             
                     <!--
-                        
-                        
                         <template v-if="activePriceList">
                             <div class="price-list-segment" v-for="segment in activePriceList" :class="{ 'update-flag': segment.updateFlag }">
                                 <input type="date" v-model="segment['startDate']" />

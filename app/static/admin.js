@@ -66,6 +66,7 @@ const vm = new Vue({
                 this.$nextTick(function() {
                     document.querySelector('.tab').classList.add('current-month-tab');
                     this.initMonthTabGlider();
+                    this.initPriceTableSwipers();
                 })
             })
     },
@@ -315,6 +316,7 @@ const vm = new Vue({
         initMonthSwiper() {
             const monthSwiper = new Swiper('.month-swiper', {
                 spaceBetween: 16,
+                allowTouchMove: false,
                 on: {
                     slideChange: function() {
                         document.querySelectorAll('.tab').forEach(tab => {
@@ -335,6 +337,14 @@ const vm = new Vue({
                 scrollLock: true
             })
             this.monthTabGlider = monthTabGlider;
+        },
+        initPriceTableSwipers() {
+            const swiperNodeList = document.querySelectorAll('.price-table-swiper');
+            for (node in swiperNodeList) {
+                new Swiper(swiperNodeList[node], {
+                    spaceBetween: 16
+                })
+            }
         },
         toggleMonthListView() {
             if (this.priceListMonthView) {
@@ -371,6 +381,23 @@ const vm = new Vue({
         },
         exitPriceListSettings() {
             this.goToPriceList();
+        },
+        segmentToggleExpand(e) {
+            function segmentNode(node) {
+                if (node.classList.contains('price-list-segment')) {
+                    return node;
+                }
+                else {
+                    return segmentNode(node.parentElement);
+                }
+            }
+
+            const segmentEl = segmentNode(e.target);
+            const segmentIndex = Array.from(document.querySelectorAll('.price-list-segment')).indexOf(segmentEl);
+
+            segmentEl.classList.toggle('expand');
+            document.querySelectorAll('.segment-card')[segmentIndex].classList.toggle('hidden');
+            document.querySelectorAll('.segment-expand')[segmentIndex].classList.toggle('hidden');
         },
         goToBookings() {
             
