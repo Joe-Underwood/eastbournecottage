@@ -803,6 +803,10 @@ svg {
                 flex-direction: column;
             }
 
+            .price-table-swiper {
+                padding-bottom: 30px;
+            }
+
             /*.price-list-segment {
                 margin-top: 8px;
                 display: flex;
