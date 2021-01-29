@@ -75,7 +75,8 @@ def get_price_list():
             'isActive': row.is_active,
             'isFuture': row.is_future,
             'updateFlag': False,
-            'deleteFlag': False
+            'deleteFlag': False,
+            'selectFlag': False
             }
         price_list.append(segment)
 
@@ -154,10 +155,13 @@ def set_price_list():
                 continue
             
             #check if booking_id needs to be set, or if there is an overlap with previously booked segment
+            
             if (query.filter(Price_List.start_date == start_date).first()):
                 #works
-                print('date already taken')
-                continue
+                if (not db_segment == query.filter(Price_List.start_date == start_date).first()):
+                    print('date already taken')
+                    continue
+                
             else:
                 prev_segment = base_query.filter(Price_List.start_date < start_date).order_by(Price_List.start_date.desc()).first()
                 if prev_segment: #may need to add some validation for updating existing segment
@@ -173,8 +177,8 @@ def set_price_list():
                             print('invalid, new segment date overlaps with preexisting booking')
                             continue
 
-            if (segment['id']):
-                query.filter(Price_List.id == segment['id']).update({
+            if (db_segment):
+                base_query.filter(Price_List.id == segment['id']).update({
                     Price_List.start_date: start_date,
                     Price_List.price: Decimal(segment['price']),
                     Price_List.price_2_weeks: Decimal(segment['price2Weeks']),

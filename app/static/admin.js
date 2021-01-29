@@ -224,7 +224,7 @@ const vm = new Vue({
                 'deleteFlag': false
             })
             const lastSegment = this.priceList[this.priceList.length - 1];
-            this.$watch(function() {
+            /*this.$watch(function() {
                 return lastSegment;
             },
             function() {
@@ -234,7 +234,7 @@ const vm = new Vue({
                 const date = lastSegment['startDate'].substr(8, 2);
                 const startDate = new Date(year, month - 1, date);
             },
-            { deep: true })
+            { deep: true })*/
         },
         setPriceListSettings() {
             fetch('/set_price_list_settings', {
@@ -374,14 +374,13 @@ const vm = new Vue({
             document.querySelector('.bookings').classList.add('hidden');
             document.querySelector('.customers').classList.add('hidden');
             document.querySelector('.settings').classList.add('hidden');
-            //this.cardSelectOff();
+            this.priceListSelectOff();
         },
         openPriceListSettings() {
             document.querySelector('.price-list').classList.add('hidden');
             document.querySelector('.bookings').classList.add('hidden');
             document.querySelector('.customers').classList.add('hidden');
             document.querySelector('.settings').classList.remove('hidden');
-            //this.cardSelectOff();
         },
         exitPriceListSettings() {
             this.goToPriceList();
@@ -548,6 +547,27 @@ const vm = new Vue({
                 return 'No customer';
             }
         },
+        priceListSelectOn() {
+            this.cardSelect = true;
+
+            document.querySelector('.price-list .cards-add').classList.add('hidden');
+            document.querySelector('.price-list .cards-select').classList.add('hidden');
+            document.querySelector('.price-list .cards-cancel').classList.remove('hidden');
+            document.querySelector('.price-list .cards-delete').classList.remove('hidden');
+
+        },
+        priceListSelectOff() {
+            this.cardSelect = false;
+            for (let i = 0; i < this.cardSelection.length; i++) {
+                this.cardSelection[i]['selectFlag'] = false;
+            }
+            this.cardSelection = [];
+
+            document.querySelector('.price-list .cards-add').classList.remove('hidden');
+            document.querySelector('.price-list .cards-select').classList.remove('hidden');
+            document.querySelector('.price-list .cards-cancel').classList.add('hidden');
+            document.querySelector('.price-list .cards-delete').classList.add('hidden');
+        },
         bookingCardSelectOn() {
             this.cardSelect = true;
 
@@ -602,6 +622,34 @@ const vm = new Vue({
             else {
                 this.goFullscreen(e);
             }
+        },
+        segmentSelect(segment) {
+            if (this.cardSelect) {
+                if (segment['selectFlag']) {
+                    segment['selectFlag'] = false;
+                    this.cardSelection.splice(this.cardSelection.indexOf(segment), 1);
+                } else {
+                    segment['selectFlag'] = true;
+                    this.cardSelection.push(segment)
+                }
+            }
+        },
+        priceListSelectionDelete() {
+            //prompt for user confirmation before deletion
+            for (let i = 0; i < this.cardSelection.length; i++) {
+                this.cardSelection[i]['deleteFlag'] = true;
+            }
+            this.setPriceList().then(success => {
+                if (success) {
+                    this.getPriceList();
+                    this.getBookings();
+                    this.getCustomers();
+                }
+                else {
+                    console.log('failed to delete bookings');
+                }
+            })
+            this.priceListSelectOff();
         },
         bookingSelectionDelete() {
             //prompt for user confirmation before deletion

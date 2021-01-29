@@ -807,6 +807,26 @@ svg {
                 padding-bottom: 30px;
             }
 
+                .segment-start-date.selected {
+                    background-color:blueviolet;
+                }
+
+                .segment-price.selected {
+                    background-color:blueviolet;
+                }
+
+                .segment-price-2-weeks.selected {
+                    background-color:blueviolet;
+                }
+
+                .segment-price-3-weeks.selected {
+                    background-color:blueviolet;
+                }
+
+                .segment-price-4-weeks.selected {
+                    background-color:blueviolet;
+                }
+
             /*.price-list-segment {
                 margin-top: 8px;
                 display: flex;
@@ -1061,11 +1081,7 @@ svg {
                     }
 
                     .page-close span:nth-child(1) {
-                        transform: translate3d(0, 9px, 0) rotate3d(0, 0, 1, 45deg);
-                    }
-
-                    .page-close span:nth-child(2) {
-                        transform: translate3d(0, 9px, 0) rotate3d(0, 0, 1, -45deg);
+                        :class="{ selected: segment['selectFlag'] }"   transform: translate3d(0, 9px, 0) rotate3d(0, 0, 1, -45deg);
                     }
 
 .customers {
@@ -1176,6 +1192,22 @@ svg {
 
         .cards-select.hidden {
             display: none;
+        }
+
+        .cards-select.shifted {
+            right: 80px;
+        }
+
+        .cards-update {
+            position: fixed;
+            bottom: 64px;
+            right: 16px;
+            background-color: rgb(15, 72, 117);
+            text-align: center;
+            color: rgb(246, 249, 250);
+            box-shadow: none;
+            border-radius: 4px;
+            z-index: 2;
         }
 
         .cards-cancel {

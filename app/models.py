@@ -71,7 +71,7 @@ class Price_List_Settings(db.Model):
 
 class Delete_Price_List(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    start_date = db.Column(db.Date, unique=True)
+    start_date = db.Column(db.Date)
     price = db.Column(db.Numeric(10,2))
     price_2_weeks = db.Column(db.Numeric(10, 2))
     price_3_weeks = db.Column(db.Numeric(10, 2))
