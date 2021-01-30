@@ -220,6 +220,7 @@ const vm = new Vue({
                 'isPast': false,
                 'isActive': false,
                 'isFuture': false,
+                'lockFlag': false,
                 'updateFlag': true,
                 'deleteFlag': false
             })
@@ -237,13 +238,22 @@ const vm = new Vue({
             { deep: true })*/
         },
         setPriceListSettings() {
-            fetch('/set_price_list_settings', {
-                method: 'post',
-                body: JSON.stringify(this.priceListSettings),
-                headers: new Headers({
-                    'content-type': 'application/json'
+            const response = 
+                fetch('/set_price_list_settings', {
+                    method: 'post',
+                    body: JSON.stringify(this.priceListSettings),
+                    headers: new Headers({
+                        'content-type': 'application/json'
+                    })
                 })
-            })
+                .then(response => {
+                    return response.json();
+                })
+                .then(json => {
+                    return json['success'];
+                })
+
+            return response;
         },
         setBookings() {
             const response =
@@ -350,17 +360,6 @@ const vm = new Vue({
                 })
             }
         },
-        toggleMonthListView() {
-            if (this.priceListMonthView) {
-                this.priceListMonthView = false;
-                this.monthSwiper.update();
-            }
-            else {
-                this.priceListMonthView = true;
-                this.initMonthTabGlider();
-                this.monthSwiper.update();
-            }
-        },
         segmentMonthFilter(segment, month, index) {
             if (index === this.rangeMonths.length - 1) {
                 return (month <= new Date(segment['startDate']));
@@ -377,12 +376,14 @@ const vm = new Vue({
             this.priceListSelectOff();
         },
         openPriceListSettings() {
+            document.querySelector('.tabs').classList.add('hidden');
             document.querySelector('.price-list').classList.add('hidden');
             document.querySelector('.bookings').classList.add('hidden');
             document.querySelector('.customers').classList.add('hidden');
             document.querySelector('.settings').classList.remove('hidden');
         },
         exitPriceListSettings() {
+            document.querySelector('.tabs').classList.add('remove');
             this.goToPriceList();
         },
         segmentToggleExpand(e) {
@@ -403,7 +404,6 @@ const vm = new Vue({
             document.querySelectorAll('.segment-expand')[segmentIndex].classList.toggle('hidden');
         },
         goToBookings() {
-            
             document.querySelector('.price-list').classList.add('hidden');
             document.querySelector('.bookings').classList.remove('hidden');
             document.querySelector('.customers').classList.add('hidden');
@@ -417,8 +417,10 @@ const vm = new Vue({
             document.querySelector('.settings').classList.add('hidden');
             this.customerCardSelectOff();
         },
-        goToSettings() {
-            
+        priceListSettingsUpdate() {
+            this.setPriceListSettings().then(success => {
+                this.getPriceList();
+            })
         },
         bookingUpdate(booking, e) {
             booking['updateFlag'] = true;

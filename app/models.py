@@ -27,6 +27,7 @@ class Price_List(db.Model):
     is_past = db.Column(db.Boolean, default=False)
     is_active = db.Column(db.Boolean, default=False)
     is_future = db.Column(db.Boolean, default=False)
+    lock_flag = db.Column(db.Boolean, default=False, nullable=False)
 
 class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -60,7 +60,7 @@ def get_active_price_list():
 @app.route('/get_price_list', methods=['POST'])
 def get_price_list():
     print('price_list_requested')
-    query = db.session.query(Price_List).order_by(Price_List.start_date.asc())
+    query = db.session.query(Price_List).filter(Price_List.is_past == False).order_by(Price_List.start_date.asc())
     price_list = []
     for row in query:
         segment = {
@@ -74,6 +74,7 @@ def get_price_list():
             'isPast': row.is_past,
             'isActive': row.is_active,
             'isFuture': row.is_future,
+            'lockFlag': row.lock_flag,
             'updateFlag': False,
             'deleteFlag': False,
             'selectFlag': False
@@ -86,7 +87,6 @@ def get_price_list():
 def set_price_list():
     json_request = request.get_json()
     base_query = db.session.query(Price_List)
-    query = base_query.order_by(Price_List.start_date.asc())
     price_list_settings = db.session.query(Price_List_Settings).first()
 
     for segment in json_request:
@@ -187,7 +187,8 @@ def set_price_list():
                     Price_List.booking_id: booking_id,
                     Price_List.is_past: is_past,
                     Price_List.is_active: is_active,
-                    Price_List.is_future: is_future
+                    Price_List.is_future: is_future,
+                    Price_List.lock_flag: segment['lockFlag']
                 },
                 synchronize_session = False
                 )
@@ -201,7 +202,8 @@ def set_price_list():
                     booking_id = booking_id,
                     is_past = is_past,
                     is_active = is_active,
-                    is_future = is_future
+                    is_future = is_future,
+                    lock_flag = segment['lockFlag']
                 )
                 db.session.add(new_segment)
     db.session.commit()
@@ -211,23 +213,31 @@ def set_price_list():
 @app.route('/set_price_list_settings', methods=['POST'])
 def set_price_list_settings():
     json_request = request.get_json()
-    query = db.session.query(Price_List_Settings)
+    query = db.session.query(Price_List_Settings).first()
     if (json_request['updateFlag']):
-        query.filter(Price_List_Settings.id == json_request['id']).update({
-            Price_List_Settings.discount_2_weeks: json_request['discount2Weeks'],
-            Price_List_Settings.discount_3_weeks: json_request['discount3Weeks'],
-            Price_List_Settings.discount_4_weeks: json_request['discount4Weeks'],
-            Price_List_Settings.active_prices_range: json_request['activePricesRange'],
-            Price_List_Settings.future_prices_range: json_request['futurePricesRange'],
-            Price_List_Settings.default_changeover_day: json_request['defaultChangeoverDay'],
-            Price_List_Settings.max_segment_length: json_request['maxSegmentLength'],
-            Price_List_Settings.price_per_dog: json_request['pricePerDog'],
-            Price_List_Settings.max_dogs: json_request['maxDogs'],
-            Price_List_Settings.max_infants: json_request['maxInfants'],
-            Price_List_Settings.max_guests: json_request['maxGuests']
-        },
-        synchronize_session = False
-        )
+        #insert validation here
+        query.discount_2_weeks = Decimal(json_request['discount2Weeks'])
+        query.discount_3_weeks = Decimal(json_request['discount3Weeks'])
+        query.discount_4_weeks = Decimal(json_request['discount4Weeks'])
+        query.active_prices_range = int(json_request['activePricesRange'])
+        query.future_prices_range = int(json_request['futurePricesRange'])
+        query.default_changeover_day = json_request['defaultChangeoverDay']
+        query.max_segment_length = json_request['maxSegmentLength']
+        query.price_per_dog = Decimal(json_request['pricePerDog'])
+        query.max_dogs = json_request['maxDogs']
+        query.max_infants = json_request['maxInfants']
+        query.max_guests = json_request['maxGuests']
+ 
+        price_list_query = db.session.query(Price_List)
+        for index, segment in enumerate(price_list_query):
+            if (not segment.lock_flag and not segment.is_past):
+                if (index + 2 < price_list_query.count()):
+                    segment.price_2_weeks = (segment.price + price_list_query[index + 1].price) * ((100 - Decimal(json_request['discount2Weeks'])) / 100)
+                if (index + 3 < price_list_query.count()):
+                    segment.price_3_weeks = (segment.price + price_list_query[index + 1].price + price_list_query[index + 2].price) * ((100 - Decimal(json_request['discount3Weeks'])) / 100)
+                if (index + 4 < price_list_query.count()):
+                    segment.price_4_weeks = (segment.price + price_list_query[index + 1].price + price_list_query[index + 2].price + price_list_query[index + 3].price) * ((100 - Decimal(json_request['discount4Weeks'])) / 100)
+                    
     db.session.commit()
     print('Price_List_Settings updated')
     return { 'success': True }

@@ -89,7 +89,6 @@
                         <h1>Price List</h1>
                         <button v-on:click="openPriceListSettings()">SETTINGS</button>
                     </div>
-                    <button v-on:click="toggleMonthListView()">SWITCH VIEW</button>
 
                     <div :class="{ hidden: !priceListMonthView }">
                         <template v-if="monthSwiper">
@@ -161,25 +160,7 @@
 
                                                     <div class="swiper-pagination"></div>
                                                 </div>
-                                                <!--
-                                                <div class="price-list-headers price-list-segment">
-                                                    <div class="segment-start-date">Start Date</div>
-                                                    <div class="segment-price">Price</div>
-                                                    <div class="segment-price-2-weeks">2 Weeks</div>
-                                                    <div class="segment-price-3-weeks">3 Weeks</div>
-                                                    <div class="segment-price-4-weeks">4 Weeks</div>
-                                                    <div class="segment-customer">Customer</div>
-                                                </div>
-                                                <div class="price-list-segment" v-for="segment in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :class="{ active: segment['isActive'], future: segment['isFuture'] }">
-
-                                                    <input class="segment-start-date" type="date" v-model="segment['startDate']"/>
-                                                    <input class="segment-price" type="number" step="0.01" v-model="segment['price']" />
-                                                    <input class="segment-price-2-weeks" type="number" step="0.01" v-model="segment['price2Weeks']" />
-                                                    <input class="segment-price-3-weeks" type="number" step="0.01" v-model="segment['price3Weeks']" />
-                                                    <input class="segment-price-4-weeks" type="number" step="0.01" v-model="segment['price4Weeks']" />
-                                                    <div class="segment-customer"><% customers.filter(customer => {customer['id'] === bookings.filter(booking => {booking['id'] === segment['bookingId']})['customerId']})['firstName'] %> <% customers.filter(customer => {customer['id'] === bookings.filter(booking => {booking['id'] === segment['bookingId']})['customerId']})['lastName'] %></div>
-                                                    
-                                                </div>-->
+                                    
 
                                             </template>
                                             <template v-else>
@@ -193,60 +174,14 @@
                         </template>
                     </div>
                     
-                    <div :class="{ hidden: priceListMonthView }">
-                        
-                        <div class="price-list-segments">
-                            <template v-if="priceList">
-                                <div class="price-list-segment" v-for="segment in priceList" :class="{ active: segment['isActive'], future: segment['isFuture'] }">
-                                    <div class="segment-start-date"><% segment['startDate'] %></div>
-                                    <div class="segment-price"><% segment['price'] %></div>
-                                    <div class="hidden">
-                                        <input type="date" v-model="segment['startDate']" />
-                                        <input type="number" step="0.01" v-model="segment['price']" />
-                                        <input type="number" step="0.01" v-model="segment['price2Weeks']" />
-                                        <input type="number" step="0.01" v-model="segment['price3Weeks']" />
-                                        <input type="number" step="0.01" v-model="segment['price4Weeks']" />
-                                    </div>
-                                </div>
-                            </template>
-                            <template v-else>
-                                <p>LOADING...</p>
-                            </template>
-                        </div>
-        
-                    </div>
-
+                  
                     <button class="cards-add" v-on:click="addPriceListSegment()">+</button>
                     <button class="cards-select shifted" v-on:click="priceListSelectOn()">SELECT</button>
                     <button class="cards-update" v-on:click="setPriceList()">UPDATE</button>
                     <button class="cards-cancel hidden" v-on:click="priceListSelectOff()">CANCEL</button>
                     <button class="cards-delete hidden" v-on:click="priceListSelectionDelete()">DELETE (<% cardSelection.length %>)</button>
                     
-                </div>
-                
-            
-                    <!--
-                        <template v-if="activePriceList">
-                            <div class="price-list-segment" v-for="segment in activePriceList" :class="{ 'update-flag': segment.updateFlag }">
-                                <input type="date" v-model="segment['startDate']" />
-                                <input type="number" step="0.01" v-model="segment['price']" />
-                                <input type="number" step="0.01" v-model="segment['price2Weeks']" />
-                                <input type="number" step="0.01" v-model="segment['price3Weeks']" />
-                                <input type="number" step="0.01" v-model="segment['price4Weeks']" />
-                                <input type="checkbox" v-model="segment['deleteFlag']" />
-                            </div>
-                        </template>
-                        <template v-else>
-                            <p>LOADING...</p>
-                        </template>
-    
-                        
-                        <div class="price-list-controls">
-                            <button v-on:click="refreshPriceList()">REFRESH</button>
-                            <button v-on:click="addPriceListSegment()">ADD SEGMENT</button>
-                            <button v-on:click="setPriceList()">UPDATE PRICE LIST</button>
-                        </div>
-                    </div>    -->      
+                </div>   
       
                 </div>
             </div>
@@ -484,11 +419,9 @@
                     <label for="max-guests">Max Guests</label>
                     <input id="max-guests" v-model="priceListSettings['maxGuests']" type="number" step="1" />
     
-                    <button v-on:click="adjustRanges()">ADJUST RANGES</button>
+                    <!--<button v-on:click="applyDiscounts()">APPLY DISCOUNTS</button>-->
     
-                    <button v-on:click="applyDiscounts()">APPLY DISCOUNTS</button>
-    
-                    <button v-on:click="setPriceListSettings()">UPDATE SETTINGS</button>
+                    <button class="page-update" v-on:click="priceListSettingsUpdate()">UPDATE SETTINGS</button>
                 </template>
                 <template v-else>
                     <p>LOADING...</p>
