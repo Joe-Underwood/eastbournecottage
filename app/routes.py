@@ -156,9 +156,9 @@ def set_price_list():
             
             #check if booking_id needs to be set, or if there is an overlap with previously booked segment
             
-            if (query.filter(Price_List.start_date == start_date).first()):
+            if (base_query.filter(Price_List.start_date == start_date).first()):
                 #works
-                if (not db_segment == query.filter(Price_List.start_date == start_date).first()):
+                if (not db_segment == base_query.filter(Price_List.start_date == start_date).first()):
                     print('date already taken')
                     continue
                 
@@ -229,6 +229,7 @@ def set_price_list_settings():
         query.max_guests = json_request['maxGuests']
  
         price_list_query = db.session.query(Price_List)
+        #apply discounts:
         for index, segment in enumerate(price_list_query):
             if (not segment.lock_flag and not segment.is_past):
                 if (index + 2 < price_list_query.count()):
@@ -238,6 +239,40 @@ def set_price_list_settings():
                 if (index + 4 < price_list_query.count()):
                     segment.price_4_weeks = (segment.price + price_list_query[index + 1].price + price_list_query[index + 2].price + price_list_query[index + 3].price) * ((100 - Decimal(json_request['discount4Weeks'])) / 100)
                     
+        #adjust ranges:
+        #currently performed when updating price list segments, this performs for all
+        activeEndDatetime = datetime.today() + timedelta(weeks = query.active_prices_range)
+        futureEndDatetime = activeEndDatetime + timedelta(weeks = query.future_prices_range)
+        for segment in price_list_query:
+            start_date = segment.start_date
+            segment.is_past = False
+            segment.is_active = False
+            segment.is_future = False
+            #check proper flag isActive, isFuture etc.
+            if (start_date < date.today()):
+                segment.is_past = True
+            elif (start_date < activeEndDatetime.date()):
+                segment.is_active = True
+            elif (start_date < futureEndDatetime.date()):
+                segment.is_future = True
+            else:
+                delete_segment = Delete_Price_List(
+                    start_date = segment.start_date,
+                    price = segment.price,
+                    price_2_weeks = segment.price_2_weeks,
+                    price_3_weeks = segment.price_3_weeks,
+                    price_4_weeks = segment.price_4_weeks,
+                    booking_id = segment.booking_id,
+                    is_past = False,
+                    is_active = False,
+                    is_future = False
+                )
+                db.session.add(delete_segment)
+                db.session.delete(segment)
+
+        #alter default changeover day:
+
+
     db.session.commit()
     print('Price_List_Settings updated')
     return { 'success': True }
@@ -610,3 +645,4 @@ def get_public_price_list_settings():
 @app.route('/get_server_date', methods=['POST'])
 def get_server_date():
     return { 'serverDate': date.today().isoformat() }
+

@@ -471,51 +471,6 @@ const vm = new Vue({
             })
             //if successful, delete from view/ refresh to show change
         },
-        /*
-        applyDiscounts() {
-            for (segment in this.priceList) {
-                if (segment['isActive']) {
-                    try {
-                        this.activePriceList[segment]['price2Weeks'] = `${ (((+this.activePriceList[segment]['price'] + +this.activePriceList[+segment + 1]['price']) * ((100 - +this.priceListSettings['discount2Weeks']) / 100))).toFixed(2) }`;
-                    }
-                    catch {
-                        this.activePriceList[segment]['price2Weeks'] = '0';
-                    }
-                    try {
-                        this.activePriceList[segment]['price3Weeks'] = `${ (((+this.activePriceList[segment]['price'] + +this.activePriceList[+segment + 1]['price'] + +this.activePriceList[+segment + 2]['price']) * ((100 - +this.priceListSettings['discount3Weeks']) / 100))).toFixed(2) }`;
-                    }    
-                    catch {
-                        this.activePriceList[segment]['price3Weeks'] = '0';
-                    }
-                    try {
-                        this.activePriceList[segment]['price4Weeks'] = `${ (((+this.activePriceList[segment]['price'] + +this.activePriceList[+segment + 1]['price'] + +this.activePriceList[+segment + 2]['price'] + +this.activePriceList[+segment + 3]['price']) * ((100 - +this.priceListSettings['discount4Weeks']) / 100))).toFixed(2) }`;
-                    }
-                    catch {
-                        this.activePriceList[segment]['price4Weeks'] = '0';
-                    }
-                }
-                else if (segment['isFuture']) {
-                    try {
-                        this.futurePriceList[segment]['price2Weeks'] = `${ (((+this.futurePriceList[segment]['price'] + +this.futurePriceList[+segment + 1]['price']) * ((100 - +this.priceListSettings['discount2Weeks']) / 100))).toFixed(2) }`;
-                    }
-                    catch {
-                        this.futurePriceList[segment]['price2Weeks'] = '0';
-                    }
-                    try {
-                        this.futurePriceList[segment]['price3Weeks'] = `${ (((+this.futurePriceList[segment]['price'] + +this.futurePriceList[+segment + 1]['price'] + +this.futurePriceList[+segment + 2]['price']) * ((100 - +this.priceListSettings['discount3Weeks']) / 100))).toFixed(2) }`;
-                    }    
-                    catch {
-                        this.futurePriceList[segment]['price3Weeks'] = '0';
-                    }
-                    try {
-                        this.futurePriceList[segment]['price4Weeks'] = `${ (((+this.futurePriceList[segment]['price'] + +this.futurePriceList[+segment + 1]['price'] + +this.futurePriceList[+segment + 2]['price'] + +this.futurePriceList[+segment + 3]['price']) * ((100 - +this.priceListSettings['discount4Weeks']) / 100))).toFixed(2) }`;
-                    }
-                    catch {
-                        this.futurePriceList[segment]['price4Weeks'] = '0';
-                    }
-                }
-            }
-        },*/
         isDeepEqual(obj1, obj2) {
             //assumes same object type
             if (Object.keys(obj1).length !== Object.keys(obj2).length) {
@@ -769,54 +724,8 @@ const vm = new Vue({
             if (booking['dogs'] < this.priceListSettings['maxDogs']) {
                 booking['dogs']++;
             }
-        }
-        //adjustRanges IS BUGGED, WILL CAUSE VUE INSTANCE TO NOT RENDER ON MOBILE DEVEICES ---- NEEDS INVESTIGATION (probably should be a server side function)
-        /*adjustRanges() {
-            this.refreshPriceList();
-            let rangeStartDate = new Date(this.activePriceList[0]['startDate']);
-            let rangeEndDate = rangeStartDate;
-            rangeEndDate.setDate(rangeStartDate.getDate() + 7 * +this.priceListSettings['activePricesRange']);
-
-            while (new Date(this.activePriceList[this.activePriceList.length - 1]['startDate']) < rangeEndDate) {
-                this.activePriceList.push(this.futurePriceList[0]);
-                this.futurePriceList.splice(0, 1);
-                
-                this.futurePriceList.push({
-                    'startDate': `${this.nextChangeoverDay(this.futurePriceList[this.futurePriceList.length - 1]['startDate']).toISOString().slice(0, 10)}`,
-                    'price': this.generatePrice(`${this.nextChangeoverDay(this.futurePriceList[this.futurePriceList.length - 1]['startDate']).toISOString().slice(0, 10)}`),
-                    'price2Weeks': '0.00',
-                    'price3Weeks': '0.00',
-                    'price4Weeks': '0.00',
-                    'booked': false
-                })  
-            }
-
-            while (new Date(this.activePriceList[this.activePriceList.length - 1]['startDate']) > rangeEndDate) {
-                this.futurePriceList.unshift(this.activePriceList[this.activePriceList.length - 1]);
-                this.futurePriceList.pop();
-                this.activePriceList.pop();
-            }
-            
-            let futureRangeStartDate = new Date(this.futurePriceList[0]['startDate']);
-            let futureRangeEndDate = futureRangeStartDate;
-            futureRangeEndDate.setDate(rangeStartDate.getDate() + 7 * +this.getPriceListSettings['futurePricesRange']);
-
-            while (new Date(this.futurePriceList[this.futurePriceList.length - 1]['startDate']) < futureRangeEndDate) {
-                this.futurePriceList.push({
-                    'startDate': `${this.nextChangeoverDay(this.futurePriceList[this.futurePriceList.length - 1]['startDate']).toISOString().slice(0, 10)}`,
-                    'price': this.generatePrice(`${this.nextChangeoverDay(this.futurePriceList[this.futurePriceList.length - 1]['startDate']).toISOString().slice(0, 10)}`),
-                    'price2Weeks': '0.00',
-                    'price3Weeks': '0.00',
-                    'price4Weeks': '0.00',
-                    'booked': false
-                })
-            }
-
-            while (new Date(this.futurePriceList[this.futurePriceList.length - 1]['startDate']) > futureRangeEndDate) {
-                this.futurePriceList.pop();
-            }
-            this.applyDiscounts();
         },
+        /*
         nextChangeoverDay(dateString, weekOffset=0) {
             let date = new Date(dateString);
             if (date.getDay() === +this.priceListSettings['defaultChangeoverDay']) {
