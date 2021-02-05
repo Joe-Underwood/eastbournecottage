@@ -14,7 +14,7 @@
 <body>
     <div id="root">
         <!--=============  NAVIGATION  ================-->
-        <nav class="navbar">
+       <!-- <nav class="navbar">
 
             <div class="navbar-inner">
                 <div class="navbar-left">
@@ -49,7 +49,7 @@
                 </div>
             </div>
             
-        </nav>
+        </nav>-->
 
         <div ref="sideMenu" class="side-menu" v-on:touchstart="menuTouchstart($event)" v-on:touchmove="menuTouchmove($event)" v-on:touchend="menuTouchend($event)">
             <div class="nav-links">
@@ -120,35 +120,35 @@
 
                                                 <div class="start-date-column price-table-column">
                                                     <div class="price-table-header">Start Date</div>
-                                                    <input class="segment-start-date" v-for="segment in priceList.filter(segment => segmentMonthFilter(segment, month, index))" type="date" v-model="segment['startDate']" v-on:click="segmentSelect(segment, $event)" :class="{ selected: segment['selectFlag'] }"/>
-                                                    <input class="segment-start-date" v-for="segment in priceList.filter(segment => !segment['startDate'])" type="date" v-model="segment['startDate']" v-on:click="segmentSelect(segment, $event)" :class="{ selected: segment['selectFlag'] }"/>
+                                                    <input class="segment-start-date" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" type="date" v-model="segment['startDate']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]"/>
+                                                    <input class="segment-start-date" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" type="date" v-model="segment['startDate']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]"/>
                                                 </div>
                                                 
                                                 <div class="swiper-container price-table-swiper">
                                                     <div class="swiper-wrapper">
 
                                                         <div class="swiper-slide price-column price-table-column">
-                                                            <div class="price-table-header">Price</div>
-                                                            <input class="segment-price" v-for="segment in priceList.filter(segment => segmentMonthFilter(segment, month, index))" type="number" step="0.01" v-model="segment['price']" v-on:click="segmentSelect(segment, $event)" :class="{ selected: segment['selectFlag'] }"/>
-                                                            <input class="segment-price" v-for="segment in priceList.filter(segment => !segment['startDate'])" type="number" step="0.01" v-model="segment['price']" v-on:click="segmentSelect(segment, $event)" :class="{ selected: segment['selectFlag'] }"/>
+                                                            <div class="price-table-header">Price / £</div>
+                                                            <input class="segment-price" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" type="number" step="0.01" v-model="segment['price']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]"/>
+                                                            <input class="segment-price" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" type="number" step="0.01" v-model="segment['price']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]"/>
                                                         </div>
 
                                                         <div class="swiper-slide price-2-weeks-column price-table-column">
-                                                            <div class="price-table-header">2 Weeks</div>
-                                                            <input class="segment-price-2-weeks" v-for="segment in priceList.filter(segment => segmentMonthFilter(segment, month, index))" type="number" step="0.01" v-model="segment['price2Weeks']" v-on:click="segmentSelect(segment, $event)" :class="{ selected: segment['selectFlag'] }"/>
-                                                            <input class="segment-price-2-weeks" v-for="segment in priceList.filter(segment => !segment['startDate'])" type="number" step="0.01" v-model="segment['price2Weeks']" v-on:click="segmentSelect(segment, $event)" :class="{ selected: segment['selectFlag'] }"/>
+                                                            <div class="price-table-header">2 Weeks / £</div>
+                                                            <input class="segment-price-2-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" type="number" step="0.01" v-model="segment['price2Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]"/>
+                                                            <input class="segment-price-2-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" type="number" step="0.01" v-model="segment['price2Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]"/>
                                                         </div>
 
                                                         <div class="swiper-slide price-3-weeks-column price-table-column">
-                                                            <div class="price-table-header">3 Weeks</div>
-                                                            <input class="segment-price-3-weeks" v-for="segment in priceList.filter(segment => segmentMonthFilter(segment, month, index))" type="number" step="0.01" v-model="segment['price3Weeks']" v-on:click="segmentSelect(segment, $event)" :class="{ selected: segment['selectFlag'] }"/>
-                                                            <input class="segment-price-3-weeks" v-for="segment in priceList.filter(segment => !segment['startDate'])" type="number" step="0.01" v-model="segment['price3Weeks']" v-on:click="segmentSelect(segment, $event)" :class="{ selected: segment['selectFlag'] }"/>
+                                                            <div class="price-table-header">3 Weeks / £</div>
+                                                            <input class="segment-price-3-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" type="number" step="0.01" v-model="segment['price3Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]"/>
+                                                            <input class="segment-price-3-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" type="number" step="0.01" v-model="segment['price3Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]"/>
                                                         </div>
 
                                                         <div class="swiper-slide price-4-weeks-column price-table-column">
-                                                            <div class="price-table-header">4 Weeks</div>
-                                                            <input class="segment-price-4-weeks" v-for="segment in priceList.filter(segment => segmentMonthFilter(segment, month, index))" type="number" step="0.01" v-model="segment['price4Weeks']" v-on:click="segmentSelect(segment, $event)" :class="{ selected: segment['selectFlag'] }"/>
-                                                            <input class="segment-price-4-weeks" v-for="segment in priceList.filter(segment => !segment['startDate'])" type="number" step="0.01" v-model="segment['price4Weeks']" v-on:click="segmentSelect(segment, $event)" :class="{ selected: segment['selectFlag'] }"/>
+                                                            <div class="price-table-header">4 Weeks / £</div>
+                                                            <input class="segment-price-4-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" type="number" step="0.01" v-model="segment['price4Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]"/>
+                                                            <input class="segment-price-4-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" type="number" step="0.01" v-model="segment['price4Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]"/>
                                                         </div>
 
                                                         <!--<div class="swiper-slide customer-column price-table-column">
@@ -174,7 +174,7 @@
                         </template>
                     </div>
                     
-                  
+                    <div class="buttons-space"></div>
                     <button class="cards-add" v-on:click="addPriceListSegment()">+</button>
                     <button class="cards-select shifted" v-on:click="priceListSelectOn()">SELECT</button>
                     <button class="cards-update" v-on:click="setPriceList()">UPDATE</button>

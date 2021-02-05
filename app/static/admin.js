@@ -352,7 +352,7 @@ const vm = new Vue({
             const swiperNodeList = document.querySelectorAll('.price-table-swiper');
             for (node in swiperNodeList) {
                 new Swiper(swiperNodeList[node], {
-                    spaceBetween: 16,
+                    spaceBetween: 0,
                     pagination: {
                         el: document.querySelectorAll('.swiper-pagination')[node],
                         type: 'bullets',
