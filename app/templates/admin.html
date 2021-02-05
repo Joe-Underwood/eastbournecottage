@@ -94,9 +94,9 @@
                         <template v-if="monthSwiper">
                             <div class="month-tabs">
                                 <div class="tab" v-for="(month, index) in rangeMonths" v-on:click="monthSwiper.slideTo(index)">
-                                    <% month.toLocaleString('default', { month: 'short' }) %>
+                                    <div class="month-text"><% month.toLocaleString('default', { month: 'short' }) %><br><% month.getFullYear().toString() %></div>
                                     <template v-if="priceList.filter(segment => segmentMonthFilter(segment, month, index)).length > 0">
-                                        <div>*</div>
+                                        <div class="month-has-data">&#8226;</div>
                                     </template>
                                 </div>
                             </div>

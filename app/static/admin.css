@@ -41,6 +41,10 @@
     text-rendering: optimizeLegibility;
 }
 
+:root {
+    --swiper-theme-color: rgb(226, 138, 12) !important;
+}
+
 html, 
 body,
 #root {
@@ -60,11 +64,13 @@ button {
     font-size: 12px;
     line-height: 100%;
     font-weight: 700;
-    height: 36px;
+    height: 40px;
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20); 
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.2s;
+    padding-left: 12px;
+    padding-right: 12px;
 }
 
 button:active {
@@ -758,7 +764,7 @@ svg {
     width: 100%;
     position: relative;
     display: block;
-    padding-bottom: 96px;
+    padding-bottom: 104px;
 }
 
 .price-list {
@@ -785,17 +791,18 @@ svg {
         .header-flex {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 40px;
+            margin-bottom: 16px;
         }
 
     .price-list-main {
         padding-left: 16px;
         padding-right: 16px;
+        box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.20);
     }
 
         .price-list-table {
             margin-top: 16px;
-            padding-left: 126px;
+            padding-left: 125px;
         }
 
             .price-list-table input {
@@ -822,14 +829,35 @@ svg {
                 position: absolute;
                 z-index: 5;
                 left: 0;
-                /*box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20);*/
                 box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.20);
+                border-top-left-radius: 4px;
+                border-bottom-left-radius: 4px;
             }
+
+                .start-date-column .price-table-header {
+                    border-top-left-radius: 4px;
+                }
+
+                .start-date-column input {
+                    border-left: 1px solid #a5c2cf;
+                }
+
+                .start-date-column input:last-child {
+                    border-bottom-left-radius: 4px;
+                }
 
             .price-table-column {
                 display: flex;
                 flex-direction: column;
             }
+
+                .price-table-column:last-child input:last-child {
+                    border-bottom-right-radius: 4px;
+                }
+
+                .price-table-column:last-child input {
+                    border-right: 1px solid #a5c2cf;
+                }
 
             .price-table-header {
                 background-color: rgb(15, 72, 117);
@@ -838,6 +866,10 @@ svg {
                 line-height: 40px;
                 padding-left: 16px;
             }
+
+                .price-table-column:last-child .price-table-header {
+                    border-top-right-radius: 4px;
+                }
 
             .price-table-swiper {
                 padding-bottom: 30px;
@@ -950,12 +982,32 @@ svg {
 
 
 .month-tabs {
-    height: 48px;
 }
 
     .current-month-tab {
-        background-color:rgb(113, 113, 113);
+        box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.20);
+        z-index: 5;
+        background-color: rgb(246, 249, 250);
+        border-top: 2px solid rgb(15, 72, 117);
     }
+
+    .month-tabs .tab {
+        height: 56px !important;
+        font-size: 12px;
+        padding-top: 4px;
+    }
+
+        .month-tabs .tab .month-text {
+            font-size: 12px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .month-has-data {
+            text-align:center;
+            font-size: 12px;
+        }
+        
 
     .header-date {
         position: relative;
@@ -1182,7 +1234,7 @@ svg {
         }
 
         .cards-select.shifted {
-            right: 80px;
+            right: 104px;
         }
 
         .cards-update {

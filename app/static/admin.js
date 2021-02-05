@@ -580,8 +580,10 @@ const vm = new Vue({
                 this.goFullscreen(e);
             }
         },
-        segmentSelect(segment) {
+        segmentSelect(segment, e) {
             if (this.cardSelect) {
+                e.preventDefault();
+                e.stopPropagation();
                 if (segment['selectFlag']) {
                     segment['selectFlag'] = false;
                     this.cardSelection.splice(this.cardSelection.indexOf(segment), 1);
