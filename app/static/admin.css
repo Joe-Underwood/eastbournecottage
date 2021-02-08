@@ -45,6 +45,14 @@
     --swiper-theme-color: rgb(226, 138, 12) !important;
 }
 
+body {
+    overflow-x:hidden;
+}
+
+.settings {
+    width: 100%;
+    overflow-x: hidden;
+}
 html, 
 body,
 #root {
@@ -115,7 +123,7 @@ ul {
 label {
     font-size: 12px;
     color: rgb(113, 113, 113);
-    position: relative;
+    position: absolute;
     display: block;
     padding-left: 16px;
     padding-top: 8px;
@@ -133,6 +141,47 @@ label.invalid {
     color: red;
 }
 
+.settings-price-settings {
+    background-color: white;
+    border: 1px solid #a5c2cf;
+    border-radius: 4px;
+    margin-bottom: 16px;
+}
+
+.settings label {
+    position: relative;
+    padding-top: 0;
+
+}
+
+.settings-input-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items:center;
+    transition: all 0.2s;
+    position: relative;
+    z-index: 0;
+    border-bottom: 1px solid #a5c2cf;
+    height: 56px;
+}
+
+    .settings-input-container:last-child {
+        border-bottom: none;
+    }
+
+.settings input {
+    border: none;
+    text-align: right;
+    padding-right: 16px;
+}
+
+.settings select {
+    border: none;
+    text-align: right;
+    padding-right: 16px;
+}
+
 .input-container {
     margin-bottom: 16px;
     display: flex;
@@ -144,6 +193,10 @@ label.invalid {
 
 .input-container.focused {
     z-index: 1;
+}
+
+.party-input-container label {
+    padding-top: 8px;
 }
 
 input {
@@ -876,28 +929,27 @@ svg {
             }
 
                 .segment-start-date.selected {
-                    background-color:blueviolet;
+                    background-color: rgba(226, 138, 12, 0.5);
                 }
 
                 .segment-price.selected {
-                    background-color:blueviolet;
+                    background-color: rgba(226, 138, 12, 0.5);
                 }
 
                 .segment-price-2-weeks.selected {
-                    background-color:blueviolet;
+                    background-color: rgba(226, 138, 12, 0.5);
                 }
 
                 .segment-price-3-weeks.selected {
-                    background-color:blueviolet;
+                    background-color: rgba(226, 138, 12, 0.5);
                 }
 
                 .segment-price-4-weeks.selected {
-                    background-color:blueviolet;
+                    background-color: rgba(226, 138, 12, 0.5);
                 }
         
 
 .page {
-    overflow: auto;
 }
 
 .bookings {
@@ -924,6 +976,7 @@ svg {
     display: block;
     padding-left: 16px;
     padding-right: 16px;
+    padding-bottom: 56px;
 }
 
 .settings.hidden {
@@ -1027,7 +1080,7 @@ svg {
         .booking .card {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
             background-color: white;
             z-index: 1;
             position: relative;
@@ -1041,31 +1094,36 @@ svg {
             width: 100%;
         }
 
-            .customer-id {
+            .booking .card div {
+                
+            }
+
+            .arrival-date {
                 grid-column: 1 / span 1;
                 grid-row: 1 / span 1;
+                font-size: 16px;
+                color: rgb(226, 138, 12);
+            }
+
+            .departure-date {
+                grid-column: 2 / span 1;
+                grid-row: 1 / span 1;
+                font-size: 16px;
+            }
+
+            .customer-id {
+                grid-column: 1 / span 1;
+                grid-row: 2 / span 1;
                 font-size: 14px;
             }
 
             .guests-total {
                 grid-column: 2 / span 1;
-                grid-row: 1 / span 1;
-                font-size: 14px;
-            }
-
-            .arrival-date {
-                grid-column: 1 / span 1;
                 grid-row: 2 / span 1;
                 font-size: 14px;
             }
 
-            .departure-date {
-                grid-column: 2 / span 1;
-                grid-row: 2 / span 1;
-                font-size: 14px;
-            }
-
-            .price {
+            /*.price {
                 grid-column: 1 / span 1;
                 grid-row: 3 / span 1;
                 font-size: 14px;
@@ -1075,7 +1133,7 @@ svg {
                 grid-column: 2 / span 1;
                 grid-row: 3 / span 1;
                 font-size: 14px;
-            }
+            }*/
 
         .booking .page {
             display: none;
@@ -1155,7 +1213,8 @@ svg {
             .customer-name {
                 grid-column: 1 / span 1;
                 grid-row: 1 / span 1;
-                font-size: 14px;
+                font-size: 16px;
+                color: rgb(226, 138, 12);
             }
 
             .customer-email-address {
@@ -1172,7 +1231,7 @@ svg {
 
             .customer-address {
                 grid-column: 2 / span 1;
-                grid-row: 1 / span 3;
+                grid-row: 2 / span 2;
                 font-size: 12px;
             }
 

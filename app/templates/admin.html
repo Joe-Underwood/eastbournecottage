@@ -82,6 +82,116 @@
 
         <div class="page-content">
 
+            <div class="settings hidden">
+                <template v-if="priceListSettings">
+
+                    <div class="page-close-container" v-on:click="goToPriceList()">
+                        <div class="page-close">
+                            <span v-for="i in 2"></span>
+                        </div>
+                    </div>
+
+                    <h4>Prices</h4>
+                    <div class="settings-price-settings">
+                        <div class="settings-input-container">
+                            <label for="discount-2-weeks">2 Weeks Discount / %</label>
+                            <input id="discount-2-weeks" v-model="priceListSettings['discount2Weeks']" type="number" step="0.01" />
+                        </div>
+                        
+                        <div class="settings-input-container">
+                            <label for="discount-3-weeks">3 Weeks Discount / %</label>
+                            <input id="discount-3-weeks" v-model="priceListSettings['discount3Weeks']" type="number" step="0.01" />
+                        </div>
+                        
+                        <div class="settings-input-container">
+                            <label for="discount-4-weeks">4 Weeks Discount / %</label>
+                            <input id="discount-4-weeks" v-model="priceListSettings['discount4Weeks']" type="number" step="0.01" />
+                        </div>
+
+                        <div class="settings-input-container">
+                            <label for="price-per-dog">Price per Dog / £</label>
+                            <input id="price-per-dog" v-model="priceListSettings['pricePerDog']" type="number" step="0.01" />
+                        </div>
+                    </div>
+
+                    
+                    <h4>Guests</h4>
+                    <div class="settings-price-settings">
+                        <div class="party-container">
+                            <div class="party-input-container">
+    
+                                <label for="max-guests"><h5>Max Guests</h5>Adults + children</label>
+    
+                                <div class="party-input" class="max-guests">
+                                    <button type="button" v-on:click="maxGuestsDecrease($event)" class="party-decrease" :class="{ inactive: priceListSettings['maxGuests'] === 0 }">-</button>
+                                    <div :class="{ inactive: priceListSettings['maxGuests'] === 0 }">&#60;% priceListSettings['maxGuests'] %></div>
+                                    <button type="button" v-on:click="maxGuestsIncrease($event)" class="party-increase">+</button>
+                                </div>
+                            </div>
+        
+                            <div class="party-input-container">
+                                <label for="max-infants"><h5>Max Infants</h5>Under 2</label>
+                                <div class="party-input" class="max-infants">
+                                    <button type="button" v-on:click="maxInfantsDecrease($event)" class="party-decrease" :class="{ inactive: priceListSettings['maxInfants'] === 0 }">-</button>
+                                    <div :class="{ inactive: priceListSettings['maxInfants'] === 0 }">&#60;% priceListSettings['maxInfants'] %></div>
+                                    <button type="button" v-on:click="maxInfantsIncrease($event)" class="party-increase">+</button>
+                                </div>
+                            </div>
+        
+                            <div class="party-input-container">
+                                <label for="max-dogs"><h5>Max Dogs</h5></label>
+                                <div class="party-input" class="max-dogs">
+                                    <button type="button" v-on:click="maxDogsDecrease($event)" class="party-decrease" :class="{ inactive: priceListSettings['maxDogs'] === 0 }">-</button>
+                                    <div :class="{ inactive: priceListSettings['maxDogs'] === 0 }">&#60;% priceListSettings['maxDogs'] %></div>
+                                    <button type="button" v-on:click="maxDogsIncrease($event)" class="party-increase">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h4>Dates</h4>
+                    <div class="settings-price-settings">
+                        <div class="settings-input-container">
+                            <label for="changeover-day">Default Changeover Day</label>
+                            <select id="changeover-day" v-model="priceListSettings['defaultChangeoverDay']" name="changeover-day">
+                                <option value="1">Monday</option>
+                                <option value="2">Tuesday</option>
+                                <option value="3">Wednesday</option>
+                                <option value="4">Thursday</option>
+                                <option value="5">Friday</option>
+                                <option value="6">Saturday</option>
+                                <option value="0">Sunday</option>
+                            </select>
+                        </div>
+    
+                        <div class="settings-input-container">
+                            <label for="active-prices-range">Active Prices Range / Days</label>
+                            <input id="price-list-range" v-model="priceListSettings['activePricesRange']" type="number" />
+                        </div>
+        
+                        <div class="settings-input-container">
+                            <label for="future-prices-range">Future Prices Range / Days</label>
+                            <input id="future-prices-range" v-model="priceListSettings['futurePricesRange']" type="number" />
+                        </div>
+                        
+                        <div class="settings-input-container">
+                            <label for="max-segment-length">Max Segment Length / Days</label>
+                            <input id="max-segment-length" v-model="priceListSettings['maxSegmentLength']" type="number" step="1" />
+                        </div>
+                    </div>
+                    
+
+                    
+
+                    <button class="page-update" v-on:click="priceListSettingsUpdate()">UPDATE SETTINGS</button>
+
+                </template>
+                <template v-else>
+                    <p>LOADING...</p>
+                </template>
+                
+            </div>
+
             <div class="price-list">
 
                 <div class="price-list-header">
@@ -91,9 +201,9 @@
                     </div>
 
                     <div :class="{ hidden: !priceListMonthView }">
-                        <template v-if="monthSwiper">
+                        <template v-if="monthSwiper && !monthTabsRefresh">
                             <div class="month-tabs">
-                                <div class="tab" v-for="(month, index) in rangeMonths" v-on:click="monthSwiper.slideTo(index)">
+                                <div class="tab" v-for="(month, index) in rangeMonths" :key="month.toString()" v-on:click="monthSwiper.slideTo(index)">
                                     <div class="month-text"><% month.toLocaleString('default', { month: 'short' }) %><br><% month.getFullYear().toString() %></div>
                                     <template v-if="priceList.filter(segment => segmentMonthFilter(segment, month, index)).length > 0">
                                         <div class="month-has-data">&#8226;</div>
@@ -113,15 +223,15 @@
             
                             <div class="swiper-container month-swiper">
                                 <div class="swiper-wrapper">
-                                    <div class="swiper-slide month" v-for="(month, index) in rangeMonths">
+                                    <div class="swiper-slide month" v-for="(month, index) in rangeMonths" :key="month.toString()">
                                         <div class="price-list-table">
                                             
                                             <template v-if="priceList">
 
                                                 <div class="start-date-column price-table-column">
                                                     <div class="price-table-header">Start Date</div>
-                                                    <input class="segment-start-date" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" type="date" v-model="segment['startDate']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]"/>
-                                                    <input class="segment-start-date" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" type="date" v-model="segment['startDate']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]"/>
+                                                    <input class="segment-start-date" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="date" v-model="segment['startDate']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
+                                                    <input class="segment-start-date" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="date" v-model="segment['startDate']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
                                                 </div>
                                                 
                                                 <div class="swiper-container price-table-swiper">
@@ -129,26 +239,26 @@
 
                                                         <div class="swiper-slide price-column price-table-column">
                                                             <div class="price-table-header">Price / £</div>
-                                                            <input class="segment-price" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" type="number" step="0.01" v-model="segment['price']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]"/>
-                                                            <input class="segment-price" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" type="number" step="0.01" v-model="segment['price']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]"/>
+                                                            <input class="segment-price" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['price']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
+                                                            <input class="segment-price" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['price']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
                                                         </div>
 
                                                         <div class="swiper-slide price-2-weeks-column price-table-column">
                                                             <div class="price-table-header">2 Weeks / £</div>
-                                                            <input class="segment-price-2-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" type="number" step="0.01" v-model="segment['price2Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]"/>
-                                                            <input class="segment-price-2-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" type="number" step="0.01" v-model="segment['price2Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]"/>
+                                                            <input class="segment-price-2-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['price2Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
+                                                            <input class="segment-price-2-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['price2Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
                                                         </div>
 
                                                         <div class="swiper-slide price-3-weeks-column price-table-column">
                                                             <div class="price-table-header">3 Weeks / £</div>
-                                                            <input class="segment-price-3-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" type="number" step="0.01" v-model="segment['price3Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]"/>
-                                                            <input class="segment-price-3-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" type="number" step="0.01" v-model="segment['price3Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]"/>
+                                                            <input class="segment-price-3-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['price3Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
+                                                            <input class="segment-price-3-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['price3Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
                                                         </div>
 
                                                         <div class="swiper-slide price-4-weeks-column price-table-column">
                                                             <div class="price-table-header">4 Weeks / £</div>
-                                                            <input class="segment-price-4-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" type="number" step="0.01" v-model="segment['price4Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]"/>
-                                                            <input class="segment-price-4-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" type="number" step="0.01" v-model="segment['price4Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]"/>
+                                                            <input class="segment-price-4-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['price4Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
+                                                            <input class="segment-price-4-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['price4Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
                                                         </div>
 
                                                         <!--<div class="swiper-slide customer-column price-table-column">
@@ -273,13 +383,11 @@
                                 <button class="page-update" v-on:click="bookingUpdate(booking, $event)">UPDATE</button>
                             </div>
 
-                            <div class="card" v-on:click="cardClick(booking, $event)" :class="{ 'select-flag': booking['selectFlag'] }">
+                            <div class="card" v-on:click="cardClick(booking, $event)" :class="{ 'select-flag': booking['selectFlag'] }">     
+                                <div class="arrival-date"><% new Date(booking['arrivalDate']).toLocaleDateString('en-GB', { weekday: 'short',  month: 'long', day: 'numeric' }) %></div>
+                                <div class="departure-date"><% new Date(booking['departureDate']).toLocaleDateString('en-GB', { weekday: 'short',  month: 'long', day: 'numeric' }) %></div>
                                 <div class="customer-id"><% customerName(booking['customerId']) %></div>
                                 <div class="guests-total"><% booking['adults'] + booking['children'] %> guests</div>
-                                <div class="arrival-date"><% booking['arrivalDate'] %></div>
-                                <div class="departure-date"><% booking['departureDate'] %></div>
-                                <div class="price">£<% booking['price'] %></div>
-                                <div class="booking-status">Status</div>
                             </div>
                         
                         </div>
@@ -349,9 +457,16 @@
                                     <template v-if="customer['addressLine2']">
                                         <% customer['addressLine2'] %> <br>
                                     </template>
-                                    <% customer['townOrCity'] %> <br>
-                                    <% customer['countyOrRegion'] %> <br>
-                                    <% customer['postCode'] %>
+                                    <template v-if="customer['townOrCity']">
+                                        <% customer['townOrCity'] %> <br>
+                                    </template>
+                                    <template v-if="customer['countyOrRegion']">
+                                        <% customer['countyOrRegion'] %> <br>
+                                    </template>
+                                    <template v-if="customer['postCode']">
+                                        <% customer['postCode'] %>
+                                    </template>
+                                    
                                 </div>
                             </div>
                             
@@ -369,67 +484,7 @@
                    
             </div>
     
-            <div class="settings hidden">
-                <template v-if="priceListSettings">
-
-                    <div class="page-close-container" v-on:click="exitPriceListSettings()">
-                        <div class="page-close">
-                            <span v-for="i in 2"></span>
-                        </div>
-                    </div>
-
-                    <label for="changeover-day">Changeover Day</label>
-                    <select id="changeover-day" v-model="priceListSettings['defaultChangeoverDay']" name="changeover-day">
-                        <option value="1">Monday</option>
-                        <option value="2">Tuesday</option>
-                        <option value="3">Wednesday</option>
-                        <option value="4">Thursday</option>
-                        <option value="5">Friday</option>
-                        <option value="6">Saturday</option>
-                        <option value="0">Sunday</option>
-                    </select>
-    
-                    <label for="active-prices-range">Active Prices Range</label>
-                    <input id="price-list-range" v-model="priceListSettings['activePricesRange']" type="number" />
-    
-                    <label for="future-prices-range">Future Prices Range</label>
-                    <input id="future-prices-range" v-model="priceListSettings['futurePricesRange']" type="number" />
-                    
-                    <label for="discount-2-weeks">2 Weeks Discount</label>
-                    <input id="discount-2-weeks" v-model="priceListSettings['discount2Weeks']" type="number" step="0.01" />
-    
-                    <label for="discount-3-weeks">3 Weeks Discount</label>
-                    <input id="discount-3-weeks" v-model="priceListSettings['discount3Weeks']" type="number" step="0.01" />
-    
-                    <label for="discount-4-weeks">4 Weeks Discount</label>
-                    <input id="discount-4-weeks" v-model="priceListSettings['discount4Weeks']" type="number" step="0.01" />
-    
-                    <label for="max-segment-length">Max Segment Length</label>
-                    <input id="max-segment-length" v-model="priceListSettings['maxSegmentLength']" type="number" step="1" />
-    
-                    <label for="price-per-dog">Price per Dog</label>
-                    <input id="price-per-dog" v-model="priceListSettings['pricePerDog']" type="number" step="0.01" />
-    
-                    <label for="max-dogs">Max Dogs</label>
-                    <input id="max-dogs" v-model="priceListSettings['maxDogs']" type="number" step="1" />
-    
-                    <label for="max-infants">Max Infants</label>
-                    <input id="max-infants" v-model="priceListSettings['maxInfants']" type="number" step="1" />
-    
-                    <label for="max-guests">Max Guests</label>
-                    <input id="max-guests" v-model="priceListSettings['maxGuests']" type="number" step="1" />
-    
-                    <!--<button v-on:click="applyDiscounts()">APPLY DISCOUNTS</button>-->
-    
-                    <button class="page-update" v-on:click="priceListSettingsUpdate()">UPDATE SETTINGS</button>
-                </template>
-                <template v-else>
-                    <p>LOADING...</p>
-                </template>
-                
-    
-                
-            </div>
+            
 
         </div>
 

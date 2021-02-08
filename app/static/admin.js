@@ -14,6 +14,7 @@ const vm = new Vue({
 
         monthSwiper: null,
         monthTabGlider: null,
+        monthTabsRefresh: false
     },
     computed: {
         activePriceList: function() {
@@ -47,7 +48,7 @@ const vm = new Vue({
             else {
                 return null;
             }
-        }
+        },
     },
     created: function() {
         this.getPriceList();
@@ -71,6 +72,9 @@ const vm = new Vue({
             })
     },
     methods: {
+        test(i) {
+            console.log(i);
+        },
         getPriceList() {
             const response =
                 fetch('/get_price_list', { method: 'post' })
@@ -373,18 +377,30 @@ const vm = new Vue({
             document.querySelector('.bookings').classList.add('hidden');
             document.querySelector('.customers').classList.add('hidden');
             document.querySelector('.settings').classList.add('hidden');
+            document.querySelector('.tabs').classList.remove('hidden');
             this.priceListSelectOff();
+            if (!this.monthTabGlider) {
+                this.monthTabsRefresh = false;
+                this.$forceUpdate();
+                this.initMonthSwiper();
+                this.$nextTick(function() {
+                    this.initMonthTabGlider();
+                    this.$forceUpdate();
+                });
+                
+            }
         },
         openPriceListSettings() {
+            if (this.monthTabGlider) {
+                this.monthTabGlider.destroy();
+                this.monthTabGlider = null;
+                this.monthTabsRefresh = true;
+            }
             document.querySelector('.tabs').classList.add('hidden');
             document.querySelector('.price-list').classList.add('hidden');
             document.querySelector('.bookings').classList.add('hidden');
             document.querySelector('.customers').classList.add('hidden');
             document.querySelector('.settings').classList.remove('hidden');
-        },
-        exitPriceListSettings() {
-            document.querySelector('.tabs').classList.add('remove');
-            this.goToPriceList();
         },
         segmentToggleExpand(e) {
             function segmentNode(node) {
@@ -418,9 +434,10 @@ const vm = new Vue({
             this.customerCardSelectOff();
         },
         priceListSettingsUpdate() {
-            this.setPriceListSettings().then(success => {
-                this.getPriceList();
-            })
+            this.setPriceListSettings()
+                .then(() => {
+                    this.getPriceList();
+                })
         },
         bookingUpdate(booking, e) {
             booking['updateFlag'] = true;
@@ -582,8 +599,6 @@ const vm = new Vue({
         },
         segmentSelect(segment, e) {
             if (this.cardSelect) {
-                e.preventDefault();
-                e.stopPropagation();
                 if (segment['selectFlag']) {
                     segment['selectFlag'] = false;
                     this.cardSelection.splice(this.cardSelection.indexOf(segment), 1);
@@ -727,6 +742,36 @@ const vm = new Vue({
                 booking['dogs']++;
             }
         },
+        maxGuestsDecrease(e) {
+            e.preventDefault();
+            if (this.priceListSettings['maxGuests'] > 0) {
+                this.priceListSettings['maxGuests']--;
+            }
+        },
+        maxGuestsIncrease(e) {
+            e.preventDefault();
+            this.priceListSettings['maxGuests']++;
+        },
+        maxInfantsDecrease(e) {
+            e.preventDefault();
+            if (this.priceListSettings['maxInfants'] > 0) {
+                this.priceListSettings['maxInfants']--;
+            }
+        },
+        maxInfantsIncrease(e) {
+            e.preventDefault();
+            this.priceListSettings['maxInfants']++;
+        },
+        maxDogsDecrease(e) {
+            e.preventDefault();
+            if (this.priceListSettings['maxDogs'] > 0) {
+                this.priceListSettings['maxDogs']--;
+            }
+        },
+        maxDogsIncrease(e) {
+            e.preventDefault();
+            this.priceListSettings['maxDogs']++;
+        }
         /*
         nextChangeoverDay(dateString, weekOffset=0) {
             let date = new Date(dateString);
