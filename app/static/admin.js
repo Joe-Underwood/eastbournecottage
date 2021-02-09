@@ -670,11 +670,20 @@ const vm = new Vue({
 
             const cardElement = cardLevelElement(e.target);
             const pageElement = cardElement.previousElementSibling;
+            const transitionElement = cardElement.nextElementSibling;
+            const cardRect = cardElement.getBoundingClientRect();
+            const pageRect = pageElement.getBoundingClientRect();
 
             document.querySelector('#root').classList.add('fullscreen');
 
-            cardElement.style.display = 'none';
-            pageElement.style.display = 'block';
+            cardElement.classList.add('invisible');
+            /*transitionElement.classList.remove('hidden');
+            transitionElement.style.top = `${cardRect.top}px`;
+            transitionElement.style.right = `${cardRect.right}px`;
+            transitionElement.style.bottom = `${cardRect.bottom}px`;
+            transitionElement.style.left = `${cardRect.left}px`;*/
+
+            pageElement.classList.remove('hidden');
 
         },
         exitFullscreen(e) {
@@ -691,8 +700,8 @@ const vm = new Vue({
 
             document.querySelector('#root').classList.remove('fullscreen');
 
-            pageElement.style.display = 'none';
-            cardElement.style.display = 'grid';
+            pageElement.classList.add('hidden');
+            cardElement.classList.remove('invisible');
         },
         adultsDecrease(booking, e) {
             e.preventDefault();

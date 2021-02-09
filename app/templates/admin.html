@@ -94,22 +94,22 @@
                     <h4>Prices</h4>
                     <div class="settings-price-settings">
                         <div class="settings-input-container">
-                            <label for="discount-2-weeks">2 Weeks Discount / %</label>
+                            <label for="discount-2-weeks">2 Weeks Discount</label>
                             <input id="discount-2-weeks" v-model="priceListSettings['discount2Weeks']" type="number" step="0.01" />
                         </div>
                         
                         <div class="settings-input-container">
-                            <label for="discount-3-weeks">3 Weeks Discount / %</label>
+                            <label for="discount-3-weeks">3 Weeks Discount</label>
                             <input id="discount-3-weeks" v-model="priceListSettings['discount3Weeks']" type="number" step="0.01" />
                         </div>
                         
                         <div class="settings-input-container">
-                            <label for="discount-4-weeks">4 Weeks Discount / %</label>
+                            <label for="discount-4-weeks">4 Weeks Discount</label>
                             <input id="discount-4-weeks" v-model="priceListSettings['discount4Weeks']" type="number" step="0.01" />
                         </div>
 
                         <div class="settings-input-container">
-                            <label for="price-per-dog">Price per Dog / £</label>
+                            <label for="price-per-dog">Price per Dog</label>
                             <input id="price-per-dog" v-model="priceListSettings['pricePerDog']" type="number" step="0.01" />
                         </div>
                     </div>
@@ -120,7 +120,7 @@
                         <div class="party-container">
                             <div class="party-input-container">
     
-                                <label for="max-guests"><h5>Max Guests</h5>Adults + children</label>
+                                <label for="max-guests"><h5>Max Guests</h5></label>
     
                                 <div class="party-input" class="max-guests">
                                     <button type="button" v-on:click="maxGuestsDecrease($event)" class="party-decrease" :class="{ inactive: priceListSettings['maxGuests'] === 0 }">-</button>
@@ -130,7 +130,7 @@
                             </div>
         
                             <div class="party-input-container">
-                                <label for="max-infants"><h5>Max Infants</h5>Under 2</label>
+                                <label for="max-infants"><h5>Max Infants</h5></label>
                                 <div class="party-input" class="max-infants">
                                     <button type="button" v-on:click="maxInfantsDecrease($event)" class="party-decrease" :class="{ inactive: priceListSettings['maxInfants'] === 0 }">-</button>
                                     <div :class="{ inactive: priceListSettings['maxInfants'] === 0 }">&#60;% priceListSettings['maxInfants'] %></div>
@@ -165,17 +165,17 @@
                         </div>
     
                         <div class="settings-input-container">
-                            <label for="active-prices-range">Active Prices Range / Days</label>
-                            <input id="price-list-range" v-model="priceListSettings['activePricesRange']" type="number" />
+                            <label for="active-prices-range">Active Prices Range</label>
+                            <input id="active-prices-range" v-model="priceListSettings['activePricesRange']" type="number" />
                         </div>
         
                         <div class="settings-input-container">
-                            <label for="future-prices-range">Future Prices Range / Days</label>
+                            <label for="future-prices-range">Future Prices Range</label>
                             <input id="future-prices-range" v-model="priceListSettings['futurePricesRange']" type="number" />
                         </div>
                         
                         <div class="settings-input-container">
-                            <label for="max-segment-length">Max Segment Length / Days</label>
+                            <label for="max-segment-length">Max Segment Length</label>
                             <input id="max-segment-length" v-model="priceListSettings['maxSegmentLength']" type="number" step="1" />
                         </div>
                     </div>
@@ -298,23 +298,28 @@
                 
 
             <div class="bookings hidden">
-                <h1>Bookings</h1>
+                <div class="price-list-header">
+                    <h1>Bookings</h1>
+                </div>
+                
                 <template v-if="bookings">
-                    <div class="bookings-list-view">
+                    <div class="bookings-list-view bookings-main">
                         <div class="booking" v-for="booking in bookings" >
 
-                            <div class="page">
+                            <div class="page hidden">
                                 <div class="page-close-container" v-on:click="exitFullscreen($event)">
                                     <div class="page-close">
                                         <span v-for="i in 2"></span>
                                     </div>
                                 </div>
                                 
-                                <label for="customer-id">Customer</label>
-                                <select id="customer-id" v-model="booking['customerId']" name="customer-id">
-                                    <option v-for="customer in customers" :value="customer['id']"><% customer['firstName'] %> <% customer['lastName'] %></option>
-                                </select>
-
+                                <div class="settings-input-container">
+                                    <label for="customer-id">Customer</label>
+                                    <select id="customer-id" v-model="booking['customerId']" name="customer-id">
+                                        <option v-for="customer in customers" :value="customer['id']"><% customer['firstName'] %> <% customer['lastName'] %></option>
+                                    </select>
+                                </div>
+                                
                                 <div class="booking-dates">
 
                                     <div class="input-container">
@@ -329,7 +334,6 @@
     
                                 </div>
                                 
-
                                 <div class="party-container">
                                     <div class="party-input-container">
 
@@ -370,20 +374,36 @@
                                     </div>
                                 </div>
 
-                                <label for="stay-price">Stay Price</label>
-                                <input id="stay-price" v-model="booking['stayPrice']" type="number" step="0.01" />
-
-                                <label for="dog-price">Dog Price</label>
-                                <input id="dog-price" v-model="booking['dogPrice']" type="number" step="0.01" />
-
-                                <label for="price">Price</label>
-                                <input id="price" v-model="booking['price']" type="number" step="0.01" />
-
+                                <div class="settings-price-settings">
+                                    <div class="settings-input-container">
+                                        <label for="stay-price">Stay Price</label>
+                                        <input id="stay-price" v-model="booking['stayPrice']" type="number" step="0.01" />
+                                    </div>
+                                    
+                                    <div class="settings-input-container">
+                                        <label for="dog-price">Dog Price</label>
+                                        <input id="dog-price" v-model="booking['dogPrice']" type="number" step="0.01" />
+                                    </div>
+                                    
+                                    <div class="settings-input-container">
+                                        <label for="price">Price</label>
+                                        <input id="price" v-model="booking['price']" type="number" step="0.01" />
+                                    </div>
+                                </div>
+                                
+                                
                                 <button class="page-delete" v-on:click="bookingDelete(booking, $event)">DELETE</button>
                                 <button class="page-update" v-on:click="bookingUpdate(booking, $event)">UPDATE</button>
                             </div>
 
                             <div class="card" v-on:click="cardClick(booking, $event)" :class="{ 'select-flag': booking['selectFlag'] }">     
+                                <div class="arrival-date"><% new Date(booking['arrivalDate']).toLocaleDateString('en-GB', { weekday: 'short',  month: 'long', day: 'numeric' }) %></div>
+                                <div class="departure-date"><% new Date(booking['departureDate']).toLocaleDateString('en-GB', { weekday: 'short',  month: 'long', day: 'numeric' }) %></div>
+                                <div class="customer-id"><% customerName(booking['customerId']) %></div>
+                                <div class="guests-total"><% booking['adults'] + booking['children'] %> guests</div>
+                            </div>
+
+                            <div class="transition card hidden">
                                 <div class="arrival-date"><% new Date(booking['arrivalDate']).toLocaleDateString('en-GB', { weekday: 'short',  month: 'long', day: 'numeric' }) %></div>
                                 <div class="departure-date"><% new Date(booking['departureDate']).toLocaleDateString('en-GB', { weekday: 'short',  month: 'long', day: 'numeric' }) %></div>
                                 <div class="customer-id"><% customerName(booking['customerId']) %></div>
@@ -404,10 +424,12 @@
             </div>
 
             <div class="customers hidden">
-
-                <h1>Customers</h1>
+                <div class="price-list-header">
+                    <h1>Customers</h1>
+                </div>
+                
                 <template v-if="customers">
-                    <div class="customers-list-view">
+                    <div class="customers-list-view customers-main">
                         <div class="customer" v-for="customer in customers">
                             
                             <div class="page">
@@ -470,7 +492,6 @@
                                 </div>
                             </div>
                             
-        
                         </div>
                     </div>
                     <button class="cards-add" v-on:click="addCustomer()">+</button>
@@ -483,13 +504,9 @@
                 </template>
                    
             </div>
-    
-            
 
         </div>
 
-        
-        
     </div>
 </body>
 

@@ -62,7 +62,7 @@ body,
 }
 
 #root.fullscreen {
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 
 
@@ -110,6 +110,7 @@ h3 {
 h4 {
     color: grey;
     font-weight:400;
+    margin-bottom: 8px;
 }
 
 h5 {
@@ -151,7 +152,11 @@ label.invalid {
 .settings label {
     position: relative;
     padding-top: 0;
-
+    padding-left: 16px;
+    padding-right: 0;
+    display: flex;
+    align-items: center;
+    height: 100%;
 }
 
 .settings-input-container {
@@ -174,12 +179,16 @@ label.invalid {
     border: none;
     text-align: right;
     padding-right: 16px;
+    padding-left: 0;
+    height: 100%;
 }
 
 .settings select {
     border: none;
     text-align: right;
     padding-right: 16px;
+    height: 100%;
+    padding-left: 0;
 }
 
 .input-container {
@@ -189,6 +198,18 @@ label.invalid {
     transition: all 0.2s;
     position: relative;
     z-index: 0;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
 .input-container.focused {
@@ -832,6 +853,10 @@ svg {
     display: none !important;
 }
 
+.invisible {
+    visibility: none !important;
+}
+
     .price-list-header {
         background-color: white;
         display: block;
@@ -947,30 +972,6 @@ svg {
                 .segment-price-4-weeks.selected {
                     background-color: rgba(226, 138, 12, 0.5);
                 }
-        
-
-.page {
-}
-
-.bookings {
-    display: block;
-    padding-left: 16px;
-    padding-right: 16px;
-}
-
-.bookings.hidden {
-    display: none;
-}
-
-.customers {
-    display: block;
-    padding-left: 16px;
-    padding-right: 16px;
-}
-
-.customers.hidden {
-    display: none;
-}
 
 .settings {
     display: block;
@@ -1069,13 +1070,24 @@ svg {
 .bookings {
     background-color: rgb(246, 249, 250);
     z-index: 1;
+    display: block;
 }
+
+.bookings.hidden {
+    display: none;
+}
+
+    .bookings-main {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
 
     .bookings-list-view {
         display: block;
         position: relative;
         width:100%;
     }
+    
 
         .booking .card {
             display: grid;
@@ -1094,8 +1106,8 @@ svg {
             width: 100%;
         }
 
-            .booking .card div {
-                
+            .booking .card.invisible {
+                visibility: hidden;
             }
 
             .arrival-date {
@@ -1136,7 +1148,7 @@ svg {
             }*/
 
         .booking .page {
-            display: none;
+            display: block;
             position: fixed;
             width: 100%;
             height: 100%;
@@ -1145,6 +1157,9 @@ svg {
             z-index: 5;
             box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.20);
             background-color: white;
+            overflow: auto;
+            padding-left: 16px;
+            padding-right: 16px;
         }
 
             .page-close-container {
@@ -1182,10 +1197,48 @@ svg {
                     .page-close span:nth-child(2) {
                         transform: translate3d(0, 9px, 0) rotate3d(0, 0, 1, 45deg);
                     }
+            
+            
+            .booking .page .settings-price-settings:last-of-type {
+                margin-bottom: 72px;
+            }
+
+            .booking .page .settings-input-container input {
+                text-align: right;
+                padding-right: 16px;
+                height: 100%;
+            }
+
+            .booking .page .settings-input-container label {
+                display: flex;
+                align-items: center;
+                height: 100%;
+            }
+
+                .booking .page input {
+                    height: 100%;
+                    width: 100%;
+                    border: none;
+                }
+
+        .booking .transition {
+            transition: all 0.5s;
+            position: fixed;
+        }
 
 .customers {
     background-color: rgb(246, 249, 250);
+    display: block;
 }
+
+.customers.hidden {
+    display: none;
+}
+
+    .customers-main {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
 
     .customers-list-view {
         display: block;
@@ -1354,6 +1407,7 @@ svg {
             height: 56px;
             width: 100%;
             margin-bottom: 8px;
+            align-items: center;
         }
 
             .party-input-container label {
