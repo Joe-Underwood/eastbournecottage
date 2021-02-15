@@ -313,26 +313,30 @@
                                     </div>
                                 </div>
                                 
-                                <div class="settings-input-container">
-                                    <label for="customer-id">Customer</label>
-                                    <select id="customer-id" v-model="booking['customerId']" name="customer-id">
-                                        <option v-for="customer in customers" :value="customer['id']"><% customer['firstName'] %> <% customer['lastName'] %></option>
-                                    </select>
-                                </div>
-                                
-                                <div class="booking-dates">
-
-                                    <div class="input-container">
-                                        <label for="arrival-date">Arrival Date</label>
-                                        <input id="arrival-date" v-model="booking['arrivalDate']" type="date"  />
+                                <div class="settings-price-settings">
+                                    
+                                    <div class="settings-input-container customer-input-container">
+                                        <label for="customer-id">Customer</label>
+                                        <select id="customer-id" v-model="booking['customerId']" name="customer-id">
+                                            <option v-for="customer in customers" :value="customer['id']"><% customer['firstName'] %> <% customer['lastName'] %></option>
+                                        </select>
                                     </div>
                                     
-                                    <div class="input-container">
-                                        <label for="departure-date">Departure Date</label>
-                                        <input id="departure-date" v-model="booking['departureDate']" type="date" />
-                                    </div>
+                                    <div class="booking-dates">
     
+                                        <div class="input-container">
+                                            <label for="arrival-date">Arrival Date</label>
+                                            <input id="arrival-date" v-model="booking['arrivalDate']" type="date"  />
+                                        </div>
+                                        
+                                        <div class="input-container">
+                                            <label for="departure-date">Departure Date</label>
+                                            <input id="departure-date" v-model="booking['departureDate']" type="date" />
+                                        </div>
+        
+                                    </div>
                                 </div>
+                                
                                 
                                 <div class="party-container">
                                     <div class="party-input-container">
@@ -432,40 +436,69 @@
                     <div class="customers-list-view customers-main">
                         <div class="customer" v-for="customer in customers">
                             
-                            <div class="page">
+                            <div class="page hidden">
                                 <div class="page-close-container" v-on:click="exitFullscreen($event)">
                                     <div class="page-close">
                                         <span v-for="i in 2"></span>
                                     </div>
                                 </div>
                                 
-                                <label for="first-name">First Name</label>
-                                <input id="first-name" v-model="customer['firstName']" />
-
-                                <label for="last-name">Last Name</label>
-                                <input id="last-name" v-model="customer['lastName']" />
-
-                                <label for="email-address">Email Address</label>
-                                <input id="email-address" v-model="customer['emailAddress']" />
-
-                                <label for="phone-number">Phone Number</label>
-                                <input id="phone-number" v-model="customer['phoneNumber']" />
-
-                                <label for="address-line-1">Address Line 1</label>
-                                <input id="address-line-1" v-model="customer['addressLine1']" />
-
-                                <label for="address-line-2">Address Line 2</label>
-                                <input id="address-line-2" v-model="customer['addressLine2']" />
-
-                                <label for="town-or-city">Town or City</label>
-                                <input id="town-or-city" v-model="customer['townOrCity']" />
-
-                                <label for="county-or-region">County or Region</label>
-                                <input id="county-or-region" v-model="customer['countyOrRegion']" />
-
-                                <label for="postcode">Postcode</label>
-                                <input id="postcode" v-model="customer['postcode']" />
-
+                                <h4>Name</h4>
+                                <div class="settings-price-settings">
+                                    <div class="settings-input-container">
+                                        <label for="first-name">First Name</label>
+                                        <input id="first-name" v-model="customer['firstName']" />
+                                    </div>
+                                    
+                                    <div class="settings-input-container">
+                                        <label for="last-name">Last Name</label>
+                                        <input id="last-name" v-model="customer['lastName']" />
+                                    </div>
+                                    
+                                </div>
+                                
+                                <h4>Contact</h4>
+                                <div class="settings-price-settings">
+                                    <div class="settings-input-container">
+                                        <label for="email-address">Email Address</label>
+                                        <input id="email-address" v-model="customer['emailAddress']" />
+                                    </div>
+                                    
+                                    <div class="settings-input-container">
+                                        <label for="phone-number">Phone Number</label>
+                                        <input id="phone-number" v-model="customer['phoneNumber']" />
+                                    </div>
+                                </div>
+                                
+                                <h4>Address</h4>
+                                <div class="settings-price-settings">
+                                    <div class="settings-input-container">
+                                        <label for="address-line-1">Address Line 1</label>
+                                        <input id="address-line-1" v-model="customer['addressLine1']" />
+                                    </div>
+                                    
+                                    <div class="settings-input-container">
+                                        <label for="address-line-2">Address Line 2</label>
+                                        <input id="address-line-2" v-model="customer['addressLine2']" />
+                                    </div>
+                                    
+                                    <div class="settings-input-container">
+                                        <label for="town-or-city">Town or City</label>
+                                        <input id="town-or-city" v-model="customer['townOrCity']" />
+                                    </div>
+                                    
+                                    <div class="settings-input-container">
+                                        <label for="county-or-region">County or Region</label>
+                                        <input id="county-or-region" v-model="customer['countyOrRegion']" />
+                                    </div>
+                                    
+                                    <div class="settings-input-container">
+                                        <label for="postcode">Postcode</label>
+                                        <input id="postcode" v-model="customer['postcode']" />
+                                    </div>
+                                </div>
+                                
+                                
                                 <button class="page-delete" v-on:click="customerDelete(customer, $event)">DELETE</button>
                                 <button class="page-update" v-on:click="customerUpdate(customer, $event)">UPDATE</button>
                             </div>
@@ -474,7 +507,7 @@
                                 <div class="customer-name"><% customer['firstName'] %> <% customer['lastName'] %></div>
                                 <div class="customer-email-address"><% customer['emailAddress'] %></div>
                                 <div class="customer-phone-number"><% customer['phoneNumber'] %></div>
-                                <div class="customer-address">
+                                <!--<div class="customer-address">
                                     <% customer['addressLine1'] %> <br>
                                     <template v-if="customer['addressLine2']">
                                         <% customer['addressLine2'] %> <br>
@@ -489,7 +522,7 @@
                                         <% customer['postCode'] %>
                                     </template>
                                     
-                                </div>
+                                </div>-->
                             </div>
                             
                         </div>

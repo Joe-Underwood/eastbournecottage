@@ -175,6 +175,10 @@ label.invalid {
         border-bottom: none;
     }
 
+    .settings-input-container label {
+        padding-top: 0;
+    }
+
 .settings input {
     border: none;
     text-align: right;
@@ -1147,7 +1151,7 @@ svg {
                 font-size: 14px;
             }*/
 
-        .booking .page {
+        .page {
             display: block;
             position: fixed;
             width: 100%;
@@ -1199,23 +1203,54 @@ svg {
                     }
             
             
-            .booking .page .settings-price-settings:last-of-type {
+            .page .settings-price-settings:last-of-type {
                 margin-bottom: 72px;
             }
 
-            .booking .page .settings-input-container input {
+            .booking-dates {
+                height: 56px;
+            }
+
+                .booking-dates .input-container {
+                    width: 50%;
+                    padding-right: 8px;
+                }
+
+                        .booking-dates input {
+                            padding-top: 8px;
+                        }
+
+            .page .input-container {
+                margin-bottom: 0px;
+                height: 100%;
+            }
+
+            .booking-dates .input-container:first-of-type {
+                border-right: 1px solid #a5c2cf;
+            }
+
+            .page .settings-input-container input {
                 text-align: right;
                 padding-right: 16px;
                 height: 100%;
             }
 
-            .booking .page .settings-input-container label {
+            .settings-input-container select {
+                border: none;
+                text-align: right;
+                padding-right: 16px;
+                height: 100%;
+                padding-left: 0;
+            }
+
+            .page .settings-input-container label {
                 display: flex;
                 align-items: center;
                 height: 100%;
+                position: relative;
             }
 
-                .booking .page input {
+                .page input {
                     height: 100%;
                     width: 100%;
                     border: none;
@@ -1248,7 +1283,7 @@ svg {
 
         .customer .card {
             display: grid; 
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             grid-template-rows: 1fr 1fr 1fr;
             background-color: white;
             box-shadow: 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.20);
@@ -1282,15 +1317,15 @@ svg {
                 font-size: 14px;
             }
 
-            .customer-address {
+            /*.customer-address {
                 grid-column: 2 / span 1;
                 grid-row: 2 / span 2;
                 font-size: 12px;
-            }
+            }*/
 
         .customer .page {
             background-color: white;
-            display: none;
+            display: block;
             position: fixed;
             width: 100%;
             height: 100%;
@@ -1298,6 +1333,7 @@ svg {
             top: 0;
             z-index: 5;
             box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.20);
+            overflow: auto;
         }
 
             .page-delete {

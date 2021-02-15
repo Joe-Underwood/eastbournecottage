@@ -1,11 +1,13 @@
 from app import app, db
-from app.forms import BookingForm
+from app.forms import BookingForm, LoginForm
 from app.models import User, Customer, Booking, Price_List, Price_List_Settings, Delete_Price_List, Delete_Booking, Delete_Customer
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, redirect, url_for
 from datetime import datetime, date, timedelta
 from datetime import timedelta
 from calendar import Calendar
 from decimal import Decimal
+from flask_login import current_user, login_user, logout_user, login_required
+from app.models import User
 
 @app.route('/', methods=['GET', 'POST'])
 def landing_page():
@@ -13,11 +15,32 @@ def landing_page():
     return render_template('main.html', booking_form=booking_form)
 
 @app.route('/admin', methods=['GET', 'POST'])
+@login_required
 def admin():
     print('admin page requested')
     return render_template('admin.html')
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('admin'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user is None or not user.check_password(form.password.data):
+            flask('Invalid username or password')
+            return redirect(url_for('login'))
+        login_user(user, remember=form.remember_me.data)
+        return redirect(url_for('admin'))
+    return render_template('login.html', title='Sign In', form=form)
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
 @app.route('/get_past_price_list', methods=['POST'])
+@login_required
 def get_past_price_list():
     query = db.session.query(Price_List).filter(Price_List.is_past == True)
     past_price_list = []
@@ -58,6 +81,7 @@ def get_active_price_list():
     return { 'activePriceList': active_price_list }
 
 @app.route('/get_price_list', methods=['POST'])
+@login_required
 def get_price_list():
     print('price_list_requested')
     query = db.session.query(Price_List).filter(Price_List.is_past == False).order_by(Price_List.start_date.asc())
@@ -84,6 +108,7 @@ def get_price_list():
     return { 'priceList': price_list }
 
 @app.route('/set_price_list', methods=['POST'])
+@login_required
 def set_price_list():
     json_request = request.get_json()
     base_query = db.session.query(Price_List)
@@ -211,6 +236,7 @@ def set_price_list():
     return { 'success': True }
 
 @app.route('/set_price_list_settings', methods=['POST'])
+@login_required
 def set_price_list_settings():
     json_request = request.get_json()
     query = db.session.query(Price_List_Settings).first()
@@ -278,6 +304,7 @@ def set_price_list_settings():
     return { 'success': True }
 
 @app.route('/get_bookings', methods=['POST'])
+@login_required
 def get_bookings():
     query = db.session.query(Booking).order_by(Booking.arrival_date.asc())
     bookings = []
@@ -303,6 +330,7 @@ def get_bookings():
     return { 'bookings': bookings }
 
 @app.route('/set_bookings', methods=['POST'])
+@login_required
 def set_bookings():
     json_request = request.get_json()
     query = db.session.query(Booking)
@@ -525,6 +553,7 @@ def booking():
     return { 'success': True }
 
 @app.route('/get_customers', methods=['POST'])
+@login_required
 def get_customers():
     customers_query = db.session.query(Customer)
     customers = []
@@ -548,6 +577,7 @@ def get_customers():
     return { 'customers': customers }
 
 @app.route('/set_customers', methods=['POST'])
+@login_required
 def set_customers():
     json_request = request.get_json()
     query = db.session.query(Customer)
@@ -609,6 +639,7 @@ def set_customers():
     return { 'success': True }
     
 @app.route('/get_price_list_settings', methods=['POST'])
+@login_required
 def get_price_list_settings():
     settings_query = db.session.query(Price_List_Settings)
     settings = { 
