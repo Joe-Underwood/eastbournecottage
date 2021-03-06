@@ -810,7 +810,7 @@ svg {
 
         .navbar-logo div:nth-child(1) {
             font-size: 14px;
-            font-weight: 900;
+            font-weight: 600;
             color: white;
             width: auto;
 
@@ -834,7 +834,7 @@ svg {
     .navbar button {
         font-size: 12px;
         line-height: 100%;
-        font-weight: 700;
+        font-weight: 600;
         height: 36px;
         max-width: 120px;
         min-width: 85px;

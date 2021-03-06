@@ -298,7 +298,6 @@ def set_price_list_settings():
 
         #alter default changeover day:
 
-
     db.session.commit()
     print('Price_List_Settings updated')
     return { 'success': True }
