@@ -17,27 +17,26 @@ def landing_page():
 @app.route('/admin', methods=['GET', 'POST'])
 @login_required
 def admin():
-    print('admin page requested')
     return render_template('admin.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('admin'))
+        return redirect('/admin')
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
             #flask('Invalid username or password')
-            return redirect(url_for('login'))
+            return redirect('/login')
         login_user(user, remember=form.remember_me.data)
-        return redirect(url_for('admin'))
+        return redirect('/admin')
     return render_template('login.html', title='Sign In', form=form)
 
-@app.route('/logout')
+@app.route('/logout', methods=['GET', 'POST'])
 def logout():
     logout_user()
-    return redirect(url_for('login'))
+    return redirect('/login')
 
 @app.route('/get_past_price_list', methods=['POST'])
 @login_required
