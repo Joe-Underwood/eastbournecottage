@@ -332,135 +332,139 @@
                         </div>
 
                         <div class="calendar-spacer"></div>
-                        <div class="booking-main">
+                        <template v-if="publicPriceList.length > 0">
+                            <div class="booking-main">
 
-                            <div class="calendar">
-                            
-                                <div class="calendar-controls">
-                                    <div class="prev-month">&#60;</div>
-                                    <div class="next-month">&#62;</div>
-                                </div>
-    
-                                <div class="calendar-weekdays-both">
-                                    <ul class="calendar-weekdays weekdays-1">
-                                        <li>Mo</li>
-                                        <li>Tu</li>
-                                        <li>We</li>
-                                        <li>Th</li>
-                                        <li>Fr</li>
-                                        <li>Sa</li>
-                                        <li>Su</li>
-                                    </ul>
-        
-                                    <ul class="calendar-weekdays weekdays-2">
-                                        <li>Mo</li>
-                                        <li>Tu</li>
-                                        <li>We</li>
-                                        <li>Th</li>
-                                        <li>Fr</li>
-                                        <li>Sa</li>
-                                        <li>Su</li>
-                                    </ul>
-                                </div>
+                                <div class="calendar">
                                 
-                                
-                                <div class="swiper-container calendar-swiper">
-                                    <div class="swiper-wrapper">
+                                    <div class="calendar-controls">
+                                        <div class="prev-month">&#60;</div>
+                                        <div class="next-month">&#62;</div>
                                     </div>
-                                </div> 
-    
-                            </div>
-    
-                            <div class="booking-summary">
-                                <div class="booking-helper-text">
-                                    Select arrival date from calendar
-                                </div>
-                                <form>
-                                    {{ booking_form.hidden_tag() }}
-                                    <div class="availability-form">
-                                        <div class="date-fields">
         
-                                            <div class="input-container focused">
-                                                <label for="arrival-date" class="focused">Arrival Date</label>
-                                                <div id="arrival-date" class="focused" v-on:focus="arrivalDateFocus()" v-on:blur="arrivalDateBlur()" tabindex="0">&#60;% bookingFormData.arrivalDate %></div>      
-                                            </div>
-        
-                                            <div class="input-container">
-                                                <label for="departure-date">Departure Date</label>
-                                                <div id="departure-date" v-on:focus="departureDateFocus()" v-on:blur="departureDateBlur()" tabindex="0">&#60;% bookingFormData.departureDate %></div>
-                                            </div>
+                                    <div class="calendar-weekdays-both">
+                                        <ul class="calendar-weekdays weekdays-1">
+                                            <li>Mo</li>
+                                            <li>Tu</li>
+                                            <li>We</li>
+                                            <li>Th</li>
+                                            <li>Fr</li>
+                                            <li>Sa</li>
+                                            <li>Su</li>
+                                        </ul>
+            
+                                        <ul class="calendar-weekdays weekdays-2">
+                                            <li>Mo</li>
+                                            <li>Tu</li>
+                                            <li>We</li>
+                                            <li>Th</li>
+                                            <li>Fr</li>
+                                            <li>Sa</li>
+                                            <li>Su</li>
+                                        </ul>
+                                    </div>
                                     
+                                    
+                                    <div class="swiper-container calendar-swiper">
+                                        <div class="swiper-wrapper">
                                         </div>
+                                    </div> 
         
-                                        <div class="input-container">
-                                            <label for="guests">Guests</label>
-                                            <div id="guests" v-on:click="displayPartyOverlay()" v-on:blur="guestsBlur()" tabindex="0"><p>&#60;% partyString %></p>
-                                                <div class="party-container guests-dropdown" tabindex="0">
-                                
-                                                    <div class="party-input-container">
-                                                        <label for="adults"><h5>Adults</h5>Ages 13 or above</label>
-                                
-                                                        <div class="party-input" id="adults">
-                                                            <button type="button" v-on:click="adultsDecrease($event)" class="party-decrease inactive">-</button>
-                                                            <div>&#60;% bookingFormData.adults %></div>
-                                                            <button type="button" v-on:click="adultsIncrease($event)" class="party-increase">+</button>
+                                </div>
+        
+                                <div class="booking-summary">
+                                    <div class="booking-helper-text">
+                                        Select arrival date from calendar
+                                    </div>
+                                    <form>
+                                        {{ booking_form.hidden_tag() }}
+                                        <div class="availability-form">
+                                            <div class="date-fields">
+            
+                                                <div class="input-container focused">
+                                                    <label for="arrival-date" class="focused">Arrival Date</label>
+                                                    <div id="arrival-date" class="focused" v-on:focus="arrivalDateFocus()" v-on:blur="arrivalDateBlur()" tabindex="0">&#60;% bookingFormData.arrivalDate %></div>      
+                                                </div>
+            
+                                                <div class="input-container">
+                                                    <label for="departure-date">Departure Date</label>
+                                                    <div id="departure-date" v-on:focus="departureDateFocus()" v-on:blur="departureDateBlur()" tabindex="0">&#60;% bookingFormData.departureDate %></div>
+                                                </div>
+                                        
+                                            </div>
+            
+                                            <div class="input-container">
+                                                <label for="guests">Guests</label>
+                                                <div id="guests" v-on:click="displayPartyOverlay()" v-on:blur="guestsBlur()" tabindex="0"><p>&#60;% partyString %></p>
+                                                    <div class="party-container guests-dropdown" tabindex="0">
+                                    
+                                                        <div class="party-input-container">
+                                                            <label for="adults"><h5>Adults</h5>Ages 13 or above</label>
+                                    
+                                                            <div class="party-input" id="adults">
+                                                                <button type="button" v-on:click="adultsDecrease($event)" class="party-decrease inactive">-</button>
+                                                                <div>&#60;% bookingFormData.adults %></div>
+                                                                <button type="button" v-on:click="adultsIncrease($event)" class="party-increase">+</button>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                
-                                                    <div class="party-input-container">
-                                                        <label for="children"><h5>Children</h5>Ages 2-12</label>
-                                                        <div class="party-input" id="children">
-                                                            <button type="button" v-on:click="childrenDecrease($event)" class="party-decrease inactive">-</button>
-                                                            <div>&#60;% bookingFormData.children %></div>
-                                                            <button type="button" v-on:click="childrenIncrease($event)" class="party-increase">+</button>
+                                    
+                                                        <div class="party-input-container">
+                                                            <label for="children"><h5>Children</h5>Ages 2-12</label>
+                                                            <div class="party-input" id="children">
+                                                                <button type="button" v-on:click="childrenDecrease($event)" class="party-decrease inactive">-</button>
+                                                                <div>&#60;% bookingFormData.children %></div>
+                                                                <button type="button" v-on:click="childrenIncrease($event)" class="party-increase">+</button>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                
-                                                    <div class="party-input-container">
-                                                        <label for="infants"><h5>Infants</h5>Under 2</label>
-                                                        <div class="party-input" id="infants">
-                                                            <button type="button" v-on:click="infantsDecrease($event)" class="party-decrease inactive">-</button>
-                                                            <div>&#60;% bookingFormData.infants %></div>
-                                                            <button type="button" v-on:click="infantsIncrease($event)" class="party-increase">+</button>
+                                    
+                                                        <div class="party-input-container">
+                                                            <label for="infants"><h5>Infants</h5>Under 2</label>
+                                                            <div class="party-input" id="infants">
+                                                                <button type="button" v-on:click="infantsDecrease($event)" class="party-decrease inactive">-</button>
+                                                                <div>&#60;% bookingFormData.infants %></div>
+                                                                <button type="button" v-on:click="infantsIncrease($event)" class="party-increase">+</button>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                
-                                                    <div class="party-input-container">
-                                                        <label for="dogs"><h5>Dogs</h5>£20 each</label>
-                                                        <div class="party-input" id="dogs">
-                                                            <button type="button" v-on:click="dogsDecrease($event)" class="party-decrease inactive">-</button>
-                                                            <div>&#60;% bookingFormData.dogs %></div>
-                                                            <button type="button" v-on:click="dogsIncrease($event)" class="party-increase">+</button>
+                                    
+                                                        <div class="party-input-container">
+                                                            <label for="dogs"><h5>Dogs</h5>£20 each</label>
+                                                            <div class="party-input" id="dogs">
+                                                                <button type="button" v-on:click="dogsDecrease($event)" class="party-decrease inactive">-</button>
+                                                                <div>&#60;% bookingFormData.dogs %></div>
+                                                                <button type="button" v-on:click="dogsIncrease($event)" class="party-increase">+</button>
+                                                            </div>
                                                         </div>
+                                                                                
                                                     </div>
-                                                                            
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    
-                                </form>
-        
-                                    
-                                <div class="booking-proceed-box">
-                                    <div class="total-breakdown">
-                                        <div class="stay-length-total"></div>
-                                        <div class="dog-total"></div>
-                                        <div class="total-box">
-                                            <div>Total</div>
-                                            <div>£&#60;% bookingFormData.price %></div>
+                                        
+                                    </form>
+            
+                                        
+                                    <div class="booking-proceed-box">
+                                        <div class="total-breakdown">
+                                            <div class="stay-length-total"></div>
+                                            <div class="dog-total"></div>
+                                            <div class="total-box">
+                                                <div>Total</div>
+                                                <div>£&#60;% bookingFormData.price %></div>
+                                            </div>
                                         </div>
+                                        
+                                        
+                                        <button class="booking-proceed" type="button" v-on:click="bookingProceed()">BOOK NOW</button>
                                     </div>
                                     
-                                    
-                                    <button class="booking-proceed" type="button" v-on:click="bookingProceed()">BOOK NOW</button>
                                 </div>
-                                
+    
                             </div>
+                        </template>
+                        <template v-else>
+                            Booking unavailable
+                        </template>
 
-                        </div>
-                        
-                        
 
                     </div>
                     

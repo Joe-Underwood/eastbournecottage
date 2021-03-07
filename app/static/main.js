@@ -367,7 +367,9 @@ const vm = new Vue({
                 return this.getServerDate();
             })
             .then((serverDate) => {
-                this.initCalendar(serverDate, '');
+                if (this.publicPriceList.length > 0) {
+                    this.initCalendar(serverDate, '');
+                }
                 return;
             })
     },
