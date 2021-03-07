@@ -107,6 +107,29 @@ def get_price_list():
 
     return { 'priceList': price_list }
 
+@app.route('/get_public_price_list', methods=['POST'])
+def get_public_price_list():
+    query = db.session.query(Price_List).filter(Price_List.is_active == True).order_by(Price_List.start_date.asc())
+    public_price_list = []
+    for row in query:
+        if row.booking_id:
+            booked = True
+        else:
+            booked = False
+        segment = {
+            'id': row.id,
+            'startDate': row.start_date.isoformat(), 
+            'price': str(row.price), 
+            'price2Weeks': str(row.price_2_weeks), 
+            'price3Weeks': str(row.price_3_weeks), 
+            'price4Weeks': str(row.price_4_weeks), 
+            'booked': booked,
+            'updateFlag': False,
+            'removeFlag': False
+            }
+        public_price_list.append(segment)
+    return { 'publicPriceList': public_price_list }
+
 @app.route('/set_price_list', methods=['POST'])
 @login_required
 def set_price_list():
