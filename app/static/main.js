@@ -775,8 +775,6 @@ const vm = new Vue({
         },
         
         initCalendar(startDate, inputField) {
-            console.log('wang');
-            console.log(startDate);
             const endDate = new Date(this.publicPriceList[this.publicPriceList.length - 1]['startDate']);
             endDate.setDate(endDate.getDate() + +this.publicPriceListSettings['maxSegmentLength']);
             //const startDate = this.serverDate; //new Date(year, month)
