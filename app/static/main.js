@@ -360,13 +360,16 @@ const vm = new Vue({
         }
     },
     created: function() {
-        this.getPublicPriceList();
-        this.getPublicPriceListSettings()
+        this.getPublicPriceListSettings();
+        this.getPublicPriceList()
             .then(() => {
                 this.initCalendarSwiper();
                 return this.getServerDate();
             })
             .then((serverDate) => {
+                const x = window.matchMedia("(max-width: 1019px)");
+                this.toggleCalendarSlides(x);
+                x.addEventListener("change", this.toggleCalendarSlides);
                 if (this.publicPriceList.length > 0) {
                     this.initCalendar(serverDate, '');
                 }
@@ -430,7 +433,14 @@ const vm = new Vue({
 
             this.calendarSwiper = calendarSwiper;
         },
-
+        toggleCalendarSlides(x) {
+            if (x.matches) {
+              this.calendarSwiper.params.slidesPerView = 1;
+            } else {
+              this.calendarSwiper.params.slidesPerView = 2;
+            }
+            this.calendarSwiper.update();
+        },
         //-------------------- NAVBAR METHODS ------------------------//
         scrollToTop() {
             console.log('top');
@@ -1647,15 +1657,5 @@ const vm = new Vue({
 
 //------ toggle calendarSwiper slides per view (responsive)-------------//
 
-function toggleCalendarSlides(x) {
-    if (x.matches) {
-      vm.calendarSwiper.params.slidesPerView = 1;
-    } else {
-      vm.calendarSwiper.params.slidesPerView = 2;
-    }
-    vm.calendarSwiper.update();
-  }
-  
-  const x = window.matchMedia("(max-width: 1019px)")
-  toggleCalendarSlides(x) // Call listener function at run time
-  x.addEventListener("change", toggleCalendarSlides) // Attach listener function on state changes 
+const x = window.matchMedia("(max-width: 1019px)");
+x.addEventListener("change", vm.toggleCalendarSlides);
