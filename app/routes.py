@@ -1,13 +1,12 @@
 from app import app, db
 from app.forms import BookingForm, LoginForm
-from app.models import User, Customer, Booking, Price_List, Price_List_Settings, Delete_Price_List, Delete_Booking, Delete_Customer
+from app.models import User, Customer, Booking, Billing, Price_List, Price_List_Settings, Delete_Price_List, Delete_Booking, Delete_Customer, Delete_Billing
 from flask import render_template, request, jsonify, redirect, url_for
 from datetime import datetime, date, timedelta
 from datetime import timedelta
 from calendar import Calendar
 from decimal import Decimal
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User
 
 @app.route('/', methods=['GET', 'POST'])
 def landing_page():
@@ -471,6 +470,81 @@ def set_bookings():
     print('Booking updated')
     return { 'success': True }
 
+@app.route('/get_billings', methods=['POST'])
+@login_required
+def get_billings():
+    query = db.session.query(Billing).order_by(Billing.booking_id.asc())
+    billings = []
+    for row in query:
+        billing = {
+            'id': row.id,
+            'bookingId': row.booking_id,
+            'amount': row.amount,
+            'date': row.date,
+            'isInvoice': row.is_invoice,
+            'isPayment': row.is_payment,
+            'isCredit': row.is_credit,
+            'isDebit': row.is_debit,
+            'note': row.note
+        }
+        billings.append(billing)
+    
+    return { 'billings': billings }
+
+@app.route('/set_billings', methods=['POST'])
+@login_required
+def set_billings():
+    json_request = request.get_json()
+    query = db.session.query(Billing)
+    for billing in json_request:
+        if (billing['deleteFlag']):
+            db_billing = query.filter(Billing.id == billing['id']).first()
+            if (db_billing):
+                delete_billing = Delete_Billing(
+                    booking_id = int(billing['bookingId']),
+                    amount = Decimal(billing['amount']),
+                    is_invoice = billing['isInvoice'],
+                    is_payment = billing['isPayment'],
+                    is_credit = billing['isCredit'],
+                    is_debit = billing['isDebit'],
+                    note = billing['note']
+                )
+                db.session.add(delete_billing)
+                print('billing deleted')
+            else:
+                print('billing marked for deletion does not exist')
+                continue
+        elif (billing['updateFlag']):
+            if (billing['id']): #maybe check if there are any mismatches
+                query.filter(Billing.id == billing['id']).update({
+                    Billing.booking_id: int(billing['bookingId']),
+                    Billing.amount: Decimal(billing['amount']),
+                    Billing.date: datetime.strptime(billing['date'], '%Y-%m-%d').date(),
+                    Billing.is_invoice: billing['isInvoice'],
+                    Billing.is_payment: billing['isPayment'],
+                    Billing.is_credit: billing['isCredit'],
+                    Billing.is_debit: billing['isDebit'],
+                    Billing.note: str(billing['note'])
+                },
+                synchronize_session = False
+                )
+                print('billing updated')
+            else: 
+                new_billing = Billing(
+                    booking_id = int(billing['bookingId']),
+                    amount = Decimal(billing['amount']),
+                    is_invoice = billing['isInvoice'],
+                    is_payment = billing['isPayment'],
+                    is_credit = billing['isCredit'],
+                    is_debit = billing['isDebit'],
+                    note = billing['note']
+                )
+                db.session.add(new_billing)
+                print('billing added')
+    db.session.commit()
+    print('Billing updated')
+    return { 'success': True }
+
 @app.route('/booking', methods=['POST'])
 def booking():
     booking_form_data = request.get_json()
@@ -637,7 +711,7 @@ def set_customers():
                     Customer.address_line_2: str(customer['addressLine2']),
                     Customer.town_or_city: str(customer['townOrCity']),
                     Customer.county_or_region: str(customer['countyOrRegion']),
-                    Customer.postcode: str(customer['postcode']),
+                    Customer.postcode: str(customer['postcode'])
                 },
                 synchronize_session = False
                 )

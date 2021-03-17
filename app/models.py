@@ -39,6 +39,7 @@ class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
     date_segments = db.relationship('Price_List', backref='booking')
+    payments = db.relationship('Payment', backref='booking')
     arrival_date = db.Column(db.Date)
     departure_date = db.Column(db.Date)
     adults = db.Column(db.Integer)
@@ -48,6 +49,18 @@ class Booking(db.Model):
     stay_price = db.Column(db.Numeric(10, 2))
     dog_price = db.Column(db.Numeric(10, 2))
     price = db.Column(db.Numeric(10,2))
+    total_due_by = db.Column(db.Date)
+
+class Billing(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    booking_id = db.Column(db.Integer, db.ForeignKey('booking.id'))
+    amount = db.Column(db.Numeric(10, 2))
+    date = db.Column(db.Date)
+    is_invoice = db.Column(db.Boolean, default=False)
+    is_payment = db.Column(db.Boolean, default=False)
+    is_credit = db.Column(db.Boolean, default=False)
+    is_debit = db.Column(db.Boolean, default=False)
+    note = db.Column(db.String(30))
 
 class Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -100,6 +113,17 @@ class Delete_Booking(db.Model):
     stay_price = db.Column(db.Numeric(10, 2))
     dog_price = db.Column(db.Numeric(10, 2))
     price = db.Column(db.Numeric(10,2))
+
+class Delete_Billing(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    booking_id = db.Column(db.Integer, db.ForeignKey('booking.id'))
+    amount = db.Column(db.Numeric(10, 2))
+    date = db.Column(db.Date)
+    is_invoice = db.Column(db.Boolean, default=False)
+    is_payment = db.Column(db.Boolean, default=False)
+    is_credit = db.Column(db.Boolean, default=False)
+    is_debit = db.Column(db.Boolean, default=False)
+    note = db.Column(db.String(30))
 
 class Delete_Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)

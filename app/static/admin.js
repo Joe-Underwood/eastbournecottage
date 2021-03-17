@@ -5,6 +5,7 @@ const vm = new Vue({
         priceListSettings: null,
         bookings: null,
         customers: null,
+        billings: null,
 
         serverDate: null,
         priceListMonthView: true,
@@ -54,6 +55,7 @@ const vm = new Vue({
         this.getPriceList();
         this.getBookings();
         this.getCustomers();
+        this.getBillings();
         this.getPriceListSettings()
             .then(() => {
                 return this.getServerDate();
@@ -154,6 +156,37 @@ const vm = new Vue({
                         this.customers = json['customers'];
                         return json['customers'];
                     })
+
+            return response;
+        },
+        getBillings() {
+            const response =
+                fetch('/get_billings', { method: 'post' })
+                    .then(response => {
+                        return response.json();
+                    })
+                    .then(json => {
+                        this.billings = json['billings'];
+                        return json['billings'];
+                    })
+
+            return response;
+        },
+        setBillings() {
+            const response = 
+                fetch('/set_billings', {
+                    method: 'post',
+                    body: JSON.stringify(this.billings),
+                    headers: new Headers({
+                        'content-type': 'application/json'
+                    })
+                })
+                .then(response => {
+                    return response.json();
+                })
+                .then(json => {
+                    return json['success'];
+                })
 
             return response;
         },

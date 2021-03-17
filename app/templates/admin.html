@@ -76,7 +76,7 @@
                 <div class="customers-tab-inner">Customers</div>
             </div>
             <div class="settings-tab-outer">
-                <div class="settings-tab-inner">Calendar</div>
+                <div class="settings-tab-inner">Payments</div>
             </div>
         </div>
 
@@ -179,9 +179,6 @@
                             <input id="max-segment-length" v-model="priceListSettings['maxSegmentLength']" type="number" step="1" />
                         </div>
                     </div>
-                    
-
-                    
 
                     <button class="page-update" v-on:click="priceListSettingsUpdate()">UPDATE SETTINGS</button>
 
@@ -394,7 +391,6 @@
                                         <input id="price" v-model="booking['price']" type="number" step="0.01" />
                                     </div>
                                 </div>
-                                
                                 
                                 <button class="page-delete" v-on:click="bookingDelete(booking, $event)">DELETE</button>
                                 <button class="page-update" v-on:click="bookingUpdate(booking, $event)">UPDATE</button>
