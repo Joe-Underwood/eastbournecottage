@@ -89,6 +89,27 @@ class Price_List_Settings(db.Model):
     max_infants = db.Column(db.Integer)
     max_guests = db.Column(db.Integer)
 
+class Billing_Settings(db.Model):
+    __tablename__ = 'billing_settings'
+    id = db.Column(db.Integer, primary_key=True)
+    payment_breakpoints = db.relationship('Payment_Breakpoint', backref='billing_settings')
+    cancellation_breakpoints = db.relationship('Cancellation_Breakpoint', backref='billing_settings')
+
+class Payment_Breakpoint(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    billing_settings_id = db.Column(db.Integer, db.ForeignKey('billing_settings.id'))
+    amount_due = db.Column(db.Numeric(10, 2))
+    due_by = db.Column(db.Integer) #days before Booking.start_date
+    is_percentage = db.Column(db.Boolean, default=True)
+    is_absolute = db.Column(db.Boolean, default=False)
+
+class Cancellation_Breakpoint(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    billing_settings_id = db.Column(db.Integer, db.ForeignKey('billing_settings.id'))
+    amount_refundable = db.Column(db.Numeric(10, 2))
+    is_percentage = db.Column(db.Boolean, default=True)
+    is_absolute = db.Column(db.Boolean, default=False)
+
 class Delete_Price_List(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     start_date = db.Column(db.Date)
