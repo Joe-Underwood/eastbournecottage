@@ -1,6 +1,6 @@
 from app import app, db
 from app.forms import BookingForm, LoginForm
-from app.models import User, Customer, Booking, Billing, Price_List, Price_List_Settings, Delete_Price_List, Delete_Booking, Delete_Customer, Delete_Billing
+from app.models import User, Customer, Booking, Billing, Billing_Settings, Payment_Breakpoint, Cancellation_Breakpoint, Price_List, Price_List_Settings, Delete_Price_List, Delete_Booking, Delete_Customer, Delete_Billing
 from flask import render_template, request, jsonify, redirect, url_for
 from datetime import datetime, date, timedelta
 from datetime import timedelta
@@ -545,6 +545,48 @@ def set_billings():
     print('Billing updated')
     return { 'success': True }
 
+@app.route('/get_billing_settings', methods=['POST'])
+@login_required
+def get_billing_settings():
+    settings_query = db.session.query(Billing_Settings).first()
+    db_payment_breakpoints = settings_query.payment_breakpoints
+    db_cancellation_breakpoints = settings_query.cancellation_breakpoints
+
+    payment_breakpoints = []
+    cancellation_breakpoints = []
+
+    if db_payment_breakpoints:
+        
+        for row in db_payment_breakpoints.order_by(Payment_Breakpoint.due_by.desc()):
+            payment_breakpoints.append({
+                'id': row.id,
+                'amountDue': row.amount_due,
+                'dueBy': row.due_by,
+                'dueOnReceipt': row.due_on_receipt,
+                'cumulativeTotal': 0,
+                'selectFlag': False
+            })
+
+    if db_cancellation_breakpoints:
+
+        for row in db_cancellation_breakpoints.order_by(Cancellation_Breakpoint.cancel_by.desc()):
+            cancellation_breakpoints.append({
+                'id': row.id,
+                'amountRefundable': row.amount_refundable,
+                'cancelBy': row.cancel_by,
+                'cumulativeTotal': 0,
+                'selectFlag': False
+            })
+
+    billing_settings = { 
+        'id': settings_query.id,
+        'paymentBreakpoints': payment_breakpoints,
+        'cancellationBreakpoints': cancellation_breakpoints,
+        'updateFlag': False
+        }
+
+    return { 'billingSettings': billing_settings }
+
 @app.route('/booking', methods=['POST'])
 def booking():
     booking_form_data = request.get_json()
@@ -635,6 +677,20 @@ def booking():
         town_or_city = booking_form_data['townOrCity'],
         county_or_region = booking_form_data['countyOrRegion'],
         postcode = booking_form_data['postcode']
+    )
+
+    billing_settings = db.session.query(Billing_Settings).first()
+    due_date = date.today() # should be a date based on settings rules
+    invoice_query = db.session.query(Billing).filter(Billing.is_invoice == True)
+    if (invoice_query):
+        invoice_ref = int(invoice_query.order_by(Billing.invoice_reference.desc()).first() + 1)
+
+    invoice = Billing(
+        amount = Decimal(booking_form_data['price']),
+        date = date.today(),
+        invoice_due_date = due_date,
+        is_invoice = True,
+        invoice_reference = invoice_ref
     )
 
     for segment in date_segments:

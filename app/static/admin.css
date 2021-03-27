@@ -928,7 +928,7 @@ svg {
                     border-bottom-left-radius: 4px;
                 }
 
-            .price-table-column {
+            .price-table-column, .billing-table-column {
                 display: flex;
                 flex-direction: column;
             }
@@ -941,7 +941,7 @@ svg {
                     border-right: 1px solid #a5c2cf;
                 }
 
-            .price-table-header {
+            .price-table-header, .billing-table-header {
                 background-color: rgb(15, 72, 117);
                 color: rgb(246, 249, 250);
                 height: 40px;
@@ -1490,3 +1490,129 @@ svg {
                 .party-input div.inactive {
                     color: rgb(113, 113, 113);
                 }
+
+.billing-main {
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+    .booking-column {
+        margin-left: 16px;
+    }
+
+        .booking-column .price-table-header {
+            padding-right: 16px;
+            padding-left: 16px;
+        }
+
+    .billing-table-swiper {
+        padding-left: 90px;
+    }
+
+.billing-settings {
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+    .payment-terms-settings {
+        margin-bottom: 32px;
+    }
+
+        .payment-terms-table {
+            display: flex;
+            margin-bottom: 16px;
+        }
+
+         .payment-terms-table input {
+            border-radius: 0;
+            border-bottom: 1px solid #a5c2cf;
+            border-top: 0;
+            border-left: 1px solid #a5c2cf;
+            border-right: 0;
+            height: 48px;
+            width: 100%;
+         }
+
+         .payment-terms-table input.selected {
+            background-color: rgba(226, 138, 12, 0.5);
+         }
+
+         .payment-terms-column:last-of-type input {
+            border-right: 1px solid #a5c2cf;
+         }
+
+        .payment-terms-column:first-of-type .price-table-header {
+            border-top-left-radius: 4px;
+        }
+
+        .payment-terms-column:first-of-type input:last-of-type {
+            border-bottom-left-radius: 4px;
+        }
+
+        .payment-terms-column:last-of-type .price-table-header {
+            border-top-right-radius: 4px;
+        }
+
+        .payment-terms-column:last-of-type input:last-of-type {
+            border-bottom-right-radius: 4px;
+        }
+
+    .cancellation-terms-settings {
+        margin-bottom: 32px;
+    }
+
+        .cancellation-terms-table {
+            display: flex;
+            margin-bottom: 16px;
+        }
+
+            .cancellation-terms-table input {
+                border-radius: 0;
+                border-bottom: 1px solid #a5c2cf;
+                border-top: 0;
+                border-left: 1px solid #a5c2cf;
+                border-right: 0;
+                height: 48px;
+                width: 100%;
+            }
+
+            .cancellation-terms-table input.selected {
+                background-color: rgba(226, 138, 12, 0.5);
+            }
+
+            .cancellation-terms-column:last-of-type input {
+                border-right: 1px solid #a5c2cf;
+             }
+
+            .cancellation-terms-column:first-of-type .price-table-header {
+                border-top-left-radius: 4px;
+            }
+    
+            .cancellation-terms-column:first-of-type input:last-of-type {
+                border-bottom-left-radius: 4px;
+            }
+    
+            .cancellation-terms-column:last-of-type .price-table-header {
+                border-top-right-radius: 4px;
+            }
+    
+            .cancellation-terms-column:last-of-type input:last-of-type {
+                border-bottom-right-radius: 4px;
+            }
+
+    .billing-settings-controls {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .controls-add {
+        border-radius: 100%;
+        width: 40px;
+        height: 40px;
+        font-size: 22px;
+    }
+
+    .billing-settings .buttons-space {
+        padding-bottom: 48px;
+    }

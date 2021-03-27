@@ -6,6 +6,7 @@ const vm = new Vue({
         bookings: null,
         customers: null,
         billings: null,
+        billingSettings: null,
 
         serverDate: null,
         priceListMonthView: true,
@@ -13,9 +14,17 @@ const vm = new Vue({
         cardSelect: false,
         cardSelection: [],
 
+        paymentBreakpointSelect: false,
+        paymentBreakpointSelection: [],
+
+        cancellationBreakpointSelect: false,
+        cancellationBreakpointSelection: [],
+
         monthSwiper: null,
         monthTabGlider: null,
-        monthTabsRefresh: false
+        monthTabsRefresh: false,
+
+        billingTableSwiper: null
     },
     computed: {
         activePriceList: function() {
@@ -56,6 +65,7 @@ const vm = new Vue({
         this.getBookings();
         this.getCustomers();
         this.getBillings();
+        this.getBillingSettings();
         this.getPriceListSettings()
             .then(() => {
                 return this.getServerDate();
@@ -70,13 +80,11 @@ const vm = new Vue({
                     document.querySelector('.tab').classList.add('current-month-tab');
                     this.initMonthTabGlider();
                     this.initPriceTableSwipers();
+                    this.initBillingTableSwiper();
                 })
             })
     },
     methods: {
-        test(i) {
-            console.log(i);
-        },
         getPriceList() {
             const response =
                 fetch('/get_price_list', { method: 'post' })
@@ -187,6 +195,19 @@ const vm = new Vue({
                 .then(json => {
                     return json['success'];
                 })
+
+            return response;
+        },
+        getBillingSettings() {
+            const response =
+                fetch('/get_billing_settings', { method: 'post' })
+                    .then(response => {
+                        return response.json();
+                    })
+                    .then(json => {
+                        this.billingSettings = json['billingSettings'];
+                        return json['billingSettings'];
+                    })
 
             return response;
         },
@@ -363,6 +384,7 @@ const vm = new Vue({
         initMonthSwiper() {
             const monthSwiper = new Swiper('.month-swiper', {
                 spaceBetween: 16,
+                slidesPerView: 1,
                 allowTouchMove: false,
                 on: {
                     slideChange: function() {
@@ -383,6 +405,7 @@ const vm = new Vue({
                 duration: 2,
                 scrollLock: true
             })
+
             this.monthTabGlider = monthTabGlider;
         },
         initPriceTableSwipers() {
@@ -390,12 +413,25 @@ const vm = new Vue({
             for (node in swiperNodeList) {
                 new Swiper(swiperNodeList[node], {
                     spaceBetween: 0,
+                    slidesPerView: 1,
                     pagination: {
                         el: document.querySelectorAll('.swiper-pagination')[node],
-                        type: 'bullets',
-                      },
+                        type: 'bullets'
+                      }
                 })
             }
+        },
+        initBillingTableSwiper() {
+            const billingSwiper = new Swiper('.billing-table-swiper', {
+                spaceBetween: 0,
+                slidesPerView: 2,
+                pagination: {
+                    el: document.querySelector('.billing-table-swiper .swiper-pagination'),
+                    type: 'bullets'
+                }
+            })
+
+            this.billingSwiper = billingSwiper;
         },
         segmentMonthFilter(segment, month, index) {
             if (index === this.rangeMonths.length - 1) {
@@ -410,7 +446,9 @@ const vm = new Vue({
             document.querySelector('.bookings').classList.add('hidden');
             document.querySelector('.customers').classList.add('hidden');
             document.querySelector('.settings').classList.add('hidden');
+            document.querySelector('.billing').classList.add('hidden');
             document.querySelector('.tabs').classList.remove('hidden');
+            document.querySelector('.billing-settings').classList.add('hidden');
             this.priceListSelectOff();
             if (!this.monthTabGlider) {
                 this.monthTabsRefresh = false;
@@ -434,6 +472,8 @@ const vm = new Vue({
             document.querySelector('.bookings').classList.add('hidden');
             document.querySelector('.customers').classList.add('hidden');
             document.querySelector('.settings').classList.remove('hidden');
+            document.querySelector('.billing').classList.add('hidden');
+            document.querySelector('.billing-settings').classList.add('hidden');
         },
         segmentToggleExpand(e) {
             function segmentNode(node) {
@@ -453,17 +493,43 @@ const vm = new Vue({
             document.querySelectorAll('.segment-expand')[segmentIndex].classList.toggle('hidden');
         },
         goToBookings() {
+            document.querySelector('.tabs').classList.remove('hidden');
             document.querySelector('.price-list').classList.add('hidden');
             document.querySelector('.bookings').classList.remove('hidden');
             document.querySelector('.customers').classList.add('hidden');
             document.querySelector('.settings').classList.add('hidden');
+            document.querySelector('.billing').classList.add('hidden');
+            document.querySelector('.billing-settings').classList.add('hidden');
             this.bookingCardSelectOff();
         },
         goToCustomers() {
+            document.querySelector('.tabs').classList.remove('hidden');
             document.querySelector('.price-list').classList.add('hidden');
             document.querySelector('.bookings').classList.add('hidden');
             document.querySelector('.customers').classList.remove('hidden');
             document.querySelector('.settings').classList.add('hidden');
+            document.querySelector('.billing').classList.add('hidden');
+            document.querySelector('.billing-settings').classList.add('hidden');
+            this.customerCardSelectOff();
+        },
+        goToBilling() {
+            document.querySelector('.tabs').classList.remove('hidden');
+            document.querySelector('.price-list').classList.add('hidden');
+            document.querySelector('.bookings').classList.add('hidden');
+            document.querySelector('.customers').classList.add('hidden');
+            document.querySelector('.settings').classList.add('hidden');
+            document.querySelector('.billing').classList.remove('hidden');
+            document.querySelector('.billing-settings').classList.add('hidden');
+            this.customerCardSelectOff();
+        },
+        goToBillingSettings() {
+            document.querySelector('.tabs').classList.add('hidden');
+            document.querySelector('.price-list').classList.add('hidden');
+            document.querySelector('.bookings').classList.add('hidden');
+            document.querySelector('.customers').classList.add('hidden');
+            document.querySelector('.settings').classList.add('hidden');
+            document.querySelector('.billing').classList.add('hidden');
+            document.querySelector('.billing-settings').classList.remove('hidden');
             this.customerCardSelectOff();
         },
         priceListSettingsUpdate() {
@@ -813,6 +879,88 @@ const vm = new Vue({
         maxDogsIncrease(e) {
             e.preventDefault();
             this.priceListSettings['maxDogs']++;
+        },
+        addPaymentBreakpoint() {
+            this.billingSettings['paymentBreakpoints'].push({
+                'id': null,
+                'amountDue': null,
+                'dueBy': null,
+                'cumulativeTotal': null,
+                'selectFlag': false
+            })
+            this.billingSettings['updateFlag'] = true
+        },
+        addCancellationBreakpoint() {
+            this.billingSettings['cancellationBreakpoints'].push({
+                'id': null,
+                'amountRefundable': null,
+                'cancelBy': null,
+                'cumulativeTotal': null,
+                'selectFlag': false
+            })
+            this.billingSettings['updateFlag'] = true
+        },
+        selectPaymentBreakpoint(row, e) {
+            if (this.paymentBreakpointSelect) {
+                if (row['selectFlag']) {
+                    row['selectFlag'] = false;
+                    this.paymentBreakpointSelection.splice(this.paymentBreakpointSelection.indexOf(row), 1);
+                } else {
+                    row['selectFlag'] = true;
+                    this.paymentBreakpointSelection.push(row);
+                }
+            }
+        },
+        paymentBreakpointSelectOn() {
+            this.paymentBreakpointSelect = true;
+
+            document.querySelector('.payment-terms-settings .controls-add').classList.add('hidden');
+            document.querySelector('.payment-terms-settings .controls-select').classList.add('hidden');
+            document.querySelector('.payment-terms-settings .controls-cancel').classList.remove('hidden');
+            document.querySelector('.payment-terms-settings .controls-delete').classList.remove('hidden');
+        },
+        paymentBreakpointSelectOff() {
+            this.paymentBreakpointSelect = false;
+            for (let i = 0; i < this.paymentBreakpointSelection.length; i++) {
+                this.paymentBreakpointSelection[i]['selectFlag'] = false;
+            }
+            this.paymentBreakpointSelection = [];
+
+            document.querySelector('.payment-terms-settings .controls-add').classList.remove('hidden');
+            document.querySelector('.payment-terms-settings .controls-select').classList.remove('hidden');
+            document.querySelector('.payment-terms-settings .controls-cancel').classList.add('hidden');
+            document.querySelector('.payment-terms-settings .controls-delete').classList.add('hidden');
+        },
+        selectCancellationBreakpoint(row, e) {
+            if (this.cancellationBreakpointSelect) {
+                if (row['selectFlag']) {
+                    row['selectFlag'] = false;
+                    this.cancellationBreakpointSelection.splice(this.cancellationBreakpointSelection.indexOf(row), 1);
+                } else {
+                    row['selectFlag'] = true;
+                    this.cancellationBreakpointSelection.push(row);
+                }
+            }
+        },
+        cancellationBreakpointSelectOn() {
+            this.cancellationBreakpointSelect = true;
+
+            document.querySelector('.cancellation-terms-settings .controls-add').classList.add('hidden');
+            document.querySelector('.cancellation-terms-settings .controls-select').classList.add('hidden');
+            document.querySelector('.cancellation-terms-settings .controls-cancel').classList.remove('hidden');
+            document.querySelector('.cancellation-terms-settings .controls-delete').classList.remove('hidden');
+        },
+        cancellationBreakpointSelectOff() {
+            this.cancellationBreakpointSelect = false;
+            for (let i = 0; i < this.cancellationBreakpointSelection.length; i++) {
+                this.cancellationBreakpointSelection[i]['selectFlag'] = false;
+            }
+            this.cancellationBreakpointSelection = [];
+
+            document.querySelector('.cancellation-terms-settings .controls-add').classList.remove('hidden');
+            document.querySelector('.cancellation-terms-settings .controls-select').classList.remove('hidden');
+            document.querySelector('.cancellation-terms-settings .controls-cancel').classList.add('hidden');
+            document.querySelector('.cancellation-terms-settings .controls-delete').classList.add('hidden');
         }
         /*
         nextChangeoverDay(dateString, weekOffset=0) {

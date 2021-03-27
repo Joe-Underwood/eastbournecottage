@@ -75,8 +75,8 @@
             <div class="customers-tab-outer" v-on:click="goToCustomers()">
                 <div class="customers-tab-inner">Customers</div>
             </div>
-            <div class="settings-tab-outer">
-                <div class="settings-tab-inner">Payments</div>
+            <div class="settings-tab-outer" v-on:click="goToBilling()">
+                <div class="settings-tab-inner">Billing</div>
             </div>
         </div>
 
@@ -268,7 +268,6 @@
                                                     <div class="swiper-pagination"></div>
                                                 </div>
                                     
-
                                             </template>
                                             <template v-else>
                                                 <p>LOADING...</p>
@@ -532,6 +531,157 @@
                     <p>LOADING...</p>
                 </template>
                    
+            </div>
+
+            <div class="billing hidden">
+
+                <div class="price-list-header">
+                    <div class="header-flex">
+                        <h1>Billing</h1>
+                        <button v-on:click="goToBillingSettings">SETTINGS</button>
+                    </div>
+                    
+                </div>
+
+                <div class="billing-main">
+                    
+                    <template v-if="billings">
+
+                        <div class="billing-table">
+
+                            <div class="booking-column price-table-column start-date-column">
+                                <div class="price-table-header">Booking</div>
+                                <input class="billing-booking-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['bookingId']"/>
+                            </div>
+        
+                            <div class="swiper-container billing-table-swiper">
+                                <div class="swiper-wrapper">
+        
+                                    <div class="swiper-slide date-column price-table-column">
+                                        <div class="price-table-header">Date</div>
+                                        <input class="billing-date-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['date']"/>
+                                    </div>
+                
+                                    <div class="swiper-slide amount-column price-table-column">
+                                        <div class="price-table-header">Amount / £</div>
+                                        <input class="billing-amount-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['amount']"/>
+                                    </div>
+                
+                                    <div class="swiper-slide customer-column price-table-column">
+                                        <div class="price-table-header">Customer</div>
+                                        <input class="billing-customer-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['customer']"/>
+                                    </div>
+                
+                                    <div class="swiper-slide type-column price-table-column">
+                                        <div class="price-table-header">Type</div>
+                                        <input class="billing-type-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['type']"/>
+                                    </div>
+                
+                                    <div class="swiper-slide note-column price-table-column">
+                                        <div class="price-table-header">Note</div>
+                                        <input class="billing-note-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['note']"/>
+                                    </div>
+        
+                                </div>
+        
+                                <div class="swiper-pagination"></div>
+                                
+                            </div>
+                        </div>
+                        
+                        
+                    </template>
+    
+                    <template v-else>
+    
+                    </template>
+                </div>
+                
+            </div>
+
+            <div class="billing-settings hidden">
+
+                <template v-if="true">
+
+                    <div class="page-close-container" v-on:click="goToBilling()">
+                        <div class="page-close">
+                            <span v-for="i in 2"></span>
+                        </div>
+                    </div>
+
+                    <div class="payment-terms-settings">
+
+                        <h4>Payment Terms</h4>
+                        <div class="payment-terms-table">
+                            
+                            <div class="amount-due-column payment-terms-column">
+                                <div class="price-table-header">Amount Due / %</div>
+                                <input class="amount-due-row" v-for="(row, index) in billingSettings['paymentBreakpoints']" :key="row['id']" v-on:click="selectPaymentBreakpoint(row, $event)" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="paymentBreakpointSelect" v-model="row['amountDue']" type="number" step="1"/>
+                            </div>
+    
+                            <div class="due-by-column payment-terms-column">
+                                <div class="price-table-header">Due By / Days</div>
+                                <input class="due-by-row" v-for="(row, index) in billingSettings['paymentBreakpoints']" :key="row['id']" v-on:click="selectPaymentBreakpoint(row, $event)" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="paymentBreakpointSelect" v-model="row['dueBy']" type="number" step="1"/>
+                            </div>
+    
+                            <div class="cumulative-total-column payment-terms-column">
+                                <div class="price-table-header">Cumulative Total / %</div>
+                                <input class="cumulative-total-row" v-for="(row, index) in billingSettings['paymentBreakpoints']" :key="row['id']" v-on:click="selectPaymentBreakpoint(row, $event)" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" v-model="row['cumulativeTotal']" readonly />
+                            </div>
+
+                        </div>
+
+                        <div class="billing-settings-controls">
+                            <button class="controls-add" v-on:click="addPaymentBreakpoint()">+</button>
+                            <button class="controls-select" v-on:click="paymentBreakpointSelectOn()">SELECT</button>
+                            <button class="controls-cancel hidden" v-on:click="paymentBreakpointSelectOff()">CANCEL</button>
+                            <button class="controls-delete hidden" v-on:click="deletePaymentBreakpointSelection()">DELETE <% paymentBreakpointSelection.length %></button>
+                        </div>
+                        
+                    </div>
+
+                    <div class="cancellation-terms-settings">
+
+                        <h4>Cancellation Terms</h4>
+                        <div class="cancellation-terms-table">
+    
+                            <div class="amount-refundable-column cancellation-terms-column">
+                                <div class="price-table-header">Amount Refundable / %</div>
+                                <input class="amount-refundable-row" v-for="(row, index) in billingSettings['cancellationBreakpoints']" :key="row['id']" v-on:click="selectCancellationBreakpoint(row, $event)" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cancellationBreakpointSelect" v-model="row['amountRefundable']" type="number" step="1" />
+                            </div>
+    
+                            <div class="cancel-by-column cancellation-terms-column">
+                                <div class="price-table-header">Cancel By / Days</div>
+                                <input class="cancel-by-row" v-for="(row, index) in billingSettings['cancellationBreakpoints']" :key="row['id']" v-on:click="selectCancellationBreakpoint(row, $event)" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cancellationBreakpointSelect" v-model="row['cancelBy']" type="number" step="1" />
+                            </div>
+    
+                            <div class="cumulative-total-column cancellation-terms-column">
+                                <div class="price-table-header">Cumulative Total / %</div>
+                                <input class="cumulative-total-row" v-for="(row, index) in billingSettings['cancellationBreakpoints']" :key="row['id']" v-on:click="selectCancellationBreakpoint(row, $event)" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" v-model="row['cumulativeTotal']" readonly />
+                            </div>
+
+                        </div>
+
+                        <div class="billing-settings-controls">
+                            <button class="controls-add" v-on:click="addCancellationBreakpoint()">+</button>
+                            <button class="controls-select" v-on:click="cancellationBreakpointSelectOn()">SELECT</button>
+                            <button class="controls-cancel hidden" v-on:click="cancellationBreakpointSelectOff()">CANCEL</button>
+                            <button class="controls-delete hidden" v-on:click="deleteCancellationBreakpointSelection()">DELETE <% cancellationBreakpointSelection.length %></button>
+                        </div>
+
+                    </div>
+                    
+                    <button class="page-update">UPDATE SETTINGS</button>
+
+                    <div class="buttons-space"></div>
+
+                </template>
+                <template v-else>
+                    <p>LOADING...</p>
+                </template>
+                
+            </div>
+
             </div>
 
         </div>

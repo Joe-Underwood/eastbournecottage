@@ -1,0 +1,109 @@
+2021-03-25 13:50:18,649 ERROR: Exception on /get_billing_settings [POST] [in /hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/hdd/code/eastbournecottage/app/routes.py", line 552, in get_billing_settings
+    db_payment_breakpoints = settings_query.payment_breakpoints
+AttributeError: 'NoneType' object has no attribute 'payment_breakpoints'
+2021-03-25 13:50:59,482 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-25 16:22:04,846 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-25 16:24:23,495 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-25 16:29:52,464 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-25 16:29:52,509 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-25 16:29:52,559 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-25 16:29:52,564 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-25 16:38:00,149 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-25 16:38:00,204 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-25 16:38:00,241 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-25 16:38:00,308 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-25 16:38:07,325 ERROR: Exception on /get_billing_settings [POST] [in /hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/hdd/code/eastbournecottage/app/routes.py", line 552, in get_billing_settings
+    db_payment_breakpoints = settings_query.payment_breakpoints.order_by(Payment_Breakpoint.due_by.desc())
+AttributeError: 'InstrumentedList' object has no attribute 'order_by'
+2021-03-25 16:46:26,699 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-25 16:49:38,233 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-25 16:49:38,267 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-25 16:49:38,287 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-25 16:49:38,320 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-25 17:10:04,175 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-25 17:10:04,230 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-25 17:10:04,293 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-25 17:10:04,326 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-25 17:36:32,744 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-25 17:36:32,749 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-25 17:36:32,749 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-25 17:36:32,751 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-25 17:36:32,754 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:36:57,935 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:36:57,940 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:36:57,950 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:36:57,952 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:38:36,026 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:38:36,131 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:38:36,169 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:38:36,264 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:44:44,754 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:44:44,779 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:44:44,836 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:44:44,870 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:47:48,452 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:47:48,452 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:47:48,492 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:47:48,562 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:50:30,757 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:50:30,795 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:50:30,838 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:50:30,893 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:55:14,929 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:55:15,004 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:55:15,052 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:55:15,122 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:56:29,497 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:56:29,558 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:56:29,621 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 11:56:29,644 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 12:04:53,737 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 12:04:53,770 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 12:04:53,782 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 12:04:53,789 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 14:09:44,799 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 14:09:44,799 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 14:09:44,815 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 14:09:44,815 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 14:14:18,713 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 14:14:18,727 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 14:14:18,734 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 14:14:18,829 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 14:16:53,592 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 14:16:53,606 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 14:16:53,699 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 14:16:53,766 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 14:20:28,559 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-03-26 14:20:28,637 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]

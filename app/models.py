@@ -39,7 +39,7 @@ class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
     date_segments = db.relationship('Price_List', backref='booking')
-    payments = db.relationship('Payment', backref='booking')
+    billings = db.relationship('Billing', backref='booking')
     arrival_date = db.Column(db.Date)
     departure_date = db.Column(db.Date)
     adults = db.Column(db.Integer)
@@ -51,16 +51,23 @@ class Booking(db.Model):
     price = db.Column(db.Numeric(10,2))
     total_due_by = db.Column(db.Date)
 
+#consider splitting this up into invoices, payments etc.
 class Billing(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     booking_id = db.Column(db.Integer, db.ForeignKey('booking.id'))
     amount = db.Column(db.Numeric(10, 2))
     date = db.Column(db.Date)
+    invoice_due_date = db.Column(db.Date, default=None)
+    #insert invoice due_dates relationship to take into account multistage payment terms
     is_invoice = db.Column(db.Boolean, default=False)
     is_payment = db.Column(db.Boolean, default=False)
     is_credit = db.Column(db.Boolean, default=False)
     is_debit = db.Column(db.Boolean, default=False)
     note = db.Column(db.String(30))
+    invoice_reference = db.Column(db.Integer, unique=True, default=None)
+    payment_reference = db.Column(db.Integer, unique=True, default=None)
+    credit_note_reference = db.Column(db.Integer, unique=True, default=None)
+    debit_note_reference = db.Column(db.Integer, unique=True, default=None)
 
 class Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -100,15 +107,15 @@ class Payment_Breakpoint(db.Model):
     billing_settings_id = db.Column(db.Integer, db.ForeignKey('billing_settings.id'))
     amount_due = db.Column(db.Numeric(10, 2))
     due_by = db.Column(db.Integer) #days before Booking.start_date
-    is_percentage = db.Column(db.Boolean, default=True)
+    due_on_receipt = db.Column(db.Boolean, default=True)
+    is_percentage = db.Column(db.Boolean, default=True) #if false then amount_due is an absolute value
     is_absolute = db.Column(db.Boolean, default=False)
 
 class Cancellation_Breakpoint(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     billing_settings_id = db.Column(db.Integer, db.ForeignKey('billing_settings.id'))
     amount_refundable = db.Column(db.Numeric(10, 2))
-    is_percentage = db.Column(db.Boolean, default=True)
-    is_absolute = db.Column(db.Boolean, default=False)
+    cancel_by = db.Column(db.Integer) #days before Booking.start_date
 
 class Delete_Price_List(db.Model):
     id = db.Column(db.Integer, primary_key=True)
