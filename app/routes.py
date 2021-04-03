@@ -643,6 +643,10 @@ def set_billing_settings():
             else:
                 due_by = int(row['dueBy'])
 
+            if row['amountDue'] <= 0 or row['dueBy'] <= 0:
+                print('amount due and due by must be more than 0, therefore invalid')
+                return { 'success': False }
+
             db_payment_breakpoints.filter(Payment_Breakpoint.id == row['id']).update({
                 Payment_Breakpoint.amount_due: int(row['amountDue']),
                 Payment_Breakpoint.due_by: due_by,
@@ -652,6 +656,10 @@ def set_billing_settings():
             )
 
         else:
+            if row['amountDue'] <= 0 or row['dueBy'] <= 0:
+                print('amount due and due by must be more than 0, therefore invalid')
+                return { 'success': False }
+
             new_payment_breakpoint = Payment_Breakpoint(
                 amount_due = int(row['amountDue']),
                 due_by = int(row['dueBy']),
@@ -673,6 +681,7 @@ def set_billing_settings():
         return { 'success': False }
 
     for row in json_cancellation_breakpoints:
+        #json_cancellation_breakpoints validation----##
         if row['deleteFlag']:
             if row['id']:
                 db.session.delete(db_cancellation_breakpoints.filter_by(id = row['id']).first())
@@ -684,6 +693,10 @@ def set_billing_settings():
             else:
                 cancel_by = int(row['cancelBy'])
 
+            if int(row['amountRefundable']) < 0 or int(row['amountRefundable']) > 100 or int(row['cancelBy']) <= 0:
+                print('amount refundable must be between 0 and 100, therefore invalid')
+                return { 'success': False }
+
             db_cancellation_breakpoints.filter(Cancellation_Breakpoint.id == row['id']).update({
                 Cancellation_Breakpoint.amount_refundable: int(row['amountRefundable']),
                 Cancellation_Breakpoint.cancel_by: cancel_by,
@@ -692,6 +705,10 @@ def set_billing_settings():
             synchronize_session = False
             )
         else:
+            if int(row['amountRefundable']) < 0 or int(row['amountRefundable']) > 100 or int(row['cancelBy']) <= 0:
+                print('amount refundable must be between 0 and 100, therefore invalid')
+                return { 'success': False }
+
             new_cancellation_breakpoint = Cancellation_Breakpoint(
                 amount_refundable = int(row['amountRefundable']),
                 cancel_by = int(row['cancelBy']),
