@@ -643,7 +643,7 @@ def set_billing_settings():
             else:
                 due_by = int(row['dueBy'])
 
-            if row['amountDue'] <= 0 or row['dueBy'] <= 0:
+            if int(row['amountDue']) <= 0 or int(row['dueBy']) <= 0:
                 print('amount due and due by must be more than 0, therefore invalid')
                 return { 'success': False }
 
@@ -656,7 +656,7 @@ def set_billing_settings():
             )
 
         else:
-            if row['amountDue'] <= 0 or row['dueBy'] <= 0:
+            if int(row['amountDue']) <= 0 or int(row['dueBy']) <= 0:
                 print('amount due and due by must be more than 0, therefore invalid')
                 return { 'success': False }
 
