@@ -1,1 +1,30 @@
-2021-03-26 14:20:28,751 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 17:43:20,210 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 17:43:20,317 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 17:43:20,342 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 17:43:42,867 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 17:43:42,923 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 17:43:42,955 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 17:43:43,045 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 17:46:10,294 ERROR: Exception on /set_billing_settings [POST] [in /hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/hdd/code/eastbournecottage/app/routes.py", line 641, in set_billing_settings
+    Payment_Breakpoint.amount_due: int(row['amountDue']),
+ValueError: invalid literal for int() with base 10: '50.00'
+2021-04-03 17:48:06,057 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 17:48:06,061 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 17:48:06,112 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 17:48:06,142 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]

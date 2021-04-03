@@ -99,23 +99,22 @@ class Price_List_Settings(db.Model):
 class Billing_Settings(db.Model):
     __tablename__ = 'billing_settings'
     id = db.Column(db.Integer, primary_key=True)
-    payment_breakpoints = db.relationship('Payment_Breakpoint', backref='billing_settings')
-    cancellation_breakpoints = db.relationship('Cancellation_Breakpoint', backref='billing_settings')
+    payment_breakpoints = db.relationship('Payment_Breakpoint', backref='billing_settings', lazy='dynamic')
+    cancellation_breakpoints = db.relationship('Cancellation_Breakpoint', backref='billing_settings', lazy='dynamic')
 
 class Payment_Breakpoint(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     billing_settings_id = db.Column(db.Integer, db.ForeignKey('billing_settings.id'))
-    amount_due = db.Column(db.Numeric(10, 2))
-    due_by = db.Column(db.Integer) #days before Booking.start_date
-    due_on_receipt = db.Column(db.Boolean, default=True)
-    is_percentage = db.Column(db.Boolean, default=True) #if false then amount_due is an absolute value
-    is_absolute = db.Column(db.Boolean, default=False)
+    amount_due = db.Column(db.Integer)
+    due_by = db.Column(db.Integer, unique=True) #days before Booking.start_date
+    first_payment = db.Column(db.Boolean, default=False)
 
 class Cancellation_Breakpoint(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     billing_settings_id = db.Column(db.Integer, db.ForeignKey('billing_settings.id'))
-    amount_refundable = db.Column(db.Numeric(10, 2))
-    cancel_by = db.Column(db.Integer) #days before Booking.start_date
+    amount_refundable = db.Column(db.Integer)
+    cancel_by = db.Column(db.Integer, unique=True) #days before Booking.start_date
+    check_in = db.Column(db.Boolean, default=False)
 
 class Delete_Price_List(db.Model):
     id = db.Column(db.Integer, primary_key=True)

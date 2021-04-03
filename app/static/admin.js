@@ -208,8 +208,75 @@ const vm = new Vue({
                         this.billingSettings = json['billingSettings'];
                         return json['billingSettings'];
                     })
+                    .then(data => {
+                        this.refreshPaymentBreakpoints();
+                        this.refreshCancellationBreakpoints();
+                        return data;
+                    })
+                    .then(data => {
+                        this.$watch('billingSettings', 
+                        function() {
+                            this.billingSettings['updateFlag'] = true;
+                        },
+                        { deep: true })
+                        return data;
+                    })
 
             return response;
+        },
+        setBillingSettings() {
+            this.refreshPaymentBreakpoints();
+            this.refreshCancellationBreakpoints();
+            if (this.billingSettings['updateFlag']) {
+                const response = 
+                    fetch('/set_billing_settings', {
+                        method: 'post',
+                        body: JSON.stringify(this.billingSettings),
+                        headers: new Headers({
+                            'content-type': 'application/json'
+                        })
+                    })
+                    .then(response => {
+                        return response.json();
+                    })
+                    .then(json => {
+                        return json['success'];
+                    })
+
+                if (response) {
+                    this.billingSettings['updateFlag'] = false;
+                }
+
+                return response;
+            }
+        },
+        refreshPaymentBreakpoints() {
+            this.billingSettings['paymentBreakpoints'].sort(function(a, b) {
+                if (a['firstPayment']) {
+                    return -1;
+                }
+                else if (b['firstPayment']) {
+                    return 1;
+                }
+                else {
+                    return b['dueBy'] - a['dueBy'];
+                }
+            })
+
+            for (let i = 0; i < this.billingSettings['paymentBreakpoints'].length; i++) {
+                if (this.billingSettings['paymentBreakpoints'][i]['deleteFlag']) {
+                    this.billingSettings['paymentBreakpoints'][i]['amountDue'] = 0;
+                }
+                if (i === 0) {
+                    this.billingSettings['paymentBreakpoints'][i]['cumulativeTotal'] = parseInt(this.billingSettings['paymentBreakpoints'][i]['amountDue']);
+                }
+                else {
+                    this.billingSettings['paymentBreakpoints'][i]['cumulativeTotal'] = parseInt(this.billingSettings['paymentBreakpoints'][i-1]['cumulativeTotal']) + parseInt(this.billingSettings['paymentBreakpoints'][i]['amountDue']);
+                }
+            }
+        },
+        refreshCancellationBreakpoints() {
+            this.billingSettings['cancellationBreakpoints'].sort((a, b) => b['cancelBy'] - a['cancelBy']);
         },
         refreshPriceList() {
             this.priceList.sort((a, b) => new Date(a['startDate']) - new Date(b['startDate']));
@@ -627,7 +694,6 @@ const vm = new Vue({
             document.querySelector('.price-list .cards-select').classList.add('hidden');
             document.querySelector('.price-list .cards-cancel').classList.remove('hidden');
             document.querySelector('.price-list .cards-delete').classList.remove('hidden');
-
         },
         priceListSelectOff() {
             this.cardSelect = false;
@@ -885,8 +951,10 @@ const vm = new Vue({
                 'id': null,
                 'amountDue': null,
                 'dueBy': null,
+                'firstPayment': false,
                 'cumulativeTotal': null,
-                'selectFlag': false
+                'selectFlag': false,
+                'deleteFlag': false
             })
             this.billingSettings['updateFlag'] = true
         },
@@ -895,8 +963,10 @@ const vm = new Vue({
                 'id': null,
                 'amountRefundable': null,
                 'cancelBy': null,
+                'checkIn': false,
                 'cumulativeTotal': null,
-                'selectFlag': false
+                'selectFlag': false,
+                'deleteFlag': false
             })
             this.billingSettings['updateFlag'] = true
         },
@@ -905,11 +975,22 @@ const vm = new Vue({
                 if (row['selectFlag']) {
                     row['selectFlag'] = false;
                     this.paymentBreakpointSelection.splice(this.paymentBreakpointSelection.indexOf(row), 1);
-                } else {
+                } else if (!row['firstPayment']) {
                     row['selectFlag'] = true;
                     this.paymentBreakpointSelection.push(row);
                 }
             }
+        },
+        deletePaymentBreakpointSelection() {
+            //prompt for user confirmation before deletion
+
+            for (let i = 0; i < this.paymentBreakpointSelection.length; i++) {
+                this.paymentBreakpointSelection[i]['deleteFlag'] = true;
+                this.paymentBreakpointSelection[i]['amountDue'] = 0;
+            }
+
+            this.paymentBreakpointSelectOff();
+            this.refreshPaymentBreakpoints();
         },
         paymentBreakpointSelectOn() {
             this.paymentBreakpointSelect = true;
@@ -936,11 +1017,20 @@ const vm = new Vue({
                 if (row['selectFlag']) {
                     row['selectFlag'] = false;
                     this.cancellationBreakpointSelection.splice(this.cancellationBreakpointSelection.indexOf(row), 1);
-                } else {
+                } else if (!row['checkIn']) {
                     row['selectFlag'] = true;
                     this.cancellationBreakpointSelection.push(row);
                 }
             }
+        },
+        deleteCancellationBreakpointSelection() {
+            //prompt for user confirmation before deletion
+            for (let i = 0; i < this.cancellationBreakpointSelection.length; i++) {
+                this.cancellationBreakpointSelection[i]['deleteFlag'] = true;
+                this.cancellationBreakpointSelection[i]['amountRefundable'] = 0;
+            }
+            
+            this.cancellationBreakpointSelectOff();
         },
         cancellationBreakpointSelectOn() {
             this.cancellationBreakpointSelect = true;

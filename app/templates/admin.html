@@ -616,17 +616,17 @@
                             
                             <div class="amount-due-column payment-terms-column">
                                 <div class="price-table-header">Amount Due / %</div>
-                                <input class="amount-due-row" v-for="(row, index) in billingSettings['paymentBreakpoints']" :key="row['id']" v-on:click="selectPaymentBreakpoint(row, $event)" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="paymentBreakpointSelect" v-model="row['amountDue']" type="number" step="1"/>
+                                <input class="amount-due-row" v-for="(row, index) in billingSettings['paymentBreakpoints'].filter(row => !row['deleteFlag'])" :key="row['id']" v-on:click="selectPaymentBreakpoint(row, $event)" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="paymentBreakpointSelect" v-model="row['amountDue']" type="number" step="1"/>
                             </div>
     
                             <div class="due-by-column payment-terms-column">
                                 <div class="price-table-header">Due By / Days</div>
-                                <input class="due-by-row" v-for="(row, index) in billingSettings['paymentBreakpoints']" :key="row['id']" v-on:click="selectPaymentBreakpoint(row, $event)" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="paymentBreakpointSelect" v-model="row['dueBy']" type="number" step="1"/>
+                                <input class="due-by-row" v-for="(row, index) in billingSettings['paymentBreakpoints'].filter(row => !row['deleteFlag'])" :key="row['id']" v-on:click="selectPaymentBreakpoint(row, $event)" v-on:blur="refreshPaymentBreakpoints()" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="paymentBreakpointSelect || row['firstPayment']" v-model="row['dueBy']" type="number" step="1"/>
                             </div>
     
                             <div class="cumulative-total-column payment-terms-column">
                                 <div class="price-table-header">Cumulative Total / %</div>
-                                <input class="cumulative-total-row" v-for="(row, index) in billingSettings['paymentBreakpoints']" :key="row['id']" v-on:click="selectPaymentBreakpoint(row, $event)" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" v-model="row['cumulativeTotal']" readonly />
+                                <input class="cumulative-total-row" v-for="(row, index) in billingSettings['paymentBreakpoints'].filter(row => !row['deleteFlag'])" :key="row['id']" v-on:click="selectPaymentBreakpoint(row, $event)" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" v-model="row['cumulativeTotal']" readonly />
                             </div>
 
                         </div>
@@ -647,17 +647,12 @@
     
                             <div class="amount-refundable-column cancellation-terms-column">
                                 <div class="price-table-header">Amount Refundable / %</div>
-                                <input class="amount-refundable-row" v-for="(row, index) in billingSettings['cancellationBreakpoints']" :key="row['id']" v-on:click="selectCancellationBreakpoint(row, $event)" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cancellationBreakpointSelect" v-model="row['amountRefundable']" type="number" step="1" />
+                                <input class="amount-refundable-row" v-for="(row, index) in billingSettings['cancellationBreakpoints'].filter(row => !row['deleteFlag'])" :key="row['id']" v-on:click="selectCancellationBreakpoint(row, $event)" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cancellationBreakpointSelect" v-model="row['amountRefundable']" type="number" step="1" />
                             </div>
     
                             <div class="cancel-by-column cancellation-terms-column">
                                 <div class="price-table-header">Cancel By / Days</div>
-                                <input class="cancel-by-row" v-for="(row, index) in billingSettings['cancellationBreakpoints']" :key="row['id']" v-on:click="selectCancellationBreakpoint(row, $event)" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cancellationBreakpointSelect" v-model="row['cancelBy']" type="number" step="1" />
-                            </div>
-    
-                            <div class="cumulative-total-column cancellation-terms-column">
-                                <div class="price-table-header">Cumulative Total / %</div>
-                                <input class="cumulative-total-row" v-for="(row, index) in billingSettings['cancellationBreakpoints']" :key="row['id']" v-on:click="selectCancellationBreakpoint(row, $event)" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" v-model="row['cumulativeTotal']" readonly />
+                                <input class="cancel-by-row" v-for="(row, index) in billingSettings['cancellationBreakpoints'].filter(row => !row['deleteFlag'])" :key="row['id']" v-on:click="selectCancellationBreakpoint(row, $event)" v-on:blur="refreshCancellationBreakpoints()" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cancellationBreakpointSelect || row['checkIn']" v-model="row['cancelBy']" type="number" step="1" />
                             </div>
 
                         </div>
@@ -671,7 +666,7 @@
 
                     </div>
                     
-                    <button class="page-update">UPDATE SETTINGS</button>
+                    <button class="page-update" :class="{ 'button-disabled': !billingSettings['updateFlag'] }"v-on:click="setBillingSettings()">UPDATE SETTINGS</button>
 
                     <div class="buttons-space"></div>
 

@@ -7,6 +7,7 @@ from datetime import timedelta
 from calendar import Calendar
 from decimal import Decimal
 from flask_login import current_user, login_user, logout_user, login_required
+from functools import reduce
 
 @app.route('/', methods=['GET', 'POST'])
 def landing_page():
@@ -556,26 +557,53 @@ def get_billing_settings():
     cancellation_breakpoints = []
 
     if db_payment_breakpoints:
+
+        db_first_payment = db_payment_breakpoints.filter_by(first_payment = True).first()
+
+        payment_breakpoints.append({
+            'id': db_first_payment.id,
+            'amountDue': int(db_first_payment.amount_due),
+            'dueBy': None,
+            'firstPayment': True,
+            'cumulativeTotal': 0,
+            'selectFlag': False,
+            'deleteFlag': False
+        })
         
-        for row in db_payment_breakpoints.order_by(Payment_Breakpoint.due_by.desc()):
+        for row in db_payment_breakpoints.filter_by(first_payment = False).order_by(Payment_Breakpoint.due_by.desc()).all():
             payment_breakpoints.append({
                 'id': row.id,
-                'amountDue': row.amount_due,
-                'dueBy': row.due_by,
-                'dueOnReceipt': row.due_on_receipt,
+                'amountDue': int(row.amount_due),
+                'dueBy': int(row.due_by),
+                'firstPayment': row.first_payment,
                 'cumulativeTotal': 0,
-                'selectFlag': False
+                'selectFlag': False,
+                'deleteFlag': False
             })
 
     if db_cancellation_breakpoints:
 
-        for row in db_cancellation_breakpoints.order_by(Cancellation_Breakpoint.cancel_by.desc()):
+        db_check_in = db_cancellation_breakpoints.filter_by(check_in = True).first()
+
+        cancellation_breakpoints.append({
+            'id': db_check_in.id,
+            'amountRefundable': int(db_check_in.amount_refundable),
+            'cancelBy': None,
+            'checkIn': True,
+            'cumulativeTotal': 0,
+            'selectFlag': False,
+            'deleteFlag': False
+        })
+
+        for row in db_cancellation_breakpoints.filter_by(check_in = False).order_by(Cancellation_Breakpoint.cancel_by.desc()).all():
             cancellation_breakpoints.append({
                 'id': row.id,
-                'amountRefundable': row.amount_refundable,
-                'cancelBy': row.cancel_by,
+                'amountRefundable': int(row.amount_refundable),
+                'cancelBy': int(row.cancel_by),
+                'checkIn': row.check_in,
                 'cumulativeTotal': 0,
-                'selectFlag': False
+                'selectFlag': False,
+                'deleteFlag': False
             })
 
     billing_settings = { 
@@ -586,6 +614,96 @@ def get_billing_settings():
         }
 
     return { 'billingSettings': billing_settings }
+
+@app.route('/set_billing_settings', methods=['POST'])
+@login_required
+def set_billing_settings():
+    json_request = request.get_json()
+    json_payment_breakpoints = json_request['paymentBreakpoints']
+    json_cancellation_breakpoints = json_request['cancellationBreakpoints']
+
+    db_billing_settings = db.session.query(Billing_Settings).first()
+    db_payment_breakpoints = db_billing_settings.payment_breakpoints
+    db_cancellation_breakpoints = db_billing_settings.cancellation_breakpoints
+
+    ##-------json_payment_breakpoint validation-----------##
+
+
+    for row in json_payment_breakpoints:
+        if row['deleteFlag']:
+            if row['id']:
+                db.session.delete(db_payment_breakpoints.filter_by(id = row['id']).first())
+            else:
+                print('payment breakpoint flagged for deletion does not exist')
+
+        elif row['id']:
+            #--payment_breakpoint new/updated validation--#
+            if row['firstPayment']:
+                due_by = None
+            else:
+                due_by = int(row['dueBy'])
+
+            db_payment_breakpoints.filter(Payment_Breakpoint.id == row['id']).update({
+                Payment_Breakpoint.amount_due: int(row['amountDue']),
+                Payment_Breakpoint.due_by: due_by,
+                Payment_Breakpoint.first_payment: row['firstPayment']
+            },
+            synchronize_session = False
+            )
+
+        else:
+            new_payment_breakpoint = Payment_Breakpoint(
+                amount_due = int(row['amountDue']),
+                due_by = int(row['dueBy']),
+                first_payment = False
+            )
+            db.session.add(new_payment_breakpoint)
+            db_billing_settings.payment_breakpoints.append(new_payment_breakpoint)   
+
+
+    #------db_payment_breakpoint validation----------------#
+    cumulative_total = 0
+    for row in db_payment_breakpoints:
+        cumulative_total += row.amount_due
+
+    print(cumulative_total)
+    if (cumulative_total != 100):
+        print('cumulative total != 100, therefore invalid')
+        print(cumulative_total)
+        return { 'success': False }
+
+    for row in json_cancellation_breakpoints:
+        if row['deleteFlag']:
+            if row['id']:
+                db.session.delete(db_cancellation_breakpoints.filter_by(id = row['id']).first())
+            else:
+                print('cancellation breakpoint marked for deletion does not exist')
+        elif row['id']:
+            if row['checkIn']:
+                cancel_by = None
+            else:
+                cancel_by = int(row['cancelBy'])
+
+            db_cancellation_breakpoints.filter(Cancellation_Breakpoint.id == row['id']).update({
+                Cancellation_Breakpoint.amount_refundable: int(row['amountRefundable']),
+                Cancellation_Breakpoint.cancel_by: cancel_by,
+                Cancellation_Breakpoint.check_in: row['checkIn']
+            },
+            synchronize_session = False
+            )
+        else:
+            new_cancellation_breakpoint = Cancellation_Breakpoint(
+                amount_refundable = int(row['amountRefundable']),
+                cancel_by = int(row['cancelBy']),
+                check_in = False
+            )
+            db.session.add(new_cancellation_breakpoint)
+            db_billing_settings.cancellation_breakpoints.append(new_cancellation_breakpoint)
+
+    db.session.commit()
+    print('Billing_Settings updated')
+    
+    return { 'success': True }
 
 @app.route('/booking', methods=['POST'])
 def booking():

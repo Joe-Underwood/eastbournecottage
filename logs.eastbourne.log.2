@@ -1,17 +1,4 @@
-2021-03-26 14:20:28,729 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-03-26 14:23:03,078 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-03-26 14:23:03,135 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-03-26 14:23:03,178 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-03-26 14:23:03,231 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-03-26 14:30:36,979 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-03-26 14:30:37,011 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-03-26 14:30:37,080 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-03-26 14:30:37,163 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-03-26 16:42:13,049 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-03-26 16:42:13,098 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-03-26 16:42:13,126 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-03-26 16:42:13,212 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-03-26 16:42:15,323 ERROR: Exception on /get_billing_settings [POST] [in /hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py:1891]
+2021-04-03 17:48:20,248 ERROR: Exception on /set_billing_settings [POST] [in /hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py:1891]
 Traceback (most recent call last):
   File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1277, in _execute_context
     self.dialect.do_execute(
@@ -33,7 +20,7 @@ Traceback (most recent call last):
     err.raise_mysql_exception(self._data)
   File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/pymysql/err.py", line 107, in raise_mysql_exception
     raise errorclass(errno, errval)
-pymysql.err.OperationalError: (1054, "Unknown column 'payment__breakpoint.due_on_receipt' in 'field list'")
+pymysql.err.IntegrityError: (1062, "Duplicate entry '30' for key 'cancellation__breakpoint.cancel_by'")
 
 The above exception was the direct cause of the following exception:
 
@@ -52,23 +39,39 @@ Traceback (most recent call last):
     return self.view_functions[rule.endpoint](**req.view_args)
   File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
     return func(*args, **kwargs)
-  File "/hdd/code/eastbournecottage/app/routes.py", line 552, in get_billing_settings
-    db_payment_breakpoints = settings_query.payment_breakpoints
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/orm/attributes.py", line 287, in __get__
-    return self.impl.get(instance_state(instance), dict_)
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/orm/attributes.py", line 723, in get
-    value = self.callable_(state, passive)
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/orm/strategies.py", line 759, in _load_for_state
-    return self._emit_lazyload(
+  File "/hdd/code/eastbournecottage/app/routes.py", line 669, in set_billing_settings
+    db_cancellation_breakpoints.filter(Cancellation_Breakpoint.id == row['id']).update({
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/orm/query.py", line 4031, in update
+    update_op.exec_()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/orm/persistence.py", line 1695, in exec_
+    self._do_pre()
   File "<string>", line 1, in <lambda>
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/orm/strategies.py", line 900, in _emit_lazyload
-    q(session)
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/ext/baked.py", line 545, in all
-    return list(self)
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/ext/baked.py", line 445, in __iter__
-    return q._execute_and_instances(context)
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/orm/query.py", line 3528, in _execute_and_instances
-    result = conn.execute(querycontext.statement, self._params)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/orm/persistence.py", line 1741, in _do_pre
+    session._autoflush()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 1628, in _autoflush
+    util.raise_(e, with_traceback=sys.exc_info()[2])
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/util/compat.py", line 178, in raise_
+    raise exception
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 1617, in _autoflush
+    self.flush()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 2523, in flush
+    self._flush(objects)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 2664, in _flush
+    transaction.rollback(_capture_exception=True)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/util/langhelpers.py", line 68, in __exit__
+    compat.raise_(
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/util/compat.py", line 178, in raise_
+    raise exception
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 2624, in _flush
+    flush_context.execute()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/orm/unitofwork.py", line 422, in execute
+    rec.execute(self)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/orm/unitofwork.py", line 586, in execute
+    persistence.save_obj(
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/orm/persistence.py", line 239, in save_obj
+    _emit_insert_statements(
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/orm/persistence.py", line 1135, in _emit_insert_statements
+    result = cached_connections[connection].execute(
   File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1014, in execute
     return meth(self, multiparams, params)
   File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/sql/elements.py", line 298, in _execute_on_connection
@@ -101,21 +104,16 @@ Traceback (most recent call last):
     err.raise_mysql_exception(self._data)
   File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/pymysql/err.py", line 107, in raise_mysql_exception
     raise errorclass(errno, errval)
-sqlalchemy.exc.OperationalError: (pymysql.err.OperationalError) (1054, "Unknown column 'payment__breakpoint.due_on_receipt' in 'field list'")
-[SQL: SELECT payment__breakpoint.id AS payment__breakpoint_id, payment__breakpoint.billing_settings_id AS payment__breakpoint_billing_settings_id, payment__breakpoint.amount_due AS payment__breakpoint_amount_due, payment__breakpoint.due_by AS payment__breakpoint_due_by, payment__breakpoint.due_on_receipt AS payment__breakpoint_due_on_receipt, payment__breakpoint.is_percentage AS payment__breakpoint_is_percentage, payment__breakpoint.is_absolute AS payment__breakpoint_is_absolute 
-FROM payment__breakpoint 
-WHERE %(param_1)s = payment__breakpoint.billing_settings_id]
-[parameters: {'param_1': 1}]
-(Background on this error at: http://sqlalche.me/e/13/e3q8)
-2021-03-26 16:43:24,010 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-03-26 16:43:24,077 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-03-26 16:43:24,087 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-03-26 16:43:24,181 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-03-26 16:44:39,999 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-03-26 16:44:40,069 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-03-26 16:44:40,147 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-03-26 16:44:40,154 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-03-26 16:45:44,800 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-03-26 16:45:44,879 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-03-26 16:45:44,890 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-03-26 16:45:44,959 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+sqlalchemy.exc.IntegrityError: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(pymysql.err.IntegrityError) (1062, "Duplicate entry '30' for key 'cancellation__breakpoint.cancel_by'")
+[SQL: INSERT INTO cancellation__breakpoint (billing_settings_id, amount_refundable, cancel_by, check_in) VALUES (%(billing_settings_id)s, %(amount_refundable)s, %(cancel_by)s, %(check_in)s)]
+[parameters: {'billing_settings_id': 1, 'amount_refundable': 50, 'cancel_by': 30, 'check_in': 0}]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2021-04-03 19:19:32,544 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 19:19:32,597 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 19:19:32,662 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 19:19:32,731 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 19:20:15,531 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 19:20:15,630 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 19:20:15,725 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 19:20:15,781 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
