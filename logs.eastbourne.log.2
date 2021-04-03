@@ -1,4 +1,4 @@
-2021-04-03 17:48:20,248 ERROR: Exception on /set_billing_settings [POST] [in /hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py:1891]
+2021-04-03 19:20:44,285 ERROR: Exception on /set_billing_settings [POST] [in /hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py:1891]
 Traceback (most recent call last):
   File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1277, in _execute_context
     self.dialect.do_execute(
@@ -20,7 +20,7 @@ Traceback (most recent call last):
     err.raise_mysql_exception(self._data)
   File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/pymysql/err.py", line 107, in raise_mysql_exception
     raise errorclass(errno, errval)
-pymysql.err.IntegrityError: (1062, "Duplicate entry '30' for key 'cancellation__breakpoint.cancel_by'")
+pymysql.err.IntegrityError: (1062, "Duplicate entry '30' for key 'payment__breakpoint.due_by'")
 
 The above exception was the direct cause of the following exception:
 
@@ -105,15 +105,23 @@ Traceback (most recent call last):
   File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/pymysql/err.py", line 107, in raise_mysql_exception
     raise errorclass(errno, errval)
 sqlalchemy.exc.IntegrityError: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
-(pymysql.err.IntegrityError) (1062, "Duplicate entry '30' for key 'cancellation__breakpoint.cancel_by'")
-[SQL: INSERT INTO cancellation__breakpoint (billing_settings_id, amount_refundable, cancel_by, check_in) VALUES (%(billing_settings_id)s, %(amount_refundable)s, %(cancel_by)s, %(check_in)s)]
-[parameters: {'billing_settings_id': 1, 'amount_refundable': 50, 'cancel_by': 30, 'check_in': 0}]
+(pymysql.err.IntegrityError) (1062, "Duplicate entry '30' for key 'payment__breakpoint.due_by'")
+[SQL: INSERT INTO payment__breakpoint (billing_settings_id, amount_due, due_by, first_payment) VALUES (%(billing_settings_id)s, %(amount_due)s, %(due_by)s, %(first_payment)s)]
+[parameters: {'billing_settings_id': 1, 'amount_due': 50, 'due_by': 30, 'first_payment': 0}]
 (Background on this error at: http://sqlalche.me/e/13/gkpj)
-2021-04-03 19:19:32,544 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-04-03 19:19:32,597 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-04-03 19:19:32,662 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-04-03 19:19:32,731 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-04-03 19:20:15,531 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-04-03 19:20:15,630 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-04-03 19:20:15,725 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
-2021-04-03 19:20:15,781 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 19:31:28,288 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 19:31:28,291 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 19:31:28,333 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 19:31:28,354 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 19:34:00,302 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 19:34:00,393 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 19:34:00,490 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 19:34:00,532 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 19:38:07,648 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 19:38:07,740 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 19:38:07,792 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 19:38:07,841 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 19:42:16,918 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 19:42:16,918 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 19:42:16,994 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-03 19:42:17,045 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]

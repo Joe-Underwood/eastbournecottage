@@ -640,10 +640,21 @@ def set_billing_settings():
             #--payment_breakpoint new/updated validation--#
             if row['firstPayment']:
                 due_by = None
+                if (int(row['amountDue']) < 0):
+                    print('first payment amount due must be more than equal to zero: invalid')
+                    return { 'success': False }
             else:
-                due_by = int(row['dueBy'])
+                if (int(row['dueBy']) > 0):
+                    due_by = int(row['dueBy'])
+                else:
+                    print('due by must be more than 0 - invalid')
+                    return { 'success': False }
 
-            if int(row['amountDue']) <= 0 or int(row['dueBy']) <= 0:
+                if (int(row['amountDue']) <= 0):
+                    print('amount due must be more than 0: invalid')
+                    return { 'success': False }
+                
+            if int(row['amountDue']) < 0:
                 print('amount due and due by must be more than 0, therefore invalid')
                 return { 'success': False }
 
@@ -691,9 +702,13 @@ def set_billing_settings():
             if row['checkIn']:
                 cancel_by = None
             else:
-                cancel_by = int(row['cancelBy'])
+                if (int(row['cancelBy']) > 0):
+                    cancel_by = int(row['cancelBy'])
+                else:
+                    print('cancelBy must be more than 0')
+                    return { 'success': False }
 
-            if int(row['amountRefundable']) < 0 or int(row['amountRefundable']) > 100 or int(row['cancelBy']) <= 0:
+            if int(row['amountRefundable']) < 0 or int(row['amountRefundable']) > 100:
                 print('amount refundable must be between 0 and 100, therefore invalid')
                 return { 'success': False }
 
