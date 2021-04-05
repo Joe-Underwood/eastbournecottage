@@ -1631,7 +1631,6 @@ const vm = new Vue({
         },
         
         submitBooking() {
-            console.log(JSON.stringify(this.bookingFormData));
 
             fetch('/booking', {
                 method: 'post',

@@ -5,7 +5,7 @@ from flask import render_template, request, jsonify, redirect, url_for
 from datetime import datetime, date, timedelta
 from datetime import timedelta
 from calendar import Calendar
-from decimal import Decimal
+from decimal import Decimal, ROUND_HALF_UP
 from flask_login import current_user, login_user, logout_user, login_required
 from functools import reduce
 
@@ -477,15 +477,32 @@ def get_billings():
     query = db.session.query(Billing).order_by(Billing.booking_id.asc())
     billings = []
     for row in query:
+        if row.transaction_type == 'INVOICE':
+            reference = row.invoice_reference
+            invoice_due_date = row.invoice_due_date.isoformat()
+        elif row.transaction_type == 'PAYMENT':
+            reference = row.payment_reference
+            invoice_due_date = None
+        elif row.transaction_type == 'DEBIT_NOTE':
+            reference = row.debit_note_reference
+            invoice_due_date = None
+        elif row.transaction_type == 'CREDIT_NOTE':
+            reference = row.credit_note_reference
+            invoice_due_date = None
+
+        if row.date:
+            billing_date = row.date.isoformat()
+        else:
+            billing_date = row.date
+
         billing = {
             'id': row.id,
             'bookingId': row.booking_id,
-            'amount': row.amount,
-            'date': row.date,
-            'isInvoice': row.is_invoice,
-            'isPayment': row.is_payment,
-            'isCredit': row.is_credit,
-            'isDebit': row.is_debit,
+            'amount': str(row.amount),
+            'date': billing_date,
+            'invoiceDueDate': invoice_due_date,
+            'transactionType': row.transaction_type,
+            'reference': reference,
             'note': row.note
         }
         billings.append(billing)
@@ -498,33 +515,50 @@ def set_billings():
     json_request = request.get_json()
     query = db.session.query(Billing)
     for billing in json_request:
+        invoice_reference = None
+        payment_reference = None
+        debit_note_reference = None
+        credit_note_reference = None
+        if billing['transactionType'] == 'INVOICE':
+            invoice_reference = billing['reference']
+        elif billing['transactionType'] == 'PAYMENT':
+            payment_reference = billing['reference']
+        elif billing['transactionType'] == 'DEBIT_NOTE':
+            debit_note_reference = billing['reference']
+        elif billing['transactionType'] == 'CREDIT_NOTE':
+            credit_note_reference = billing['reference']
+
         if (billing['deleteFlag']):
             db_billing = query.filter(Billing.id == billing['id']).first()
             if (db_billing):
                 delete_billing = Delete_Billing(
                     booking_id = int(billing['bookingId']),
                     amount = Decimal(billing['amount']),
-                    is_invoice = billing['isInvoice'],
-                    is_payment = billing['isPayment'],
-                    is_credit = billing['isCredit'],
-                    is_debit = billing['isDebit'],
+                    transaction_type = billing['transactionType'],
+                    invoice_reference = invoice_reference,
+                    payment_reference = payment_reference,
+                    debit_note_reference = debit_note_reference,
+                    credit_note_reference = credit_note_reference,
                     note = billing['note']
                 )
+
                 db.session.add(delete_billing)
                 print('billing deleted')
             else:
                 print('billing marked for deletion does not exist')
                 continue
+
         elif (billing['updateFlag']):
             if (billing['id']): #maybe check if there are any mismatches
                 query.filter(Billing.id == billing['id']).update({
                     Billing.booking_id: int(billing['bookingId']),
                     Billing.amount: Decimal(billing['amount']),
                     Billing.date: datetime.strptime(billing['date'], '%Y-%m-%d').date(),
-                    Billing.is_invoice: billing['isInvoice'],
-                    Billing.is_payment: billing['isPayment'],
-                    Billing.is_credit: billing['isCredit'],
-                    Billing.is_debit: billing['isDebit'],
+                    Billing.transaction_type: billing['transactionType'],
+                    Billing.invoice_reference: invoice_reference,
+                    Billing.payment_reference: payment_reference,
+                    Billing.debit_note_reference: debit_note_reference,
+                    Billing.credit_note_reference: credit_note_reference,
                     Billing.note: str(billing['note'])
                 },
                 synchronize_session = False
@@ -534,14 +568,16 @@ def set_billings():
                 new_billing = Billing(
                     booking_id = int(billing['bookingId']),
                     amount = Decimal(billing['amount']),
-                    is_invoice = billing['isInvoice'],
-                    is_payment = billing['isPayment'],
-                    is_credit = billing['isCredit'],
-                    is_debit = billing['isDebit'],
+                    transaction_type = billing['transactionType'],
+                    invoice_reference = invoice_reference,
+                    payment_reference = payment_reference,
+                    debit_note_reference = debit_note_reference,
+                    credit_note_reference = credit_note_reference,
                     note = billing['note']
                 )
                 db.session.add(new_billing)
                 print('billing added')
+
     db.session.commit()
     print('Billing updated')
     return { 'success': True }
@@ -814,7 +850,7 @@ def booking():
         dogs = int(booking_form_data['dogs']),
         stay_price = Decimal(booking_form_data['stayPrice']),
         dog_price = Decimal(booking_form_data['dogPrice']),
-        price = Decimal(booking_form_data['price'])
+        price = Decimal(correct_price)
     )
 
     customer = Customer(
@@ -830,18 +866,73 @@ def booking():
     )
 
     billing_settings = db.session.query(Billing_Settings).first()
-    due_date = date.today() # should be a date based on settings rules
-    invoice_query = db.session.query(Billing).filter(Billing.is_invoice == True)
-    if (invoice_query):
-        invoice_ref = int(invoice_query.order_by(Billing.invoice_reference.desc()).first() + 1)
+    payment_terms = billing_settings.payment_breakpoints.all()
 
-    invoice = Billing(
-        amount = Decimal(booking_form_data['price']),
+    first_invoice_amount = 0
+    cumulative_total = 0
+
+    db_invoices = db.session.query(Billing).filter(Billing.transaction_type == 'INVOICE')
+    if db_invoices.all():
+        prev_invoice_reference = int(db_invoices.order_by(Billing.invoice_reference.desc()).first().invoice_reference)
+    else:
+        prev_invoice_reference = 0
+    invoices = []
+
+    for index, breakpoint in enumerate(payment_terms):
+        if breakpoint.first_payment:
+            first_invoice_amount += (Decimal(booking.price) * Decimal(breakpoint.amount_due / 100)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+            cumulative_total += (Decimal(booking.price) * Decimal(breakpoint.amount_due / 100)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+        elif date.today() >= arrival_date - timedelta(days = breakpoint.due_by):
+            first_invoice_amount += (Decimal(booking.price) * Decimal(breakpoint.amount_due / 100)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+            cumulative_total += (Decimal(booking.price) * Decimal(breakpoint.amount_due / 100)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+        elif index == len(payment_terms) - 1:
+            last_invoice = Billing(
+                amount = (Decimal(booking.price) - Decimal(cumulative_total)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP),
+                invoice_due_date = arrival_date - timedelta(days = breakpoint.due_by),
+                transaction_type = 'INVOICE',
+                invoice_reference = prev_invoice_reference + 1
+            )
+            db.session.add(last_invoice)
+            invoices.append(last_invoice)
+            booking.billings.append(last_invoice)
+            prev_invoice_reference = last_invoice.invoice_reference
+
+        else:
+            new_invoice = Billing(
+                amount = (Decimal(booking.price) * Decimal(breakpoint.amount_due / 100)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP),
+                invoice_due_date = arrival_date - timedelta(days = breakpoint.due_by),
+                transaction_type = 'INVOICE',
+                invoice_reference = prev_invoice_reference + 1
+            )
+            cumulative_total += new_invoice.amount
+            db.session.add(new_invoice)
+            booking.billings.append(new_invoice)
+            invoices.append(new_invoice)
+            prev_invoice_reference = new_invoice.invoice_reference
+
+    first_invoice = Billing(
+        amount = first_invoice_amount.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP),
         date = date.today(),
-        invoice_due_date = due_date,
-        is_invoice = True,
-        invoice_reference = invoice_ref
+        invoice_due_date = date.today(),
+        transaction_type = 'INVOICE',
+        invoice_reference = prev_invoice_reference + 1
     )
+
+    db.session.add(first_invoice)
+    booking.billings.append(first_invoice)
+    invoices.append(first_invoice)
+    #invoice price validation
+    invoices_total_amount = 0
+    for invoice in invoices:
+        invoices_total_amount += invoice.amount
+        print(invoice.amount)
+
+    print(booking.price)
+    print(first_invoice_amount)
+
+    if invoices_total_amount != booking.price:
+        print('error in prices when creating invoices')
+        return { 'success': False }
 
     for segment in date_segments:
         segment.booked = True

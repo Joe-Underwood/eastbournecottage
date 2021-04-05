@@ -551,30 +551,35 @@
 
                             <div class="booking-column price-table-column start-date-column">
                                 <div class="price-table-header">Booking</div>
-                                <input class="billing-booking-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['bookingId']"/>
+                                <input class="billing-booking-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['bookingId']" readonly />
                             </div>
         
                             <div class="swiper-container billing-table-swiper">
                                 <div class="swiper-wrapper">
+
+                                    <div class="swiper-slide amount-column price-table-column">
+                                        <div class="price-table-header">Amount / £</div>
+                                        <input class="billing-amount-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['amount']" readonly />
+                                    </div>
         
                                     <div class="swiper-slide date-column price-table-column">
                                         <div class="price-table-header">Date</div>
-                                        <input class="billing-date-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['date']"/>
+                                        <input class="billing-date-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['date']" readonly />
+                                    </div>
+
+                                    <div class="swiper-slide due-by-column price-table-column">
+                                        <div class="price-table-header">Due By</div>
+                                        <input class="billing-due-by-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['date']" readonly />
                                     </div>
                 
-                                    <div class="swiper-slide amount-column price-table-column">
-                                        <div class="price-table-header">Amount / £</div>
-                                        <input class="billing-amount-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['amount']"/>
-                                    </div>
-                
-                                    <div class="swiper-slide customer-column price-table-column">
-                                        <div class="price-table-header">Customer</div>
-                                        <input class="billing-customer-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['customer']"/>
-                                    </div>
-                
-                                    <div class="swiper-slide type-column price-table-column">
+                                    <div class="swiper-slide transaction-type-column price-table-column">
                                         <div class="price-table-header">Type</div>
-                                        <input class="billing-type-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['type']"/>
+                                        <input class="billing-transaction-type-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['transactionType']" readonly />
+                                    </div>
+
+                                    <div class="swiper-slide reference-column price-table-column">
+                                        <div class="price-table-header">Reference</div>
+                                        <input class="billing-reference-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['reference']" readonly />
                                     </div>
                 
                                     <div class="swiper-slide note-column price-table-column">

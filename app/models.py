@@ -59,10 +59,7 @@ class Billing(db.Model):
     date = db.Column(db.Date)
     invoice_due_date = db.Column(db.Date, default=None)
     #insert invoice due_dates relationship to take into account multistage payment terms
-    is_invoice = db.Column(db.Boolean, default=False)
-    is_payment = db.Column(db.Boolean, default=False)
-    is_credit = db.Column(db.Boolean, default=False)
-    is_debit = db.Column(db.Boolean, default=False)
+    transaction_type = db.Column(db.Enum('INVOICE', 'PAYMENT', 'DEBIT_NOTE', 'CREDIT_NOTE', name='transaction_type'), nullable=False)
     note = db.Column(db.String(30))
     invoice_reference = db.Column(db.Integer, unique=True, default=None)
     payment_reference = db.Column(db.Integer, unique=True, default=None)
