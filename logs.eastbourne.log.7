@@ -1,0 +1,115 @@
+2021-04-05 19:35:50,236 ERROR: Exception on /booking [POST] [in /hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/hdd/code/eastbournecottage/app/routes.py", line 908, in booking
+    invoice_reference = prev_invoice_reference + 1
+TypeError: unsupported operand type(s) for +: 'Billing' and 'int'
+2021-04-05 19:37:14,184 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 19:37:14,187 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 19:37:14,257 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 19:37:14,277 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 19:37:19,336 ERROR: Exception on /booking [POST] [in /hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/hdd/code/eastbournecottage/app/routes.py", line 869, in booking
+    prev_invoice_reference = int(db_invoices.order_by(Billing.invoice_reference.desc()).first())
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'Billing'
+2021-04-05 19:37:46,738 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 19:40:47,304 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 19:40:47,377 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 19:40:47,379 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 19:40:47,444 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 19:45:17,946 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 19:45:18,008 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 19:45:18,014 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 19:45:18,046 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 19:49:22,283 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 19:56:23,007 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 19:56:23,017 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 19:56:23,067 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 19:56:23,133 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 19:57:19,154 ERROR: Exception on /booking [POST] [in /hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/hdd/code/eastbournecottage/app/routes.py", line 879, in booking
+    elif index == payment_terms.length - 1:
+AttributeError: 'list' object has no attribute 'length'
+2021-04-05 19:57:47,994 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 20:01:28,426 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 20:01:28,476 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 20:01:28,508 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 20:01:28,595 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 20:02:56,306 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 20:02:56,365 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 20:02:56,457 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 20:02:56,491 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 20:05:32,318 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 20:05:32,402 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 20:05:32,495 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 20:05:32,497 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 20:07:15,678 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 20:07:15,686 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 20:07:15,738 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 20:07:15,842 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 22:21:19,851 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 22:21:19,851 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 22:21:19,937 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 22:21:19,990 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 22:21:21,947 ERROR: Exception on /booking [POST] [in /hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/hdd/code/eastbournecottage/app/routes.py", line 877, in booking
+    print('first_payment ' + first_invoice_amount)
+TypeError: can only concatenate str (not "decimal.Decimal") to str
+2021-04-05 22:24:05,118 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 22:24:05,197 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 22:24:05,300 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 22:24:05,345 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 22:40:17,636 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 22:40:17,642 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 22:40:17,667 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]
+2021-04-05 22:40:17,697 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:29]

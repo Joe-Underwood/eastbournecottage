@@ -65,7 +65,6 @@ body,
     /*overflow: hidden;*/
 }
 
-
 button {
     background-color: rgb(226, 138, 12);
     color: white;
@@ -88,6 +87,18 @@ button:active {
 
 .button-disabled {
     opacity: 0.5;
+}
+
+    .overlay-confirm-button {
+        display: relative;
+        
+    }
+
+.buttons-container {
+    position: fixed;
+    display: block;
+    bottom: 64px;
+    width: 100%;
 }
 
 h1, h2 {
@@ -783,7 +794,6 @@ svg {
         padding-left: 16px;   
         padding-right: 16px; 
         overflow-y: scroll;
-
     }
 
     .nav-links.open {
@@ -836,6 +846,241 @@ svg {
 .content-wrapper.closed {
     display: none;
 }
+
+/*----- margin breakpoints ------------------*/
+@media screen and (max-width: 744px) {
+    .price-list-main,
+    .price-list-header,
+    .bookings-main,
+    .customers-main,
+    .billing-main,
+    .settings,
+    .page {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .tabs {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    .content-inner-wrapper {
+        max-width: none;
+        position: relative;
+    }
+
+    .buttons-container {
+        width: calc(100% - 32px);
+    }
+}
+
+@media screen and (min-width: 745px) {
+    .price-list-main,
+    .price-list-header,
+    .bookings-main,
+    .customers-main,
+    .billing-main,
+    .tabs,
+    .settings,
+    .page {
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+
+    .content-inner-wrapper {
+        max-width: none;
+        position: relative;
+    }
+
+    .buttons-container {
+        width: calc(100% - 80px);
+    }
+}
+
+@media screen and (min-width: 798px) {
+    .price-list-table .start-date-column {
+        box-shadow: none;
+        z-index: 1;
+    }
+}
+
+@media screen and (min-width: 1092px) {
+    .billing-table .booking-column {
+        box-shadow: none;
+        z-index: 1;
+    }
+}
+
+@media screen and (min-width: 1158px) {
+    .price-list-main,
+    .price-list-header,
+    .bookings-main,
+    .customers-main,
+    .billing-main,
+    .tabs,
+    .settings,
+    .page {
+        padding-left: 80px;
+        padding-right: 80px;
+    }
+
+    .content-inner-wrapper {
+        max-width: 1157px;
+        margin-left: auto;
+        margin-right: auto;
+        position: relative;
+    }
+
+    .buttons-container {
+        width: calc(100% - 160px);
+    }
+}
+/*---------- new billing input overlay ---------------*/
+/*--------- PARTY INPUT OVERLAY --------*/
+.new-billing-wrapper {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+    width: 100%;
+    z-index: 5;
+    transition: background-color 0.4s;
+    
+}
+
+.new-billing-wrapper.closed {
+    z-index: -5;
+    transform: translate3d(0, 100%, 0);
+}
+
+.new-billing-wrapper.open {
+    background-color: rgba(0, 0, 0, 0.5);
+    transform: translate3d(0, 0, 0);
+}
+
+    .new-billing-container {
+        background-color: white;
+        transform: translate3d(0, 100%, 0);
+        transition: all 0.2s;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        width: 100%;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+    }
+
+    .new-billing-container.open {
+        transform: translate3d(0, 0, 0);
+    }
+
+        .new-billing-header {
+            display: flex;
+            position: relative;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            box-shadow: 0 0 16px 0 rgba(0,0,0,.1);
+            z-index: 1;
+        } 
+
+            .new-billing-header-text {
+                font-weight: 1000;
+                padding-left: 24px;
+                padding-top: 18px;
+                padding-bottom: 18px;
+            }
+
+            .new-billing-close-container {
+                margin-right: 8px;
+                margin-top: 8px;
+                margin-bottom: 8px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                height: 40px;
+                width: 40px;
+            }
+
+                .new-billing-close {
+                    width: 20px;
+                    height: 20px;
+                    display: block;
+                    position: relative;
+                }
+
+                    .new-billing-close span {
+                        display: block;
+                        position: absolute;
+                        height: 2px;
+                        width: 100%;
+                        background-color: rgb(15, 72, 117);
+                        border-radius: 3px;
+                    }
+
+                    .new-billing-close span:nth-child(1) {
+                        transform: translate3d(0, 9px, 0) rotate3d(0, 0, 1, 45deg);
+                    }
+
+                    .new-billing-close span:nth-child(2) {
+                        transform: translate3d(0, 9px, 0) rotate3d(0, 0, 1, -45deg);
+                    }
+
+        .new-billing-input-container {
+            padding-left: 16px;
+            padding-right: 16px;
+            position: relative;
+            display: flex;
+            height: 56px;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+            .new-billing-input-container label {
+                position: relative;
+                padding-left: 8px;
+                line-height: 16px;
+            }
+
+            .new-billing-input {
+                display: flex;
+                position: relative;
+                margin-left: auto;
+                justify-content: flex-end;
+                height: 40px;
+                margin-top: 8px;
+            }
+
+                .new-billing-input button {
+                    height: 40px;
+                    width: 40px;
+                    background-color: white;
+                    border: 1px solid #a5c2cf;
+                    font-size: 22px;
+                    text-align: center;
+                    color: rgb(113, 113, 113);
+                    box-shadow: none;
+                    border-radius: 100%;
+                }
+
+                .new-billing-input button.inactive {
+                    opacity: 0.35;
+                }
+
+                .new-billing-input div {
+                    line-height: 40px;
+                    height: 40px;
+                    width: 40px;
+                    background-color: white;
+                    text-align: center;
+                    color: rgb(113, 113, 113);
+                }
+
+                .new-billing-input div.active {
+                    color: rgb(15, 72, 117);
+                }
 /*----------- PRICE-LIST-EDITOR ----------------------------*/
 .page-content {
     background-color: rgb(246, 249, 250);
@@ -868,8 +1113,6 @@ svg {
     .price-list-header {
         background-color: white;
         display: block;
-        padding-left: 16px;
-        padding-right: 16px;
         position: relative;
         padding-top: 16px;
     }
@@ -881,8 +1124,6 @@ svg {
         }
 
     .price-list-main {
-        padding-left: 16px;
-        padding-right: 16px;
         box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.20);
     }
 
@@ -891,7 +1132,8 @@ svg {
             padding-left: 125px;
         }
 
-            .price-list-table input {
+            .price-list-table input,
+            .billing-table input {
                 border-radius: 0;
                 border-bottom: 1px solid #a5c2cf;
                 border-top: 0;
@@ -900,7 +1142,19 @@ svg {
                 height: 48px;
             }
 
-            .price-list-table input[type=date] {
+            .price-list-table input,
+            .price-list-table .price-table-header {
+                text-align: right;
+                padding-right: 16px;
+            }
+
+            .price-list-table .start-date-column input,
+            .price-list-table .start-date-column .price-table-header {
+                text-align: left;
+            }
+
+            .price-list-table input[type=date],
+            .billing-table input[type=date] {
                 -webkit-appearance: none;
                 -moz-appearance: none;
                 appearance: none;
@@ -913,14 +1167,15 @@ svg {
 
             .start-date-column {
                 position: absolute;
-                z-index: 5;
+                z-index: 4;
                 left: 0;
                 box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.20);
                 border-top-left-radius: 4px;
                 border-bottom-left-radius: 4px;
             }
 
-                .start-date-column .price-table-header {
+                .start-date-column .price-table-header,
+                .booking-column .price-table-header {
                     border-top-left-radius: 4px;
                 }
 
@@ -983,8 +1238,6 @@ svg {
 
 .settings {
     display: block;
-    padding-left: 16px;
-    padding-right: 16px;
     padding-bottom: 56px;
 }
 
@@ -1010,18 +1263,22 @@ svg {
 
 .tabs {
     position: fixed;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
     width: 100%;
     background-color:rgba(56, 56, 56, 0.75);
     bottom: 0;
     height: 56px;
-    z-index: 3;
+    z-index: 10;
     box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.20);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
 }
+
+    .tabs-inner {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        height: 100%;
+    }
 
     .price-list-tab-outer,
     .bookings-tab-outer,
@@ -1048,7 +1305,7 @@ svg {
 
     .current-month-tab {
         box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.20);
-        z-index: 5;
+        z-index: 4;
         background-color: rgb(246, 249, 250);
         border-top: 2px solid rgb(15, 72, 117);
     }
@@ -1084,11 +1341,6 @@ svg {
 .bookings.hidden {
     display: none;
 }
-
-    .bookings-main {
-        padding-left: 16px;
-        padding-right: 16px;
-    }
 
     .bookings-list-view {
         display: block;
@@ -1274,11 +1526,6 @@ svg {
     display: none;
 }
 
-    .customers-main {
-        padding-left: 16px;
-        padding-right: 16px;
-    }
-
     .customers-list-view {
         display: block;
         position: relative;
@@ -1341,21 +1588,21 @@ svg {
         }
 
             .page-delete {
-                position: fixed;
-                left: 16px;
-                bottom: 16px;
+                position: absolute;
+                left: 0;
+                bottom: 0;
             }
 
             .page-update {
-                position: fixed;
-                right: 16px;
-                bottom: 16px;
+                position: absolute;
+                right: 0;
+                bottom: 0;
             }
 
         .cards-add {
-            position: fixed;
-            bottom: 64px;
-            left: 16px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
             height: 40px;
             width: 40px;
             font-size: 22px;
@@ -1363,7 +1610,7 @@ svg {
             color: rgb(246, 249, 250);
             box-shadow: none;
             border-radius: 100%;
-            z-index: 2;
+            z-index: 5;
         }
 
         .cards-add.hidden {
@@ -1371,9 +1618,9 @@ svg {
         }
 
         .cards-select {
-            position: fixed;
-            bottom: 64px;
-            right: 16px;
+            position: absolute;
+            bottom: 0;
+            right: 0;
             text-align: center;
             color: rgb(246, 249, 250);
             box-shadow: none;
@@ -1390,25 +1637,25 @@ svg {
         }
 
         .cards-update {
-            position: fixed;
-            bottom: 64px;
-            right: 16px;
+            position: absolute;
+            bottom: 0;
+            right: 0;
             text-align: center;
             color: rgb(246, 249, 250);
             box-shadow: none;
             border-radius: 4px;
-            z-index: 2;
+            z-index: 5;
         }
 
         .cards-cancel {
-            position: fixed;
-            bottom: 64px;
-            left: 16px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
             text-align: center;
             color: rgb(246, 249, 250);
             box-shadow: none;
             border-radius: 4px;
-            z-index: 2;
+            z-index: 5;
         }
 
         .cards-cancel.hidden {
@@ -1416,14 +1663,14 @@ svg {
         }
 
         .cards-delete {
-            position: fixed;
-            bottom: 64px;
-            right: 16px;
+            position: absolute;
+            bottom: 0;
+            right: 0;
             text-align: center;
             color: rgb(246, 249, 250);
             box-shadow: none;
             border-radius: 4px;
-            z-index: 2;
+            z-index: 5;
         }
 
         .cards-delete.hidden {
@@ -1495,13 +1742,8 @@ svg {
                     color: rgb(113, 113, 113);
                 }
 
-.billing-main {
-    padding-left: 16px;
-    padding-right: 16px;
-}
-
     .booking-column {
-        margin-left: 16px;
+        width: 90px;
     }
 
         .booking-column .price-table-header {
@@ -1509,8 +1751,43 @@ svg {
             padding-left: 16px;
         }
 
+    .billing-table {
+        margin-bottom: 16px;
+        display: block;
+        position: relative;
+    }
+
+        .billing-table input,
+        .billing-table .price-table-header {
+            text-align:left;
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+
+        .billing-table .amount-column input,
+        .billing-table .amount-column .price-table-header,
+        .billing-table .date-column input,
+        .billing-table .date-column .price-table-header,
+        .billing-table .due-by-column input,
+        .billing-table .due-by-column .price-table-header {
+            text-align:right;
+        }
+
+        .billing-table .customer-name-column {
+            width: 250px;
+        }
+
+        .billing-table .amount-column {
+            width: 100px;
+        }
+
+        .billing-table .date-column {
+            width: 138px;
+        }
+
     .billing-table-swiper {
         padding-left: 90px;
+        padding-bottom: 30px;
     }
 
 .billing-settings {

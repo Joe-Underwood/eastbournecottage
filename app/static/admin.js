@@ -23,8 +23,30 @@ const vm = new Vue({
         monthSwiper: null,
         monthTabGlider: null,
         monthTabsRefresh: false,
+        priceTableSwiperList: [],
 
-        billingTableSwiper: null
+
+        billingTableSwiper: null,
+
+        newBillingScrimClose: false,
+        initialY: undefined,
+        offsetY: undefined,
+
+        disableBodyScroll: undefined,
+        enableBodyScroll: undefined,
+
+        newBillingFormData: {
+            'id': null,
+            'bookingId': null,
+            'amount': null,
+            'date': null,
+            'invoiceDueDate': null,
+            'transactionType': null,
+            'reference': null,
+            'note': null
+        }
+
+
     },
     computed: {
         activePriceList: function() {
@@ -61,6 +83,8 @@ const vm = new Vue({
         },
     },
     created: function() {
+        this.disableBodyScroll = bodyScrollLock.disableBodyScroll;
+        this.enableBodyScroll = bodyScrollLock.enableBodyScroll;
         this.getPriceList();
         this.getBookings();
         this.getCustomers();
@@ -80,7 +104,6 @@ const vm = new Vue({
                     document.querySelector('.tab').classList.add('current-month-tab');
                     this.initMonthTabGlider();
                     this.initPriceTableSwipers();
-                    this.initBillingTableSwiper();
                 })
             })
     },
@@ -477,28 +500,75 @@ const vm = new Vue({
         },
         initPriceTableSwipers() {
             const swiperNodeList = document.querySelectorAll('.price-table-swiper');
+            const priceTableSwiperList = [];
             for (node in swiperNodeList) {
-                new Swiper(swiperNodeList[node], {
+                priceTableSwiperList.push(new Swiper(swiperNodeList[node], {
                     spaceBetween: 0,
                     slidesPerView: 1,
+                    allowTouchMove: true,
                     pagination: {
                         el: document.querySelectorAll('.swiper-pagination')[node],
                         type: 'bullets'
-                      }
-                })
+                    },
+                    breakpoints: {
+                        478: {
+                            slidesPerView: 2,
+                            allowTouchMove: true
+                        },
+                        638: {
+                            slidesPerView: 3,
+                            allowTouchMove: true
+                        },
+                        798: {
+                            slidesPerView: 4,
+                            allowTouchMove: false
+                        }
+                    }
+                    
+                }))
             }
+
+            this.priceTableSwiperList = priceTableSwiperList;
         },
         initBillingTableSwiper() {
-            const billingSwiper = new Swiper('.billing-table-swiper', {
+            const billingTableSwiper = new Swiper('.billing-table-swiper', {
                 spaceBetween: 0,
-                slidesPerView: 2,
+                slidesPerView: 1,
+                allowTouchMove: true,
                 pagination: {
                     el: document.querySelector('.billing-table-swiper .swiper-pagination'),
                     type: 'bullets'
+                },
+                breakpoints: {
+                    422: {
+                        slidesPerView: 2,
+                        allowTouchMove: true
+                    },
+                    582: {
+                        slidesPerView: 3,
+                        allowTouchMove: true
+                    },
+                    712: {
+                        slidesPerView: 4,
+                        allowTouchMove: true
+                    },
+                    872: {
+                        slidesPerView: 5,
+                        allowTouchMove: true
+                    },
+                    932: {
+                        slidesPerView: 6,
+                        allowTouchMove: true
+                    },
+                    1092: {
+                        slidesPerView: 7,
+                        allowTouchMove: false
+                    }
                 }
             })
 
-            this.billingSwiper = billingSwiper;
+            this.billingTableSwiper = billingTableSwiper;
+            
         },
         segmentMonthFilter(segment, month, index) {
             if (index === this.rangeMonths.length - 1) {
@@ -525,7 +595,6 @@ const vm = new Vue({
                     this.initMonthTabGlider();
                     this.$forceUpdate();
                 });
-                
             }
         },
         openPriceListSettings() {
@@ -588,6 +657,9 @@ const vm = new Vue({
             document.querySelector('.billing').classList.remove('hidden');
             document.querySelector('.billing-settings').classList.add('hidden');
             this.customerCardSelectOff();
+            if (!this.billingTableSwiper) {
+                this.initBillingTableSwiper();
+            }
         },
         goToBillingSettings() {
             document.querySelector('.tabs').classList.add('hidden');
@@ -1051,6 +1123,125 @@ const vm = new Vue({
             document.querySelector('.cancellation-terms-settings .controls-select').classList.remove('hidden');
             document.querySelector('.cancellation-terms-settings .controls-cancel').classList.add('hidden');
             document.querySelector('.cancellation-terms-settings .controls-delete').classList.add('hidden');
+        },
+        newBillingTouchstart(event) {
+            //on touchstart
+            if (document.querySelector('.new-billing-container').contains(event.target)) {
+                this.initialY = event.touches[0].clientY;
+                document.querySelector('.new-billing-container').style.transition = "none"; 
+            } else if (document.querySelector('.new-billing-container').classList.contains('open') && event.target === document.querySelector('.new-billing-wrapper')) {
+                this.newBillingScrimClose = true;
+                this.initialY = document.querySelector('.new-billing-container').offsetTop;
+                document.querySelector('.new-billing-container').style.transition = "none"; 
+            }
+        },
+        newBillingTouchmove(event) {
+            //on touchmove, slides menu horizontally based on touch position
+            if (document.querySelector('.new-billing-wrapper').contains(event.target) && document.querySelector('.new-billing-container').classList.contains('open')) {
+                this.newBillingScrimClose = false;
+                /*if (!document.querySelector('.navbar').contains(event.target)) {*/
+                    this.offsetY = event.touches[0].clientY - this.initialY;
+                    if (this.offsetY >= 0) {
+                        document.querySelector('.new-billing-container').style.transform = `translate3d(0, ${this.offsetY}px, 0)`;
+                    }   
+                /*}*/
+            }
+        },
+        newBillingTouchend(event) {
+            //on touchend, calls side menu if conditions are met, else keeps side menu open and resets parameters ready for next touch event
+            if (this.newBillingScrimClose && document.querySelector('.new-billing-container').classList.contains('open')) {
+                document.querySelector('.new-billing-container').style.transition = 'all 0.2s';
+                let endX = event.changedTouches[0].clientX;
+                let endY = event.changedTouches[0].clientY;
+                if (document.elementFromPoint(endX, endY) === document.querySelector('.new-billing-wrapper')) {
+                    vm.hideNewBillingOverlay();
+                }
+                this.newBillingScrimClose = false;
+            }
+            /*else if (document.querySelector('.party-wrapper').contains(event.target) && document.querySelector('.party-container').classList.contains('open')) {
+                document.querySelector('.party-container').style.transition = 'all 0.4s';
+                if (this.offsetY > (document.querySelector('.party-container').clientHeight) / 4) {  
+                    this.hidePartyOverlay();
+                } else {
+                    document.querySelector('.party-container').style.transform = `translate3d(0, 0, 0)`;
+                }
+            }*/
+            else if (document.querySelector('.new-billing-wrapper').contains(event.target) && document.querySelector('.new-billing-container').classList.contains('open')) {
+                document.querySelector('.new-billing-container').style.transition = 'all 0.2s';
+                if (this.offsetY > document.querySelector('.new-billing-container').clientHeight / 4) {
+                    this.hideNewBillingOverlay();
+                } else {
+                    document.querySelector('.new-billing-container').style.transform = 'translate3d(0, 0, 0)';
+                }
+                
+            }
+            this.newBillingScrimClose = false;
+            this.initialY = undefined;
+            this.offsetY = undefined;
+        },
+        displayNewBillingOverlay() {
+            const x = window.matchMedia("(max-width: 735px)");
+
+            if (x.matches) {
+                document.querySelector('.new-billing-wrapper').classList.remove('closed');
+                document.querySelector('.new-billing-wrapper').classList.add('open');
+                document.querySelector('.new-billing-container').classList.add('open');
+                document.querySelector('.new-billing-container').style.transform = 'translate3d(0, 0, 0)';
+    
+                this.disableBodyScroll(document.querySelector('.new-billing-container'));
+            } 
+            /*
+            else {
+                document.querySelector('.guests-dropdown').classList.add('open');
+                window.addEventListener('click', this.hideGuestsDropdown);
+            }*/
+            
+        },
+        hideNewBillingOverlay() {
+            closeNewBillingOverlay = true;
+            document.querySelector('.new-billing-wrapper').classList.remove('open');
+            document.querySelector('.new-billing-container').classList.remove('open');
+            document.querySelector('.new-billing-container').style.transform = 'translate3d(0, 100%, 0)';
+
+            document.querySelector('.new-billing-container').ontransitionend = function() {
+                if (!document.querySelector('.new-billing-wrapper').classList.contains('open') && closeNewBillingOverlay) {
+                    document.querySelector('.new-billing-wrapper').classList.add('closed');
+                    closeNewBillingOverlay = false;
+                }
+            }
+            this.enableBodyScroll(document.querySelector('.new-billing-container'));
+        },
+        createNewBilling() {
+            if (this.newBillingFormData['transactionType'] && this.newBillingFormData['date'] && this.newBillingFormData['amount'] && this.newBillingFormData['bookingId']) {
+                if (this.newBillingFormData['transactionType'] == 'PAYMENT') {
+                    if (this.newBillingFormData['amount'] > 0) {
+                        this.newBillingFormData['amount'] *= -1;
+                    }
+                }
+                this.billings.push({
+                    'id': null,
+                    'bookingId': this.newBillingFormData['bookingId'],
+                    'amount': this.newBillingFormData['amount'],
+                    'date': this.newBillingFormData['date'],
+                    'invoiceDueDate': null,
+                    'transactionType': this.newBillingFormData['transactionType'],
+                    'reference': null,
+                    'note': this.newBillingFormData['note'],
+                    'updateFlag': true,
+                    'deleteFlag': false
+                });
+                this.newBillingFormData = {
+                    'id': null,
+                    'bookingId': null,
+                    'amount': null,
+                    'date': null,
+                    'invoiceDueDate': null,
+                    'transactionType': null,
+                    'reference': null,
+                    'note': null
+                }
+                this.hideNewBillingOverlay();
+            }
         }
         /*
         nextChangeoverDay(dateString, weekOffset=0) {

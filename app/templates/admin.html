@@ -66,226 +66,308 @@
         </div>
 
         <div class="tabs">
-            <div class="price-list-tab-outer" v-on:click="goToPriceList()">
-                <div class="price-list-tab-inner">Price List</div>
+            <div class="content-inner-wrapper tabs-inner">
+                <div class="price-list-tab-outer" v-on:click="goToPriceList()">
+                    <div class="price-list-tab-inner">Price List</div>
+                </div>
+                <div class="bookings-tab-outer" v-on:click="goToBookings()">
+                    <div class="bookings-tab-inner">Bookings</div>
+                </div>
+                <div class="customers-tab-outer" v-on:click="goToCustomers()">
+                    <div class="customers-tab-inner">Customers</div>
+                </div>
+                <div class="settings-tab-outer" v-on:click="goToBilling()">
+                    <div class="settings-tab-inner">Billing</div>
+                </div>
             </div>
-            <div class="bookings-tab-outer" v-on:click="goToBookings()">
-                <div class="bookings-tab-inner">Bookings</div>
-            </div>
-            <div class="customers-tab-outer" v-on:click="goToCustomers()">
-                <div class="customers-tab-inner">Customers</div>
-            </div>
-            <div class="settings-tab-outer" v-on:click="goToBilling()">
-                <div class="settings-tab-inner">Billing</div>
+            
+        </div>
+
+        <div class="new-billing-wrapper closed" v-on:touchstart="newBillingTouchstart($event)" v-on:touchmove="newBillingTouchmove($event)" v-on:touchend="newBillingTouchend($event)">
+            <div class="new-billing-container">
+
+                <div class="new-billing-header">
+                    <div class="new-billing-header-text">Create Billing</div>
+                    <div class="new-billing-close-container" v-on:click="hideNewBillingOverlay()">
+                        <div class="new-billing-close">
+                            <span v-for="i in 2"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-price-settings">
+
+                    <div class="new-billing-input-container settings-input-container">
+                        <label for="new-billing-type">Type</label>
+                        <select id="new-billing-type" name="new-billing-type" v-model="newBillingFormData['transactionType']">
+                            <option value="PAYMENT">Payment</option>
+                            <option value="CREDIT_NOTE">Credit Note</option>
+                            <option value="DEBIT_NOTE">Debit Note</option>
+                        </select>
+                    </div>
+    
+                    <div class="new-billing-input-container settings-input-container">
+                        <label for="new-billing-date">Date</label>
+                        <input id="new-billing-date" type="date" v-model="newBillingFormData['date']"/>
+                    </div>
+    
+                    <div class="new-billing-input-container settings-input-container">
+                        <label for="new-billing-amount">Amount</label>
+                        <input id="new-billing-amount" type="number" step="0.01" v-model="newBillingFormData['amount']"/>
+                    </div>
+    
+                    <div class="new-billing-input-container settings-input-container">
+                        <label for="new-billing-booking-id">Booking ID</label>
+                        <select id="new-billing-booking-id" name="new-billing-booking-id" v-model="newBillingFormData['bookingId']">
+                            <option v-for="booking in bookings" :value="booking['id']"><% booking['id'] %></option>
+                        </select>
+                    </div>
+    
+                    <div class="new-billing-input-container settings-input-container">
+                        <label for="new-billing-invoice-reference">Invoice Reference</label>
+                        <select id="new-billing-invoice-reference" name="new-billing-invoice-reference" v-model="newBillingFormData['reference']">
+                            <option v-for="invoice in billings.filter(invoice => invoice['transactionType'] == 'INVOICE')" :value="invoice['reference']"><% invoice['reference'] %></option>
+                        </select>
+                    </div>
+    
+                    <!--<div class="new-billing-input-container">
+                        <label for="new-billing-note">Note</label>
+                        <textarea id="new-billing-note"></textarea>
+                    </div>-->
+                </div>
+                
+                <div class="buttons-container">
+                    <div class="content-inner-wrapper">
+                        <button class="overlay-confirm-button" v-on:click="createNewBilling()">CREATE</button>
+                    </div>
+                    
+                </div>
+                
             </div>
         </div>
 
         <div class="page-content">
 
             <div class="settings hidden">
-                <template v-if="priceListSettings">
+                <div class="content-inner-wrapper">
+                    <template v-if="priceListSettings">
 
-                    <div class="page-close-container" v-on:click="goToPriceList()">
-                        <div class="page-close">
-                            <span v-for="i in 2"></span>
-                        </div>
-                    </div>
-
-                    <h4>Prices</h4>
-                    <div class="settings-price-settings">
-                        <div class="settings-input-container">
-                            <label for="discount-2-weeks">2 Weeks Discount</label>
-                            <input id="discount-2-weeks" v-model="priceListSettings['discount2Weeks']" type="number" step="0.01" />
-                        </div>
-                        
-                        <div class="settings-input-container">
-                            <label for="discount-3-weeks">3 Weeks Discount</label>
-                            <input id="discount-3-weeks" v-model="priceListSettings['discount3Weeks']" type="number" step="0.01" />
-                        </div>
-                        
-                        <div class="settings-input-container">
-                            <label for="discount-4-weeks">4 Weeks Discount</label>
-                            <input id="discount-4-weeks" v-model="priceListSettings['discount4Weeks']" type="number" step="0.01" />
-                        </div>
-
-                        <div class="settings-input-container">
-                            <label for="price-per-dog">Price per Dog</label>
-                            <input id="price-per-dog" v-model="priceListSettings['pricePerDog']" type="number" step="0.01" />
-                        </div>
-                    </div>
-
-                    
-                    <h4>Guests</h4>
-                    <div class="settings-price-settings">
-                        <div class="party-container">
-                            <div class="party-input-container">
-    
-                                <label for="max-guests"><h5>Max Guests</h5></label>
-    
-                                <div class="party-input" class="max-guests">
-                                    <button type="button" v-on:click="maxGuestsDecrease($event)" class="party-decrease" :class="{ inactive: priceListSettings['maxGuests'] === 0 }">-</button>
-                                    <div :class="{ inactive: priceListSettings['maxGuests'] === 0 }">&#60;% priceListSettings['maxGuests'] %></div>
-                                    <button type="button" v-on:click="maxGuestsIncrease($event)" class="party-increase">+</button>
-                                </div>
-                            </div>
-        
-                            <div class="party-input-container">
-                                <label for="max-infants"><h5>Max Infants</h5></label>
-                                <div class="party-input" class="max-infants">
-                                    <button type="button" v-on:click="maxInfantsDecrease($event)" class="party-decrease" :class="{ inactive: priceListSettings['maxInfants'] === 0 }">-</button>
-                                    <div :class="{ inactive: priceListSettings['maxInfants'] === 0 }">&#60;% priceListSettings['maxInfants'] %></div>
-                                    <button type="button" v-on:click="maxInfantsIncrease($event)" class="party-increase">+</button>
-                                </div>
-                            </div>
-        
-                            <div class="party-input-container">
-                                <label for="max-dogs"><h5>Max Dogs</h5></label>
-                                <div class="party-input" class="max-dogs">
-                                    <button type="button" v-on:click="maxDogsDecrease($event)" class="party-decrease" :class="{ inactive: priceListSettings['maxDogs'] === 0 }">-</button>
-                                    <div :class="{ inactive: priceListSettings['maxDogs'] === 0 }">&#60;% priceListSettings['maxDogs'] %></div>
-                                    <button type="button" v-on:click="maxDogsIncrease($event)" class="party-increase">+</button>
-                                </div>
+                        <div class="page-close-container" v-on:click="goToPriceList()">
+                            <div class="page-close">
+                                <span v-for="i in 2"></span>
                             </div>
                         </div>
-                    </div>
-                    
-                    <h4>Dates</h4>
-                    <div class="settings-price-settings">
-                        <div class="settings-input-container">
-                            <label for="changeover-day">Default Changeover Day</label>
-                            <select id="changeover-day" v-model="priceListSettings['defaultChangeoverDay']" name="changeover-day">
-                                <option value="1">Monday</option>
-                                <option value="2">Tuesday</option>
-                                <option value="3">Wednesday</option>
-                                <option value="4">Thursday</option>
-                                <option value="5">Friday</option>
-                                <option value="6">Saturday</option>
-                                <option value="0">Sunday</option>
-                            </select>
+    
+                        <h4>Prices</h4>
+                        <div class="settings-price-settings">
+                            <div class="settings-input-container">
+                                <label for="discount-2-weeks">2 Weeks Discount</label>
+                                <input id="discount-2-weeks" v-model="priceListSettings['discount2Weeks']" type="number" step="0.01" />
+                            </div>
+                            
+                            <div class="settings-input-container">
+                                <label for="discount-3-weeks">3 Weeks Discount</label>
+                                <input id="discount-3-weeks" v-model="priceListSettings['discount3Weeks']" type="number" step="0.01" />
+                            </div>
+                            
+                            <div class="settings-input-container">
+                                <label for="discount-4-weeks">4 Weeks Discount</label>
+                                <input id="discount-4-weeks" v-model="priceListSettings['discount4Weeks']" type="number" step="0.01" />
+                            </div>
+    
+                            <div class="settings-input-container">
+                                <label for="price-per-dog">Price per Dog</label>
+                                <input id="price-per-dog" v-model="priceListSettings['pricePerDog']" type="number" step="0.01" />
+                            </div>
                         </div>
     
-                        <div class="settings-input-container">
-                            <label for="active-prices-range">Active Prices Range</label>
-                            <input id="active-prices-range" v-model="priceListSettings['activePricesRange']" type="number" />
-                        </div>
+                        
+                        <h4>Guests</h4>
+                        <div class="settings-price-settings">
+                            <div class="party-container">
+                                <div class="party-input-container">
         
-                        <div class="settings-input-container">
-                            <label for="future-prices-range">Future Prices Range</label>
-                            <input id="future-prices-range" v-model="priceListSettings['futurePricesRange']" type="number" />
+                                    <label for="max-guests"><h5>Max Guests</h5></label>
+        
+                                    <div class="party-input" class="max-guests">
+                                        <button type="button" v-on:click="maxGuestsDecrease($event)" class="party-decrease" :class="{ inactive: priceListSettings['maxGuests'] === 0 }">-</button>
+                                        <div :class="{ inactive: priceListSettings['maxGuests'] === 0 }">&#60;% priceListSettings['maxGuests'] %></div>
+                                        <button type="button" v-on:click="maxGuestsIncrease($event)" class="party-increase">+</button>
+                                    </div>
+                                </div>
+            
+                                <div class="party-input-container">
+                                    <label for="max-infants"><h5>Max Infants</h5></label>
+                                    <div class="party-input" class="max-infants">
+                                        <button type="button" v-on:click="maxInfantsDecrease($event)" class="party-decrease" :class="{ inactive: priceListSettings['maxInfants'] === 0 }">-</button>
+                                        <div :class="{ inactive: priceListSettings['maxInfants'] === 0 }">&#60;% priceListSettings['maxInfants'] %></div>
+                                        <button type="button" v-on:click="maxInfantsIncrease($event)" class="party-increase">+</button>
+                                    </div>
+                                </div>
+            
+                                <div class="party-input-container">
+                                    <label for="max-dogs"><h5>Max Dogs</h5></label>
+                                    <div class="party-input" class="max-dogs">
+                                        <button type="button" v-on:click="maxDogsDecrease($event)" class="party-decrease" :class="{ inactive: priceListSettings['maxDogs'] === 0 }">-</button>
+                                        <div :class="{ inactive: priceListSettings['maxDogs'] === 0 }">&#60;% priceListSettings['maxDogs'] %></div>
+                                        <button type="button" v-on:click="maxDogsIncrease($event)" class="party-increase">+</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
-                        <div class="settings-input-container">
-                            <label for="max-segment-length">Max Segment Length</label>
-                            <input id="max-segment-length" v-model="priceListSettings['maxSegmentLength']" type="number" step="1" />
+                        <h4>Dates</h4>
+                        <div class="settings-price-settings">
+                            <div class="settings-input-container">
+                                <label for="changeover-day">Default Changeover Day</label>
+                                <select id="changeover-day" v-model="priceListSettings['defaultChangeoverDay']" name="changeover-day">
+                                    <option value="1">Monday</option>
+                                    <option value="2">Tuesday</option>
+                                    <option value="3">Wednesday</option>
+                                    <option value="4">Thursday</option>
+                                    <option value="5">Friday</option>
+                                    <option value="6">Saturday</option>
+                                    <option value="0">Sunday</option>
+                                </select>
+                            </div>
+        
+                            <div class="settings-input-container">
+                                <label for="active-prices-range">Active Prices Range</label>
+                                <input id="active-prices-range" v-model="priceListSettings['activePricesRange']" type="number" />
+                            </div>
+            
+                            <div class="settings-input-container">
+                                <label for="future-prices-range">Future Prices Range</label>
+                                <input id="future-prices-range" v-model="priceListSettings['futurePricesRange']" type="number" />
+                            </div>
+                            
+                            <div class="settings-input-container">
+                                <label for="max-segment-length">Max Segment Length</label>
+                                <input id="max-segment-length" v-model="priceListSettings['maxSegmentLength']" type="number" step="1" />
+                            </div>
                         </div>
-                    </div>
-
-                    <button class="page-update" v-on:click="priceListSettingsUpdate()">UPDATE SETTINGS</button>
-
-                </template>
-                <template v-else>
-                    <p>LOADING...</p>
-                </template>
+    
+                        <div class="buttons-container">
+                            <div class="content-inner-wrapper">
+                                <button class="page-update" v-on:click="priceListSettingsUpdate()">UPDATE SETTINGS</button>
+                            </div>
+                            
+                        </div>
+                        
+    
+                    </template>
+                    <template v-else>
+                        <p>LOADING...</p>
+                    </template>
+                </div>
                 
             </div>
 
             <div class="price-list">
 
                 <div class="price-list-header">
-                    <div class="header-flex">
-                        <h1>Price List</h1>
-                        <button v-on:click="openPriceListSettings()">SETTINGS</button>
-                    </div>
-
-                    <div :class="{ hidden: !priceListMonthView }">
-                        <template v-if="monthSwiper && !monthTabsRefresh">
-                            <div class="month-tabs">
-                                <div class="tab" v-for="(month, index) in rangeMonths" :key="month.toString()" v-on:click="monthSwiper.slideTo(index)">
-                                    <div class="month-text"><% month.toLocaleString('default', { month: 'short' }) %><br><% month.getFullYear().toString() %></div>
-                                    <template v-if="priceList.filter(segment => segmentMonthFilter(segment, month, index)).length > 0">
-                                        <div class="month-has-data">&#8226;</div>
-                                    </template>
+                    <div class="content-inner-wrapper">
+                        <div class="header-flex">
+                            <h1>Price List</h1>
+                            <button v-on:click="openPriceListSettings()">SETTINGS</button>
+                        </div>
+    
+                        <div :class="{ hidden: !priceListMonthView }">
+                            <template v-if="monthSwiper && !monthTabsRefresh">
+                                <div class="month-tabs">
+                                    <div class="tab" v-for="(month, index) in rangeMonths" :key="month.toString()" v-on:click="monthSwiper.slideTo(index)">
+                                        <div class="month-text"><% month.toLocaleString('default', { month: 'short' }) %><br><% month.getFullYear().toString() %></div>
+                                        <template v-if="priceList.filter(segment => segmentMonthFilter(segment, month, index)).length > 0">
+                                            <div class="month-has-data">&#8226;</div>
+                                        </template>
+                                    </div>
                                 </div>
-                            </div>
-                        </template>
+                            </template>
+                        </div>
                     </div>
                     
                 </div>
 
                 <div class="price-list-main">
-
-                    <div :class="{ hidden: !priceListMonthView }">
+                    <div class="content-inner-wrapper">
+                        <div :class="{ hidden: !priceListMonthView }">
     
-                        <template v-if="rangeMonths">
-            
-                            <div class="swiper-container month-swiper">
-                                <div class="swiper-wrapper">
-                                    <div class="swiper-slide month" v-for="(month, index) in rangeMonths" :key="month.toString()">
-                                        <div class="price-list-table">
-                                            
-                                            <template v-if="priceList">
-
-                                                <div class="start-date-column price-table-column">
-                                                    <div class="price-table-header">Start Date</div>
-                                                    <input class="segment-start-date" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="date" v-model="segment['startDate']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
-                                                    <input class="segment-start-date" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="date" v-model="segment['startDate']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
-                                                </div>
+                            <template v-if="rangeMonths">
+                
+                                <div class="swiper-container month-swiper">
+                                    <div class="swiper-wrapper">
+                                        <div class="swiper-slide month" v-for="(month, index) in rangeMonths" :key="month.toString()">
+                                            <div class="price-list-table">
                                                 
-                                                <div class="swiper-container price-table-swiper">
-                                                    <div class="swiper-wrapper">
-
-                                                        <div class="swiper-slide price-column price-table-column">
-                                                            <div class="price-table-header">Price / £</div>
-                                                            <input class="segment-price" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['price']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
-                                                            <input class="segment-price" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['price']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
-                                                        </div>
-
-                                                        <div class="swiper-slide price-2-weeks-column price-table-column">
-                                                            <div class="price-table-header">2 Weeks / £</div>
-                                                            <input class="segment-price-2-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['price2Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
-                                                            <input class="segment-price-2-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['price2Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
-                                                        </div>
-
-                                                        <div class="swiper-slide price-3-weeks-column price-table-column">
-                                                            <div class="price-table-header">3 Weeks / £</div>
-                                                            <input class="segment-price-3-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['price3Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
-                                                            <input class="segment-price-3-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['price3Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
-                                                        </div>
-
-                                                        <div class="swiper-slide price-4-weeks-column price-table-column">
-                                                            <div class="price-table-header">4 Weeks / £</div>
-                                                            <input class="segment-price-4-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['price4Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
-                                                            <input class="segment-price-4-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['price4Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
-                                                        </div>
-
-                                                        <!--<div class="swiper-slide customer-column price-table-column">
-                                                            <div class="price-table-header">Customer</div>
-                                                            <div class="segment-customer"><% customers.filter(customer => {customer['id'] === bookings.filter(booking => {booking['id'] === priceList.filter(segment => segmentMonthFilter(segment, month, index))['bookingId']})['customerId']})['firstName'] %> <% customers.filter(customer => {customer['id'] === bookings.filter(booking => {booking['id'] === priceList.filter(segment => segmentMonthFilter(segment, month, index))['bookingId']})['customerId']})['lastName'] %></div>
-                                                        </div>-->
-
+                                                <template v-if="priceList">
+    
+                                                    <div class="start-date-column price-table-column">
+                                                        <div class="price-table-header">Start Date</div>
+                                                        <input class="segment-start-date" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="date" v-model="segment['startDate']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
+                                                        <input class="segment-start-date" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="date" v-model="segment['startDate']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
                                                     </div>
-
-                                                    <div class="swiper-pagination"></div>
-                                                </div>
-                                    
-                                            </template>
-                                            <template v-else>
-                                                <p>LOADING...</p>
-                                            </template>
+                                                    
+                                                    <div class="swiper-container price-table-swiper">
+                                                        <div class="swiper-wrapper">
+    
+                                                            <div class="swiper-slide price-column price-table-column">
+                                                                <div class="price-table-header">Price / £</div>
+                                                                <input class="segment-price" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['price']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
+                                                                <input class="segment-price" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['price']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
+                                                            </div>
+    
+                                                            <div class="swiper-slide price-2-weeks-column price-table-column">
+                                                                <div class="price-table-header">2 Weeks / £</div>
+                                                                <input class="segment-price-2-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['price2Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
+                                                                <input class="segment-price-2-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['price2Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
+                                                            </div>
+    
+                                                            <div class="swiper-slide price-3-weeks-column price-table-column">
+                                                                <div class="price-table-header">3 Weeks / £</div>
+                                                                <input class="segment-price-3-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['price3Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
+                                                                <input class="segment-price-3-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['price3Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
+                                                            </div>
+    
+                                                            <div class="swiper-slide price-4-weeks-column price-table-column">
+                                                                <div class="price-table-header">4 Weeks / £</div>
+                                                                <input class="segment-price-4-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['price4Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
+                                                                <input class="segment-price-4-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['price4Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" :readonly="cardSelect"/>
+                                                            </div>
+    
+                                                            <!--<div class="swiper-slide customer-column price-table-column">
+                                                                <div class="price-table-header">Customer</div>
+                                                                <div class="segment-customer"><% customers.filter(customer => {customer['id'] === bookings.filter(booking => {booking['id'] === priceList.filter(segment => segmentMonthFilter(segment, month, index))['bookingId']})['customerId']})['firstName'] %> <% customers.filter(customer => {customer['id'] === bookings.filter(booking => {booking['id'] === priceList.filter(segment => segmentMonthFilter(segment, month, index))['bookingId']})['customerId']})['lastName'] %></div>
+                                                            </div>-->
+    
+                                                        </div>
+    
+                                                        <div class="swiper-pagination"></div>
+                                                    </div>
+                                        
+                                                </template>
+                                                <template v-else>
+                                                    <p>LOADING...</p>
+                                                </template>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div> 
-                                        
-                        </template>
+                                </div> 
+                                            
+                            </template>
+                        </div>
                     </div>
                     
+                    
                     <div class="buttons-space"></div>
-                    <button class="cards-add" v-on:click="addPriceListSegment()">+</button>
-                    <button class="cards-select shifted" v-on:click="priceListSelectOn()">SELECT</button>
-                    <button class="cards-update" v-on:click="setPriceList()">UPDATE</button>
-                    <button class="cards-cancel hidden" v-on:click="priceListSelectOff()">CANCEL</button>
-                    <button class="cards-delete hidden" v-on:click="priceListSelectionDelete()">DELETE (<% cardSelection.length %>)</button>
+                    <div class="buttons-container">
+                        <div class="content-inner-wrapper">
+                            <button class="cards-add" v-on:click="addPriceListSegment()">+</button>
+                            <button class="cards-select shifted" v-on:click="priceListSelectOn()">SELECT</button>
+                            <button class="cards-update" v-on:click="setPriceList()">UPDATE</button>
+                            <button class="cards-cancel hidden" v-on:click="priceListSelectOff()">CANCEL</button>
+                            <button class="cards-delete hidden" v-on:click="priceListSelectionDelete()">DELETE (<% cardSelection.length %>)</button>
+                        </div>
+                    </div>
                     
                 </div>   
       
@@ -294,127 +376,147 @@
                 
 
             <div class="bookings hidden">
-                <div class="price-list-header">
-                    <h1>Bookings</h1>
+                <div class="content-inner-wrapper">
+                    <div class="price-list-header">
+                        <h1>Bookings</h1>
+                    </div>
                 </div>
+                
                 
                 <template v-if="bookings">
                     <div class="bookings-list-view bookings-main">
-                        <div class="booking" v-for="booking in bookings" >
+                        <div class="content-inner-wrapper">
+                            <div class="booking" v-for="booking in bookings" >
 
-                            <div class="page hidden">
-                                <div class="page-close-container" v-on:click="exitFullscreen($event)">
-                                    <div class="page-close">
-                                        <span v-for="i in 2"></span>
-                                    </div>
-                                </div>
-                                
-                                <div class="settings-price-settings">
-                                    
-                                    <div class="settings-input-container customer-input-container">
-                                        <label for="customer-id">Customer</label>
-                                        <select id="customer-id" v-model="booking['customerId']" name="customer-id">
-                                            <option v-for="customer in customers" :value="customer['id']"><% customer['firstName'] %> <% customer['lastName'] %></option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="booking-dates">
-    
-                                        <div class="input-container">
-                                            <label for="arrival-date">Arrival Date</label>
-                                            <input id="arrival-date" v-model="booking['arrivalDate']" type="date"  />
+                                <div class="page hidden">
+                                    <div class="content-inner-wrapper">
+                                        <div class="page-close-container" v-on:click="exitFullscreen($event)">
+                                            <div class="page-close">
+                                                <span v-for="i in 2"></span>
+                                            </div>
                                         </div>
                                         
-                                        <div class="input-container">
-                                            <label for="departure-date">Departure Date</label>
-                                            <input id="departure-date" v-model="booking['departureDate']" type="date" />
+                                        <div class="settings-price-settings">
+                                            
+                                            <div class="settings-input-container customer-input-container">
+                                                <label for="customer-id">Customer</label>
+                                                <select id="customer-id" v-model="booking['customerId']" name="customer-id">
+                                                    <option v-for="customer in customers" :value="customer['id']"><% customer['firstName'] %> <% customer['lastName'] %></option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="booking-dates">
+            
+                                                <div class="input-container">
+                                                    <label for="arrival-date">Arrival Date</label>
+                                                    <input id="arrival-date" v-model="booking['arrivalDate']" type="date"  />
+                                                </div>
+                                                
+                                                <div class="input-container">
+                                                    <label for="departure-date">Departure Date</label>
+                                                    <input id="departure-date" v-model="booking['departureDate']" type="date" />
+                                                </div>
+                
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="party-container">
+                                            <div class="party-input-container">
+        
+                                                <label for="adults"><h5>Adults</h5>Ages 13 or above</label>
+        
+                                                <div class="party-input" class="adults">
+                                                    <button type="button" v-on:click="adultsDecrease(booking, $event)" class="party-decrease" :class="{ inactive: booking['adults'] === 0 }">-</button>
+                                                    <div :class="{ inactive: booking['adults'] === 0 }">&#60;% booking['adults'] %></div>
+                                                    <button type="button" v-on:click="adultsIncrease(booking, $event)" class="party-increase" :class="{ inactive: booking['adults'] + booking['children'] >= priceListSettings['maxGuests'] }">+</button>
+                                                </div>
+                                            </div>
+        
+                                            <div class="party-input-container">
+                                                <label for="children"><h5>Children</h5>Ages 2-12</label>
+                                                <div class="party-input" class="children">
+                                                    <button type="button" v-on:click="childrenDecrease(booking, $event)" class="party-decrease" :class="{ inactive: booking['children'] === 0 }">-</button>
+                                                    <div :class="{ inactive: booking['children'] === 0 }">&#60;% booking['children'] %></div>
+                                                    <button type="button" v-on:click="childrenIncrease(booking, $event)" class="party-increase" :class="{ inactive: booking['adults'] + booking['children'] >= priceListSettings['maxGuests'] }">+</button>
+                                                </div>
+                                            </div>
+                        
+                                            <div class="party-input-container">
+                                                <label for="infants"><h5>Infants</h5>Under 2</label>
+                                                <div class="party-input" class="infants">
+                                                    <button type="button" v-on:click="infantsDecrease(booking, $event)" class="party-decrease" :class="{ inactive: booking['infants'] === 0 }">-</button>
+                                                    <div :class="{ inactive: booking['infants'] === 0 }">&#60;% booking['infants'] %></div>
+                                                    <button type="button" v-on:click="infantsIncrease(booking, $event)" class="party-increase" :class="{ inactive: booking['infants'] >= priceListSettings['maxInfants'] }">+</button>
+                                                </div>
+                                            </div>
+                        
+                                            <div class="party-input-container">
+                                                <label for="dogs"><h5>Dogs</h5>£20 each</label>
+                                                <div class="party-input" class="dogs">
+                                                    <button type="button" v-on:click="dogsDecrease(booking, $event)" class="party-decrease" :class="{ inactive: booking['dogs'] === 0 }">-</button>
+                                                    <div :class="{ inactive: booking['dogs'] === 0 }">&#60;% booking['dogs'] %></div>
+                                                    <button type="button" v-on:click="dogsIncrease(booking, $event)" class="party-increase" :class="{ inactive: booking['dogs'] >= priceListSettings['maxDogs'] }">+</button>
+                                                </div>
+                                            </div>
                                         </div>
         
-                                    </div>
-                                </div>
-                                
-                                
-                                <div class="party-container">
-                                    <div class="party-input-container">
-
-                                        <label for="adults"><h5>Adults</h5>Ages 13 or above</label>
-
-                                        <div class="party-input" class="adults">
-                                            <button type="button" v-on:click="adultsDecrease(booking, $event)" class="party-decrease" :class="{ inactive: booking['adults'] === 0 }">-</button>
-                                            <div :class="{ inactive: booking['adults'] === 0 }">&#60;% booking['adults'] %></div>
-                                            <button type="button" v-on:click="adultsIncrease(booking, $event)" class="party-increase" :class="{ inactive: booking['adults'] + booking['children'] >= priceListSettings['maxGuests'] }">+</button>
+                                        <div class="settings-price-settings">
+                                            <div class="settings-input-container">
+                                                <label for="stay-price">Stay Price</label>
+                                                <input id="stay-price" v-model="booking['stayPrice']" type="number" step="0.01" />
+                                            </div>
+                                            
+                                            <div class="settings-input-container">
+                                                <label for="dog-price">Dog Price</label>
+                                                <input id="dog-price" v-model="booking['dogPrice']" type="number" step="0.01" />
+                                            </div>
+                                            
+                                            <div class="settings-input-container">
+                                                <label for="price">Price</label>
+                                                <input id="price" v-model="booking['price']" type="number" step="0.01" />
+                                            </div>
                                         </div>
-                                    </div>
-
-                                    <div class="party-input-container">
-                                        <label for="children"><h5>Children</h5>Ages 2-12</label>
-                                        <div class="party-input" class="children">
-                                            <button type="button" v-on:click="childrenDecrease(booking, $event)" class="party-decrease" :class="{ inactive: booking['children'] === 0 }">-</button>
-                                            <div :class="{ inactive: booking['children'] === 0 }">&#60;% booking['children'] %></div>
-                                            <button type="button" v-on:click="childrenIncrease(booking, $event)" class="party-increase" :class="{ inactive: booking['adults'] + booking['children'] >= priceListSettings['maxGuests'] }">+</button>
+                                        
+                                        <div class="buttons-container">
+                                            <div class="content-inner-wrapper">
+                                                <button class="page-delete" v-on:click="bookingDelete(booking, $event)">DELETE</button>
+                                                <button class="page-update" v-on:click="bookingUpdate(booking, $event)">UPDATE</button>
+                                            </div>
+                                            
                                         </div>
-                                    </div>
-                
-                                    <div class="party-input-container">
-                                        <label for="infants"><h5>Infants</h5>Under 2</label>
-                                        <div class="party-input" class="infants">
-                                            <button type="button" v-on:click="infantsDecrease(booking, $event)" class="party-decrease" :class="{ inactive: booking['infants'] === 0 }">-</button>
-                                            <div :class="{ inactive: booking['infants'] === 0 }">&#60;% booking['infants'] %></div>
-                                            <button type="button" v-on:click="infantsIncrease(booking, $event)" class="party-increase" :class="{ inactive: booking['infants'] >= priceListSettings['maxInfants'] }">+</button>
-                                        </div>
-                                    </div>
-                
-                                    <div class="party-input-container">
-                                        <label for="dogs"><h5>Dogs</h5>£20 each</label>
-                                        <div class="party-input" class="dogs">
-                                            <button type="button" v-on:click="dogsDecrease(booking, $event)" class="party-decrease" :class="{ inactive: booking['dogs'] === 0 }">-</button>
-                                            <div :class="{ inactive: booking['dogs'] === 0 }">&#60;% booking['dogs'] %></div>
-                                            <button type="button" v-on:click="dogsIncrease(booking, $event)" class="party-increase" :class="{ inactive: booking['dogs'] >= priceListSettings['maxDogs'] }">+</button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="settings-price-settings">
-                                    <div class="settings-input-container">
-                                        <label for="stay-price">Stay Price</label>
-                                        <input id="stay-price" v-model="booking['stayPrice']" type="number" step="0.01" />
+                                        
                                     </div>
                                     
-                                    <div class="settings-input-container">
-                                        <label for="dog-price">Dog Price</label>
-                                        <input id="dog-price" v-model="booking['dogPrice']" type="number" step="0.01" />
-                                    </div>
-                                    
-                                    <div class="settings-input-container">
-                                        <label for="price">Price</label>
-                                        <input id="price" v-model="booking['price']" type="number" step="0.01" />
-                                    </div>
                                 </div>
-                                
-                                <button class="page-delete" v-on:click="bookingDelete(booking, $event)">DELETE</button>
-                                <button class="page-update" v-on:click="bookingUpdate(booking, $event)">UPDATE</button>
+    
+                                <div class="card" v-on:click="cardClick(booking, $event)" :class="{ 'select-flag': booking['selectFlag'] }">     
+                                    <div class="arrival-date"><% new Date(booking['arrivalDate']).toLocaleDateString('en-GB', { weekday: 'short',  month: 'long', day: 'numeric' }) %></div>
+                                    <div class="departure-date"><% new Date(booking['departureDate']).toLocaleDateString('en-GB', { weekday: 'short',  month: 'long', day: 'numeric' }) %></div>
+                                    <div class="customer-id"><% customerName(booking['customerId']) %></div>
+                                    <div class="guests-total"><% booking['adults'] + booking['children'] %> guests</div>
+                                </div>
+    
+                                <div class="transition card hidden">
+                                    <div class="arrival-date"><% new Date(booking['arrivalDate']).toLocaleDateString('en-GB', { weekday: 'short',  month: 'long', day: 'numeric' }) %></div>
+                                    <div class="departure-date"><% new Date(booking['departureDate']).toLocaleDateString('en-GB', { weekday: 'short',  month: 'long', day: 'numeric' }) %></div>
+                                    <div class="customer-id"><% customerName(booking['customerId']) %></div>
+                                    <div class="guests-total"><% booking['adults'] + booking['children'] %> guests</div>
+                                </div>
+                            
                             </div>
-
-                            <div class="card" v-on:click="cardClick(booking, $event)" :class="{ 'select-flag': booking['selectFlag'] }">     
-                                <div class="arrival-date"><% new Date(booking['arrivalDate']).toLocaleDateString('en-GB', { weekday: 'short',  month: 'long', day: 'numeric' }) %></div>
-                                <div class="departure-date"><% new Date(booking['departureDate']).toLocaleDateString('en-GB', { weekday: 'short',  month: 'long', day: 'numeric' }) %></div>
-                                <div class="customer-id"><% customerName(booking['customerId']) %></div>
-                                <div class="guests-total"><% booking['adults'] + booking['children'] %> guests</div>
-                            </div>
-
-                            <div class="transition card hidden">
-                                <div class="arrival-date"><% new Date(booking['arrivalDate']).toLocaleDateString('en-GB', { weekday: 'short',  month: 'long', day: 'numeric' }) %></div>
-                                <div class="departure-date"><% new Date(booking['departureDate']).toLocaleDateString('en-GB', { weekday: 'short',  month: 'long', day: 'numeric' }) %></div>
-                                <div class="customer-id"><% customerName(booking['customerId']) %></div>
-                                <div class="guests-total"><% booking['adults'] + booking['children'] %> guests</div>
-                            </div>
-                        
                         </div>
+                        
                     </div>
-                    <button class="cards-add" v-on:click="addBooking()">+</button>
-                    <button class="cards-select" v-on:click="bookingCardSelectOn()">SELECT</button>
-                    <button class="cards-cancel hidden" v-on:click="bookingCardSelectOff()">CANCEL</button>
-                    <button class="cards-delete hidden" v-on:click="bookingSelectionDelete()">DELETE (<% cardSelection.length %>)</button>
+                    <div class="buttons-container">
+                        <div class="content-inner-wrapper">
+                            <button class="cards-add" v-on:click="addBooking()">+</button>
+                            <button class="cards-select" v-on:click="bookingCardSelectOn()">SELECT</button>
+                            <button class="cards-cancel hidden" v-on:click="bookingCardSelectOff()">CANCEL</button>
+                            <button class="cards-delete hidden" v-on:click="bookingSelectionDelete()">DELETE (<% cardSelection.length %>)</button>
+                        </div>
+                        
+                    </div>
+                    
                 </template>
                 <template v-else>
                     <p>LOADING...</p>>
@@ -423,109 +525,129 @@
             </div>
 
             <div class="customers hidden">
-                <div class="price-list-header">
-                    <h1>Customers</h1>
+                <div class="content-inner-wrapper">
+                    <div class="price-list-header">
+                        <h1>Customers</h1>
+                    </div>
                 </div>
+                
                 
                 <template v-if="customers">
                     <div class="customers-list-view customers-main">
-                        <div class="customer" v-for="customer in customers">
+                        <div class="content-inner-wrapper">
+                            <div class="customer" v-for="customer in customers">
                             
-                            <div class="page hidden">
-                                <div class="page-close-container" v-on:click="exitFullscreen($event)">
-                                    <div class="page-close">
-                                        <span v-for="i in 2"></span>
+                                <div class="page hidden">
+                                    <div class="content-inner-wrapper">
+                                        <div class="page-close-container" v-on:click="exitFullscreen($event)">
+                                            <div class="page-close">
+                                                <span v-for="i in 2"></span>
+                                            </div>
+                                        </div>
+                                        
+                                        <h4>Name</h4>
+                                        <div class="settings-price-settings">
+                                            <div class="settings-input-container">
+                                                <label for="first-name">First Name</label>
+                                                <input id="first-name" v-model="customer['firstName']" />
+                                            </div>
+                                            
+                                            <div class="settings-input-container">
+                                                <label for="last-name">Last Name</label>
+                                                <input id="last-name" v-model="customer['lastName']" />
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                        <h4>Contact</h4>
+                                        <div class="settings-price-settings">
+                                            <div class="settings-input-container">
+                                                <label for="email-address">Email Address</label>
+                                                <input id="email-address" v-model="customer['emailAddress']" />
+                                            </div>
+                                            
+                                            <div class="settings-input-container">
+                                                <label for="phone-number">Phone Number</label>
+                                                <input id="phone-number" v-model="customer['phoneNumber']" />
+                                            </div>
+                                        </div>
+                                        
+                                        <h4>Address</h4>
+                                        <div class="settings-price-settings">
+                                            <div class="settings-input-container">
+                                                <label for="address-line-1">Address Line 1</label>
+                                                <input id="address-line-1" v-model="customer['addressLine1']" />
+                                            </div>
+                                            
+                                            <div class="settings-input-container">
+                                                <label for="address-line-2">Address Line 2</label>
+                                                <input id="address-line-2" v-model="customer['addressLine2']" />
+                                            </div>
+                                            
+                                            <div class="settings-input-container">
+                                                <label for="town-or-city">Town or City</label>
+                                                <input id="town-or-city" v-model="customer['townOrCity']" />
+                                            </div>
+                                            
+                                            <div class="settings-input-container">
+                                                <label for="county-or-region">County or Region</label>
+                                                <input id="county-or-region" v-model="customer['countyOrRegion']" />
+                                            </div>
+                                            
+                                            <div class="settings-input-container">
+                                                <label for="postcode">Postcode</label>
+                                                <input id="postcode" v-model="customer['postcode']" />
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="buttons-container">
+                                            <div class="content-inner-wrapper">
+                                                <button class="page-delete" v-on:click="customerDelete(customer, $event)">DELETE</button>
+                                                <button class="page-update" v-on:click="customerUpdate(customer, $event)">UPDATE</button>
+                                            </div>
+                                            
+                                        </div>
+                                        
                                     </div>
+                                    
+                                </div>
+    
+                                <div class="card" v-on:click="cardClick(customer, $event)" :class="{ 'select-flag': customer.selectFlag }">
+                                    <div class="customer-name"><% customer['firstName'] %> <% customer['lastName'] %></div>
+                                    <div class="customer-email-address"><% customer['emailAddress'] %></div>
+                                    <div class="customer-phone-number"><% customer['phoneNumber'] %></div>
+                                    <!--<div class="customer-address">
+                                        <% customer['addressLine1'] %> <br>
+                                        <template v-if="customer['addressLine2']">
+                                            <% customer['addressLine2'] %> <br>
+                                        </template>
+                                        <template v-if="customer['townOrCity']">
+                                            <% customer['townOrCity'] %> <br>
+                                        </template>
+                                        <template v-if="customer['countyOrRegion']">
+                                            <% customer['countyOrRegion'] %> <br>
+                                        </template>
+                                        <template v-if="customer['postCode']">
+                                            <% customer['postCode'] %>
+                                        </template>
+                                        
+                                    </div>-->
                                 </div>
                                 
-                                <h4>Name</h4>
-                                <div class="settings-price-settings">
-                                    <div class="settings-input-container">
-                                        <label for="first-name">First Name</label>
-                                        <input id="first-name" v-model="customer['firstName']" />
-                                    </div>
-                                    
-                                    <div class="settings-input-container">
-                                        <label for="last-name">Last Name</label>
-                                        <input id="last-name" v-model="customer['lastName']" />
-                                    </div>
-                                    
-                                </div>
-                                
-                                <h4>Contact</h4>
-                                <div class="settings-price-settings">
-                                    <div class="settings-input-container">
-                                        <label for="email-address">Email Address</label>
-                                        <input id="email-address" v-model="customer['emailAddress']" />
-                                    </div>
-                                    
-                                    <div class="settings-input-container">
-                                        <label for="phone-number">Phone Number</label>
-                                        <input id="phone-number" v-model="customer['phoneNumber']" />
-                                    </div>
-                                </div>
-                                
-                                <h4>Address</h4>
-                                <div class="settings-price-settings">
-                                    <div class="settings-input-container">
-                                        <label for="address-line-1">Address Line 1</label>
-                                        <input id="address-line-1" v-model="customer['addressLine1']" />
-                                    </div>
-                                    
-                                    <div class="settings-input-container">
-                                        <label for="address-line-2">Address Line 2</label>
-                                        <input id="address-line-2" v-model="customer['addressLine2']" />
-                                    </div>
-                                    
-                                    <div class="settings-input-container">
-                                        <label for="town-or-city">Town or City</label>
-                                        <input id="town-or-city" v-model="customer['townOrCity']" />
-                                    </div>
-                                    
-                                    <div class="settings-input-container">
-                                        <label for="county-or-region">County or Region</label>
-                                        <input id="county-or-region" v-model="customer['countyOrRegion']" />
-                                    </div>
-                                    
-                                    <div class="settings-input-container">
-                                        <label for="postcode">Postcode</label>
-                                        <input id="postcode" v-model="customer['postcode']" />
-                                    </div>
-                                </div>
-                                
-                                
-                                <button class="page-delete" v-on:click="customerDelete(customer, $event)">DELETE</button>
-                                <button class="page-update" v-on:click="customerUpdate(customer, $event)">UPDATE</button>
                             </div>
-
-                            <div class="card" v-on:click="cardClick(customer, $event)" :class="{ 'select-flag': customer.selectFlag }">
-                                <div class="customer-name"><% customer['firstName'] %> <% customer['lastName'] %></div>
-                                <div class="customer-email-address"><% customer['emailAddress'] %></div>
-                                <div class="customer-phone-number"><% customer['phoneNumber'] %></div>
-                                <!--<div class="customer-address">
-                                    <% customer['addressLine1'] %> <br>
-                                    <template v-if="customer['addressLine2']">
-                                        <% customer['addressLine2'] %> <br>
-                                    </template>
-                                    <template v-if="customer['townOrCity']">
-                                        <% customer['townOrCity'] %> <br>
-                                    </template>
-                                    <template v-if="customer['countyOrRegion']">
-                                        <% customer['countyOrRegion'] %> <br>
-                                    </template>
-                                    <template v-if="customer['postCode']">
-                                        <% customer['postCode'] %>
-                                    </template>
-                                    
-                                </div>-->
-                            </div>
-                            
                         </div>
+                        
                     </div>
-                    <button class="cards-add" v-on:click="addCustomer()">+</button>
-                    <button class="cards-select" v-on:click="customerCardSelectOn()">SELECT</button>
-                    <button class="cards-cancel hidden" v-on:click="customerCardSelectOff()">CANCEL</button>
-                    <button class="cards-delete hidden" v-on:click="customerSelectionDelete()">DELETE (<% cardSelection.length %>)</button>
+                    <div class="buttons-container">
+                        <div class="content-inner-wrapper">
+                            <button class="cards-add" v-on:click="addCustomer()">+</button>
+                            <button class="cards-select" v-on:click="customerCardSelectOn()">SELECT</button>
+                            <button class="cards-cancel hidden" v-on:click="customerCardSelectOff()">CANCEL</button>
+                            <button class="cards-delete hidden" v-on:click="customerSelectionDelete()">DELETE (<% cardSelection.length %>)</button>
+                        </div>
+                        
+                    </div>
+                    
                 </template>
                 <template v-else>
                     <p>LOADING...</p>
@@ -535,71 +657,93 @@
 
             <div class="billing hidden">
 
-                <div class="price-list-header">
-                    <div class="header-flex">
-                        <h1>Billing</h1>
-                        <button v-on:click="goToBillingSettings">SETTINGS</button>
-                    </div>
-                    
-                </div>
-
-                <div class="billing-main">
-                    
-                    <template v-if="billings">
-
-                        <div class="billing-table">
-
-                            <div class="booking-column price-table-column start-date-column">
-                                <div class="price-table-header">Booking</div>
-                                <input class="billing-booking-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['bookingId']" readonly />
-                            </div>
-        
-                            <div class="swiper-container billing-table-swiper">
-                                <div class="swiper-wrapper">
-
-                                    <div class="swiper-slide amount-column price-table-column">
-                                        <div class="price-table-header">Amount / £</div>
-                                        <input class="billing-amount-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['amount']" readonly />
-                                    </div>
-        
-                                    <div class="swiper-slide date-column price-table-column">
-                                        <div class="price-table-header">Date</div>
-                                        <input class="billing-date-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['date']" readonly />
-                                    </div>
-
-                                    <div class="swiper-slide due-by-column price-table-column">
-                                        <div class="price-table-header">Due By</div>
-                                        <input class="billing-due-by-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['date']" readonly />
-                                    </div>
-                
-                                    <div class="swiper-slide transaction-type-column price-table-column">
-                                        <div class="price-table-header">Type</div>
-                                        <input class="billing-transaction-type-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['transactionType']" readonly />
-                                    </div>
-
-                                    <div class="swiper-slide reference-column price-table-column">
-                                        <div class="price-table-header">Reference</div>
-                                        <input class="billing-reference-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['reference']" readonly />
-                                    </div>
-                
-                                    <div class="swiper-slide note-column price-table-column">
-                                        <div class="price-table-header">Note</div>
-                                        <input class="billing-note-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['note']"/>
-                                    </div>
-        
-                                </div>
-        
-                                <div class="swiper-pagination"></div>
-                                
-                            </div>
+                <div class="content-inner-wrapper">
+                    <div class="price-list-header">
+                        <div class="header-flex">
+                            <h1>Billing</h1>
+                            <button v-on:click="goToBillingSettings">SETTINGS</button>
                         </div>
                         
-                        
-                    </template>
+                    </div>
+                </div>
+                
+
+                <div class="billing-main">
+                    <div class="content-inner-wrapper">
+                        <template v-if="billings">
+
+                            <div class="billing-table">
     
-                    <template v-else>
+                                <div class="booking-column price-table-column start-date-column">
+                                    <div class="price-table-header">Booking</div>
+                                    <input class="billing-booking-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['bookingId']" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" readonly />
+                                </div>
+            
+                                <div class="swiper-container billing-table-swiper">
+                                    <div class="swiper-wrapper">
     
-                    </template>
+                                        <div class="swiper-slide customer-name-column price-table-column">
+                                            <div class="price-table-header">Customer</div>
+                                            <input class="billing-customer-row" v-for="(row, index) in billings" :key="row['id']" :value="customers.find(customer => customer['id'] == (bookings.find(booking => booking['id'] == row['bookingId'])['customerId']))['firstName'] + ' ' + customers.find(customer => customer['id'] == (bookings.find(booking => booking['id'] == row['bookingId'])['customerId']))['lastName']" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" readonly />
+                                        </div>
+    
+                                        <div class="swiper-slide amount-column price-table-column">
+                                            <div class="price-table-header">Amount / £</div>
+                                            <input class="billing-amount-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['amount']" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" readonly />
+                                        </div>
+            
+                                        <div class="swiper-slide date-column price-table-column">
+                                            <div class="price-table-header">Date</div>
+                                            <input class="billing-date-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['date']" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" readonly />
+                                        </div>
+    
+                                        <div class="swiper-slide due-by-column price-table-column">
+                                            <div class="price-table-header">Due By</div>
+                                            <input class="billing-due-by-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['invoiceDueDate']" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" readonly />
+                                        </div>
+                    
+                                        <div class="swiper-slide transaction-type-column price-table-column">
+                                            <div class="price-table-header">Type</div>
+                                            <input class="billing-transaction-type-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['transactionType']" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" readonly />
+                                        </div>
+    
+                                        <div class="swiper-slide reference-column price-table-column">
+                                            <div class="price-table-header">Reference</div>
+                                            <input class="billing-reference-row" v-for="(row, index) in billings" :key="row['id']" v-model="row['reference']" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" readonly />
+                                        </div>
+                    
+                                        <div class="swiper-slide note-column price-table-column">
+                                            <div class="price-table-header">Note</div>
+                                            <input class="billing-note-row" v-for="(row, index) in billings" :key="row['id']" :class="[{ selected: row['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }]" v-model="row['note']"/>
+                                        </div>
+            
+                                    </div>
+            
+                                    <div class="swiper-pagination"></div>
+                                    
+                                </div>
+                            </div>
+    
+                            <div class="buttons-space"></div>
+                            <div class="buttons-container">
+                                <div class="content-inner-wrapper">
+                                    <div class="billing-controls">
+                                        <button class="cards-add" v-on:click="displayNewBillingOverlay()">+</button>
+                                        <button class="cards-update" v-on:click="setBillings()">UPDATE</button>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            
+                            
+                        </template>
+        
+                        <template v-else>
+        
+                        </template>
+                    </div>
+                    
+                    
                 </div>
                 
             </div>
@@ -637,10 +781,13 @@
                         </div>
 
                         <div class="billing-settings-controls">
-                            <button class="controls-add" v-on:click="addPaymentBreakpoint()">+</button>
-                            <button class="controls-select" v-on:click="paymentBreakpointSelectOn()">SELECT</button>
-                            <button class="controls-cancel hidden" v-on:click="paymentBreakpointSelectOff()">CANCEL</button>
-                            <button class="controls-delete hidden" v-on:click="deletePaymentBreakpointSelection()">DELETE <% paymentBreakpointSelection.length %></button>
+                            <div class="content-inner-wrapper">
+                                <button class="controls-add" v-on:click="addPaymentBreakpoint()">+</button>
+                                <button class="controls-select" v-on:click="paymentBreakpointSelectOn()">SELECT</button>
+                                <button class="controls-cancel hidden" v-on:click="paymentBreakpointSelectOff()">CANCEL</button>
+                                <button class="controls-delete hidden" v-on:click="deletePaymentBreakpointSelection()">DELETE <% paymentBreakpointSelection.length %></button>
+                            </div>
+                            
                         </div>
                         
                     </div>
@@ -663,16 +810,23 @@
                         </div>
 
                         <div class="billing-settings-controls">
-                            <button class="controls-add" v-on:click="addCancellationBreakpoint()">+</button>
-                            <button class="controls-select" v-on:click="cancellationBreakpointSelectOn()">SELECT</button>
-                            <button class="controls-cancel hidden" v-on:click="cancellationBreakpointSelectOff()">CANCEL</button>
-                            <button class="controls-delete hidden" v-on:click="deleteCancellationBreakpointSelection()">DELETE <% cancellationBreakpointSelection.length %></button>
+                            <div class="content-inner-wrapper">
+                                <button class="controls-add" v-on:click="addCancellationBreakpoint()">+</button>
+                                <button class="controls-select" v-on:click="cancellationBreakpointSelectOn()">SELECT</button>
+                                <button class="controls-cancel hidden" v-on:click="cancellationBreakpointSelectOff()">CANCEL</button>
+                                <button class="controls-delete hidden" v-on:click="deleteCancellationBreakpointSelection()">DELETE <% cancellationBreakpointSelection.length %></button>
+                            </div>
+                            
                         </div>
 
                     </div>
+                    <div class="buttons-container">
+                        <div class="content-inner-wrapper">
+                            <button class="page-update" :class="{ 'button-disabled': !billingSettings['updateFlag'] }"v-on:click="setBillingSettings()">UPDATE SETTINGS</button>
+                        </div>
+                        
+                    </div>
                     
-                    <button class="page-update" :class="{ 'button-disabled': !billingSettings['updateFlag'] }"v-on:click="setBillingSettings()">UPDATE SETTINGS</button>
-
                     <div class="buttons-space"></div>
 
                 </template>
@@ -690,6 +844,7 @@
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="../static/body-scroll-lock/bodyScrollLock.js"></script>
 <script src="../static/zenscroll-min.js"></script>
 <script src="../static/swiper/swiper-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/glider-js@1/glider.min.js"></script>

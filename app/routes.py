@@ -503,7 +503,12 @@ def get_billings():
             'invoiceDueDate': invoice_due_date,
             'transactionType': row.transaction_type,
             'reference': reference,
-            'note': row.note
+            'note': row.note,
+            'invoiceStatus': row.invoice_status,
+            'linkedInvoice': row.linked_invoice,
+            'linkedPayments': row.linked_payments,
+            'updateFlag': False,
+            'deleteFlag': False
         }
         billings.append(billing)
     
@@ -519,6 +524,7 @@ def set_billings():
         payment_reference = None
         debit_note_reference = None
         credit_note_reference = None
+        invoice_status = None
         if billing['transactionType'] == 'INVOICE':
             invoice_reference = billing['reference']
         elif billing['transactionType'] == 'PAYMENT':
@@ -534,11 +540,15 @@ def set_billings():
                 delete_billing = Delete_Billing(
                     booking_id = int(billing['bookingId']),
                     amount = Decimal(billing['amount']),
+                    date = datetime.strptime(billing['date'], '%Y-%m-%d').date(),
                     transaction_type = billing['transactionType'],
                     invoice_reference = invoice_reference,
                     payment_reference = payment_reference,
                     debit_note_reference = debit_note_reference,
                     credit_note_reference = credit_note_reference,
+                    invoice_status = 'INACTIVE',
+                    linked_invoice = billing['linkedInvoice'],
+                    linked_payments = billing['linkedPayments'],
                     note = billing['note']
                 )
 
@@ -559,20 +569,52 @@ def set_billings():
                     Billing.payment_reference: payment_reference,
                     Billing.debit_note_reference: debit_note_reference,
                     Billing.credit_note_reference: credit_note_reference,
+                    Billing.invoice_status: billing['invoiceStatus'],
+                    Billing.linked_invoice: billing['linkedInvoice'],
+                    Billing.linked_payments: billing['linkedPayments'],
                     Billing.note: str(billing['note'])
                 },
                 synchronize_session = False
                 )
                 print('billing updated')
             else: 
+                if billing['transactionType'] == 'INVOICE':
+                    db_invoices = db.session.query(Billing).filter(Billing.transaction_type == 'INVOICE')
+                    if db_invoices.all():
+                        invoice_reference = int(db_invoices.order_by(Billing.invoice_reference.desc()).first().invoice_reference) + 1
+                    else:
+                        invoice_reference = 1
+                elif billing['transactionType'] == 'PAYMENT':
+                    db_payments = db.session.query(Billing).filter(Billing.transaction_type == 'PAYMENT')
+                    if db_payments.all():
+                        payment_reference = int(db_payments.order_by(Billing.payment_reference.desc()).first().payment_reference) + 1
+                    else:
+                        payment_reference = 1
+                elif billing['transactionType'] == 'DEBIT_NOTE':
+                    db_debit_notes = db.session.query(Billing).filter(Billing.transaction_type == 'DEBIT_NOTE')
+                    if db_debit_notes.all():
+                        debit_note_reference = int(db_debit_notes.order_by(Billing.debit_note_reference.desc()).first().debit_note_reference) + 1
+                    else:
+                        debit_note_reference = 1
+                elif billing['transactionType'] == 'CREDIT_NOTE':
+                    db_credit_notes = db.session.query(Billing).filter(Billing.transaction_type == 'CREDIT_NOTE')
+                    if db_credit_notes.all():
+                        credit_note_reference = int(db_credit_notes.order_by(Billing.credit_note_reference.desc()).first().credit_note_reference) + 1
+                    else:
+                        credit_note_reference = 1
+
                 new_billing = Billing(
                     booking_id = int(billing['bookingId']),
                     amount = Decimal(billing['amount']),
+                    date = datetime.strptime(billing['date'], '%Y-%m-%d').date(),
                     transaction_type = billing['transactionType'],
                     invoice_reference = invoice_reference,
                     payment_reference = payment_reference,
                     debit_note_reference = debit_note_reference,
                     credit_note_reference = credit_note_reference,
+                    invoice_status = billing['invoiceStatus'],
+                    linked_invoice = billing['linkedInvoice'],
+                    linked_payments = billing['linkedPayments'],
                     note = billing['note']
                 )
                 db.session.add(new_billing)
@@ -890,7 +932,8 @@ def booking():
                 amount = (Decimal(booking.price) - Decimal(cumulative_total)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP),
                 invoice_due_date = arrival_date - timedelta(days = breakpoint.due_by),
                 transaction_type = 'INVOICE',
-                invoice_reference = prev_invoice_reference + 1
+                invoice_reference = prev_invoice_reference + 1,
+                invoice_status = 'NOT SENT',
             )
             db.session.add(last_invoice)
             invoices.append(last_invoice)
@@ -902,7 +945,8 @@ def booking():
                 amount = (Decimal(booking.price) * Decimal(breakpoint.amount_due / 100)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP),
                 invoice_due_date = arrival_date - timedelta(days = breakpoint.due_by),
                 transaction_type = 'INVOICE',
-                invoice_reference = prev_invoice_reference + 1
+                invoice_reference = prev_invoice_reference + 1,
+                invoice_status = 'NOT_SENT'
             )
             cumulative_total += new_invoice.amount
             db.session.add(new_invoice)
@@ -915,7 +959,8 @@ def booking():
         date = date.today(),
         invoice_due_date = date.today(),
         transaction_type = 'INVOICE',
-        invoice_reference = prev_invoice_reference + 1
+        invoice_reference = prev_invoice_reference + 1,
+        invoice_status = 'ACTIVE'
     )
 
     db.session.add(first_invoice)

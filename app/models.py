@@ -65,6 +65,9 @@ class Billing(db.Model):
     payment_reference = db.Column(db.Integer, unique=True, default=None)
     credit_note_reference = db.Column(db.Integer, unique=True, default=None)
     debit_note_reference = db.Column(db.Integer, unique=True, default=None)
+    invoice_status = db.Column(db.Enum('NOT_SENT', 'ACTIVE', 'OVERDUE', 'PAID', 'INACTIVE', name='invoice_status'), nullable=True)
+    linked_invoice_id = db.Column(db.Integer, db.ForeignKey('billing.id'))
+    linked_payments = db.relationship('Billing', backref=db.backref('linked_invoice', remote_side=[id]))
 
 class Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
