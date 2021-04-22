@@ -106,7 +106,7 @@ Vue.component('calendar-date', {
         },
         isAvailable: function() {
             if (this.isChangeoverData) {
-                if (this.isChangeoverData['bookingId']) {
+                if (this.isChangeoverData['booked']) {
                     return 'booked';
                 } else {
                     return 'available';
@@ -269,8 +269,6 @@ const vm = new Vue({
         contactFormData: {
             firstName: '',
             lastName: '',
-            emailAddress: '',
-            phoneNumber: '',
             message: ''
         },
         
@@ -420,6 +418,24 @@ const vm = new Vue({
                         return serverDate;
                     })
                 
+            return response;
+        },
+        submitContact() {
+            const response =
+                fetch('/submit_contact', {
+                    method: 'post',
+                    body: JSON.stringify(this.contactFormData),
+                    headers: new Headers({
+                        'content-type': 'application/json'
+                    })
+                })
+                .then(response => {
+                    return response.json();
+                })
+                .then(json => {
+                    return json['success'];
+                })
+
             return response;
         },
         initCalendarSwiper() {
@@ -1376,33 +1392,35 @@ const vm = new Vue({
 
         //------------------CHECKOUT BUTTONS-------------------------//
         bookingProceed() {
-            document.querySelector('.checkout-container').classList.remove('closed');
-            this.checkoutScrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-            //transitionend event
-            let pageSlide = this.pageSlide;
-            document.querySelector('.checkout-container').ontransitionend = function(e) {
-                if (e.target === document.querySelector('.checkout-container')) {
-                    if (pageSlide === 0) {
-                        document.body.scrollTop = 0;
-                        document.documentElement.scrollTop = 0;
-                        setTimeout( () => {
-                            document.querySelector('.checkout-container').classList.add('open');
+            if (this.bookingFormData['arrivalDate'] && this.bookingFormData['departureDate'] && this.bookingFormData['adults']) {
+                document.querySelector('.checkout-container').classList.remove('closed');
+                this.checkoutScrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+                //transitionend event
+                let pageSlide = this.pageSlide;
+                document.querySelector('.checkout-container').ontransitionend = function(e) {
+                    if (e.target === document.querySelector('.checkout-container')) {
+                        if (pageSlide === 0) {
+                            document.body.scrollTop = 0;
+                            document.documentElement.scrollTop = 0;
                             setTimeout( () => {
-                                document.querySelector('.content-wrapper').classList.add('closed');
-                            }, 5)
-                        }, 5);
-                        pageSlide = 1;
-                    } 
-                    else if (pageSlide === 1) {
-                        pageSlide = 1;
+                                document.querySelector('.checkout-container').classList.add('open');
+                                setTimeout( () => {
+                                    document.querySelector('.content-wrapper').classList.add('closed');
+                                }, 5)
+                            }, 5);
+                            pageSlide = 1;
+                        } 
+                        else if (pageSlide === 1) {
+                            pageSlide = 1;
+                        }
                     }
                 }
+                this.pageSlide = pageSlide;
+    
+                document.querySelector('.hamburger').classList.add('back');
+                document.querySelector('.navbar button').classList.add('hidden');
+                this.checkoutStep = 1;
             }
-            this.pageSlide = pageSlide;
-
-            document.querySelector('.hamburger').classList.add('back');
-            document.querySelector('.navbar button').classList.add('hidden');
-            this.checkoutStep = 1;
         },  
         bookingBack() {
             document.querySelector('.content-wrapper').classList.remove('closed');

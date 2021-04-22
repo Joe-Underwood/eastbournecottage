@@ -29,6 +29,16 @@
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+/* latin */
+@font-face {
+    font-family: Lato-bold;
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/lato/v17/S6u9w4BMUTPHh6UVSwiPGQ.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+
 /*-----------------GLOBAL----------------------*/
 * {
     box-sizing: border-box;
@@ -54,7 +64,7 @@ button {
     color: white;
     font-size: 12px;
     line-height: 100%;
-    font-weight: 700;
+    font-family: 'Lato-bold';
     height: 36px;
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20); 
     border-radius: 4px;
@@ -65,6 +75,10 @@ button {
 button:active {
     box-shadow: 0 8px 10px 1px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.20);
     background-color: rgb(237, 185, 113);
+}
+
+button.disabled {
+    opacity: 0.5;
 }
 
 h1, h2 {
@@ -197,6 +211,8 @@ textarea.disabled {
 svg {
     z-index: 2;
 }
+
+
 /*--------------CHECKOUT OVERLAY-------------*/
 .checkout-container {
     position: fixed;
@@ -375,7 +391,7 @@ svg {
         } 
 
             .party-header-text {
-                font-weight: 1000;
+                font-family: 'Lato-bold';
                 padding-left: 24px;
                 padding-top: 18px;
                 padding-bottom: 18px;
@@ -810,7 +826,7 @@ svg {
 
         .navbar-logo div:nth-child(1) {
             font-size: 14px;
-            font-weight: 600;
+            font-family: 'Lato-bold';
             color: white;
             width: auto;
 
@@ -834,7 +850,7 @@ svg {
     .navbar button {
         font-size: 12px;
         line-height: 100%;
-        font-weight: 600;
+        font-family: 'Lato-bold';
         height: 36px;
         max-width: 120px;
         min-width: 85px;
@@ -972,7 +988,7 @@ svg {
             font-family: 'Lato';
             font-size: 13px;
             text-transform: uppercase;
-            font-weight: 600;
+            font-family: 'Lato-bold';
             line-height: 48px;
             width: auto;
             height: 48px;
@@ -1075,7 +1091,7 @@ svg {
             margin-top: 16px;
             font-size: 12px;
             line-height: 100%;
-            font-weight: 700;
+            font-family: 'Lato-bold';
             height: 40px;
             width: 100%;
             max-width: 480px;
@@ -1150,7 +1166,7 @@ svg {
 
             .cottage-basic-items div {
                 font-size: 14px;
-                font-weight: 700;
+                font-family: 'Lato-bold';
                 line-height: 24px;
                 margin-left: 8px;
                 color: rgb(128, 128, 128);
@@ -1479,6 +1495,7 @@ svg {
                     position: absolute;
                     top: 0;
                     font-size: 14px;
+                    border-radius: 4px;
                 }
 
                 .calendar-date div::before {
@@ -1523,13 +1540,25 @@ svg {
                         border: 1px solid rgba(15, 72, 117, 0.4);
                     }
 
+                    .booked.prev-days div {
+                        border: none;
+                    }
+
                     .changeover-date.next-days {
                         border: 1px solid rgba(15, 72, 117, 0.4);
                     }
 
+                    .booked.next-days div {
+                        border: none;
+                    }
+
+                .booked {
+                    border: none !important;
+                }
+
                 .booked div {
                     background-color: rgb(229, 229, 229);
-                    color: white;
+                    color: #829099;
                     text-decoration: none !important;
                 }
 
@@ -1826,7 +1855,7 @@ svg {
         }
 
             .total-box div {
-                font-weight: 800;
+                font-family: 'Lato-bold';
             }
         
         .booking-proceed {
@@ -1839,7 +1868,7 @@ svg {
             margin-left: auto;
             font-size: 12px;
             line-height: 100%;
-            font-weight: 700;
+            font-family: 'Lato-bold';
             height: 40px;
             box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20);
         }

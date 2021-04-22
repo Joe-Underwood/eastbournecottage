@@ -324,12 +324,6 @@
                 <section class="booking">
                     <div class="booking-content">
                         <h2>Availability &amp; Booking</h2>
-                        <div class="price-list">
-                            <h3>Price List</h3>
-                            <div class="price-list-container">
-
-                            </div>
-                        </div>
 
                         <div class="calendar-spacer"></div>
                         <template v-if="publicPriceList">
@@ -452,7 +446,7 @@
                                             </div>
                                         </div>
                                         
-                                        <button class="booking-proceed" type="button" v-on:click="bookingProceed()">BOOK NOW</button>
+                                        <button class="booking-proceed" :class="{ disabled: !(bookingFormData['arrivalDate'] && bookingFormData['departureDate'] && bookingFormData['adults']) }" type="button" v-on:click="bookingProceed()">REQUEST TO BOOK</button>
                                     </div>
                                     
                                 </div>
@@ -504,7 +498,7 @@
                             </div>
 
                             <div class="contact-button-container">
-                                <button type="button">SEND MESSAGE</button>
+                                <button type="button" v-on:click="submitContact()">SEND MESSAGE</button>
                             </div>
                             
                         </form>

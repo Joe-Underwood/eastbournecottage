@@ -1,4 +1,4 @@
-from app import app, db
+from app import app, db, mail
 from app.forms import BookingForm, LoginForm
 from app.models import User, Customer, Booking, Billing, Billing_Settings, Payment_Breakpoint, Cancellation_Breakpoint, Price_List, Price_List_Settings, Delete_Price_List, Delete_Booking, Delete_Customer, Delete_Billing
 from flask import render_template, request, jsonify, redirect, url_for
@@ -8,6 +8,8 @@ from calendar import Calendar
 from decimal import Decimal, ROUND_HALF_UP
 from flask_login import current_user, login_user, logout_user, login_required
 from functools import reduce
+from flask_mail import Message
+from threading import Thread
 
 @app.route('/', methods=['GET', 'POST'])
 def landing_page():
@@ -406,6 +408,7 @@ def set_bookings():
             if (not int(booking['adults']) >= 1):
                 print('no. of adults must be at least 1')
                 continue
+            
             def checkDateSegments():
                 arrivalSegmentFound = False
                 for index, segment in enumerate(price_list):
@@ -988,6 +991,27 @@ def booking():
     db.session.add(booking)
     db.session.commit()
 
+    return { 'success': True }
+
+@app.route('/submit_contact', methods=['POST'])
+def submit_contact():
+
+    def send_async_email(app, msg):
+        with app.app_context():
+            mail.send(msg)
+
+    contact_request = request.get_json()
+    msg = Message('Contact Form: ' + contact_request['firstName'] + ' ' + contact_request['lastName'], sender=app.config['MAIL_USERNAME'], recipients=[app.config['MAIL_USERNAME']])
+    msg.body = ('Hello, \n' +
+                'A new message has been submitted via the contact form. \n' +
+                'First Name: ' + contact_request['firstName'] + '\n' +
+                'Last Name: ' + contact_request['lastName'] + '\n' +
+                'Message: \n' +
+                contact_request['message'])
+
+    thr = Thread(target=send_async_email, args=[app, msg])
+    thr.start()
+    
     return { 'success': True }
 
 @app.route('/get_customers', methods=['POST'])
