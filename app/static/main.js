@@ -31,7 +31,6 @@ let offsetHeight;
 let currentOrientation;
 let newOrientation;
 
-
 const heroResize = function () {
     if (window.screen.height > window.screen.width) {
         if (document.documentElement.offsetHeight > document.documentElement.offsetWidth) {
@@ -71,7 +70,6 @@ const heroResize = function () {
 heroResize();
 
 window.addEventListener('resize', heroResize);
-
 
 //------body scroll lock used when side menu open--------//
 const disableBodyScroll = bodyScrollLock.disableBodyScroll;
@@ -367,7 +365,8 @@ const vm = new Vue({
             .then((serverDate) => {
                 const x = window.matchMedia("(max-width: 1019px)");
                 this.toggleCalendarSlides(x);
-                x.addEventListener("change", this.toggleCalendarSlides);
+                /*x.addEventListener("change", this.toggleCalendarSlides); THIS NEEDS TO REPLACE BELOW LINE WHICH IS DEPRECATED, BUT CURRENTLY IS NEEDED FOR SAFARI */
+                x.addListener(this.toggleCalendarSlides);
                 if (this.publicPriceList.length > 0) {
                     this.initCalendar(serverDate, '');
                 }
@@ -1672,7 +1671,5 @@ const vm = new Vue({
     delimiters: ['<%', '%>']
 })
 
-//------ toggle calendarSwiper slides per view (responsive)-------------//
 
-const x = window.matchMedia("(max-width: 1019px)");
-x.addEventListener("change", vm.toggleCalendarSlides);
+
