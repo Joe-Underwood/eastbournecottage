@@ -570,7 +570,9 @@ svg {
         .cottage-content,
         .booking-content,
         .contact,
-        .checkout-container {
+        .checkout-1,
+        .checkout-2,
+        .checkout-3 {
             padding-left: 16px;
             padding-right: 16px;
         }
@@ -610,7 +612,9 @@ svg {
         .cottage-content,
         .booking-content,
         .contact,
-        .checkout-container,
+        .checkout-1,
+        .checkout-2,
+        .checkout-3,
         .nav-links,
         .gallery {
             padding-left: 40px;
@@ -659,7 +663,9 @@ svg {
         .cottage-content,
         .booking-content,
         .contact,
-        .checkout-container {
+        .checkout-1,
+        .checkout-2,
+        .checkout-3 {
             margin-left: auto;
             margin-right: auto;
             padding-left: 80px;
@@ -1634,6 +1640,7 @@ svg {
 
             .booking-proceed-box {
                 margin-top:auto;
+
             }
 
             .date-fields {
