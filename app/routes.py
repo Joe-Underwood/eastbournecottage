@@ -2,7 +2,7 @@ from app import app, db, mail
 from app.forms import BookingForm, LoginForm
 from app.models import User, Customer, Booking, Billing, Billing_Settings, Payment_Breakpoint, Cancellation_Breakpoint, Price_List, Price_List_Settings, Delete_Price_List, Delete_Booking, Delete_Customer, Delete_Billing
 from flask import render_template, request, jsonify, redirect, url_for
-from datetime import datetime, date, timedelta
+from datetime import datetime, date, timedelta, time
 from datetime import timedelta
 from calendar import Calendar
 from decimal import Decimal, ROUND_HALF_UP
@@ -125,11 +125,10 @@ def get_public_price_list():
             'price2Weeks': str(row.price_2_weeks), 
             'price3Weeks': str(row.price_3_weeks), 
             'price4Weeks': str(row.price_4_weeks), 
-            'booked': booked,
-            'updateFlag': False,
-            'removeFlag': False
+            'booked': booked
             }
         public_price_list.append(segment)
+
     return { 'publicPriceList': public_price_list }
 
 @app.route('/set_price_list', methods=['POST'])
@@ -278,6 +277,9 @@ def set_price_list_settings():
         query.max_dogs = json_request['maxDogs']
         query.max_infants = json_request['maxInfants']
         query.max_guests = json_request['maxGuests']
+        query.min_age = json_request['minAge']
+        query.check_in_time = time.fromisoformat(json_request['checkInTime'])
+        query.check_out_time = time.fromisoformat(json_request['checkOutTime'])
  
         price_list_query = db.session.query(Price_List)
         #apply discounts:
@@ -1117,6 +1119,9 @@ def get_price_list_settings():
         'maxDogs': settings_query[0].max_dogs,
         'maxInfants': settings_query[0].max_infants,
         'maxGuests': settings_query[0].max_guests,
+        'minAge': settings_query[0].min_age,
+        'checkInTime': settings_query[0].check_in_time.isoformat(timespec='minutes'),
+        'checkOutTime': settings_query[0].check_out_time.isoformat(timespec='minutes'),
         'updateFlag': False
         }
 
@@ -1130,10 +1135,72 @@ def get_public_price_list_settings():
         'discount3Weeks': str(settings_query[0].discount_3_weeks),
         'discount4Weeks': str(settings_query[0].discount_4_weeks),
         'activePricesRange': str(settings_query[0].active_prices_range),
-        'maxSegmentLength': str(settings_query[0].max_segment_length)
+        'maxSegmentLength': str(settings_query[0].max_segment_length),
+        'pricePerDog': str(settings_query[0].price_per_dog),
+        'maxDogs': settings_query[0].max_dogs,
+        'maxInfants': settings_query[0].max_infants,
+        'maxGuests': settings_query[0].max_guests,
+        'minAge': settings_query[0].min_age,
+        'checkInTime': settings_query[0].check_in_time.isoformat(timespec='minutes'),
+        'checkOutTime': settings_query[0].check_out_time.isoformat(timespec='minutes')
         }
 
     return { 'publicPriceListSettings': settings }
+
+@app.route('/get_public_billing_settings', methods=['POST'])
+def get_public_billing_settings():
+    settings_query = db.session.query(Billing_Settings).first()
+    db_payment_breakpoints = settings_query.payment_breakpoints
+    db_cancellation_breakpoints = settings_query.cancellation_breakpoints
+
+    payment_breakpoints = []
+    cancellation_breakpoints = []
+
+    if db_payment_breakpoints:
+
+        db_first_payment = db_payment_breakpoints.filter_by(first_payment = True).first()
+
+        payment_breakpoints.append({
+            'id': db_first_payment.id,
+            'amountDue': int(db_first_payment.amount_due),
+            'dueBy': None,
+            'firstPayment': True
+        })
+        
+        for row in db_payment_breakpoints.filter_by(first_payment = False).order_by(Payment_Breakpoint.due_by.desc()).all():
+            payment_breakpoints.append({
+                'id': row.id,
+                'amountDue': int(row.amount_due),
+                'dueBy': int(row.due_by),
+                'firstPayment': row.first_payment
+            })
+
+    if db_cancellation_breakpoints:
+
+        db_check_in = db_cancellation_breakpoints.filter_by(check_in = True).first()
+
+        cancellation_breakpoints.append({
+            'id': db_check_in.id,
+            'amountRefundable': int(db_check_in.amount_refundable),
+            'cancelBy': None,
+            'checkIn': True
+        })
+
+        for row in db_cancellation_breakpoints.filter_by(check_in = False).order_by(Cancellation_Breakpoint.cancel_by.desc()).all():
+            cancellation_breakpoints.append({
+                'id': row.id,
+                'amountRefundable': int(row.amount_refundable),
+                'cancelBy': int(row.cancel_by),
+                'checkIn': row.check_in
+            })
+
+    public_billing_settings = { 
+        'paymentBreakpoints': payment_breakpoints,
+        'cancellationBreakpoints': cancellation_breakpoints
+        }
+
+    return { 'publicBillingSettings': public_billing_settings }
+
 
 @app.route('/get_server_date', methods=['POST'])
 def get_server_date():

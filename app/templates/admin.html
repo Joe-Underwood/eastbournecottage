@@ -213,6 +213,12 @@
                                         <button type="button" v-on:click="maxDogsIncrease($event)" class="party-increase">+</button>
                                     </div>
                                 </div>
+
+                                <div class="party-input-container">
+                                    <label for="min-age"><h5>Minimum Age To Book</h5></label>
+                                    <input id="min-age" v-model="priceListSettings['minAge']" type="number" step="1" />
+                                </div>
+                                
                             </div>
                         </div>
                         
@@ -229,6 +235,16 @@
                                     <option value="6">Saturday</option>
                                     <option value="0">Sunday</option>
                                 </select>
+                            </div>
+
+                            <div class="settings-input-container">
+                                <label for="check-in-time">Check In Time</label>
+                                <input id="check-in-time" type="time" v-model="priceListSettings['checkInTime']" />
+                            </div>
+
+                            <div class="settings-input-container">
+                                <label for="check-out-time">Check Out Time</label>
+                                <input id="check-out-time" type="time" v-model="priceListSettings['checkOutTime']" />
                             </div>
         
                             <div class="settings-input-container">

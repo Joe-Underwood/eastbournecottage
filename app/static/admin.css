@@ -1695,6 +1695,7 @@ svg {
             width: 100%;
             margin-bottom: 8px;
             align-items: center;
+            justify-content: space-between;
         }
 
             .party-input-container label {
@@ -1741,6 +1742,11 @@ svg {
                 .party-input div.inactive {
                     color: rgb(113, 113, 113);
                 }
+
+                    .party-input-container #min-age {
+                        width: 40px;
+                        margin-right: 40px;
+                    }
 
     .booking-column {
         width: 90px;

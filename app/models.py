@@ -95,6 +95,9 @@ class Price_List_Settings(db.Model):
     max_dogs = db.Column(db.Integer)
     max_infants = db.Column(db.Integer)
     max_guests = db.Column(db.Integer)
+    min_age = db.Column(db.Integer)
+    check_in_time = db.Column(db.Time)
+    check_out_time = db.Column(db.Time)
 
 class Billing_Settings(db.Model):
     __tablename__ = 'billing_settings'

@@ -240,6 +240,7 @@ const vm = new Vue({
     data: {
         publicPriceList: null,
         publicPriceListSettings: null,
+        publicBillingSettings: null,
         serverDate: null,
 
         bookingFormData: {
@@ -356,37 +357,32 @@ const vm = new Vue({
         }
     },
     created: function() {
-        this.getPublicPriceListSettings();
-        this.getPublicPriceList()
+        Promise.allSettled([this.getPublicBillingSettings(), this.getPublicPriceListSettings(), this.getPublicPriceList(), this.getServerDate()])
             .then(() => {
-                this.initCalendarSwiper();
-                return this.getServerDate();
+                this.$nextTick(() => {
+                    this.initCalendarSwiper();
+                })
             })
-            .then((serverDate) => {
-                const x = window.matchMedia("(max-width: 1019px)");
-                this.toggleCalendarSlides(x);
-                /*x.addEventListener("change", this.toggleCalendarSlides); THIS NEEDS TO REPLACE BELOW LINE WHICH IS DEPRECATED, BUT CURRENTLY IS NEEDED FOR SAFARI */
-                x.addListener(this.toggleCalendarSlides);
-                if (this.publicPriceList.length > 0) {
-                    this.initCalendar(serverDate, '');
-                }
-                return;
+            .then(() => {
+                this.$nextTick(() => {
+                    this.initCalendar(this.serverDate, '');
+                })
             })
     },
     methods: {
         //fetch requests
         getPublicPriceList() {
             const response =
-            fetch('/get_public_price_list', { method: 'post' })
-                .then(response => {
-                    return response.json();
-                })
-                .then(json => {
-                    this.publicPriceList = json['publicPriceList'];
-                    return json['publicPriceList'];
-                })
+                fetch('/get_public_price_list', { method: 'post' })
+                    .then(response => {
+                        return response.json();
+                    })
+                    .then(json => {
+                        this.publicPriceList = json['publicPriceList'];
+                        return json['publicPriceList'];
+                    })
                 
-        return response;
+            return response;
         },
         getPublicPriceListSettings() {
             const response = 
@@ -397,6 +393,19 @@ const vm = new Vue({
                     .then(json => {
                         this.publicPriceListSettings = json['publicPriceListSettings'];
                         return json['publicPriceListSettings'];
+                    })
+
+            return response;
+        },
+        getPublicBillingSettings() {
+            const response =   
+                fetch('/get_public_billing_settings', { method: 'post' })
+                    .then(response => {
+                        return response.json();
+                    })
+                    .then(json => {
+                        this.publicBillingSettings = json['publicBillingSettings'];
+                        return json['publicBillingSettings'];
                     })
 
             return response;
@@ -444,17 +453,15 @@ const vm = new Vue({
                     prevEl: '.prev-month',
                 },
                 spaceBetween: 16,
+                slidesPerView: 1,
+                breakpoints: {
+                    1019: {
+                        slidesPerView: 2
+                    }
+                }
             });
 
             this.calendarSwiper = calendarSwiper;
-        },
-        toggleCalendarSlides(x) {
-            if (x.matches) {
-              this.calendarSwiper.params.slidesPerView = 1;
-            } else {
-              this.calendarSwiper.params.slidesPerView = 2;
-            }
-            this.calendarSwiper.update();
         },
         //-------------------- NAVBAR METHODS ------------------------//
         scrollToTop() {
@@ -819,16 +826,15 @@ const vm = new Vue({
                     }    
                 });
                 let mountPoint = document.createElement('div');
-                vm.calendarSwiper.appendSlide(mountPoint);
+                this.calendarSwiper.appendSlide(mountPoint);
                 instance.$mount(mountPoint);
             }
-            vm.calendarSwiper.update();
+            this.calendarSwiper.update();
 
-            vm.calendarSwiper.on('slideChange', () => {
-                this.slideCount = vm.calendarSwiper.activeIndex;
+            this.calendarSwiper.on('slideChange', () => {
+                this.slideCount = this.calendarSwiper.activeIndex;
             })
         },
-
         
         //---------------------------- SELECT DATE FROM CALENDAR ---------------------------------------//
         bookingHelperText() {
@@ -1646,9 +1652,7 @@ const vm = new Vue({
             e.preventDefault();
             e.target.classList.add('invalid');
         },
-        
         submitBooking() {
-
             fetch('/booking', {
                 method: 'post',
                 body: JSON.stringify(this.bookingFormData),
@@ -1666,7 +1670,20 @@ const vm = new Vue({
                         console.log('request unsuccessful');
                     }
                 })
-        }
+        },
+        cancellationTermsText() {
+            let totalAmountRefundable = 0;
+            for (let i = 0; i < this.publicBillingSettings['cancellationBreakpoints'].length; i++) {
+                totalAmountRefundable += +this.publicBillingSettings['cancellationBreakpoints'][i]['amountRefundable'];
+            }
+
+            if (totalAmountRefundable > 0) {
+                return 'list of refund breakpoints';
+            }
+            else {
+                return 'no refunds available for this booking';
+            }
+        },
     },
     delimiters: ['<%', '%>']
 })

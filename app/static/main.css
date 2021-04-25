@@ -259,6 +259,15 @@ svg {
         position: relative;
         display:none;
     }
+
+        .house-rules,
+        .booking-terms {
+            background-color: white;
+            padding: 16px;
+            border: 1px solid #a5c2cf;
+            border-radius: 4px;
+            margin-bottom: 16px;
+        }
     
     .checkout-3 {
         position: relative;
