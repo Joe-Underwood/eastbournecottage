@@ -1236,6 +1236,10 @@ svg {
                     background-color: rgba(226, 138, 12, 0.5);
                 }
 
+                .future-segment {
+                    background-color:aqua;
+                }
+
 .settings {
     display: block;
     padding-bottom: 56px;

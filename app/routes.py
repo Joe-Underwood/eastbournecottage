@@ -3,7 +3,6 @@ from app.forms import BookingForm, LoginForm
 from app.models import User, Customer, Booking, Billing, Billing_Settings, Payment_Breakpoint, Cancellation_Breakpoint, Price_List, Price_List_Settings, Delete_Price_List, Delete_Booking, Delete_Customer, Delete_Billing
 from flask import render_template, request, jsonify, redirect, url_for
 from datetime import datetime, date, timedelta, time
-from datetime import timedelta
 from calendar import Calendar
 from decimal import Decimal, ROUND_HALF_UP
 from flask_login import current_user, login_user, logout_user, login_required
@@ -43,7 +42,7 @@ def logout():
 @app.route('/get_past_price_list', methods=['POST'])
 @login_required
 def get_past_price_list():
-    query = db.session.query(Price_List).filter(Price_List.is_past == True)
+    query = db.session.query(Price_List).filter(Price_List.range_type == 'PAST')
     past_price_list = []
     for row in query:
         segment = {
@@ -64,7 +63,7 @@ def get_past_price_list():
 @app.route('/get_active_price_list', methods=['POST'])
 @login_required
 def get_active_price_list():
-    query = db.session.query(Price_List).filter(Price_List.is_active == True).order_by(Price_List.start_date.asc())
+    query = db.session.query(Price_List).filter(Price_List.range_type == 'ACTIVE').order_by(Price_List.start_date.asc())
     active_price_list = []
     for row in query:
         segment = {
@@ -86,7 +85,7 @@ def get_active_price_list():
 @login_required
 def get_price_list():
     print('price_list_requested')
-    query = db.session.query(Price_List).filter(Price_List.is_past == False).order_by(Price_List.start_date.asc())
+    query = db.session.query(Price_List).filter(Price_List.range_type != 'PAST').order_by(Price_List.start_date.asc())
     price_list = []
     for row in query:
         segment = {
@@ -95,11 +94,9 @@ def get_price_list():
             'price': str(row.price), 
             'price2Weeks': str(row.price_2_weeks), 
             'price3Weeks': str(row.price_3_weeks), 
-            'price4Weeks': str(row.price_4_weeks), 
+            'price4Weeks': str(row.price_4_weeks),
             'bookingId': row.booking_id,
-            'isPast': row.is_past,
-            'isActive': row.is_active,
-            'isFuture': row.is_future,
+            'rangeType': row.range_type,
             'lockFlag': row.lock_flag,
             'updateFlag': False,
             'deleteFlag': False,
@@ -111,7 +108,7 @@ def get_price_list():
 
 @app.route('/get_public_price_list', methods=['POST'])
 def get_public_price_list():
-    query = db.session.query(Price_List).filter(Price_List.is_active == True).order_by(Price_List.start_date.asc())
+    query = db.session.query(Price_List).filter(Price_List.range_type == 'ACTIVE').order_by(Price_List.start_date.asc())
     public_price_list = []
     for row in query:
         if row.booking_id:
@@ -124,7 +121,7 @@ def get_public_price_list():
             'price': str(row.price), 
             'price2Weeks': str(row.price_2_weeks), 
             'price3Weeks': str(row.price_3_weeks), 
-            'price4Weeks': str(row.price_4_weeks), 
+            'price4Weeks': str(row.price_4_weeks),
             'booked': booked
             }
         public_price_list.append(segment)
@@ -167,9 +164,7 @@ def set_price_list():
                 price_3_weeks = db_segment.price_3_weeks,
                 price_4_weeks = db_segment.price_4_weeks,
                 booking_id = db_segment.booking_id,
-                is_past = False,
-                is_active = False,
-                is_future = False
+                range_type = None
             )
             db.session.add(delete_segment)
             db.session.delete(db_segment)
@@ -180,9 +175,6 @@ def set_price_list():
             start_date = datetime.strptime(segment['startDate'], '%Y-%m-%d').date()
             activeEndDatetime = datetime.today() + timedelta(weeks = price_list_settings.active_prices_range)
             futureEndDatetime = activeEndDatetime + timedelta(weeks = price_list_settings.future_prices_range)
-            is_past = False
-            is_active = False
-            is_future = False
             db_segment = base_query.filter(Price_List.id == segment['id']).first()
             if (db_segment):
                 booking_id = db_segment.booking_id
@@ -191,13 +183,13 @@ def set_price_list():
             
             #check proper flag isActive, isFuture etc.
             if (start_date < date.today()):
-                is_past = True
+                range_type = 'PAST'
                 print('is_past')
             elif (start_date < activeEndDatetime.date()):
-                is_active = True
+                range_type = 'ACTIVE'
                 print('is_active')
             elif (start_date < futureEndDatetime.date()):
-                is_future = True
+                range_type = 'FUTURE'
                 print('is_future')
             else:
                 print('date too far into future, change price_list_settings.future_prices_range')
@@ -234,9 +226,7 @@ def set_price_list():
                     Price_List.price_3_weeks: Decimal(segment['price3Weeks']),
                     Price_List.price_4_weeks: Decimal(segment['price4Weeks']),
                     Price_List.booking_id: booking_id,
-                    Price_List.is_past: is_past,
-                    Price_List.is_active: is_active,
-                    Price_List.is_future: is_future,
+                    Price_List.range_type: range_type,
                     Price_List.lock_flag: segment['lockFlag']
                 },
                 synchronize_session = False
@@ -249,9 +239,7 @@ def set_price_list():
                     price_3_weeks = Decimal(segment['price3Weeks']),
                     price_4_weeks = Decimal(segment['price4Weeks']),
                     booking_id = booking_id,
-                    is_past = is_past,
-                    is_active = is_active,
-                    is_future = is_future,
+                    range_type = range_type,
                     lock_flag = segment['lockFlag']
                 )
                 db.session.add(new_segment)
@@ -284,7 +272,7 @@ def set_price_list_settings():
         price_list_query = db.session.query(Price_List)
         #apply discounts:
         for index, segment in enumerate(price_list_query):
-            if (not segment.lock_flag and not segment.is_past):
+            if (not segment.lock_flag and segment.range_type != 'PAST'):
                 if (index + 2 < price_list_query.count()):
                     segment.price_2_weeks = (segment.price + price_list_query[index + 1].price) * ((100 - Decimal(json_request['discount2Weeks'])) / 100)
                 if (index + 3 < price_list_query.count()):
@@ -298,16 +286,13 @@ def set_price_list_settings():
         futureEndDatetime = activeEndDatetime + timedelta(weeks = query.future_prices_range)
         for segment in price_list_query:
             start_date = segment.start_date
-            segment.is_past = False
-            segment.is_active = False
-            segment.is_future = False
             #check proper flag isActive, isFuture etc.
             if (start_date < date.today()):
-                segment.is_past = True
+                segment.range_type = 'PAST'
             elif (start_date < activeEndDatetime.date()):
-                segment.is_active = True
+                segment.range_type = 'ACTIVE'
             elif (start_date < futureEndDatetime.date()):
-                segment.is_future = True
+                segment.range_type = 'FUTURE'
             else:
                 delete_segment = Delete_Price_List(
                     start_date = segment.start_date,
@@ -316,9 +301,7 @@ def set_price_list_settings():
                     price_3_weeks = segment.price_3_weeks,
                     price_4_weeks = segment.price_4_weeks,
                     booking_id = segment.booking_id,
-                    is_past = False,
-                    is_active = False,
-                    is_future = False
+                    range_type = None
                 )
                 db.session.add(delete_segment)
                 db.session.delete(segment)

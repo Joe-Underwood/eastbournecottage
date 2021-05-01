@@ -30,9 +30,7 @@ class Price_List(db.Model):
     price_3_weeks = db.Column(db.Numeric(10, 2))
     price_4_weeks = db.Column(db.Numeric(10, 2))
     booking_id = db.Column(db.Integer, db.ForeignKey('booking.id', ondelete='SET NULL'), default=None)
-    is_past = db.Column(db.Boolean, default=False)
-    is_active = db.Column(db.Boolean, default=False)
-    is_future = db.Column(db.Boolean, default=False)
+    range_type = db.Column(db.Enum('PAST', 'ACTIVE', 'FUTURE', name='range_type'))
     lock_flag = db.Column(db.Boolean, default=False, nullable=False)
 
 class Booking(db.Model):
@@ -149,11 +147,16 @@ class Delete_Billing(db.Model):
     booking_id = db.Column(db.Integer, db.ForeignKey('booking.id'))
     amount = db.Column(db.Numeric(10, 2))
     date = db.Column(db.Date)
-    is_invoice = db.Column(db.Boolean, default=False)
-    is_payment = db.Column(db.Boolean, default=False)
-    is_credit = db.Column(db.Boolean, default=False)
-    is_debit = db.Column(db.Boolean, default=False)
     note = db.Column(db.String(30))
+    invoice_due_date = db.Column(db.Date, default=None)
+    #insert invoice due_dates relationship to take into account multistage payment terms
+    transaction_type = db.Column(db.Enum('INVOICE', 'PAYMENT', 'DEBIT_NOTE', 'CREDIT_NOTE', name='transaction_type'), nullable=False)
+    invoice_reference = db.Column(db.Integer, unique=True, default=None)
+    payment_reference = db.Column(db.Integer, unique=True, default=None)
+    credit_note_reference = db.Column(db.Integer, unique=True, default=None)
+    debit_note_reference = db.Column(db.Integer, unique=True, default=None)
+    invoice_status = db.Column(db.Enum('NOT_SENT', 'ACTIVE', 'OVERDUE', 'PAID', 'INACTIVE', name='invoice_status'), nullable=True)
+    linked_invoice_id = db.Column(db.Integer, unique=True)
 
 class Delete_Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -16,7 +16,7 @@ login = LoginManager(app)
 login.login_view = 'login'
 mail = Mail(app)
 
-from app import routes, models
+from app import routes, models, methods
 
 if not app.debug:
     if not os.path.exists('logs'):

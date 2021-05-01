@@ -1791,6 +1791,8 @@ svg {
 
         .total-breakdown {
             display: none;
+            position: relative;
+            z-index: -1;
             flex-direction: column;
             padding-left: 8px;
             padding-right: 8px;

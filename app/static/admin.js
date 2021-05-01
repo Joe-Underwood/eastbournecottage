@@ -49,7 +49,7 @@ const vm = new Vue({
 
     },
     computed: {
-        activePriceList: function() {
+        /*activePriceList: function() {
             if (this.priceList) {
                 return (this.priceList.filter(segment => segment['isActive']));
             }
@@ -80,7 +80,7 @@ const vm = new Vue({
             else {
                 return null;
             }
-        },
+        },*/
     },
     created: function() {
         this.disableBodyScroll = bodyScrollLock.disableBodyScroll;
@@ -365,9 +365,7 @@ const vm = new Vue({
                 'price3Weeks': 0,
                 'price4Weeks': 0,
                 'bookingId': null,
-                'isPast': false,
-                'isActive': false,
-                'isFuture': false,
+                'rangeType': null,
                 'lockFlag': false,
                 'updateFlag': true,
                 'deleteFlag': false
