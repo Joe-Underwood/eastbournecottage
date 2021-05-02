@@ -59,6 +59,10 @@ body,
     position: relative;
 }
 
+.hidden {
+    display: none !important;
+}
+
 button {
     background-color: rgb(226, 138, 12);
     color: white;
@@ -506,11 +510,12 @@ svg {
                     width: 40px;
                     background-color: white;
                     text-align: center;
-                    color: rgb(113, 113, 113);
+                    
+                    color: rgb(15, 72, 117);
                 }
 
-                .party-input div.active {
-                    color: rgb(15, 72, 117);
+                .party-input div.inactive {
+                    color: rgb(113, 113, 113);
                 }
 /*---------------NAVIGATION-----------------*/
 .navbar {

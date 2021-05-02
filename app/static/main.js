@@ -354,6 +354,14 @@ const vm = new Vue({
             }
 
             return partyString;
+        },
+        stayLength: function() {
+            if (this.arrivalDateObject && this.departureDateObject) {
+                return Math.round((this.departureDateObject - this.arrivalDateObject) / (1000 * 60 * 60 * 24));
+            }
+            else {
+                return null;
+            }
         }
     },
     created: function() {
@@ -851,21 +859,6 @@ const vm = new Vue({
                 document.querySelector('.booking-helper-text').innerHTML = 'Dates available';
             }
         },
-        bookingShowTotal() {
-            if (this.bookingFormData.arrivalDate && this.bookingFormData.departureDate && this.bookingFormData.price) {
-                const stayLength = Math.round((this.departureDateObject - this.arrivalDateObject) / (1000 * 60 * 60 * 24));
-                document.querySelector('.total-breakdown').classList.add('show');
-                document.querySelector('.stay-length-total').innerHTML = `<div>${stayLength} nights</div><div>£${this.bookingFormData.stayPrice}</div>`;
-                if (this.bookingFormData.dogs) {
-                    document.querySelector('.dog-total').classList.add('show');
-                    document.querySelector('.dog-total').innerHTML = `<div>${this.bookingFormData.dogs} dog</div><div>£${this.bookingFormData.dogPrice}</div>`;
-                }
-            }
-            else {
-                document.querySelector('.total-breakdown').classList.remove('show');
-                document.querySelector('.dog-total').classList.remove('show');
-            }
-        },
         selectDate(element, date) {
             if (element.classList.contains('available')) {
                 if (element.classList.contains('arrival-date')) {
@@ -873,13 +866,11 @@ const vm = new Vue({
                     this.arrivalDateFocus();
                     this.hideDateRange();
                     this.bookingHelperText();
-                    this.bookingShowTotal();
                 } 
                 else if (element.classList.contains('departure-date')) {
                     this.removeDepartureDate();
                     this.hideDateRange();
                     this.bookingHelperText();
-                    this.bookingShowTotal();
                 }
                 else if (this.calendarSelector === 'arrival') {
                     if (element.classList.contains('changeover-date')) {
@@ -902,7 +893,8 @@ const vm = new Vue({
                             this.departureDateFocus();
                         }
                     }
-                } else if (element.classList.contains('valid-departure-date')) {
+                } 
+                else if (element.classList.contains('valid-departure-date')) {
                     if (this.bookingFormData.departureDate) {
                         this.hideDateRange();
                     }
@@ -950,7 +942,6 @@ const vm = new Vue({
                 this.bookingFormData.stayPrice = 0;
             }
             this.bookingHelperText();
-            this.bookingShowTotal();
             if (this.arrivalDateObject) {
                 this.refreshDateRange();
             }
@@ -1142,6 +1133,9 @@ const vm = new Vue({
                     this.bookingFormData.departureDate = date.toISOString().slice(0, 10);
                     this.departureDateString = date.toDateString();
                     this.departureDateObject = date;
+                    if (!this.bookingFormData.adults) {
+                        this.displayPartyOverlay();
+                    }
                 } 
                 else if (date <= this.arrivalDateObject) {
                     this.removeDepartureDate();
@@ -1354,7 +1348,7 @@ const vm = new Vue({
                 disableBodyScroll(document.querySelector('.party-container'));
             } 
             else {
-                document.querySelector('.guests-dropdown').classList.add('open');
+                document.querySelector('.booking .guests-dropdown').classList.add('open');
                 window.addEventListener('click', this.hideGuestsDropdown);
             }
             
@@ -1380,8 +1374,8 @@ const vm = new Vue({
             if (!this.guestsDropdownOpen) {
                 this.guestsDropdownOpen = true;
             }
-            else if (!document.querySelector('.guests-dropdown').contains(e.target)) {
-                document.querySelector('.guests-dropdown').classList.remove('open');
+            else if (!document.querySelector('.booking .guests-dropdown').contains(e.target)) {
+                document.querySelector('.booking .guests-dropdown').classList.remove('open');
                 this.guestsBlur();
                 window.removeEventListener('click', this.hideGuestsDropdown);
                 this.guestsDropdownOpen = false;
@@ -1492,134 +1486,55 @@ const vm = new Vue({
             e.preventDefault();
             if (this.bookingFormData.adults > 0) {
                 this.bookingFormData.adults--;
-                document.querySelectorAll('#adults .party-increase')[0].classList.remove('inactive');
-                document.querySelectorAll('#children .party-increase')[0].classList.remove('inactive');
-                document.querySelectorAll('#adults .party-increase')[1].classList.remove('inactive');
-                document.querySelectorAll('#children .party-increase')[1].classList.remove('inactive');
             }
-            if (this.bookingFormData.adults === 0) {
-                document.querySelectorAll('#adults div')[0].classList.remove('active');
-                document.querySelectorAll('#adults .party-decrease')[0].classList.add('inactive');
-                document.querySelectorAll('#adults div')[1].classList.remove('active');
-                document.querySelectorAll('#adults .party-decrease')[1].classList.add('inactive');
-            } 
             this.bookingHelperText();
-            this.bookingShowTotal();
         },
         adultsIncrease(e) {
             e.preventDefault();
             if (this.bookingFormData.adults + this.bookingFormData.children < this.partyMax) {
                 this.bookingFormData.adults++;  
-                document.querySelectorAll('#adults .party-decrease')[0].classList.remove('inactive');
-                document.querySelectorAll('#adults .party-decrease')[1].classList.remove('inactive');
             } 
-            if (this.bookingFormData.adults + this.bookingFormData.children === this.partyMax) {
-                document.querySelectorAll('#adults .party-increase')[0].classList.add('inactive');
-                document.querySelectorAll('#children .party-increase')[0].classList.add('inactive'); 
-                document.querySelectorAll('#adults .party-increase')[1].classList.add('inactive');
-                document.querySelectorAll('#children .party-increase')[1].classList.add('inactive'); 
-            } 
-            document.querySelector('#adults div').classList.add('active');
             this.bookingHelperText();
-            this.bookingShowTotal();
         },
         childrenDecrease(e) {
             e.preventDefault();
             if (this.bookingFormData.children > 0) {
                 this.bookingFormData.children--;
-                document.querySelectorAll('#children .party-increase')[0].classList.remove('inactive');
-                document.querySelectorAll('#adults .party-increase')[0].classList.remove('inactive');
-                document.querySelectorAll('#children .party-increase')[1].classList.remove('inactive');
-                document.querySelectorAll('#adults .party-increase')[1].classList.remove('inactive');
             }
-            if (this.bookingFormData.children === 0) {
-                document.querySelectorAll('#children div')[0].classList.remove('active');
-                document.querySelectorAll('#children .party-decrease')[0].classList.add('inactive');
-                document.querySelectorAll('#children div')[1].classList.remove('active');
-                document.querySelectorAll('#children .party-decrease')[1].classList.add('inactive');
-            }
-            this.bookingShowTotal();
         },
         childrenIncrease(e) {
             e.preventDefault();
             if (this.bookingFormData.children + this.bookingFormData.adults < this.partyMax) {
                 this.bookingFormData.children++;  
-                document.querySelectorAll('#children .party-decrease')[0].classList.remove('inactive');
-                document.querySelectorAll('#children .party-decrease')[1].classList.remove('inactive');
-            } 
-            if (this.bookingFormData.children + this.bookingFormData.adults === this.partyMax) {
-                document.querySelectorAll('#children .party-increase')[0].classList.add('inactive');
-                document.querySelectorAll('#adults .party-increase')[0].classList.add('inactive');
-                document.querySelectorAll('#children .party-increase')[1].classList.add('inactive');
-                document.querySelectorAll('#adults .party-increase')[1].classList.add('inactive');
             }
-            document.querySelectorAll('#children div')[0].classList.add('active');
-            document.querySelectorAll('#children div')[1].classList.add('active');
-            this.bookingShowTotal();
         },
         infantsDecrease(e) {
             e.preventDefault();
             if (this.bookingFormData.infants > 0) {
                 this.bookingFormData.infants--;
-                document.querySelectorAll('#infants .party-increase')[0].classList.remove('inactive');
-                document.querySelectorAll('#infants .party-increase')[1].classList.remove('inactive');
             }
-            if (this.bookingFormData.infants === 0) {
-                document.querySelectorAll('#infants div')[0].classList.remove('active');
-                document.querySelectorAll('#infants .party-decrease')[0].classList.add('inactive');
-                document.querySelectorAll('#infants div')[1].classList.remove('active');
-                document.querySelectorAll('#infants .party-decrease')[1].classList.add('inactive');
-            }
-            this.bookingShowTotal();
         },
         infantsIncrease(e) {
             e.preventDefault();
             if (this.bookingFormData.infants < this.infantsMax) {
                 this.bookingFormData.infants++;
-                document.querySelectorAll('#infants .party-decrease')[0].classList.remove('inactive');
-                document.querySelectorAll('#infants .party-decrease')[1].classList.remove('inactive');
             }
-            if (this.bookingFormData.infants === this.infantsMax) {
-                document.querySelectorAll('#infants .party-increase')[0].classList.add('inactive');
-                document.querySelectorAll('#infants .party-increase')[1].classList.add('inactive');
-            }
-            document.querySelectorAll('#infants div')[0].classList.add('active');
-            document.querySelectorAll('#infants div')[1].classList.add('active');
-            this.bookingShowTotal();
         },
         dogsDecrease(e) {
             e.preventDefault();
             if (this.bookingFormData.dogs > 0) {
                 this.bookingFormData.dogs--;
-                document.querySelectorAll('#dogs .party-increase')[0].classList.remove('inactive');
-                document.querySelectorAll('#dogs .party-increase')[1].classList.remove('inactive');
-            }
-            if (this.bookingFormData.dogs === 0) {
-                document.querySelectorAll('#dogs div')[0].classList.remove('active');
-                document.querySelectorAll('#dogs .party-decrease')[0].classList.add('inactive');
-                document.querySelectorAll('#dogs div')[1].classList.remove('active');
-                document.querySelectorAll('#dogs .party-decrease')[1].classList.add('inactive');
             }
             this.bookingFormData.dogPrice = (+this.bookingFormData.dogs * +this.pricePerDog).toFixed(2);
             this.bookingFormData.price = (+this.bookingFormData.stayPrice + +this.bookingFormData.dogPrice).toFixed(2);
-            this.bookingShowTotal();
         },
         dogsIncrease(e) {
             e.preventDefault();
             if (this.bookingFormData.dogs < this.dogsMax) {
                 this.bookingFormData.dogs++;
-                document.querySelectorAll('#dogs .party-decrease')[0].classList.remove('inactive');
-                document.querySelectorAll('#dogs .party-decrease')[1].classList.remove('inactive');
             }
-            if (this.bookingFormData.dogs === this.dogsMax) {
-                document.querySelectorAll('#dogs .party-increase')[0].classList.add('inactive');
-                document.querySelectorAll('#dogs .party-increase')[1].classList.add('inactive');
-            }
-            document.querySelectorAll('#dogs div')[0].classList.add('active');
-            document.querySelectorAll('#dogs div')[1].classList.add('active');
             this.bookingFormData.dogPrice = (+this.bookingFormData.dogs * +this.pricePerDog).toFixed(2);
             this.bookingFormData.price = (+this.bookingFormData.stayPrice + +this.bookingFormData.dogPrice).toFixed(2);
-            this.bookingShowTotal();
         },
 
         //-----------personal details//

@@ -192,6 +192,87 @@
                 <section class="checkout-3 next">
                     <h4>Step 3 of 3</h4>
                     <h2>Confirm Booking</h2>
+
+                    <div class="booking-summary">
+                        <form>
+                            {{ booking_form.hidden_tag() }}
+                            <div class="availability-form">
+                                <div class="date-fields">
+
+                                    <div class="input-container focused">
+                                        <label for="checkout-arrival-date" class="focused">Arrival Date</label>
+                                        <div id="checkout-arrival-date" class="focused" v-on:focus="arrivalDateFocus()" v-on:blur="arrivalDateBlur()" tabindex="0">&#60;% bookingFormData.arrivalDate %></div>      
+                                    </div>
+
+                                    <div class="input-container">
+                                        <label for="checkout-departure-date">Departure Date</label>
+                                        <div id="checkout-departure-date" v-on:focus="departureDateFocus()" v-on:blur="departureDateBlur()" tabindex="0">&#60;% bookingFormData.departureDate %></div>
+                                    </div>
+                            
+                                </div>
+
+                                <div class="input-container">
+                                    <label for="checkout-guests">Guests</label>
+                                    <div id="checkout-guests" v-on:click="displayPartyOverlay()" v-on:blur="guestsBlur()" tabindex="0"><p>&#60;% partyString %></p>
+                                        <div class="party-container guests-dropdown" tabindex="0">
+                        
+                                            <div class="party-input-container">
+                                                <label for="checkout-adults"><h5>Adults</h5>Ages 13 or above</label>
+                        
+                                                <div class="party-input" id="checkout-adults">
+                                                    <button type="button" v-on:click="adultsDecrease($event)" class="party-decrease" :class="{ inactive: !bookingFormData.adults }">-</button>
+                                                    <div :class="{ inactive: !bookingFormData.adults }">&#60;% bookingFormData.adults %></div>
+                                                    <button type="button" v-on:click="adultsIncrease($event)" class="party-increase" :class="{ inactive: bookingFormData.adults + bookingFormData.children >= publicPriceListSettings.maxGuests }">+</button>
+                                                </div>
+                                            </div>
+                        
+                                            <div class="party-input-container">
+                                                <label for="checkout-children"><h5>Children</h5>Ages 2-12</label>
+                                                <div class="party-input" id="checkout-children">
+                                                    <button type="button" v-on:click="childrenDecrease($event)" class="party-decrease" :class="{ inactive: !bookingFormData.children }">-</button>
+                                                    <div :class="{ inactive: !bookingFormData.children }">&#60;% bookingFormData.children %></div>
+                                                    <button type="button" v-on:click="childrenIncrease($event)" class="party-increase" :class="{ inactive: bookingFormData.adults + bookingFormData.children >= publicPriceListSettings.maxGuests }" >+</button>
+                                                </div>
+                                            </div>
+                        
+                                            <div class="party-input-container">
+                                                <label for="checkout-infants"><h5>Infants</h5>Under 2</label>
+                                                <div class="party-input" id="checkout-infants">
+                                                    <button type="button" v-on:click="infantsDecrease($event)" class="party-decrease" :class="{ inactive: !bookingFormData.infants }">-</button>
+                                                    <div :class="{ inactive: !bookingFormData.infants }">&#60;% bookingFormData.infants %></div>
+                                                    <button type="button" v-on:click="infantsIncrease($event)" class="party-increase" :class="{ inactive: bookingFormData.infants >= publicPriceListSettings.maxInfants }">+</button>
+                                                </div>
+                                            </div>
+                        
+                                            <div class="party-input-container">
+                                                <label for="checkout-dogs"><h5>Dogs</h5>£20 each</label>
+                                                <div class="party-input" id="checkout-dogs">
+                                                    <button type="button" v-on:click="dogsDecrease($event)" class="party-decrease" :class="{ inactive: !bookingFormData.dogs }">-</button>
+                                                    <div :class="{ inactive: !bookingFormData.dogs }">&#60;% bookingFormData.dogs %></div>
+                                                    <button type="button" v-on:click="dogsIncrease($event)" class="party-increase" :class="{ inactive: bookingFormData.dogs >= publicPriceListSettings.maxDogs }">+</button>
+                                                </div>
+                                            </div>
+                                                                    
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </form>
+                            
+                        <div class="booking-proceed-box">
+                            <div class="total-breakdown">
+                                <div class="stay-length-total"></div>
+                                <div class="dog-total"></div>
+                                <div class="total-box">
+                                    <div>Total</div>
+                                    <div>£&#60;% bookingFormData.price %></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
                     <div class="checkout-buttons">
                         <button class="checkout-back" type="button" v-on:click="checkoutPrev()"><svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 20 20" height="18px" viewBox="0 0 20 20" width="18px" fill="rgb(15, 72, 117)"><rect fill="none" height="20" width="20"/><polygon points="14.41,3.41 13,2 5,10 13,18 14.41,16.59 7.83,10"/></svg>BACK</button>
                         <button type="button" v-on:click="submitBooking()">CONFIRM BOOKING</button>
@@ -217,36 +298,36 @@
                         <label for="adults"><h5>Adults</h5>Ages 13 or above</label>
 
                         <div class="party-input" id="adults">
-                            <button type="button" v-on:click="adultsDecrease($event)" class="party-decrease inactive">-</button>
-                            <div>&#60;% bookingFormData.adults %></div>
-                            <button type="button" v-on:click="adultsIncrease($event)" class="party-increase">+</button>
+                            <button type="button" v-on:click="adultsDecrease($event)" class="party-decrease" :class="{ inactive: !bookingFormData.adults }">-</button>
+                            <div :class="{ inactive: !bookingFormData.adults }">&#60;% bookingFormData.adults %></div>
+                            <button type="button" v-on:click="adultsIncrease($event)" class="party-increase" :class="{ inactive: bookingFormData.adults + bookingFormData.children >= publicPriceListSettings.maxGuests }">+</button>
                         </div>
                     </div>
 
                     <div class="party-input-container">
                         <label for="children"><h5>Children</h5>Ages 2-12</label>
                         <div class="party-input" id="children">
-                            <button type="button" v-on:click="childrenDecrease($event)" class="party-decrease inactive">-</button>
-                            <div>&#60;% bookingFormData.children %></div>
-                            <button type="button" v-on:click="childrenIncrease($event)" class="party-increase">+</button>
+                            <button type="button" v-on:click="childrenDecrease($event)" class="party-decrease" :class="{ inactive: !bookingFormData.children }">-</button>
+                            <div :class="{ inactive: !bookingFormData.children }">&#60;% bookingFormData.children %></div>
+                            <button type="button" v-on:click="childrenIncrease($event)" class="party-increase" :class="{ inactive: bookingFormData.adults + bookingFormData.children >= publicPriceListSettings.maxGuests }">+</button>
                         </div>
                     </div>
 
                     <div class="party-input-container">
                         <label for="infants"><h5>Infants</h5>Under 2</label>
                         <div class="party-input" id="infants">
-                            <button type="button" v-on:click="infantsDecrease($event)" class="party-decrease inactive">-</button>
-                            <div>&#60;% bookingFormData.infants %></div>
-                            <button type="button" v-on:click="infantsIncrease($event)" class="party-increase">+</button>
+                            <button type="button" v-on:click="infantsDecrease($event)" class="party-decrease" :class="{ inactive: !bookingFormData.infants }">-</button>
+                            <div :class="{ inactive: !bookingFormData.infants }">&#60;% bookingFormData.infants %></div>
+                            <button type="button" v-on:click="infantsIncrease($event)" class="party-increase" :class="{ inactive: bookingFormData.infants >= publicPriceListSettings.maxInfants }">+</button>
                         </div>
                     </div>
 
                     <div class="party-input-container">
                         <label for="dogs"><h5>Dogs</h5>£20 each</label>
                         <div class="party-input" id="dogs">
-                            <button type="button" v-on:click="dogsDecrease($event)" class="party-decrease inactive">-</button>
-                            <div>&#60;% bookingFormData.dogs %></div>
-                            <button type="button" v-on:click="dogsIncrease($event)" class="party-increase">+</button>
+                            <button type="button" v-on:click="dogsDecrease($event)" class="party-decrease" :class="{ inactive: !bookingFormData.dogs }">-</button>
+                            <div :class="{ inactive: !bookingFormData.dogs }">&#60;% bookingFormData.dogs %></div>
+                            <button type="button" v-on:click="dogsIncrease($event)" class="party-increase" :class="{ inactive: bookingFormData.dogs >= publicPriceListSettings.maxDogs }">+</button>
                         </div>
                     </div>
                                             
@@ -430,36 +511,36 @@
                                                             <label for="adults"><h5>Adults</h5>Ages 13 or above</label>
                                     
                                                             <div class="party-input" id="adults">
-                                                                <button type="button" v-on:click="adultsDecrease($event)" class="party-decrease inactive">-</button>
-                                                                <div>&#60;% bookingFormData.adults %></div>
-                                                                <button type="button" v-on:click="adultsIncrease($event)" class="party-increase">+</button>
+                                                                <button type="button" v-on:click="adultsDecrease($event)" class="party-decrease" :class="{ inactive: !bookingFormData.adults }">-</button>
+                                                                <div :class="{ inactive: !bookingFormData.adults }">&#60;% bookingFormData.adults %></div>
+                                                                <button type="button" v-on:click="adultsIncrease($event)" class="party-increase" :class="{ inactive: bookingFormData.adults + bookingFormData.children >= publicPriceListSettings.maxGuests }">+</button>
                                                             </div>
                                                         </div>
                                     
                                                         <div class="party-input-container">
                                                             <label for="children"><h5>Children</h5>Ages 2-12</label>
                                                             <div class="party-input" id="children">
-                                                                <button type="button" v-on:click="childrenDecrease($event)" class="party-decrease inactive">-</button>
-                                                                <div>&#60;% bookingFormData.children %></div>
-                                                                <button type="button" v-on:click="childrenIncrease($event)" class="party-increase">+</button>
+                                                                <button type="button" v-on:click="childrenDecrease($event)" class="party-decrease" :class="{ inactive: !bookingFormData.children }">-</button>
+                                                                <div :class="{ inactive: !bookingFormData.children }">&#60;% bookingFormData.children %></div>
+                                                                <button type="button" v-on:click="childrenIncrease($event)" class="party-increase" :class="{ inactive: bookingFormData.adults + bookingFormData.children >= publicPriceListSettings.maxGuests }">+</button>
                                                             </div>
                                                         </div>
                                     
                                                         <div class="party-input-container">
                                                             <label for="infants"><h5>Infants</h5>Under 2</label>
                                                             <div class="party-input" id="infants">
-                                                                <button type="button" v-on:click="infantsDecrease($event)" class="party-decrease inactive">-</button>
-                                                                <div>&#60;% bookingFormData.infants %></div>
-                                                                <button type="button" v-on:click="infantsIncrease($event)" class="party-increase">+</button>
+                                                                <button type="button" v-on:click="infantsDecrease($event)" class="party-decrease" :class="{ inactive: !bookingFormData.infants }">-</button>
+                                                                <div :class="{ inactive: !bookingFormData.infants }">&#60;% bookingFormData.infants %></div>
+                                                                <button type="button" v-on:click="infantsIncrease($event)" class="party-increase" :class="{ inactive: bookingFormData.infants >= publicPriceListSettings.maxInfants }">+</button>
                                                             </div>
                                                         </div>
                                     
                                                         <div class="party-input-container">
                                                             <label for="dogs"><h5>Dogs</h5>£20 each</label>
                                                             <div class="party-input" id="dogs">
-                                                                <button type="button" v-on:click="dogsDecrease($event)" class="party-decrease inactive">-</button>
-                                                                <div>&#60;% bookingFormData.dogs %></div>
-                                                                <button type="button" v-on:click="dogsIncrease($event)" class="party-increase">+</button>
+                                                                <button type="button" v-on:click="dogsDecrease($event)" class="party-decrease" :class="{ inactive: !bookingFormData.dogs }">-</button>
+                                                                <div :class="{ inactive: !bookingFormData.dogs }">&#60;% bookingFormData.dogs %></div>
+                                                                <button type="button" v-on:click="dogsIncrease($event)" class="party-increase" :class="{ inactive: bookingFormData.dogs >= publicPriceListSettings.maxDogs }">+</button>
                                                             </div>
                                                         </div>
                                                                                 
@@ -471,9 +552,17 @@
                                     </form>
                                         
                                     <div class="booking-proceed-box">
-                                        <div class="total-breakdown">
-                                            <div class="stay-length-total"></div>
-                                            <div class="dog-total"></div>
+                                        <div class="total-breakdown" :class="{ show: bookingFormData.price && bookingFormData.arrivalDate && bookingFormData.departureDate }">
+
+                                            <div class="stay-length-total" :class="{ show: bookingFormData.stayPrice && bookingFormData.stayLength }">
+                                                <div><% stayLength %> nights</div>
+                                                <div>£<% bookingFormData.stayPrice %></div>
+                                            </div>
+
+                                            <div class="dog-total" :class="{ show: bookingFormData.dogs }">
+                                                <div><% bookingFormData.dogs %> dog</div>
+                                                <div>£<% bookingFormData.dogPrice %></div>
+                                            </div>
                                             <div class="total-box">
                                                 <div>Total</div>
                                                 <div>£&#60;% bookingFormData.price %></div>
