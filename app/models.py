@@ -23,7 +23,6 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
 class Price_List(db.Model):
-    __tablename__ = 'price_list'
     id = db.Column(db.Integer, primary_key=True)
     start_date = db.Column(db.Date, unique=True)
     price = db.Column(db.Numeric(10,2))
