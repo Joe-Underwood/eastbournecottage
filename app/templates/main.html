@@ -261,15 +261,30 @@
                         </form>
                             
                         <div class="booking-proceed-box">
-                            <div class="total-breakdown">
-                                <div class="stay-length-total"></div>
-                                <div class="dog-total"></div>
+                            <div class="total-breakdown" :class="{ show: bookingFormData.price && bookingFormData.arrivalDate && bookingFormData.departureDate }">
+
+                                <div class="stay-length-total" :class="{ show: bookingFormData.stayPrice && bookingFormData.stayLength }">
+                                    <div><% stayLength %> nights</div>
+                                    <div>£<% bookingFormData.stayPrice %></div>
+                                </div>
+
+                                <div class="dog-total" :class="{ show: bookingFormData.dogs }">
+                                    <div><% bookingFormData.dogs %> dog</div>
+                                    <div>£<% bookingFormData.dogPrice %></div>
+                                </div>
                                 <div class="total-box">
                                     <div>Total</div>
                                     <div>£&#60;% bookingFormData.price %></div>
                                 </div>
                             </div>
+                            
                         </div>
+                        
+                    </div>
+
+                    <div class="payment-options">
+                        <h3>Payments</h3>
+                        <h4>Choose How To Pay</h4>
                         
                     </div>
                     

@@ -23,12 +23,16 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
 class Price_List(db.Model):
+    __tablename__ = 'price_list'
     id = db.Column(db.Integer, primary_key=True)
     start_date = db.Column(db.Date, unique=True)
     price = db.Column(db.Numeric(10,2))
     price_2_weeks = db.Column(db.Numeric(10, 2))
     price_3_weeks = db.Column(db.Numeric(10, 2))
     price_4_weeks = db.Column(db.Numeric(10, 2))
+    discount_amount_2_weeks = db.Column(db.Numeric(10, 2))
+    discount_amount_3_weeks = db.Column(db.Numeric(10, 2))
+    discount_amount_4_weeks = db.Column(db.Numeric(10, 2))
     booking_id = db.Column(db.Integer, db.ForeignKey('booking.id', ondelete='SET NULL'), default=None)
     range_type = db.Column(db.Enum('PAST', 'ACTIVE', 'FUTURE', name='range_type'))
     lock_flag = db.Column(db.Boolean, default=False, nullable=False)

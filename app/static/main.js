@@ -262,7 +262,8 @@ const vm = new Vue({
             stayPrice: 0,
             dogPrice: 0,
             stayDiscount: 0,
-            price: 0
+            price: 0,
+            payInFull: true
         },
 
         contactFormData: {

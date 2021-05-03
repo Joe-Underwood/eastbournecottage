@@ -10,14 +10,6 @@ def update_price_list():
     active_end_datetime = datetime.today() + timedelta(weeks = db_price_list_settings.active_prices_range)
     future_end_datetime = active_end_datetime + timedelta(weeks = db_price_list_settings.future_prices_range)
 
-    for segment in db_price_list:
-        if segment.start_date <= date.today():
-            segment.range_type = 'PAST'
-        elif segment.start_date < active_end_datetime.date():
-            segment.range_type = 'ACTIVE'
-        elif segment.start_date < future_end_datetime.date():
-            segment.range_type = 'FUTURE'
-
     first_changeover_date = db_price_list.order_by(Price_List.start_date.asc()).first().start_date
     last_changeover_date = db_price_list.order_by(Price_List.start_date.desc()).first().start_date
     last_changeover_datetime = datetime(last_changeover_date.year, last_changeover_date.month, last_changeover_date.day)
@@ -39,9 +31,6 @@ def update_price_list():
             new_changeover = Price_List(
                 start_date = new_changeover_datetime.date(),
                 price = previous_year_segment.price,
-                price_2_weeks = previous_year_segment.price_2_weeks,
-                price_3_weeks = previous_year_segment.price_3_weeks,
-                price_4_weeks = previous_year_segment.price_4_weeks,
                 range_type = 'FUTURE'
             )
         else:
@@ -58,9 +47,6 @@ def update_price_list():
             next_changeover = Price_List(
                 start_date = next_changeover_datetime.date(),
                 price = previous_year_segment.price,
-                price_2_weeks = previous_year_segment.price_2_weeks,
-                price_3_weeks = previous_year_segment.price_3_weeks,
-                price_4_weeks = previous_year_segment.price_4_weeks,
                 range_type = 'FUTURE'
             )
         else:
@@ -70,5 +56,29 @@ def update_price_list():
         )
         db.session.add(next_changeover)
         next_changeover_datetime += timedelta(weeks=1)
+    
+    for index, segment in enumerate(db_price_list):
+        if segment.start_date <= date.today():
+            segment.range_type = 'PAST'
+        elif segment.start_date < active_end_datetime.date():
+            segment.range_type = 'ACTIVE'
+        elif segment.start_date < future_end_datetime.date():
+            segment.range_type = 'FUTURE'
+        
+        #recalculate multiweek prices
+        
+        db_price_list_len = len(db_price_list.all())
+
+        if index < db_price_list_len - 1:
+            segment.price_2_weeks = segment.price + db_price_list[index + 1].price
+            segment.discount_amount_2_weeks = segment.price_2_weeks * (db_price_list_settings.discount_2_weeks / 100)
+
+        if index < db_price_list_len - 2:
+            segment.price_3_weeks = segment.price_2_weeks + db_price_list[index + 2].price
+            segment.discount_amount_3_weeks = segment.price_3_weeks * (db_price_list_settings.discount_3_weeks / 100)
+
+        if index < db_price_list_len - 3:
+            segment.price_4_weeks = segment.price_3_weeks + db_price_list[index + 3].price
+            segment.discount_amount_4_weeks = segment.price_4_weeks * (db_price_list_settings.discount_4_weeks / 100)
 
     db.session.commit()
