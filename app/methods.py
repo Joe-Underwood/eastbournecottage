@@ -69,6 +69,15 @@ def update_price_list():
         
         db_price_list_len = len(db_price_list.all())
 
+        if not segment.price:
+            segment.price = 0
+            segment.price_2_weeks = 0
+            segment.discount_amount_2_weeks = 0
+            segment.price_3_weeks = 0
+            segment.discount_amount_3_weeks = 0
+            segment.price_4_weeks = 0
+            segment.discount_amount_4_weeks = 0   
+            
         if index < db_price_list_len - 1:
             if db_price_list[index + 1].price:
                 segment.price_2_weeks = segment.price + db_price_list[index + 1].price
