@@ -70,15 +70,33 @@ def update_price_list():
         db_price_list_len = len(db_price_list.all())
 
         if index < db_price_list_len - 1:
-            segment.price_2_weeks = segment.price + db_price_list[index + 1].price
-            segment.discount_amount_2_weeks = segment.price_2_weeks * (db_price_list_settings.discount_2_weeks / 100)
+            if db_price_list[index + 1].price:
+                segment.price_2_weeks = segment.price + db_price_list[index + 1].price
+                segment.discount_amount_2_weeks = segment.price_2_weeks * (db_price_list_settings.discount_2_weeks / 100)
+            
+                if index < db_price_list_len - 2:
+                    if db_price_list[index + 2].price:
+                        segment.price_3_weeks = segment.price_2_weeks + db_price_list[index + 2].price
+                        segment.discount_amount_3_weeks = segment.price_3_weeks * (db_price_list_settings.discount_3_weeks / 100)
 
-        if index < db_price_list_len - 2:
-            segment.price_3_weeks = segment.price_2_weeks + db_price_list[index + 2].price
-            segment.discount_amount_3_weeks = segment.price_3_weeks * (db_price_list_settings.discount_3_weeks / 100)
-
-        if index < db_price_list_len - 3:
-            segment.price_4_weeks = segment.price_3_weeks + db_price_list[index + 3].price
-            segment.discount_amount_4_weeks = segment.price_4_weeks * (db_price_list_settings.discount_4_weeks / 100)
+                        if index < db_price_list_len - 3:
+                            if db_price_list[index + 3].price:
+                                segment.price_4_weeks = segment.price_3_weeks + db_price_list[index + 3].price
+                                segment.discount_amount_4_weeks = segment.price_4_weeks * (db_price_list_settings.discount_4_weeks / 100)
+                            else:
+                                segment.price_4_weeks = 0
+                                segment.discount_amount_4_weeks = 0
+                    else:
+                        segment.price_3_weeks = 0
+                        segment.discount_amount_3_weeks = 0
+                        segment.price_4_weeks = 0
+                        segment.discount_amount_4_weeks = 0
+            else:
+                segment.price_2_weeks = 0
+                segment.discount_amount_2_weeks = 0
+                segment.price_3_weeks = 0
+                segment.discount_amount_3_weeks = 0
+                segment.price_4_weeks = 0
+                segment.discount_amount_4_weeks = 0
 
     db.session.commit()
