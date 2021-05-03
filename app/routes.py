@@ -1,6 +1,7 @@
 from app import app, db, mail
 from app.forms import BookingForm, LoginForm
 from app.models import User, Customer, Booking, Billing, Billing_Settings, Payment_Breakpoint, Cancellation_Breakpoint, Price_List, Price_List_Settings, Delete_Price_List, Delete_Booking, Delete_Customer, Delete_Billing
+from app.methods import update_price_list
 from flask import render_template, request, jsonify, redirect, url_for
 from datetime import datetime, date, timedelta, time
 from calendar import Calendar
@@ -52,6 +53,9 @@ def get_past_price_list():
             'price2Weeks': str(row.price_2_weeks), 
             'price3Weeks': str(row.price_3_weeks), 
             'price4Weeks': str(row.price_4_weeks), 
+            'discountAmount2Weeks': str(row.discount_amount_2_weeks),
+            'discountAmount3Weeks': str(row.discount_amount_3_weeks),
+            'discountAmount4Weeks': str(row.discount_amount_4_weeks),
             'bookingId': row.booking_id,
             'updateFlag': False,
             'removeFlag': False
@@ -73,6 +77,9 @@ def get_active_price_list():
             'price2Weeks': str(row.price_2_weeks), 
             'price3Weeks': str(row.price_3_weeks), 
             'price4Weeks': str(row.price_4_weeks), 
+            'discountAmount2Weeks': str(row.discount_amount_2_weeks),
+            'discountAmount3Weeks': str(row.discount_amount_3_weeks),
+            'discountAmount4Weeks': str(row.discount_amount_4_weeks),
             'bookingId': row.booking_id,
             'updateFlag': False,
             'removeFlag': False
@@ -95,6 +102,9 @@ def get_price_list():
             'price2Weeks': str(row.price_2_weeks), 
             'price3Weeks': str(row.price_3_weeks), 
             'price4Weeks': str(row.price_4_weeks),
+            'discountAmount2Weeks': str(row.discount_amount_2_weeks),
+            'discountAmount3Weeks': str(row.discount_amount_3_weeks),
+            'discountAmount4Weeks': str(row.discount_amount_4_weeks),
             'bookingId': row.booking_id,
             'rangeType': row.range_type,
             'lockFlag': row.lock_flag,
@@ -122,6 +132,9 @@ def get_public_price_list():
             'price2Weeks': str(row.price_2_weeks), 
             'price3Weeks': str(row.price_3_weeks), 
             'price4Weeks': str(row.price_4_weeks),
+            'discountAmount2Weeks': str(row.discount_amount_2_weeks),
+            'discountAmount3Weeks': str(row.discount_amount_3_weeks),
+            'discountAmount4Weeks': str(row.discount_amount_4_weeks),
             'booked': booked
             }
         public_price_list.append(segment)
@@ -163,6 +176,9 @@ def set_price_list():
                 price_2_weeks = db_segment.price_2_weeks,
                 price_3_weeks = db_segment.price_3_weeks,
                 price_4_weeks = db_segment.price_4_weeks,
+                discount_amount_2_weeks = db_segment.discount_amount_2_weeks,
+                discount_amount_3_weeks = db_segment.discount_amount_3_weeks,
+                discount_amount_4_weeks = db_segment.discount_amount_4_weeks,
                 booking_id = db_segment.booking_id,
                 range_type = None
             )
@@ -225,6 +241,9 @@ def set_price_list():
                     Price_List.price_2_weeks: Decimal(segment['price2Weeks']),
                     Price_List.price_3_weeks: Decimal(segment['price3Weeks']),
                     Price_List.price_4_weeks: Decimal(segment['price4Weeks']),
+                    Price_List.discount_amount_2_weeks: Decimal(segment['discountAmount2Weeks']),
+                    Price_List.discount_amount_3_weeks: Decimal(segment['discountAmount3Weeks']),
+                    Price_List.discount_amount_4_weeks: Decimal(segment['discountAmount4Weeks']),
                     Price_List.booking_id: booking_id,
                     Price_List.range_type: range_type,
                     Price_List.lock_flag: segment['lockFlag']
@@ -238,12 +257,16 @@ def set_price_list():
                     price_2_weeks = Decimal(segment['price2Weeks']),
                     price_3_weeks = Decimal(segment['price3Weeks']),
                     price_4_weeks = Decimal(segment['price4Weeks']),
+                    discount_amount_2_weeks = db_segment.discount_amount_2_weeks,
+                    discount_amount_3_weeks = db_segment.discount_amount_3_weeks,
+                    discount_amount_4_weeks = db_segment.discount_amount_4_weeks,
                     booking_id = booking_id,
                     range_type = range_type,
                     lock_flag = segment['lockFlag']
                 )
                 db.session.add(new_segment)
     db.session.commit()
+    update_price_list()
     print('Price_List updated')
     return { 'success': True }
 
@@ -268,47 +291,9 @@ def set_price_list_settings():
         query.min_age = json_request['minAge']
         query.check_in_time = time.fromisoformat(json_request['checkInTime'])
         query.check_out_time = time.fromisoformat(json_request['checkOutTime'])
- 
-        price_list_query = db.session.query(Price_List)
-        #apply discounts:
-        for index, segment in enumerate(price_list_query):
-            if (not segment.lock_flag and segment.range_type != 'PAST'):
-                if (index + 2 < price_list_query.count()):
-                    segment.price_2_weeks = (segment.price + price_list_query[index + 1].price) * ((100 - Decimal(json_request['discount2Weeks'])) / 100)
-                if (index + 3 < price_list_query.count()):
-                    segment.price_3_weeks = (segment.price + price_list_query[index + 1].price + price_list_query[index + 2].price) * ((100 - Decimal(json_request['discount3Weeks'])) / 100)
-                if (index + 4 < price_list_query.count()):
-                    segment.price_4_weeks = (segment.price + price_list_query[index + 1].price + price_list_query[index + 2].price + price_list_query[index + 3].price) * ((100 - Decimal(json_request['discount4Weeks'])) / 100)
-                    
-        #adjust ranges:
-        #currently performed when updating price list segments, this performs for all
-        activeEndDatetime = datetime.today() + timedelta(weeks = query.active_prices_range)
-        futureEndDatetime = activeEndDatetime + timedelta(weeks = query.future_prices_range)
-        for segment in price_list_query:
-            start_date = segment.start_date
-            #check proper flag isActive, isFuture etc.
-            if (start_date < date.today()):
-                segment.range_type = 'PAST'
-            elif (start_date < activeEndDatetime.date()):
-                segment.range_type = 'ACTIVE'
-            elif (start_date < futureEndDatetime.date()):
-                segment.range_type = 'FUTURE'
-            else:
-                delete_segment = Delete_Price_List(
-                    start_date = segment.start_date,
-                    price = segment.price,
-                    price_2_weeks = segment.price_2_weeks,
-                    price_3_weeks = segment.price_3_weeks,
-                    price_4_weeks = segment.price_4_weeks,
-                    booking_id = segment.booking_id,
-                    range_type = None
-                )
-                db.session.add(delete_segment)
-                db.session.delete(segment)
-
-        #alter default changeover day:
 
     db.session.commit()
+    update_price_list()
     print('Price_List_Settings updated')
     return { 'success': True }
 
