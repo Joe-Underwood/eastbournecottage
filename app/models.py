@@ -36,6 +36,24 @@ class Price_List(db.Model):
     range_type = db.Column(db.Enum('PAST', 'ACTIVE', 'FUTURE', name='range_type'))
     lock_flag = db.Column(db.Boolean, default=False, nullable=False)
 
+"""
+class Progressive_Payment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    price_list_id = db.Column(db.Integer, db.ForeignKey('price__list.id'))
+    due_by = db.Column(db.Date)
+    amount_due = db.Column(db.Numeric(10, 2))
+    first_payment = db.Column(db.Boolean, default=False)
+    stay_length_type = db.Column(db.Enum('1_WEEK', '2_WEEKS', '3_WEEKS', '4_WEEKS', name='stay_length_type'), nullable=False)
+
+progressive_payments = db.Table('progressive_payments',
+    db.Column('id', db.Integer, primary_key=True),
+    db.Column('price_list_id', db.Integer, db.ForeignKey('price__list.id')), 
+    db.Column('due_by', db.Date), 
+    db.Column('amount_due', db.Numeric(10, 2)), 
+    db.Column('first_payment', db.Boolean, default=False)
+)
+"""
+
 class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))

@@ -1,5 +1,5 @@
 from app import app, db
-from app.models import Price_List, Price_List_Settings, Delete_Price_List
+from app.models import Price_List, Price_List_Settings, Delete_Price_List, Billing_Settings, Payment_Breakpoint
 from datetime import datetime, date, timedelta, time
 from dateutil.relativedelta import relativedelta
 

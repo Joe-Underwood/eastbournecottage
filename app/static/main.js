@@ -263,7 +263,9 @@ const vm = new Vue({
             dogPrice: 0,
             stayDiscount: 0,
             price: 0,
-            payInFull: true
+            payInFull: true,
+            progressivePayments: [],
+            cancellationTerms: []
         },
 
         contactFormData: {
@@ -435,6 +437,44 @@ const vm = new Vue({
                         return serverDate;
                     })
                 
+            return response;
+        },
+        getProgressivePayments() {
+            const response =
+                fetch('/get_progressive_payments', {
+                    method: 'post',
+                    body: JSON.stringify(this.bookingFormData),
+                    headers: new Headers({
+                        'content-type': 'application/json'
+                    })
+                })
+                .then(response => {
+                    return response.json();
+                })
+                .then(json => {
+                    this.bookingFormData['progressivePayments'] = json['progressivePayments'];
+                    return json['progressivePayments'];
+                })
+
+            return response;
+        },
+        getCancellationTerms() {
+            const response =
+                fetch('/get_cancellation_terms', {
+                    method: 'post',
+                    body: JSON.stringify(this.bookingFormData),
+                    headers: new Headers({
+                        'content-type': 'application/json'
+                    })
+                })
+                .then(response => {
+                    return response.json();
+                })
+                .then(json => {
+                    this.bookingFormData['cancellationTerms'] = json['cancellationTerms'];
+                    return json['cancellationTerms'];
+                })
+
             return response;
         },
         submitContact() {
@@ -947,8 +987,6 @@ const vm = new Vue({
                 this.refreshDateRange();
             }
             this.bookingFormData.price = (+this.bookingFormData.stayPrice + +this.bookingFormData.dogPrice).toFixed(2);
-            
-            
         },
         showValidDepartureDates(arrivalElement) {
             const changeoverData = arrivalElement.__vue__._props.isChangeoverData;
@@ -1261,7 +1299,7 @@ const vm = new Vue({
             } 
             return true;
 
-        },      
+        },     
         hideInvalidDates() {
             for (let i = 0; i < this.invalidDates.length; i++) {
                 this.invalidDates[i].classList.remove('invalid-date');
@@ -1420,6 +1458,8 @@ const vm = new Vue({
                 document.querySelector('.hamburger').classList.add('back');
                 document.querySelector('.navbar button').classList.add('hidden');
                 this.checkoutStep = 1;
+                this.getProgressivePayments();
+                this.getCancellationTerms();
             }
         },  
         bookingBack() {
@@ -1588,17 +1628,14 @@ const vm = new Vue({
                 })
         },
         cancellationTermsText() {
-            let totalAmountRefundable = 0;
-            for (let i = 0; i < this.publicBillingSettings['cancellationBreakpoints'].length; i++) {
-                totalAmountRefundable += +this.publicBillingSettings['cancellationBreakpoints'][i]['amountRefundable'];
-            }
-
-            if (totalAmountRefundable > 0) {
-                return 'list of refund breakpoints';
-            }
-            else {
-                return 'no refunds available for this booking';
-            }
+            if (this.bookingFormData['cancellationTerms'].length === 1) {
+                if (parseInt(this.bookingFormData['cancellationTerms'][0]['amountRefundable']) === 0) {
+                    return 'No refund available for this booking';
+                }
+                else {
+                    return String(parseInt(this.bookingFormData['cancellationTerms'][0]['amountRefundable'])) + '% refund available if you cancel at any time';
+                }
+            } 
         },
     },
     delimiters: ['<%', '%>']

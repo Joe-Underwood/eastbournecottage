@@ -272,6 +272,13 @@ svg {
             border-radius: 4px;
             margin-bottom: 16px;
         }
+
+            .house-rules p,
+            .booking-terms p,
+            .house-rules div,
+            .booking-terms div {
+                margin-bottom: 8px;
+            }
     
     .checkout-3 {
         position: relative;

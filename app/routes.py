@@ -257,9 +257,9 @@ def set_price_list():
                     price_2_weeks = Decimal(segment['price2Weeks']),
                     price_3_weeks = Decimal(segment['price3Weeks']),
                     price_4_weeks = Decimal(segment['price4Weeks']),
-                    discount_amount_2_weeks = db_segment.discount_amount_2_weeks,
-                    discount_amount_3_weeks = db_segment.discount_amount_3_weeks,
-                    discount_amount_4_weeks = db_segment.discount_amount_4_weeks,
+                    discount_amount_2_weeks = Decimal(segment['discountAmount2Weeks']),
+                    discount_amount_3_weeks = Decimal(segment['discountAmount3Weeks']),
+                    discount_amount_4_weeks = Decimal(segment['discountAmount4Weeks']),
                     booking_id = booking_id,
                     range_type = range_type,
                     lock_flag = segment['lockFlag']
@@ -783,6 +783,7 @@ def set_billing_settings():
             db.session.add(new_cancellation_breakpoint)
             db_billing_settings.cancellation_breakpoints.append(new_cancellation_breakpoint)
 
+
     db.session.commit()
     print('Billing_Settings updated')
     
@@ -1174,3 +1175,58 @@ def get_public_billing_settings():
 def get_server_date():
     return { 'serverDate': date.today().isoformat() }
 
+@app.route('/get_progressive_payments', methods=['POST'])
+def get_progressive_payments():
+    json_request = request.get_json()
+    db_payment_breakpoints = db.session.query(Billing_Settings).first().payment_breakpoints
+    db_add_payment_breakpoints = db_payment_breakpoints.filter_by(first_payment = False).order_by(Payment_Breakpoint.due_by.desc()).all()
+    db_first_payment = db_payment_breakpoints.filter_by(first_payment = True).all()
+    ordered_breakpoints = db_first_payment + db_add_payment_breakpoints
+    progressive_payments = []
+
+    for index, breakpoint in enumerate(ordered_breakpoints):
+        if breakpoint.first_payment:
+            progressive_payments.append({
+                'amountDue': str(Decimal(json_request['price']) * breakpoint.amount_due / 100),
+                'dueBy': None,
+                'firstPayment': True
+            })
+        else:
+            due_by = datetime.strptime(json_request['arrivalDate'], '%Y-%m-%d').date() - timedelta(days=breakpoint.due_by)
+            if due_by <= date.today():
+                progressive_payments[-1]['amountDue'] = str(Decimal(progressive_payments[-1]['amountDue']) + Decimal(json_request['price']) * breakpoint.amount_due / 100)
+            else:
+                progressive_payments.append({
+                    'amountDue': str(Decimal(json_request['price']) * breakpoint.amount_due / 100),
+                    'dueBy': due_by.isoformat(),
+                    'firstPayment': False
+                })
+
+    return { 'progressivePayments': progressive_payments }
+
+@app.route('/get_cancellation_terms', methods=['POST'])
+def get_cancellation_terms():
+    json_request = request.get_json()
+    db_cancellation_breakpoints = db.session.query(Billing_Settings).first().cancellation_breakpoints
+    db_add_cancellation_breakpoints = db_cancellation_breakpoints.filter_by(check_in = False).order_by(Cancellation_Breakpoint.cancel_by.desc()).all()
+    db_check_in = db_cancellation_breakpoints.filter_by(check_in = True).all()
+    ordered_breakpoints = db_add_cancellation_breakpoints + db_check_in
+    cancellation_terms = []
+
+    for breakpoint in ordered_breakpoints:
+        if breakpoint.check_in:
+            cancellation_terms.append({
+                'amountRefundable': str(breakpoint.amount_refundable),
+                'cancelBy': None,
+                'checkIn': True
+            })
+        else:
+            cancel_by = datetime.strptime(json_request['arrivalDate'], '%Y-%m-%d').date() - timedelta(days=breakpoint.cancel_by)
+            if cancel_by > date.today():
+                cancellation_terms.append({
+                    'amountRefundable': str(breakpoint.amount_refundable),
+                    'cancelBy': cancel_by.isoformat(),
+                    'checkIn': False
+                })     
+    
+    return { 'cancellationTerms': cancellation_terms }
