@@ -216,7 +216,13 @@ svg {
     z-index: 2;
 }
 
-
+.white-box {
+    background-color: white;
+    padding: 16px;
+    border: 1px solid #a5c2cf;
+    border-radius: 4px;
+    margin-bottom: 16px;
+}
 /*--------------CHECKOUT OVERLAY-------------*/
 .checkout-container {
     position: fixed;
@@ -261,7 +267,7 @@ svg {
 
     .checkout-2 {
         position: relative;
-        display:none;
+        display: none;
     }
 
         .house-rules,
@@ -274,16 +280,95 @@ svg {
         }
 
             .house-rules p,
-            .booking-terms p,
-            .house-rules div,
-            .booking-terms div {
+            .booking-terms p {
                 margin-bottom: 8px;
             }
-    
+
+            .house-rules div,
+            .booking-terms div {
+                margin-bottom: 16px;
+            }
+
+            .house-rules h4,
+            .booking-terms h4 {
+                padding-bottom: 8px;
+            }
+  
     .checkout-3 {
         position: relative;
         display: none;
     }
+
+        .checkout-3 .booking-summary {
+            margin-bottom: 16px;
+        }
+
+        .payment-options {
+            margin-bottom: 16px;
+        }
+
+        .pay-in-full,
+        .pay-in-parts,
+        .full-payment-no-options {
+            padding: 8px;
+            padding-left: 16px;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            border: 1px solid #a5c2cf;
+            background-color: white;
+            line-height: 36px;
+            font-size: 14px;
+            position: relative;
+        }
+
+        .pay-in-full {
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+        }
+
+        .pay-in-parts {
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+            margin-top: -1px;
+        }
+
+        .full-payment-no-options {
+            border-radius: 4px;
+        }
+
+        .pay-in-full.focused,
+        .pay-in-parts.focused,
+        .full-payment-no-options.focused {
+            border: 2px solid rgb(15, 72, 117);
+            z-index: 1;
+        }
+
+        .payment-options h4 {
+            font-family: 'Lato-bold';
+            color: rgb(15, 72, 117);
+            line-height: 32px;
+        }
+
+        .payment-options div {
+            line-height: 28px;
+        }
+
+            .payment-option-header {
+                display: flex;
+                justify-content: space-between;
+            }
+
+        .payment-stage {
+            padding-left: 8px;
+        }
+        
+        .payment-options input[type=radio] {
+            appearance: auto;
+            -webkit-appearance: auto;
+            height: auto;
+        }
+        
 
     .booking-form {
         position: relative;
@@ -1833,21 +1918,26 @@ svg {
 
             .stay-length-total {
                 display: flex;
+            }
+
+            .stay-length-total,
+            .dog-total,
+            .multi-week-discount {
                 position: relative;
                 justify-content: space-between;
                 padding-bottom: 8px;
             }
 
-            .dog-total {
+            .dog-total, 
+            .multi-week-discount {
                 display: none;
-                position: relative;
-                justify-content: space-between;
-                padding-bottom: 8px;
             }
 
-            .dog-total.show {
+            .dog-total.show,
+            .multi-week-discount.show {
                 display: flex;
             }
+
 
         .total-box {
             padding-top: 8px;

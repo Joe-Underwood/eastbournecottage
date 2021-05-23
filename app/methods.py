@@ -109,3 +109,12 @@ def update_price_list():
                 segment.discount_amount_4_weeks = 0
 
     db.session.commit()
+
+def update_bookings():
+    return
+
+def update_customers():
+    return
+    
+def update_billings():
+    return

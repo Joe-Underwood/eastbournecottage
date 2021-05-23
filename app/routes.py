@@ -313,9 +313,12 @@ def get_bookings():
             'infants': row.infants,
             'dogs': row.dogs,
             'stayPrice': str(row.stay_price),
+            'multiWeekDiscount': str(row.multi_week_discount),
             'dogPrice': str(row.dog_price),
-            'price': str(row.price),
+            'total': str(row.total),
+            'status': row.status,
             'updateFlag': False,
+            'updateStatusFlag': False,
             'deleteFlag': False,
             'selectFlag': False
         }
@@ -331,6 +334,7 @@ def set_bookings():
     price_list = db.session.query(Price_List)
 
     for booking in json_request:
+
         if (booking['arrivalDate'] and booking['departureDate']):
             arrival_date = datetime.strptime(booking['arrivalDate'], '%Y-%m-%d').date()
             departure_date = datetime.strptime(booking['departureDate'], '%Y-%m-%d').date()
@@ -343,9 +347,76 @@ def set_bookings():
         else:
             print('warning: booking not assigned to customer')
             customer_id = None
-        
+
         date_segments = []
-        if (booking['deleteFlag']):
+        if (booking['updateStatusFlag']):
+            query.filter(Booking.id == booking['id']).update({
+                Booking.status: booking['status']
+            })
+
+            customer = db.session.query(Customer).get(customer_id)
+
+            def send_async_email(app, msg):
+                with app.app_context():
+                    mail.send(msg)
+
+            if booking['status'] == 'ACCEPTED':
+                admin_msg = Message('Booking Request Accepted: ' + customer.first_name + ' ' + customer.last_name, sender=app.config['MAIL_USERNAME'], recipients=[app.config['MAIL_USERNAME']])
+                admin_msg.body = (
+                    'Hello, \n \n' +
+                    'The following booking request has now been ACCEPTED and the customer has been notified. \n' + 
+                    'Name: ' + customer.first_name + ' ' + customer.last_name + '\n' +
+                    'Email: ' + customer.email_address + '\n' +
+                    'Phone: ' + customer.phone_number + '\n' +
+                    'Arrival Date: ' + booking['arrivalDate'] + '\n' + 
+                    'Departure Date: ' + booking['departureDate'] + '\n' +
+                    'Party: ' + str(booking['adults']) + ' adults, ' + str(booking['children']) + ' children, ' + str(booking['infants']) + ' infants, ' + str(booking['dogs']) + ' dogs \n' +
+                    'Total: ' + str(booking['total']) + '\n \n'
+                )
+
+                admin_thr = Thread(target=send_async_email, args=[app, admin_msg])
+                admin_thr.start()
+
+                customer_msg = Message('Booking Request Accepted', sender=app.config['MAIL_USERNAME'], recipients=[customer.email_address])
+                customer_msg.body = (
+                    'Hello, \n \n' +
+                    'Your booking request has been accepted! You will receive an email shortly with details of the first invoice that is now due within 7 days. \n \n' +
+                    'Kind regards, \n \n' + 
+                    'The Cottage - Eastbourne' 
+                    )
+
+                customer_thr = Thread(target=send_async_email, args=[app, customer_msg])
+                customer_thr.start() 
+
+            elif booking['status'] == 'REJECTED':
+                admin_msg = Message('Booking Request Rejected: ' + customer.first_name + ' ' + customer.last_name, sender=app.config['MAIL_USERNAME'], recipients=[app.config['MAIL_USERNAME']])
+                admin_msg.body = (
+                    'Hello, \n \n' +
+                    'The following booking request has now been REJECTED and the customer has been notified. \n' + 
+                    'Name: ' + customer.first_name + ' ' + customer.last_name + '\n' +
+                    'Email: ' + customer.email_address + '\n' +
+                    'Phone: ' + customer.phone_number + '\n' +
+                    'Arrival Date: ' + booking['arrivalDate'] + '\n' + 
+                    'Departure Date: ' + booking['departureDate'] + '\n' +
+                    'Party: ' + str(booking['adults']) + ' adults, ' + str(booking['children']) + ' children, ' + str(booking['infants']) + ' infants, ' + str(booking['dogs']) + ' dogs \n' +
+                    'Total: ' + str(booking['total']) + '\n \n'
+                )
+
+                admin_thr = Thread(target=send_async_email, args=[app, admin_msg])
+                admin_thr.start()
+
+                customer_msg = Message('Booking Request Rejected', sender=app.config['MAIL_USERNAME'], recipients=[customer.email_address])
+                customer_msg.body = (
+                    'Hello, \n \n' +
+                    'Unfortunately, your booking request with us has been rejected. \n \n' +
+                    'Kind regards, \n \n' + 
+                    'The Cottage - Eastbourne' 
+                    )
+
+                customer_thr = Thread(target=send_async_email, args=[app, customer_msg])
+                customer_thr.start()
+        
+        elif (booking['deleteFlag']):
             db_booking = query.filter(Booking.id == booking['id']).first()
             if (db_booking):
                 delete_booking = Delete_Booking(
@@ -357,8 +428,10 @@ def set_bookings():
                     infants = int(booking['infants']),
                     dogs = int(booking['dogs']),
                     stay_price = Decimal(booking['stayPrice']),
+                    multi_week_discount = Decimal(booking['multiWeekDiscount']),
                     dog_price = Decimal(booking['dogPrice']),
-                    price = Decimal(booking['price'])
+                    total = Decimal(booking['total']),
+                    status = booking['status']
                 )
                 db.session.add(delete_booking)
                 for segment in db_booking.date_segments:
@@ -415,8 +488,10 @@ def set_bookings():
                     Booking.infants: int(booking['infants']),
                     Booking.dogs: int(booking['dogs']),
                     Booking.stay_price: Decimal(booking['stayPrice']),
+                    Booking.multi_week_discount: Decimal(booking['multi_week_discount']),
                     Booking.dog_price: Decimal(booking['dogPrice']),
-                    Booking.price: Decimal(booking['price'])
+                    Booking.total: Decimal(booking['total']),
+                    Booking.status: booking['status']
                 },
                 synchronize_session = False
                 )
@@ -434,8 +509,10 @@ def set_bookings():
                     infants = int(booking['infants']),
                     dogs = int(booking['dogs']),
                     stay_price = Decimal(booking['stayPrice']),
+                    multi_week_discount = Decimal(booking['multiWeekDiscount']),
                     dog_price = Decimal(booking['dogPrice']),
-                    price = Decimal(booking['price'])
+                    total = Decimal(booking['total']),
+                    status = booking['status']
                 )
                 for segment in date_segments:
                     new_booking.date_segments.append(segment)
@@ -452,21 +529,22 @@ def get_billings():
     for row in query:
         if row.transaction_type == 'INVOICE':
             reference = row.invoice_reference
-            invoice_due_date = row.invoice_due_date.isoformat()
         elif row.transaction_type == 'PAYMENT':
             reference = row.payment_reference
-            invoice_due_date = None
         elif row.transaction_type == 'DEBIT_NOTE':
             reference = row.debit_note_reference
-            invoice_due_date = None
         elif row.transaction_type == 'CREDIT_NOTE':
             reference = row.credit_note_reference
-            invoice_due_date = None
 
         if row.date:
             billing_date = row.date.isoformat()
         else:
             billing_date = row.date
+
+        if row.invoice_due_date:
+            invoice_due_date = row.invoice_due_date.isoformat()
+        else:
+            invoice_due_date = None
 
         billing = {
             'id': row.id,
@@ -820,12 +898,20 @@ def booking():
     else:
         if (len(date_segments) == 1):
             correct_price = date_segments[0].price
+            correct_multi_week_discount = 0
+            stay_length_weeks = 1
         elif (len(date_segments) == 2):
             correct_price = date_segments[0].price_2_weeks
+            correct_multi_week_discount = date_segments[0].discount_amount_2_weeks
+            stay_length_weeks = 2
         elif (len(date_segments) == 3):
             correct_price = date_segments[0].price_3_weeks
+            correct_multi_week_discount = date_segments[0].discount_amount_3_weeks
+            stay_length_weeks = 3
         elif (len(date_segments) == 4):
             correct_price = date_segments[0].price_4_weeks
+            correct_multi_week_discount = date_segments[0].discount_amount_4_weeks
+            stay_length_weeks = 4
         else:
             print('Stay length exceeds maximum allowed')
             return { 'success': False }
@@ -834,6 +920,10 @@ def booking():
             print('submitted stay price:' + str(booking_form_data['stayPrice']))
             print('database stay_price:' + str(correct_price))
             print('Submitted price does not match with databse, resubmit correct_price to user for confirmation')
+            return { 'success': False }
+
+        if (Decimal(booking_form_data['multiWeekDiscount']) != Decimal(correct_multi_week_discount)):
+            print('multi_week_discount incorrect')
             return { 'success': False }
 
     if (int(booking_form_data['adults']) <= 0):
@@ -848,10 +938,10 @@ def booking():
     if (int(booking_form_data['dogs']) > price_list_settings[0].max_dogs):
         print('Number of dogs exceeds maximum allowed')
         return { 'success': False }
-    if (Decimal(booking_form_data['dogPrice']) != int(booking_form_data['dogs']) * price_list_settings[0].price_per_dog):
+    if (Decimal(booking_form_data['dogPrice']) != int(booking_form_data['dogs']) * price_list_settings[0].price_per_dog * stay_length_weeks):
         print('Incorrect dog price')
         return { 'success': False }
-    if (Decimal(booking_form_data['price']) != Decimal(booking_form_data['stayPrice']) + Decimal(booking_form_data['dogPrice'])):
+    if (Decimal(booking_form_data['total']) != Decimal(booking_form_data['stayPrice']) + Decimal(booking_form_data['dogPrice']) - Decimal(booking_form_data['multiWeekDiscount'])):
         print('Prices do not add up to total, resubmit correct prices to user for confirmation')
         return { 'success': False }
     
@@ -865,8 +955,10 @@ def booking():
         infants = int(booking_form_data['infants']),
         dogs = int(booking_form_data['dogs']),
         stay_price = Decimal(booking_form_data['stayPrice']),
+        multi_week_discount = Decimal(correct_multi_week_discount),
         dog_price = Decimal(booking_form_data['dogPrice']),
-        price = Decimal(correct_price)
+        total = Decimal(correct_price),
+        status = 'AWAITING_CONFIRMATION'
     )
 
     customer = Customer(
@@ -881,8 +973,18 @@ def booking():
         postcode = booking_form_data['postcode']
     )
 
+    for segment in date_segments:
+        segment.booked = True
+        booking.date_segments.append(segment)
+
+    customer.bookings.append(booking)
+    db.session.add(customer)
+    db.session.add(booking)
+
+    #-------- CREATE DRAFT INVOICES -------------#
     billing_settings = db.session.query(Billing_Settings).first()
     payment_terms = billing_settings.payment_breakpoints.all()
+    cancellation_terms = billing_settings.cancellation_breakpoints.all()
 
     first_invoice_amount = 0
     cumulative_total = 0
@@ -894,73 +996,110 @@ def booking():
         prev_invoice_reference = 0
     invoices = []
 
-    for index, breakpoint in enumerate(payment_terms):
-        if breakpoint.first_payment:
-            first_invoice_amount += (Decimal(booking.price) * Decimal(breakpoint.amount_due / 100)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
-            cumulative_total += (Decimal(booking.price) * Decimal(breakpoint.amount_due / 100)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
-        elif date.today() >= arrival_date - timedelta(days = breakpoint.due_by):
-            first_invoice_amount += (Decimal(booking.price) * Decimal(breakpoint.amount_due / 100)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
-            cumulative_total += (Decimal(booking.price) * Decimal(breakpoint.amount_due / 100)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
-        elif index == len(payment_terms) - 1:
-            last_invoice = Billing(
-                amount = (Decimal(booking.price) - Decimal(cumulative_total)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP),
-                invoice_due_date = arrival_date - timedelta(days = breakpoint.due_by),
-                transaction_type = 'INVOICE',
-                invoice_reference = prev_invoice_reference + 1,
-                invoice_status = 'NOT SENT',
-            )
-            db.session.add(last_invoice)
-            invoices.append(last_invoice)
-            booking.billings.append(last_invoice)
-            prev_invoice_reference = last_invoice.invoice_reference
+    if (booking_form_data['payInFull']):
+        invoice = Billing(
+            amount = booking.total,
+            transaction_type = 'INVOICE',
+            invoice_reference = prev_invoice_reference + 1,
+            invoice_status = 'DRAFT'
+        )
+        db.session.add(invoice)
+        booking.billings.append(invoice)
 
-        else:
-            new_invoice = Billing(
-                amount = (Decimal(booking.price) * Decimal(breakpoint.amount_due / 100)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP),
-                invoice_due_date = arrival_date - timedelta(days = breakpoint.due_by),
-                transaction_type = 'INVOICE',
-                invoice_reference = prev_invoice_reference + 1,
-                invoice_status = 'NOT_SENT'
-            )
-            cumulative_total += new_invoice.amount
-            db.session.add(new_invoice)
-            booking.billings.append(new_invoice)
-            invoices.append(new_invoice)
-            prev_invoice_reference = new_invoice.invoice_reference
+    else:
+        for index, breakpoint in enumerate(payment_terms):
+            if breakpoint.first_payment:
+                first_invoice_amount += (Decimal(booking.total) * Decimal(breakpoint.amount_due / 100)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+                cumulative_total += (Decimal(booking.total) * Decimal(breakpoint.amount_due / 100)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+            elif date.today() >= arrival_date - timedelta(days = breakpoint.due_by):
+                first_invoice_amount += (Decimal(booking.total) * Decimal(breakpoint.amount_due / 100)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+                cumulative_total += (Decimal(booking.total) * Decimal(breakpoint.amount_due / 100)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+            elif index == len(payment_terms) - 1:
+                last_invoice = Billing(
+                    amount = (Decimal(booking.total) - Decimal(cumulative_total)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP),
+                    invoice_due_date = arrival_date - timedelta(days = breakpoint.due_by),
+                    transaction_type = 'INVOICE',
+                    invoice_reference = prev_invoice_reference + 1,
+                    invoice_status = 'DRAFT'
+                )
+                db.session.add(last_invoice)
+                invoices.append(last_invoice)
+                booking.billings.append(last_invoice)
+                prev_invoice_reference = last_invoice.invoice_reference
 
-    first_invoice = Billing(
-        amount = first_invoice_amount.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP),
-        date = date.today(),
-        invoice_due_date = date.today(),
-        transaction_type = 'INVOICE',
-        invoice_reference = prev_invoice_reference + 1,
-        invoice_status = 'ACTIVE'
-    )
+            else:
+                new_invoice = Billing(
+                    amount = (Decimal(booking.total) * Decimal(breakpoint.amount_due / 100)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP),
+                    invoice_due_date = arrival_date - timedelta(days = breakpoint.due_by),
+                    transaction_type = 'INVOICE',
+                    invoice_reference = prev_invoice_reference + 1,
+                    invoice_status = 'DRAFT'
+                )
+                cumulative_total += new_invoice.amount
+                db.session.add(new_invoice)
+                booking.billings.append(new_invoice)
+                invoices.append(new_invoice)
+                prev_invoice_reference = new_invoice.invoice_reference
 
-    db.session.add(first_invoice)
-    booking.billings.append(first_invoice)
-    invoices.append(first_invoice)
-    #invoice price validation
-    invoices_total_amount = 0
-    for invoice in invoices:
-        invoices_total_amount += invoice.amount
-        print(invoice.amount)
+        first_invoice = Billing(
+            amount = first_invoice_amount.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP),
+            transaction_type = 'INVOICE',
+            invoice_reference = prev_invoice_reference + 1,
+            invoice_status = 'DRAFT'
+        )
 
-    print(booking.price)
-    print(first_invoice_amount)
+        db.session.add(first_invoice)
+        booking.billings.append(first_invoice)
+        invoices.append(first_invoice)
+        #invoice price validation
+        invoices_total_amount = 0
+        for invoice in invoices:
+            invoices_total_amount += invoice.amount
+            print(invoice.amount)
 
-    if invoices_total_amount != booking.price:
-        print('error in prices when creating invoices')
-        return { 'success': False }
+        print(booking.total)
+        print(first_invoice_amount)
 
-    for segment in date_segments:
-        segment.booked = True
-        booking.date_segments.append(segment)
+        if invoices_total_amount != booking.total:
+            print('error in prices when creating invoices')
+            return { 'success': False }
 
-    customer.bookings.append(booking)
-    db.session.add(customer)
-    db.session.add(booking)
     db.session.commit()
+
+    #create request for admin
+
+    #send confirmation emails
+
+    def send_async_email(app, msg):
+        with app.app_context():
+            mail.send(msg)
+
+    admin_msg = Message('Booking Request: ' + customer.first_name + ' ' + customer.last_name, sender=app.config['MAIL_USERNAME'], recipients=[app.config['MAIL_USERNAME']])
+    admin_msg.body = (
+                'Hello, \n' +
+                'A new booking request has been submitted. Details are as follows: \n \n' +
+                'Name: ' + customer.first_name + ' ' + customer.last_name + '\n' +
+                'Email: ' + customer.email_address + '\n' +
+                'Phone: ' + customer.phone_number + '\n' +
+                'Arrival Date: ' + booking.arrival_date.isoformat() + '\n' + 
+                'Departure Date: ' + booking.departure_date.isoformat() + '\n' +
+                'Party: ' + str(booking.adults) + ' adults, ' + str(booking.children) + ' children, ' + str(booking.infants) + ' infants, ' + str(booking.dogs) + ' dogs \n' +
+                'Total: ' + str(booking.total) + '\n \n'
+                )
+
+    admin_thr = Thread(target=send_async_email, args=[app, admin_msg])
+    admin_thr.start()
+
+    customer_msg = Message('Booking Request Received', sender=app.config['MAIL_USERNAME'], recipients=[customer.email_address])
+    customer_msg.body = (
+        'Hello, \n \n' +
+        'We have received your booking request and will update you as soon as possible! \n \n' +
+        'Kind regards, \n \n' + 
+        'The Cottage - Eastbourne' 
+        )
+
+    customer_thr = Thread(target=send_async_email, args=[app, customer_msg])
+    customer_thr.start()
 
     return { 'success': True }
 
@@ -1187,17 +1326,17 @@ def get_progressive_payments():
     for index, breakpoint in enumerate(ordered_breakpoints):
         if breakpoint.first_payment:
             progressive_payments.append({
-                'amountDue': str(Decimal(json_request['price']) * breakpoint.amount_due / 100),
+                'amountDue': str(Decimal(json_request['total']) * breakpoint.amount_due / 100),
                 'dueBy': None,
                 'firstPayment': True
             })
         else:
             due_by = datetime.strptime(json_request['arrivalDate'], '%Y-%m-%d').date() - timedelta(days=breakpoint.due_by)
             if due_by <= date.today():
-                progressive_payments[-1]['amountDue'] = str(Decimal(progressive_payments[-1]['amountDue']) + Decimal(json_request['price']) * breakpoint.amount_due / 100)
+                progressive_payments[-1]['amountDue'] = str(Decimal(progressive_payments[-1]['amountDue']) + Decimal(json_request['total']) * breakpoint.amount_due / 100)
             else:
                 progressive_payments.append({
-                    'amountDue': str(Decimal(json_request['price']) * breakpoint.amount_due / 100),
+                    'amountDue': str(Decimal(json_request['total']) * breakpoint.amount_due / 100),
                     'dueBy': due_by.isoformat(),
                     'firstPayment': False
                 })
@@ -1230,3 +1369,11 @@ def get_cancellation_terms():
                 })     
     
     return { 'cancellationTerms': cancellation_terms }
+
+@app.route('/get_booking_requests', methods=['POST'])
+def get_booking_requests():
+    return { 'success': False }
+
+@app.route('/set_booking_requests', methods=['POST'])
+def set_booking_requests():
+    return { 'success': False}

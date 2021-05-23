@@ -522,13 +522,11 @@ const vm = new Vue({
                         },
                         798: {
                             slidesPerView: 4,
-                            allowTouchMove: false
+                            allowTouchMove: true
                         }
                     }
-                    
                 }))
             }
-
             this.priceTableSwiperList = priceTableSwiperList;
         },
         initBillingTableSwiper() {
@@ -678,6 +676,48 @@ const vm = new Vue({
                     this.getPriceList();
                 })
         },
+        bookingRequestReject(booking, e) {
+            booking['updateStatusFlag'] = true;
+            booking['status'] = 'REJECTED';
+            this.setBookings().then(success => {
+                if (success) {
+                    this.exitFullscreen(e);
+                }
+                else {
+                    console.log('error rejecting booking');
+                }
+                return success;
+            })
+            .then(success => {
+                if (success) {
+                    this.getPriceList();
+                    this.getBookings();
+                    this.getCustomers();
+                    this.getBillings();
+                }
+            })
+        },
+        bookingRequestAccept(booking, e) {
+            booking['updateStatusFlag'] = true;
+            booking['status'] = 'ACCEPTED';
+            this.setBookings().then(success => {
+                if (success) {
+                    this.exitFullscreen(e);
+                }
+                else {
+                    console.log('error rejecting booking');
+                }
+                return success;
+            })
+            .then(success => {
+                if (success) {
+                    this.getPriceList();
+                    this.getBookings();
+                    this.getCustomers();
+                    this.getBillings();
+                }
+            })
+        },
         bookingUpdate(booking, e) {
             booking['updateFlag'] = true;
             this.setBookings();
@@ -699,6 +739,7 @@ const vm = new Vue({
                     this.getPriceList();
                     this.getBookings();
                     this.getCustomers();
+                    this.getBillings();
                 }
             })
             //if successful, delete from view/ refresh to show change

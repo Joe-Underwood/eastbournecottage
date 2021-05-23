@@ -1,83 +1,3 @@
-window.addEventListener('load', function() {
-    var gallerySwiper = new Swiper('.gallery-swiper', {
-        // Optional parameters
-        loop: true,
-      
-        // If we need pagination
-        pagination: {
-          el: '.gallery-pagination',
-          dynamicBullets: true
-        },
-      
-        // Navigation arrows
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        }
-    });
-    
-    var calendarSwiper;
-    let closePartyOverlay = false;
-
-})
-
-// corrects hero image size, as most mobile browsers have inconsistent viewport dimensions
-// which causes undesirable resizing of hero area
-// also accounts for mobile browsers confusing height and width in landscape orientation
-
-let heroHeight;
-let innerHeight;
-let offsetHeight;
-let currentOrientation;
-let newOrientation;
-
-const heroResize = function () {
-    if (window.screen.height > window.screen.width) {
-        if (document.documentElement.offsetHeight > document.documentElement.offsetWidth) {
-            heroHeight = window.screen.height;
-            newOrientation = 'portait';
-        }
-        else {
-            heroHeight = window.screen.width;
-            newOrientation = 'landscape';
-        }
-    } 
-    else {
-        if (document.documentElement.offsetWidth > document.documentElement.offsetHeight) {
-            heroHeight = window.screen.height;
-            newOrientation = 'landscape';
-        }
-        else {
-            heroHeight = window.screen.width;
-            newOrientation = 'portait';
-        }
-    }
-
-    if (currentOrientation != newOrientation) {
-        offsetHeight = heroHeight - document.documentElement.offsetHeight;
-        currentOrientation = newOrientation;
-    }
-
-    if (newOrientation === 'portait') {
-        document.querySelector('.hero-area img').src = '../static/cottage-02.jpg';
-    } else {
-        document.querySelector('.hero-area img').src = '../static/cottage-01.jpg';
-    }
-
-    document.querySelector('.hero-area').style.height = `${heroHeight - offsetHeight}px`;
-}
-
-heroResize();
-
-window.addEventListener('resize', heroResize);
-
-//------body scroll lock used when side menu open--------//
-const disableBodyScroll = bodyScrollLock.disableBodyScroll;
-const enableBodyScroll = bodyScrollLock.enableBodyScroll;
-
-//-------------------- side menu close behavious ---------------//
-zenscroll.setup(500, 56);
-
 //---------------CALENDAR COMPONENTS---------------------------------------//
 
 Vue.component('calendar-date', {
@@ -243,6 +163,15 @@ const vm = new Vue({
         publicBillingSettings: null,
         serverDate: null,
 
+        heroHeight: undefined,
+        innerHeight: undefined,
+        offsetHeight: undefined,
+        currentOrientation: undefined,
+        newOrientation: undefined,
+
+        disableBodyScroll: bodyScrollLock.disableBodyScroll,
+        enableBodyScroll: bodyScrollLock.enableBodyScroll,
+
         bookingFormData: {
             arrivalDate: '',
             departureDate: '',
@@ -261,8 +190,10 @@ const vm = new Vue({
             postcode: '',
             stayPrice: 0,
             dogPrice: 0,
-            stayDiscount: 0,
-            price: 0,
+            multiWeekDiscount: 0,
+            multiWeekDiscountPercent: 0,
+            stayLengthWeeks: 0,
+            total: 0,
             payInFull: true,
             progressivePayments: [],
             cancellationTerms: []
@@ -309,13 +240,15 @@ const vm = new Vue({
         checkoutScrollTop: 0,
         checkoutStep: 0,
         //party-overlay
+        closePartyOverlay: false,
         partyScrimClose: false,
         initialY: undefined,
         offsetY: undefined,
         //guests-dropdown
         guestsDropdownOpen: false,
         
-        calendarSwiper: null
+        calendarSwiper: undefined,
+        gallerySwiper: undefined
     },
     computed: {
         selectedMonth: function () {
@@ -368,7 +301,17 @@ const vm = new Vue({
         }
     },
     created: function() {
+        this.heroResize();
+        window.addEventListener('resize', this.heroResize);
+
+        zenscroll.setup(500, 56);
+
         Promise.allSettled([this.getPublicBillingSettings(), this.getPublicPriceListSettings(), this.getPublicPriceList(), this.getServerDate()])
+            .then(() => {
+                this.$nextTick(() => {
+                    this.initGallerySwiper();
+                })
+            })
             .then(() => {
                 this.$nextTick(() => {
                     this.initCalendarSwiper();
@@ -378,7 +321,7 @@ const vm = new Vue({
                 this.$nextTick(() => {
                     this.initCalendar(this.serverDate, '');
                 })
-            })
+            });     
     },
     methods: {
         //fetch requests
@@ -495,6 +438,41 @@ const vm = new Vue({
 
             return response;
         },
+        heroResize() {
+            if (window.screen.height > window.screen.width) {
+                if (document.documentElement.offsetHeight > document.documentElement.offsetWidth) {
+                    this.heroHeight = window.screen.height;
+                    this.newOrientation = 'portait';
+                }
+                else {
+                    this.heroHeight = window.screen.width;
+                    this.newOrientation = 'landscape';
+                }
+            } 
+            else {
+                if (document.documentElement.offsetWidth > document.documentElement.offsetHeight) {
+                    this.heroHeight = window.screen.height;
+                    this.newOrientation = 'landscape';
+                }
+                else {
+                    this.heroHeight = window.screen.width;
+                    this.newOrientation = 'portait';
+                }
+            }
+        
+            if (this.currentOrientation != this.newOrientation) {
+                this.offsetHeight = this.heroHeight - document.documentElement.offsetHeight;
+                this.currentOrientation = this.newOrientation;
+            }
+        
+            if (this.newOrientation === 'portait') {
+                document.querySelector('.hero-area img').src = '../static/cottage-02.jpg';
+            } else {
+                document.querySelector('.hero-area img').src = '../static/cottage-01.jpg';
+            }
+        
+            document.querySelector('.hero-area').style.height = `${this.heroHeight - this.offsetHeight}px`;
+        },
         initCalendarSwiper() {
             const calendarSwiper = new Swiper('.calendar-swiper', {
                 navigation: {
@@ -511,6 +489,23 @@ const vm = new Vue({
             });
 
             this.calendarSwiper = calendarSwiper;
+        },
+        initGallerySwiper() {
+            const gallerySwiper = new Swiper('.gallery-swiper', {
+                observer: true,
+                observeParents: true,
+                loop: true,
+                pagination: {
+                    el: '.gallery-pagination',
+                    dynamicBullets: true
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev'
+                }
+            });
+
+            this.gallerySwiper = gallerySwiper;
         },
         //-------------------- NAVBAR METHODS ------------------------//
         scrollToTop() {
@@ -595,7 +590,7 @@ const vm = new Vue({
                 //body scroll lock
                 this.scrollY = window.scrollY;
                 let offsetY = this.scrollY;
-                disableBodyScroll(navLinks);
+                this.disableBodyScroll(navLinks);
                 //desktop browsers scroll to the top of page, below code corrects view only if this happens
                 setTimeout(function () {
                     if (window.scrollY != offsetY) {
@@ -608,7 +603,7 @@ const vm = new Vue({
 
                 //body scroll unlock
                 let offsetY = this.scrollY;
-                enableBodyScroll(navLinks);
+                this.enableBodyScroll(navLinks);
                 //desktop browsers scroll to the top of page, below code corrects view only if this happens
                 setTimeout(function () {
                     if (window.scrollY != offsetY) {
@@ -951,15 +946,27 @@ const vm = new Vue({
 
                 if (this.departure1Week.includes(document.querySelector('.departure-date'))) {
                     this.bookingFormData.stayPrice = (+document.querySelector('.arrival-date').__vue__._props.isChangeoverData.price).toFixed(2);    
+                    this.bookingFormData.multiWeekDiscount = 0;  
+                    this.bookingFormData.multiWeekDiscountPercent = 0;
+                    this.bookingFormData.stayLengthWeeks = 1;
                 }
                 else if (this.departure2Week.includes(document.querySelector('.departure-date'))) {
                     this.bookingFormData.stayPrice = (+document.querySelector('.arrival-date').__vue__._props.isChangeoverData.price2Weeks).toFixed(2);
+                    this.bookingFormData.multiWeekDiscount = (+document.querySelector('.arrival-date').__vue__._props.isChangeoverData.discountAmount2Weeks).toFixed(2);
+                    this.bookingFormData.multiWeekDiscountPercent = parseInt(this.publicPriceListSettings.discount2Weeks);
+                    this.bookingFormData.stayLengthWeeks = 2;
                 }
                 else if (this.departure3Week.includes(document.querySelector('.departure-date'))) {
                     this.bookingFormData.stayPrice = (+document.querySelector('.arrival-date').__vue__._props.isChangeoverData.price3Weeks).toFixed(2);
+                    this.bookingFormData.multiWeekDiscount = (+document.querySelector('.arrival-date').__vue__._props.isChangeoverData.discountAmount3Weeks).toFixed(2);
+                    this.bookingFormData.multiWeekDiscountPercent = parseInt(this.publicPriceListSettings.discount3Weeks);
+                    this.bookingFormData.stayLengthWeeks = 3;
                 }
                 else if (this.departure4Week.includes(document.querySelector('.departure-date'))) {
                     this.bookingFormData.stayPrice = (+document.querySelector('.arrival-date').__vue__._props.isChangeoverData.price4Weeks).toFixed(2);
+                    this.bookingFormData.multiWeekDiscount = (+document.querySelector('.arrival-date').__vue__._props.isChangeoverData.discountAmount4Weeks).toFixed(2);
+                    this.bookingFormData.multiWeekDiscountPercent = parseInt(this.publicPriceListSettings.discount4Weeks);
+                    this.bookingFormData.stayLengthWeeks = 4;
                 }
                 
             } 
@@ -986,7 +993,8 @@ const vm = new Vue({
             if (this.arrivalDateObject) {
                 this.refreshDateRange();
             }
-            this.bookingFormData.price = (+this.bookingFormData.stayPrice + +this.bookingFormData.dogPrice).toFixed(2);
+            this.bookingFormData.dogPrice = (+this.bookingFormData.dogs * +this.pricePerDog * +this.bookingFormData.stayLengthWeeks).toFixed(2);
+            this.bookingFormData.total = (+this.bookingFormData.stayPrice + +this.bookingFormData.dogPrice - +this.bookingFormData.multiWeekDiscount).toFixed(2);
         },
         showValidDepartureDates(arrivalElement) {
             const changeoverData = arrivalElement.__vue__._props.isChangeoverData;
@@ -1384,7 +1392,7 @@ const vm = new Vue({
                 document.querySelector('.party-container').classList.add('open');
                 document.querySelector('.party-container').style.transform = 'translate3d(0, 0, 0)';
     
-                disableBodyScroll(document.querySelector('.party-container'));
+                this.disableBodyScroll(document.querySelector('.party-container'));
             } 
             else {
                 document.querySelector('.booking .guests-dropdown').classList.add('open');
@@ -1394,20 +1402,20 @@ const vm = new Vue({
         },
         hidePartyOverlay() {
             document.querySelector('#guests').focus();
-            closePartyOverlay = true;
+            this.closePartyOverlay = true;
             document.querySelector('.party-wrapper').classList.remove('open');
             document.querySelector('.party-container').classList.remove('open');
             document.querySelector('.party-container').style.transform = 'translate3d(0, 100%, 0)';
 
             document.querySelector('.party-container').ontransitionend = function() {
-                if (!document.querySelector('.party-wrapper').classList.contains('open') && closePartyOverlay) {
+                if (!document.querySelector('.party-wrapper').classList.contains('open') && this.closePartyOverlay) {
                     document.querySelector('.party-wrapper').classList.add('closed');
-                    closePartyOverlay = false;
+                    this.closePartyOverlay = false;
 
                     document.querySelector('#guests').blur();
                 }
             }
-            enableBodyScroll(document.querySelector('.party-container'));
+            this.enableBodyScroll(document.querySelector('.party-container'));
         },
         hideGuestsDropdown(e) {
             if (!this.guestsDropdownOpen) {
@@ -1566,16 +1574,16 @@ const vm = new Vue({
             if (this.bookingFormData.dogs > 0) {
                 this.bookingFormData.dogs--;
             }
-            this.bookingFormData.dogPrice = (+this.bookingFormData.dogs * +this.pricePerDog).toFixed(2);
-            this.bookingFormData.price = (+this.bookingFormData.stayPrice + +this.bookingFormData.dogPrice).toFixed(2);
+            this.bookingFormData.dogPrice = (+this.bookingFormData.dogs * +this.pricePerDog * +this.bookingFormData.stayLengthWeeks).toFixed(2);
+            this.bookingFormData.total = (+this.bookingFormData.stayPrice + +this.bookingFormData.dogPrice - +this.bookingFormData.multiWeekDiscount).toFixed(2);
         },
         dogsIncrease(e) {
             e.preventDefault();
             if (this.bookingFormData.dogs < this.dogsMax) {
                 this.bookingFormData.dogs++;
             }
-            this.bookingFormData.dogPrice = (+this.bookingFormData.dogs * +this.pricePerDog).toFixed(2);
-            this.bookingFormData.price = (+this.bookingFormData.stayPrice + +this.bookingFormData.dogPrice).toFixed(2);
+            this.bookingFormData.dogPrice = (+this.bookingFormData.dogs * +this.pricePerDog * +this.bookingFormData.stayLengthWeeks).toFixed(2);
+            this.bookingFormData.total = (+this.bookingFormData.stayPrice + +this.bookingFormData.dogPrice - +this.bookingFormData.multiWeekDiscount).toFixed(2);
         },
 
         //-----------personal details//
@@ -1637,6 +1645,12 @@ const vm = new Vue({
                 }
             } 
         },
+        payInFull() {
+            this.bookingFormData['payInFull'] = true;
+        },
+        payInParts() {
+            this.bookingFormData['payInFull'] = false;
+        }
     },
     delimiters: ['<%', '%>']
 })

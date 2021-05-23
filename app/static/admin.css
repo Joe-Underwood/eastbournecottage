@@ -898,12 +898,12 @@ svg {
     }
 }
 
-@media screen and (min-width: 798px) {
+/*@media screen and (min-width: 798px) {
     .price-list-table .start-date-column {
         box-shadow: none;
         z-index: 1;
     }
-}
+}*/
 
 @media screen and (min-width: 1092px) {
     .billing-table .booking-column {

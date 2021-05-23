@@ -66,9 +66,10 @@ class Booking(db.Model):
     infants = db.Column(db.Integer)
     dogs = db.Column(db.Integer)
     stay_price = db.Column(db.Numeric(10, 2))
+    multi_week_discount = db.Column(db.Numeric(10, 2))
     dog_price = db.Column(db.Numeric(10, 2))
-    price = db.Column(db.Numeric(10,2))
-    total_due_by = db.Column(db.Date)
+    total = db.Column(db.Numeric(10,2))
+    status = db.Column(db.Enum('AWAITING_CONFIRMATION', 'ACCEPTED', 'REJECTED', 'ACTIVE', 'INACTIVE', name='status'), nullable=True)
 
 #consider splitting this up into invoices, payments etc.
 class Billing(db.Model):
@@ -84,7 +85,7 @@ class Billing(db.Model):
     payment_reference = db.Column(db.Integer, unique=True, default=None)
     credit_note_reference = db.Column(db.Integer, unique=True, default=None)
     debit_note_reference = db.Column(db.Integer, unique=True, default=None)
-    invoice_status = db.Column(db.Enum('NOT_SENT', 'ACTIVE', 'OVERDUE', 'PAID', 'INACTIVE', name='invoice_status'), nullable=True)
+    invoice_status = db.Column(db.Enum('DRAFT', 'ACTIVE', 'OVERDUE', 'PAID', 'INACTIVE', name='invoice_status'), nullable=True)
     linked_invoice_id = db.Column(db.Integer, db.ForeignKey('billing.id'))
     linked_payments = db.relationship('Billing', backref=db.backref('linked_invoice', remote_side=[id]))
 
