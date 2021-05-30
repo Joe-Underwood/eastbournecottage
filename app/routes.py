@@ -10,6 +10,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from functools import reduce
 from flask_mail import Message
 from threading import Thread
+import pdfkit
 
 @app.route('/', methods=['GET', 'POST'])
 def landing_page():
@@ -350,24 +351,41 @@ def set_bookings():
 
         date_segments = []
         if (booking['updateStatusFlag']):
+            print(booking['status'])
             query.filter(Booking.id == booking['id']).update({
                 Booking.status: booking['status']
             })
 
-            customer = db.session.query(Customer).get(customer_id)
+            db_customer = db.session.query(Customer).get(customer_id)
+            db_booking = db.session.query(Booking).get(booking['id'])
+            db_billing_settings = db.session.query(Billing_Settings).first()
+
+            for bill in db_booking.billings:
+                if bill.first_invoice:
+                    first_invoice = bill
+                    bill.date = date.today()
+                    bill.invoice_due_date = bill.date + timedelta(days=db_billing_settings.first_payment_due_after)
+                
+                bill.status = 'ACTIVE'
 
             def send_async_email(app, msg):
                 with app.app_context():
                     mail.send(msg)
 
+            def send_async_email_with_invoice(app, msg, render, invoice_reference):
+                pdf = pdfkit.from_string(render, False)
+                msg.attach('invoice_' + str(invoice_reference) + '.pdf', 'application/pdf', pdf, 'attachment')
+                with app.app_context():
+                    mail.send(msg)
+
             if booking['status'] == 'ACCEPTED':
-                admin_msg = Message('Booking Request Accepted: ' + customer.first_name + ' ' + customer.last_name, sender=app.config['MAIL_USERNAME'], recipients=[app.config['MAIL_USERNAME']])
+                admin_msg = Message('Booking Request Accepted: ' + db_customer.first_name + ' ' + db_customer.last_name, sender=app.config['MAIL_USERNAME'], recipients=[app.config['MAIL_USERNAME']])
                 admin_msg.body = (
                     'Hello, \n \n' +
                     'The following booking request has now been ACCEPTED and the customer has been notified. \n' + 
-                    'Name: ' + customer.first_name + ' ' + customer.last_name + '\n' +
-                    'Email: ' + customer.email_address + '\n' +
-                    'Phone: ' + customer.phone_number + '\n' +
+                    'Name: ' + db_customer.first_name + ' ' + db_customer.last_name + '\n' +
+                    'Email: ' + db_customer.email_address + '\n' +
+                    'Phone: ' + db_customer.phone_number + '\n' +
                     'Arrival Date: ' + booking['arrivalDate'] + '\n' + 
                     'Departure Date: ' + booking['departureDate'] + '\n' +
                     'Party: ' + str(booking['adults']) + ' adults, ' + str(booking['children']) + ' children, ' + str(booking['infants']) + ' infants, ' + str(booking['dogs']) + ' dogs \n' +
@@ -377,25 +395,51 @@ def set_bookings():
                 admin_thr = Thread(target=send_async_email, args=[app, admin_msg])
                 admin_thr.start()
 
-                customer_msg = Message('Booking Request Accepted', sender=app.config['MAIL_USERNAME'], recipients=[customer.email_address])
-                customer_msg.body = (
-                    'Hello, \n \n' +
-                    'Your booking request has been accepted! You will receive an email shortly with details of the first invoice that is now due within 7 days. \n \n' +
-                    'Kind regards, \n \n' + 
-                    'The Cottage - Eastbourne' 
+                invoice_render = render_template(
+                    'invoice.html',
+                    customer = db_customer,
+                    invoice = first_invoice,
+                    booking = db_booking, 
+                    price_per_dog = db.session.query(Price_List_Settings).first().price_per_dog,
+                    stay_length = (db_booking.departure_date - db_booking.arrival_date).days
+                )
+
+                customer_msg = Message('Booking Request Accepted', sender=app.config['MAIL_USERNAME'], recipients=[db_customer.email_address])
+
+                if len(db_booking.billings) == 1:
+                    customer_msg.body = (
+                        'Hello, \n \n' +
+                        'Your booking request has been accepted! Payment is now due within ' + str(db_billing_settings.first_payment_due_after) + ' days of this email, and should be made via bank transfer. Our account details are as follows: \n ' +
+                        '>>Insert bank details<< \n \n' +
+                        'Kind regards, \n \n' + 
+                        'The Cottage - Eastbourne' 
                     )
 
-                customer_thr = Thread(target=send_async_email, args=[app, customer_msg])
+                elif len(db_booking.billings) > 1:
+                    customer_msg.body = (
+                        'Hello, \n \n' +
+                        'Your booking request has been accepted! The first payment of £' + str(first_invoice.amount) + ' (' + str(first_invoice.percentage_due) + '%) is now due within ' + str(db_billing_settings.first_payment_due_after) + ' days of this email, and should be made via bank transfer. Our account details are as follows: \n' +
+                        '>>Insert banks details<< \n \n' +
+                        'The other installments are' + 
+                        'Kind regards, \n \n' + 
+                        'The Cottage - Eastbourne' 
+                        )
+
+                customer_thr = Thread(target=send_async_email_with_invoice, args=[app, customer_msg, invoice_render, str(first_invoice.invoice_reference)])
                 customer_thr.start() 
 
             elif booking['status'] == 'REJECTED':
-                admin_msg = Message('Booking Request Rejected: ' + customer.first_name + ' ' + customer.last_name, sender=app.config['MAIL_USERNAME'], recipients=[app.config['MAIL_USERNAME']])
+
+                for bill in db_booking.billings:
+                    db.session.delete(bill)
+
+                admin_msg = Message('Booking Request Rejected: ' + db_customer.first_name + ' ' + db_customer.last_name, sender=app.config['MAIL_USERNAME'], recipients=[app.config['MAIL_USERNAME']])
                 admin_msg.body = (
                     'Hello, \n \n' +
                     'The following booking request has now been REJECTED and the customer has been notified. \n' + 
-                    'Name: ' + customer.first_name + ' ' + customer.last_name + '\n' +
-                    'Email: ' + customer.email_address + '\n' +
-                    'Phone: ' + customer.phone_number + '\n' +
+                    'Name: ' + db_customer.first_name + ' ' + db_customer.last_name + '\n' +
+                    'Email: ' + db_customer.email_address + '\n' +
+                    'Phone: ' + db_customer.phone_number + '\n' +
                     'Arrival Date: ' + booking['arrivalDate'] + '\n' + 
                     'Departure Date: ' + booking['departureDate'] + '\n' +
                     'Party: ' + str(booking['adults']) + ' adults, ' + str(booking['children']) + ' children, ' + str(booking['infants']) + ' infants, ' + str(booking['dogs']) + ' dogs \n' +
@@ -405,7 +449,7 @@ def set_bookings():
                 admin_thr = Thread(target=send_async_email, args=[app, admin_msg])
                 admin_thr.start()
 
-                customer_msg = Message('Booking Request Rejected', sender=app.config['MAIL_USERNAME'], recipients=[customer.email_address])
+                customer_msg = Message('Booking Request Rejected', sender=app.config['MAIL_USERNAME'], recipients=[db_customer.email_address])
                 customer_msg.body = (
                     'Hello, \n \n' +
                     'Unfortunately, your booking request with us has been rejected. \n \n' +
@@ -415,6 +459,8 @@ def set_bookings():
 
                 customer_thr = Thread(target=send_async_email, args=[app, customer_msg])
                 customer_thr.start()
+
+
         
         elif (booking['deleteFlag']):
             db_booking = query.filter(Booking.id == booking['id']).first()
@@ -436,6 +482,28 @@ def set_bookings():
                 db.session.add(delete_booking)
                 for segment in db_booking.date_segments:
                     segment.booking_id = None
+                    
+                for bill in db_booking.billings:
+                    delete_billing = Delete_Billing(
+                        booking_id = delete_booking.id,
+                        amount = bill.amount,
+                        date = bill.date,
+                        note = bill.note,
+                        invoice_due_date = bill.invoice_due_date,
+                        transaction_type = bill.transaction_type,
+                        invoice_reference = bill.invoice_reference,
+                        payment_reference = bill.payment_reference,
+                        credit_note_reference = bill.credit_note_reference,
+                        debit_note_reference = bill.debit_note_reference,
+                        invoice_status = 'INACTIVE',
+                        linked_invoice_id = bill.linked_invoice_id,
+                        first_invoice = bill.first_invoice,
+                        last_reminder = bill.last_reminder,
+                        percentage_due = bill.percentage_due
+                    )
+
+                    db.session.add(delete_billing)
+                    db.session.delete(bill)
                 #remove references to booking from related customer
                 db.session.delete(db_booking)
                 print('booking deleted')   
@@ -737,6 +805,7 @@ def get_billing_settings():
 
     billing_settings = { 
         'id': settings_query.id,
+        'firstPaymentDueAfter': settings_query.first_payment_due_after,
         'paymentBreakpoints': payment_breakpoints,
         'cancellationBreakpoints': cancellation_breakpoints,
         'updateFlag': False
@@ -754,6 +823,9 @@ def set_billing_settings():
     db_billing_settings = db.session.query(Billing_Settings).first()
     db_payment_breakpoints = db_billing_settings.payment_breakpoints
     db_cancellation_breakpoints = db_billing_settings.cancellation_breakpoints
+
+    if int(json_request['firstPaymentDueAfter']) >= 0:
+        db_billing_settings.first_payment_due_after = int(json_request['firstPaymentDueAfter'])
 
     ##-------json_payment_breakpoint validation-----------##
 
@@ -987,7 +1059,9 @@ def booking():
     cancellation_terms = billing_settings.cancellation_breakpoints.all()
 
     first_invoice_amount = 0
+    first_invoice_percentage_due = 0
     cumulative_total = 0
+    cumulative_percentage = 0
 
     db_invoices = db.session.query(Billing).filter(Billing.transaction_type == 'INVOICE')
     if db_invoices.all():
@@ -1001,7 +1075,9 @@ def booking():
             amount = booking.total,
             transaction_type = 'INVOICE',
             invoice_reference = prev_invoice_reference + 1,
-            invoice_status = 'DRAFT'
+            invoice_status = 'DRAFT',
+            first_invoice = True,
+            percentage_due = 100
         )
         db.session.add(invoice)
         booking.billings.append(invoice)
@@ -1010,47 +1086,56 @@ def booking():
         for index, breakpoint in enumerate(payment_terms):
             if breakpoint.first_payment:
                 first_invoice_amount += (Decimal(booking.total) * Decimal(breakpoint.amount_due / 100)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+                first_invoice_percentage_due += breakpoint.amount_due
                 cumulative_total += (Decimal(booking.total) * Decimal(breakpoint.amount_due / 100)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+                cumulative_percentage += breakpoint.amount_due
             elif date.today() >= arrival_date - timedelta(days = breakpoint.due_by):
                 first_invoice_amount += (Decimal(booking.total) * Decimal(breakpoint.amount_due / 100)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+                first_invoice_percentage_due += breakpoint.amount_due
                 cumulative_total += (Decimal(booking.total) * Decimal(breakpoint.amount_due / 100)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+                cumulative_percentage += breakpoint.amount_due
             elif index == len(payment_terms) - 1:
                 last_invoice = Billing(
                     amount = (Decimal(booking.total) - Decimal(cumulative_total)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP),
                     invoice_due_date = arrival_date - timedelta(days = breakpoint.due_by),
                     transaction_type = 'INVOICE',
-                    invoice_reference = prev_invoice_reference + 1,
-                    invoice_status = 'DRAFT'
+                    invoice_status = 'DRAFT',
+                    percentage_due = 100 - cumulative_percentage
                 )
                 db.session.add(last_invoice)
                 invoices.append(last_invoice)
                 booking.billings.append(last_invoice)
-                prev_invoice_reference = last_invoice.invoice_reference
-
             else:
                 new_invoice = Billing(
                     amount = (Decimal(booking.total) * Decimal(breakpoint.amount_due / 100)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP),
                     invoice_due_date = arrival_date - timedelta(days = breakpoint.due_by),
                     transaction_type = 'INVOICE',
-                    invoice_reference = prev_invoice_reference + 1,
-                    invoice_status = 'DRAFT'
+                    invoice_status = 'DRAFT',
+                    percentage_due = breakpoint.amount_due
                 )
                 cumulative_total += new_invoice.amount
+                cumulative_percentage += new_invoice.percentage_due
                 db.session.add(new_invoice)
                 booking.billings.append(new_invoice)
                 invoices.append(new_invoice)
-                prev_invoice_reference = new_invoice.invoice_reference
 
         first_invoice = Billing(
             amount = first_invoice_amount.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP),
             transaction_type = 'INVOICE',
-            invoice_reference = prev_invoice_reference + 1,
-            invoice_status = 'DRAFT'
+            invoice_status = 'DRAFT',
+            first_invoice = True,
+            percentage_due = first_invoice_percentage_due
         )
 
+        invoices.append(first_invoice)
         db.session.add(first_invoice)
         booking.billings.append(first_invoice)
-        invoices.append(first_invoice)
+
+        invoices.sort(key=lambda x: (x.invoice_due_date is not None, x.invoice_due_date))
+        for invoice in invoices:
+            invoice.invoice_reference = prev_invoice_reference + 1
+            prev_invoice_reference = invoice.invoice_reference
+        
         #invoice price validation
         invoices_total_amount = 0
         for invoice in invoices:
@@ -1302,7 +1387,8 @@ def get_public_billing_settings():
                 'checkIn': row.check_in
             })
 
-    public_billing_settings = { 
+    public_billing_settings = {
+        'firstPaymentDueAfter': settings_query.first_payment_due_after,
         'paymentBreakpoints': payment_breakpoints,
         'cancellationBreakpoints': cancellation_breakpoints
         }
@@ -1369,11 +1455,3 @@ def get_cancellation_terms():
                 })     
     
     return { 'cancellationTerms': cancellation_terms }
-
-@app.route('/get_booking_requests', methods=['POST'])
-def get_booking_requests():
-    return { 'success': False }
-
-@app.route('/set_booking_requests', methods=['POST'])
-def set_booking_requests():
-    return { 'success': False}

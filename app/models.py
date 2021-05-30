@@ -36,24 +36,6 @@ class Price_List(db.Model):
     range_type = db.Column(db.Enum('PAST', 'ACTIVE', 'FUTURE', name='range_type'))
     lock_flag = db.Column(db.Boolean, default=False, nullable=False)
 
-"""
-class Progressive_Payment(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    price_list_id = db.Column(db.Integer, db.ForeignKey('price__list.id'))
-    due_by = db.Column(db.Date)
-    amount_due = db.Column(db.Numeric(10, 2))
-    first_payment = db.Column(db.Boolean, default=False)
-    stay_length_type = db.Column(db.Enum('1_WEEK', '2_WEEKS', '3_WEEKS', '4_WEEKS', name='stay_length_type'), nullable=False)
-
-progressive_payments = db.Table('progressive_payments',
-    db.Column('id', db.Integer, primary_key=True),
-    db.Column('price_list_id', db.Integer, db.ForeignKey('price__list.id')), 
-    db.Column('due_by', db.Date), 
-    db.Column('amount_due', db.Numeric(10, 2)), 
-    db.Column('first_payment', db.Boolean, default=False)
-)
-"""
-
 class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
@@ -76,7 +58,7 @@ class Billing(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     booking_id = db.Column(db.Integer, db.ForeignKey('booking.id'))
     amount = db.Column(db.Numeric(10, 2))
-    date = db.Column(db.Date)
+    date = db.Column(db.Date)                                                                                                                                                  
     invoice_due_date = db.Column(db.Date, default=None)
     #insert invoice due_dates relationship to take into account multistage payment terms
     transaction_type = db.Column(db.Enum('INVOICE', 'PAYMENT', 'DEBIT_NOTE', 'CREDIT_NOTE', name='transaction_type'), nullable=False)
@@ -88,6 +70,9 @@ class Billing(db.Model):
     invoice_status = db.Column(db.Enum('DRAFT', 'ACTIVE', 'OVERDUE', 'PAID', 'INACTIVE', name='invoice_status'), nullable=True)
     linked_invoice_id = db.Column(db.Integer, db.ForeignKey('billing.id'))
     linked_payments = db.relationship('Billing', backref=db.backref('linked_invoice', remote_side=[id]))
+    first_invoice = db.Column(db.Boolean, default=False)
+    last_reminder = db.Column(db.Date)
+    percentage_due = db.Column(db.Integer)
 
 class Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -122,6 +107,7 @@ class Price_List_Settings(db.Model):
 class Billing_Settings(db.Model):
     __tablename__ = 'billing_settings'
     id = db.Column(db.Integer, primary_key=True)
+    first_payment_due_after = db.Column(db.Integer, default=None)
     payment_breakpoints = db.relationship('Payment_Breakpoint', backref='billing_settings', lazy='dynamic')
     cancellation_breakpoints = db.relationship('Cancellation_Breakpoint', backref='billing_settings', lazy='dynamic')
 
@@ -164,12 +150,14 @@ class Delete_Booking(db.Model):
     infants = db.Column(db.Integer)
     dogs = db.Column(db.Integer)
     stay_price = db.Column(db.Numeric(10, 2))
+    multi_week_discount = db.Column(db.Numeric(10, 2))
     dog_price = db.Column(db.Numeric(10, 2))
-    price = db.Column(db.Numeric(10,2))
+    total = db.Column(db.Numeric(10,2))
+    status = db.Column(db.Enum('AWAITING_CONFIRMATION', 'ACCEPTED', 'REJECTED', 'ACTIVE', 'INACTIVE', name='status'), default='INACTIVE', nullable=True)
 
 class Delete_Billing(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    booking_id = db.Column(db.Integer, db.ForeignKey('booking.id'))
+    booking_id = db.Column(db.Integer, default=None)
     amount = db.Column(db.Numeric(10, 2))
     date = db.Column(db.Date)
     note = db.Column(db.String(30))
@@ -182,6 +170,9 @@ class Delete_Billing(db.Model):
     debit_note_reference = db.Column(db.Integer, unique=True, default=None)
     invoice_status = db.Column(db.Enum('NOT_SENT', 'ACTIVE', 'OVERDUE', 'PAID', 'INACTIVE', name='invoice_status'), nullable=True)
     linked_invoice_id = db.Column(db.Integer, unique=True)
+    first_invoice = db.Column(db.Boolean, default=False)
+    last_reminder = db.Column(db.Date)
+    percentage_due = db.Column(db.Integer)
 
 class Delete_Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)

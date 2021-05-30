@@ -940,6 +940,11 @@
 
                         </div>
 
+                        <div class="settings-input-container">
+                            <label for="first-payment-due-after">1st Payment Due After / Days</label>
+                            <input id="first-payment-due-after" v-model="billingSettings['firstPaymentDueAfter']" type="number" step="1" />
+                        </div>
+
                         <div class="billing-settings-controls">
                             <div class="content-inner-wrapper">
                                 <button class="controls-add" v-on:click="addPaymentBreakpoint()">+</button>
@@ -951,6 +956,8 @@
                         </div>
                         
                     </div>
+
+
 
                     <div class="cancellation-terms-settings">
 
