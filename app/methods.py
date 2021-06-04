@@ -1,7 +1,11 @@
-from app import app, db
-from app.models import Price_List, Price_List_Settings, Delete_Price_List, Billing_Settings, Payment_Breakpoint
+from app import app, db, mail
+from app.models import Price_List, Price_List_Settings, Delete_Price_List, Billing_Settings, Payment_Breakpoint, Billing, Customer, Booking
 from datetime import datetime, date, timedelta, time
 from dateutil.relativedelta import relativedelta
+import pdfkit
+from flask_mail import Message
+from threading import Thread
+from flask import render_template
 
 def update_price_list():
     db_price_list = db.session.query(Price_List)
@@ -117,4 +121,45 @@ def update_customers():
     return
     
 def update_billings():
+    db_billings = db.session.query(Billing)
+    
+    db_billing_settings = db.session.query(Billing_Settings).first()
+
+    ## clear out fully paid bookings ##
+    
+    for bill in db_billings:
+        if bill.transaction_type == 'INVOICE' and bill.invoice_status == 'ACCEPTED' and not bill.first_invoice and not bill.last_reminder and date.today() >= bill.invoice_due_date - timedelta(days=db_billing_settings.progressive_bill_notice):
+            
+            db_booking = db.session.query(Booking).get(bill.booking_id)
+            db_customer = db.session.query(Customer).get(db_booking.customer_id)
+
+            def send_async_email_with_invoice(app, msg, render, invoice_reference):
+                pdf = pdfkit.from_string(render, False)
+                msg.attach('invoice_' + str(invoice_reference) + '.pdf', 'application/pdf', pdf, 'attachment')
+                with app.app_context():
+                    mail.send(msg)
+
+            invoice_render = render_template(
+                'invoice.html',
+                customer = db_customer,
+                invoice = bill,
+                booking = db_booking, 
+                price_per_dog = db.session.query(Price_List_Settings).first().price_per_dog,
+                stay_length = (db_booking.departure_date - db_booking.arrival_date).days
+            )
+
+            customer_msg = Message('Invoice ' + str(bill.invoice_reference) + ' now due', sender=app.config['MAIL_USERNAME'], recipients=[db_customer.email_address])
+
+            customer_msg.body = (
+                'Hello, \n \n' +
+                'The next payment for your booking with us is now due. Please find attached invoice which is due by ' + bill.invoice_due_date.isoformat() + '.' +
+                'Kind regards, \n \n' + 
+                'The Cottage - Eastbourne' 
+            )
+
+            customer_thr = Thread(target=send_async_email_with_invoice, args=[app, customer_msg, invoice_render, str(bill.invoice_reference)])
+            customer_thr.start() 
+
+
+
     return

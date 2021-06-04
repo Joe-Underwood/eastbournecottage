@@ -88,6 +88,8 @@
     h4 {
         color: grey;
         font-weight:400;
+        font-family: 'Lato-bold';
+        margin-bottom: 8px;
     }
     
     h5 {
@@ -97,6 +99,7 @@
         .invoice-header {
             position: relative;
             padding: 80px;
+            padding-bottom: 40px;
         }
 
             .header-row-1 {
@@ -137,6 +140,7 @@
                 margin-right: auto;
                 text-align: center;
                 margin-bottom: 40px;
+                color: rgb(226, 138, 12);
             }
 
             .header-row-3 {
@@ -156,14 +160,17 @@
         padding-top: 0;
     }
 
+        .invoice-details-main {
+            border-top: 1px solid grey;
+            border-bottom: 1px solid grey;
+        }
+
         .row {
             display: flex;
             justify-content: space-between;
             width: 100%;
             padding-top: 8px;
             padding-bottom: 8px;
-            padding-left: 22px;
-            padding-right: 22px;
         }
 
         #header-row {
@@ -186,6 +193,25 @@
             #header-row div {
                 color: white;
                 padding: 0;
+            }
+
+        #subtotal-row {
+            border-top: 1px dotted grey;
+        }
+
+            #subtotal-row div {
+                font-family: 'Lato-bold';
+            }
+
+        #total-row {
+            padding-top: 12px;
+            padding-bottom: 12px;
+        }
+
+            #total-row div {
+                color: rgb(226, 138, 12);
+                font-family: 'Lato-bold';
+                font-size: 18px;
             }
         
 </style>
@@ -214,7 +240,7 @@
         
         <div class="header-row-3">
             <div class="bill-to">
-                <h4>Bill to:</h4>
+                <h4>Bill to</h4>
                 <div>{{ customer.first_name }} {{ customer.last_name }}</div>
                 <div>{{ customer.address_line_1 }}</div>
                 <!--if address_line_2-->
@@ -225,42 +251,60 @@
             </div>
         
             <div class="invoice-info">
+                <h4>Details</h4>
                 <div>Invoice number: {{ invoice.invoice_reference }}</div>
                 <div>Date: {{ invoice.date }}</div>
                 <div>Due by: {{ invoice.invoice_due_date }}</div>
             </div>
         </div>
         
-
     </div>
+    
     
 
     <div class="invoice-details">
-        <div class="row" id="header-row">
-            <div class="description-col">Description</div>
-            <div class="amount-col">Amount</div>
-        </div>
 
-        <div class="row">
-            <div class="description-col">{{ stay_length }} nights</div>
-            <div class="amount-col">£{{ booking.stay_price }}</div>
-        </div>
+        <h1 class="invoice-details-header">Summary</h1>
 
-        <div class="row">
-            <div class="description-col">{{ booking.dogs }} dog (£{{ price_per_dog }} / week )</div>
-            <div class="amount-col">£{{ booking.dog_price }}</div>
-        </div>
+        <div class="invoice-details-main">
 
-        <div class="row">
-            <div class="description-col">Discount</div>
-            <div class="amount-col">-£{{ booking.multi_week_discount }}</div>
+            <div class="row">
+                <div class="description-col">{{ stay_length }} nights</div>
+                <div class="amount-col">£{{ booking.stay_price }}</div>
+            </div>
+    
+            {% if booking.dogs %}
+            <div class="row">
+                <div class="description-col">{{ booking.dogs }} dog (£{{ price_per_dog }} / week )</div>
+                <div class="amount-col">£{{ booking.dog_price }}</div>
+            </div>
+            {% endif %}
+    
+            {% if booking.multi_week_discount %}
+            <div class="row">
+                <div class="description-col">Discount</div>
+                <div class="amount-col">-£{{ booking.multi_week_discount }}</div>
+            </div>
+            {% endif %}
+    
+            <div class="row" id="subtotal-row">
+                <div class="description-col">Subtotal</div>
+                <div class="amount-col">£{{ booking.total }}</div>
+            </div>
+
+        </div>
+        
+        <div class="row" id="total-row">
+            <div>Total due ({{ invoice.percentage_due }}%)</div>
+            <div>£{{ invoice.amount }}</div>
         </div>
     </div>
 
-    <div class="total-row">
-        <div>Total</div>
-        <div>£{{ booking.total }}</div>
+    <div class="bank-details">
+
     </div>
+
+    
 </body>
 
 </html>

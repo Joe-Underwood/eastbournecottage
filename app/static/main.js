@@ -199,11 +199,19 @@ const vm = new Vue({
             cancellationTerms: []
         },
 
+        bookingFormComplete: false,
+        bookingFormFail: false,
+
         contactFormData: {
             firstName: '',
             lastName: '',
+            emailAddress: '',
+            phoneNumber: '',
             message: ''
         },
+
+        contactFormComplete: false,
+        contactFormFail: false,
         
         //calendar load settings
         currentDate: new Date(),
@@ -240,7 +248,6 @@ const vm = new Vue({
         checkoutScrollTop: 0,
         checkoutStep: 0,
         //party-overlay
-        closePartyOverlay: false,
         partyScrimClose: false,
         initialY: undefined,
         offsetY: undefined,
@@ -434,6 +441,14 @@ const vm = new Vue({
                 })
                 .then(json => {
                     return json['success'];
+                })
+                .then(success => {
+                    if (success) {
+                        this.contactFormComplete = true;
+                    }
+                    else {
+                        this.contactFormFail = true;
+                    }
                 })
 
             return response;
@@ -1389,10 +1404,10 @@ const vm = new Vue({
             if (x.matches) {
                 document.querySelector('.party-wrapper').classList.remove('closed');
                 document.querySelector('.party-wrapper').classList.add('open');
-                document.querySelector('.party-container').classList.add('open');
-                document.querySelector('.party-container').style.transform = 'translate3d(0, 0, 0)';
+                document.querySelector('.party-wrapper .party-container').classList.add('open');
+                /*document.querySelector('.party-wrapper .party-container').style.transform = 'translate3d(0, 0, 0)';*/
     
-                this.disableBodyScroll(document.querySelector('.party-container'));
+                this.disableBodyScroll(document.querySelector('.party-wrapper .party-container'));
             } 
             else {
                 document.querySelector('.booking .guests-dropdown').classList.add('open');
@@ -1402,20 +1417,17 @@ const vm = new Vue({
         },
         hidePartyOverlay() {
             document.querySelector('#guests').focus();
-            this.closePartyOverlay = true;
             document.querySelector('.party-wrapper').classList.remove('open');
-            document.querySelector('.party-container').classList.remove('open');
-            document.querySelector('.party-container').style.transform = 'translate3d(0, 100%, 0)';
+            document.querySelector('.party-wrapper .party-container').classList.remove('open');
+            /*document.querySelector('.party-wrapper .party-container').style.transform = 'translate3d(0, 100%, 0)';*/
 
-            document.querySelector('.party-container').ontransitionend = function() {
-                if (!document.querySelector('.party-wrapper').classList.contains('open') && this.closePartyOverlay) {
+            document.querySelector('.party-wrapper .party-container').ontransitionend = function() {
+                if (!document.querySelector('.party-wrapper').classList.contains('open')) {
                     document.querySelector('.party-wrapper').classList.add('closed');
-                    this.closePartyOverlay = false;
-
                     document.querySelector('#guests').blur();
                 }
             }
-            this.enableBodyScroll(document.querySelector('.party-container'));
+            this.enableBodyScroll(document.querySelector('.party-wrapper .party-container'));
         },
         hideGuestsDropdown(e) {
             if (!this.guestsDropdownOpen) {
@@ -1629,8 +1641,10 @@ const vm = new Vue({
                 })
                 .then(json => {
                     if (json['success']) {
+                        this.bookingFormSuccess = true;
                         console.log('request successful');
                     } else {
+                        this.bookingFormFail = true;
                         console.log('request unsuccessful');
                     }
                 })

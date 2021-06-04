@@ -365,8 +365,10 @@ def set_bookings():
                     first_invoice = bill
                     bill.date = date.today()
                     bill.invoice_due_date = bill.date + timedelta(days=db_billing_settings.first_payment_due_after)
+                    bill.invoice_status = 'ACTIVE'
                 
-                bill.status = 'ACTIVE'
+                else:
+                    bill.invoice_status = 'ACCEPTED'
 
             def send_async_email(app, msg):
                 with app.app_context():
@@ -806,6 +808,7 @@ def get_billing_settings():
     billing_settings = { 
         'id': settings_query.id,
         'firstPaymentDueAfter': settings_query.first_payment_due_after,
+        'progressiveBillNotice': settings_query.progressive_bill_notice,
         'paymentBreakpoints': payment_breakpoints,
         'cancellationBreakpoints': cancellation_breakpoints,
         'updateFlag': False
@@ -826,6 +829,9 @@ def set_billing_settings():
 
     if int(json_request['firstPaymentDueAfter']) >= 0:
         db_billing_settings.first_payment_due_after = int(json_request['firstPaymentDueAfter'])
+
+    if int(json_request['progressiveBillNotice']) >= 0:
+        db_billing_settings.progressive_bill_notice = int(json_request['progressiveBillNotice'])
 
     ##-------json_payment_breakpoint validation-----------##
 
@@ -987,6 +993,10 @@ def booking():
         else:
             print('Stay length exceeds maximum allowed')
             return { 'success': False }
+
+        correct_dog_price = Decimal(int(booking_form_data['dogs']) * price_list_settings[0].price_per_dog * stay_length_weeks)
+        correct_total = correct_price + correct_dog_price - correct_multi_week_discount
+        print('total = ' + str(correct_total) + 'price = ' + str(correct_price) + 'dog_price = ' + str(correct_dog_price) + 'discount = ' + str(correct_multi_week_discount))
         
         if (Decimal(booking_form_data['stayPrice']) != Decimal(correct_price)):
             print('submitted stay price:' + str(booking_form_data['stayPrice']))
@@ -996,6 +1006,14 @@ def booking():
 
         if (Decimal(booking_form_data['multiWeekDiscount']) != Decimal(correct_multi_week_discount)):
             print('multi_week_discount incorrect')
+            return { 'success': False }
+
+        if (Decimal(booking_form_data['dogPrice']) != correct_dog_price):
+            print('incorrect dog price')
+            return { 'success': False }
+
+        if (Decimal(booking_form_data['total']) != correct_total):
+            print('incorrect_total')
             return { 'success': False }
 
     if (int(booking_form_data['adults']) <= 0):
@@ -1029,7 +1047,7 @@ def booking():
         stay_price = Decimal(booking_form_data['stayPrice']),
         multi_week_discount = Decimal(correct_multi_week_discount),
         dog_price = Decimal(booking_form_data['dogPrice']),
-        total = Decimal(correct_price),
+        total = Decimal(correct_total),
         status = 'AWAITING_CONFIRMATION'
     )
 
@@ -1197,11 +1215,13 @@ def submit_contact():
 
     contact_request = request.get_json()
     msg = Message('Contact Form: ' + contact_request['firstName'] + ' ' + contact_request['lastName'], sender=app.config['MAIL_USERNAME'], recipients=[app.config['MAIL_USERNAME']])
-    msg.body = ('Hello, \n' +
-                'A new message has been submitted via the contact form. \n' +
-                'First Name: ' + contact_request['firstName'] + '\n' +
-                'Last Name: ' + contact_request['lastName'] + '\n' +
-                'Message: \n' +
+    msg.body = ('Hello, \n \n' +
+                'A new message has been submitted via the contact form. \n \n' +
+                'First name: ' + contact_request['firstName'] + '\n' +
+                'Last name: ' + contact_request['lastName'] + '\n' +
+                'Email address: ' + contact_request['emailAddress'] + '\n' +
+                'Phone number: ' + contact_request['phoneNumber'] + '\n \n' +
+                'Message: \n \n' +
                 contact_request['message'])
 
     thr = Thread(target=send_async_email, args=[app, msg])
@@ -1389,6 +1409,7 @@ def get_public_billing_settings():
 
     public_billing_settings = {
         'firstPaymentDueAfter': settings_query.first_payment_due_after,
+        'progressiveBillNotice': settings_query.progressive_bill_notice,
         'paymentBreakpoints': payment_breakpoints,
         'cancellationBreakpoints': cancellation_breakpoints
         }

@@ -4,7 +4,7 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', threaded=True)
 
 import click
-from app.methods import update_price_list
+from app.methods import update_price_list, update_billings
 
 @app.cli.command()
 def updatepricelist():
@@ -12,5 +12,8 @@ def updatepricelist():
     update_price_list()
     click.echo('Price_List_Updated')
 
-
-
+@app.cli.command()
+def updatebillings():
+    """Update Billing table and send invoices out for progressive billings"""
+    update_billings()
+    click.echo('Billing updated')

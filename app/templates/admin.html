@@ -825,7 +825,6 @@
                         
                     </div>
                 </div>
-                
 
                 <div class="billing-main">
                     <div class="content-inner-wrapper">
@@ -943,6 +942,11 @@
                         <div class="settings-input-container">
                             <label for="first-payment-due-after">1st Payment Due After / Days</label>
                             <input id="first-payment-due-after" v-model="billingSettings['firstPaymentDueAfter']" type="number" step="1" />
+                        </div>
+
+                        <div class="settings-input-container">
+                            <label for="progressive-bill-notice">Progressive Bill Notice / Days</label>
+                            <input id="progressive-bill-notice" v-model="billingSettings['progressiveBillNotice']" type="number" step="1" />
                         </div>
 
                         <div class="billing-settings-controls">

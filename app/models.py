@@ -67,11 +67,11 @@ class Billing(db.Model):
     payment_reference = db.Column(db.Integer, unique=True, default=None)
     credit_note_reference = db.Column(db.Integer, unique=True, default=None)
     debit_note_reference = db.Column(db.Integer, unique=True, default=None)
-    invoice_status = db.Column(db.Enum('DRAFT', 'ACTIVE', 'OVERDUE', 'PAID', 'INACTIVE', name='invoice_status'), nullable=True)
+    invoice_status = db.Column(db.Enum('DRAFT', 'ACCEPTED', 'ACTIVE', 'OVERDUE', 'PAID', 'INACTIVE', name='invoice_status'), nullable=True)
     linked_invoice_id = db.Column(db.Integer, db.ForeignKey('billing.id'))
     linked_payments = db.relationship('Billing', backref=db.backref('linked_invoice', remote_side=[id]))
     first_invoice = db.Column(db.Boolean, default=False)
-    last_reminder = db.Column(db.Date)
+    last_reminder = db.Column(db.Date, default=None)
     percentage_due = db.Column(db.Integer)
 
 class Customer(db.Model):
@@ -108,6 +108,7 @@ class Billing_Settings(db.Model):
     __tablename__ = 'billing_settings'
     id = db.Column(db.Integer, primary_key=True)
     first_payment_due_after = db.Column(db.Integer, default=None)
+    progressive_bill_notice = db.Column(db.Integer, default=None)
     payment_breakpoints = db.relationship('Payment_Breakpoint', backref='billing_settings', lazy='dynamic')
     cancellation_breakpoints = db.relationship('Cancellation_Breakpoint', backref='billing_settings', lazy='dynamic')
 
