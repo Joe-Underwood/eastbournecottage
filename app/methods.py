@@ -143,6 +143,8 @@ def update_billings():
                 'invoice.html',
                 customer = db_customer,
                 invoice = bill,
+                invoice_date_string = bill.date.strftime("%d %B %Y"),
+                invoice_due_date_string = bill.invoice_due_date.strftime("%d %B %Y"),
                 booking = db_booking, 
                 price_per_dog = db.session.query(Price_List_Settings).first().price_per_dog,
                 stay_length = (db_booking.departure_date - db_booking.arrival_date).days
@@ -159,7 +161,5 @@ def update_billings():
 
             customer_thr = Thread(target=send_async_email_with_invoice, args=[app, customer_msg, invoice_render, str(bill.invoice_reference)])
             customer_thr.start() 
-
-
 
     return

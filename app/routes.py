@@ -401,6 +401,8 @@ def set_bookings():
                     'invoice.html',
                     customer = db_customer,
                     invoice = first_invoice,
+                    invoice_date_string = first_invoice.date.strftime("%d %B %Y"),
+                    invoice_due_date_string = first_invoice.invoice_due_date.strftime("%d %B %Y"),
                     booking = db_booking, 
                     price_per_dog = db.session.query(Price_List_Settings).first().price_per_dog,
                     stay_length = (db_booking.departure_date - db_booking.arrival_date).days

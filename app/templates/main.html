@@ -152,71 +152,73 @@
                     <h4>Step 2 of 3</h4>
                     <h2>Review Terms</h2>
 
-                    <div class="house-rules">
-                        <h3>House Rules</h3>
-                        <p><b>Check in</b> after <% publicPriceListSettings['checkInTime'] %></p>
-                        <p><b>Check out</b> before <% publicPriceListSettings['checkOutTime'] %></p>
-                        <p>Minimum age to book: <% publicPriceListSettings['minAge'] %></p>
-                        <p>Maximum overnight guests: <% publicPriceListSettings['maxGuests'] %></p>
-                        <p class="no-smoking"><span>No smoking</span> <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="rgb(15, 72, 117)"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M20.5 13H22v3h-1.5zM18 13h1.5v3H18zm-1 0h-2.34L17 15.34zm-2.5-4.35h1.53c1.05 0 1.97.74 1.97 2.05V12h1.5v-1.64c0-1.81-1.6-3.16-3.47-3.16H14.5c-1.02 0-1.85-.98-1.85-2s.83-1.75 1.85-1.75v-1.5c-1.85 0-3.35 1.5-3.35 3.35s1.5 3.35 3.35 3.35zm4.35-3.92c.62-.61 1-1.45 1-2.38h-1.5c0 1.02-.83 1.85-1.85 1.85v1.5c2.24 0 4 1.83 4 4.07V12H22V9.76c0-2.22-1.28-4.14-3.15-5.03zM3.41 4.59L2 6l7 7H2v3h10l7 7 1.41-1.41z"/></svg></p>
-                        <!--<p><svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="rgb(15, 72, 117)"><g><rect fill="none" height="24" width="24" y="0"/></g><g><g><g><path d="M2,22l14-5L7,8L2,22z M12.35,16.18L5.3,18.7l2.52-7.05L12.35,16.18z"/><path d="M14.53,12.53l5.59-5.59c0.49-0.49,1.28-0.49,1.77,0l0.59,0.59l1.06-1.06l-0.59-0.59c-1.07-1.07-2.82-1.07-3.89,0 l-5.59,5.59L14.53,12.53z"/><path d="M10.06,6.88L9.47,7.47l1.06,1.06l0.59-0.59c1.07-1.07,1.07-2.82,0-3.89l-0.59-0.59L9.47,4.53l0.59,0.59 C10.54,5.6,10.54,6.4,10.06,6.88z"/><path d="M17.06,11.88l-1.59,1.59l1.06,1.06l1.59-1.59c0.49-0.49,1.28-0.49,1.77,0l1.61,1.61l1.06-1.06l-1.61-1.61 C19.87,10.81,18.13,10.81,17.06,11.88z"/><path d="M15.06,5.88l-3.59,3.59l1.06,1.06l3.59-3.59c1.07-1.07,1.07-2.82,0-3.89l-1.59-1.59l-1.06,1.06l1.59,1.59 C15.54,4.6,15.54,5.4,15.06,5.88z"/></g></g></g></svg>
-                            No events</p>-->
-                    </div>
-                    
-                    <div class="booking-terms">
+                    <div class="checkout-terms-main">
+                        <div class="house-rules">
+                            <h4>House Rules</h4>
+                            <p><b>Check in</b> after <% publicPriceListSettings['checkInTime'] %></p>
+                            <p><b>Check out</b> before <% publicPriceListSettings['checkOutTime'] %></p>
+                            <p>Minimum age to book: <% publicPriceListSettings['minAge'] %></p>
+                            <p>Maximum overnight guests: <% publicPriceListSettings['maxGuests'] %></p>
+                            <p class="no-smoking"><span>No smoking</span> <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="rgb(15, 72, 117)"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M20.5 13H22v3h-1.5zM18 13h1.5v3H18zm-1 0h-2.34L17 15.34zm-2.5-4.35h1.53c1.05 0 1.97.74 1.97 2.05V12h1.5v-1.64c0-1.81-1.6-3.16-3.47-3.16H14.5c-1.02 0-1.85-.98-1.85-2s.83-1.75 1.85-1.75v-1.5c-1.85 0-3.35 1.5-3.35 3.35s1.5 3.35 3.35 3.35zm4.35-3.92c.62-.61 1-1.45 1-2.38h-1.5c0 1.02-.83 1.85-1.85 1.85v1.5c2.24 0 4 1.83 4 4.07V12H22V9.76c0-2.22-1.28-4.14-3.15-5.03zM3.41 4.59L2 6l7 7H2v3h10l7 7 1.41-1.41z"/></svg></p>
+                            <!--<p><svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="rgb(15, 72, 117)"><g><rect fill="none" height="24" width="24" y="0"/></g><g><g><g><path d="M2,22l14-5L7,8L2,22z M12.35,16.18L5.3,18.7l2.52-7.05L12.35,16.18z"/><path d="M14.53,12.53l5.59-5.59c0.49-0.49,1.28-0.49,1.77,0l0.59,0.59l1.06-1.06l-0.59-0.59c-1.07-1.07-2.82-1.07-3.89,0 l-5.59,5.59L14.53,12.53z"/><path d="M10.06,6.88L9.47,7.47l1.06,1.06l0.59-0.59c1.07-1.07,1.07-2.82,0-3.89l-0.59-0.59L9.47,4.53l0.59,0.59 C10.54,5.6,10.54,6.4,10.06,6.88z"/><path d="M17.06,11.88l-1.59,1.59l1.06,1.06l1.59-1.59c0.49-0.49,1.28-0.49,1.77,0l1.61,1.61l1.06-1.06l-1.61-1.61 C19.87,10.81,18.13,10.81,17.06,11.88z"/><path d="M15.06,5.88l-3.59,3.59l1.06,1.06l3.59-3.59c1.07-1.07,1.07-2.82,0-3.89l-1.59-1.59l-1.06,1.06l1.59,1.59 C15.54,4.6,15.54,5.4,15.06,5.88z"/></g></g></g></svg>
+                                No events</p>-->
+                        </div>
                         
-                        <h3>Booking Terms</h3>
-
-                        <!--<h4><svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="rgb(15, 72, 117)"><g><rect fill="none" height="24" width="24"/><path d="M19,14V6c0-1.1-0.9-2-2-2H3C1.9,4,1,4.9,1,6v8c0,1.1,0.9,2,2,2h14C18.1,16,19,15.1,19,14z M17,14H3V6h14V14z M10,7 c-1.66,0-3,1.34-3,3s1.34,3,3,3s3-1.34,3-3S11.66,7,10,7z M23,7v11c0,1.1-0.9,2-2,2H4c0-1,0-0.9,0-2h17V7C22.1,7,22,7,23,7z"/></g></svg>
-                            Payment Terms</h4>
-                        <p>Payments to be made via bank transfer, the first payment is due once the booking is confirmed by the owner.</p>-->
-                        
-                        <div class="cancellation-terms">
-                            <h4><!--<svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="rgb(15, 72, 117)"><rect fill="none" height="24" width="24"/><path d="M11.21,20H5V10h14v4.38l2-2V6c0-1.1-0.9-2-2-2h-1V2h-2v2H8V2H6v2H5C3.89,4,3.01,4.9,3.01,6L3,20c0,1.1,0.89,2,2,2h8.21 L11.21,20z M5,6h14v2H5V6z M16.54,22.5L13,18.96l1.41-1.41l2.12,2.12l4.24-4.24l1.41,1.41L16.54,22.5z M10.41,14L12,15.59L10.59,17 L9,15.41L7.41,17L6,15.59L7.59,14L6,12.41L7.41,11L9,12.59L10.59,11L12,12.41L10.41,14z"/></svg>-->
-                                Cancellation Terms</h4>
+                        <div class="booking-terms">
     
-                            <template v-if="bookingFormData['cancellationTerms']">
-                                <template v-if="bookingFormData['cancellationTerms'].length === 1">
-    
-                                    <div v-if="parseInt(bookingFormData['cancellationTerms'][0]['amountRefundable']) === 0">
-                                        <b>No refund</b> available for this booking.
-                                    </div>
-    
-                                    <div v-else>
-                                        <b><% String(parseInt(bookingFormData['cancellationTerms'][0]['amountRefundable'])) %>% refund</b> if you cancel at any time.
-                                    </div>
-    
-                                </template>
-    
-                                <template v-else>
-                                    <template v-for="(breakpoint, index) in bookingFormData['cancellationTerms']">
-    
-                                        <template v-if="breakpoint['checkIn']">
-                                            <div v-if="parseInt(breakpoint['amountRefundable']) === 0">
-                                                <b>No refund</b> if you cancel after <% new Date(bookingFormData['cancellationTerms'][index - 1]['cancelBy'].slice(0, 4), parseInt(bookingFormData['cancellationTerms'][index - 1]['cancelBy'].slice(5, 7)) - 1, bookingFormData['cancellationTerms'][index - 1]['cancelBy'].slice(8, 10)).toLocaleString('default', { day: 'numeric', month: 'long', year: 'numeric' }) %>.
-                                            </div>
-    
-                                            <div v-else>
-                                                <b><% String(parseInt(breakpoint['amountRefundable'])) %>% refund</b> if you cancel after <% new Date(bookingFormData['cancellationTerms'][index - 1]['cancelBy'].slice(0, 4), parseInt(bookingFormData['cancellationTerms'][index - 1]['cancelBy'].slice(5, 7)) - 1, bookingFormData['cancellationTerms'][index - 1]['cancelBy'].slice(8, 10)).toLocaleString('default', { day: 'numeric', month: 'long', year: 'numeric' }) %>.
-                                            </div>
+                            <!--<h4><svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="rgb(15, 72, 117)"><g><rect fill="none" height="24" width="24"/><path d="M19,14V6c0-1.1-0.9-2-2-2H3C1.9,4,1,4.9,1,6v8c0,1.1,0.9,2,2,2h14C18.1,16,19,15.1,19,14z M17,14H3V6h14V14z M10,7 c-1.66,0-3,1.34-3,3s1.34,3,3,3s3-1.34,3-3S11.66,7,10,7z M23,7v11c0,1.1-0.9,2-2,2H4c0-1,0-0.9,0-2h17V7C22.1,7,22,7,23,7z"/></g></svg>
+                                Payment Terms</h4>
+                            <p>Payments to be made via bank transfer, the first payment is due once the booking is confirmed by the owner.</p>-->
+                            
+                            <div class="cancellation-terms">
+                                <h4><!--<svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="rgb(15, 72, 117)"><rect fill="none" height="24" width="24"/><path d="M11.21,20H5V10h14v4.38l2-2V6c0-1.1-0.9-2-2-2h-1V2h-2v2H8V2H6v2H5C3.89,4,3.01,4.9,3.01,6L3,20c0,1.1,0.89,2,2,2h8.21 L11.21,20z M5,6h14v2H5V6z M16.54,22.5L13,18.96l1.41-1.41l2.12,2.12l4.24-4.24l1.41,1.41L16.54,22.5z M10.41,14L12,15.59L10.59,17 L9,15.41L7.41,17L6,15.59L7.59,14L6,12.41L7.41,11L9,12.59L10.59,11L12,12.41L10.41,14z"/></svg>-->
+                                    Cancellation Terms</h4>
+        
+                                <template v-if="bookingFormData['cancellationTerms']">
+                                    <template v-if="bookingFormData['cancellationTerms'].length === 1">
+        
+                                        <div v-if="parseInt(bookingFormData['cancellationTerms'][0]['amountRefundable']) === 0">
+                                            <b>No refund</b> available for this booking.
+                                        </div>
+        
+                                        <div v-else>
+                                            <b><% String(parseInt(bookingFormData['cancellationTerms'][0]['amountRefundable'])) %>% refund</b> if you cancel at any time.
+                                        </div>
+        
+                                    </template>
+        
+                                    <template v-else>
+                                        <template v-for="(breakpoint, index) in bookingFormData['cancellationTerms']">
+        
+                                            <template v-if="breakpoint['checkIn']">
+                                                <div v-if="parseInt(breakpoint['amountRefundable']) === 0">
+                                                    <b>No refund</b> if you cancel after <% new Date(bookingFormData['cancellationTerms'][index - 1]['cancelBy'].slice(0, 4), parseInt(bookingFormData['cancellationTerms'][index - 1]['cancelBy'].slice(5, 7)) - 1, bookingFormData['cancellationTerms'][index - 1]['cancelBy'].slice(8, 10)).toLocaleString('default', { day: 'numeric', month: 'long', year: 'numeric' }) %>.
+                                                </div>
+        
+                                                <div v-else>
+                                                    <b><% String(parseInt(breakpoint['amountRefundable'])) %>% refund</b> if you cancel after <% new Date(bookingFormData['cancellationTerms'][index - 1]['cancelBy'].slice(0, 4), parseInt(bookingFormData['cancellationTerms'][index - 1]['cancelBy'].slice(5, 7)) - 1, bookingFormData['cancellationTerms'][index - 1]['cancelBy'].slice(8, 10)).toLocaleString('default', { day: 'numeric', month: 'long', year: 'numeric' }) %>.
+                                                </div>
+                                                
+                                            </template>
+        
+                                            <template v-else>
+                                                <div><b><% String(parseInt(breakpoint['amountRefundable']))%>% refund</b> if you cancel before <% new Date(breakpoint['cancelBy'].slice(0, 4), parseInt(breakpoint['cancelBy'].slice(5, 7)) - 1, breakpoint['cancelBy'].slice(8, 10)).toLocaleString('default', { day: 'numeric', month: 'long', year: 'numeric' }) %>.</div>
+                                            </template>
                                             
                                         </template>
-    
-                                        <template v-else>
-                                            <div><b><% String(parseInt(breakpoint['amountRefundable']))%>% refund</b> if you cancel before <% new Date(breakpoint['cancelBy'].slice(0, 4), parseInt(breakpoint['cancelBy'].slice(5, 7)) - 1, breakpoint['cancelBy'].slice(8, 10)).toLocaleString('default', { day: 'numeric', month: 'long', year: 'numeric' }) %>.</div>
-                                        </template>
-                                        
                                     </template>
                                 </template>
-                            </template>
+                            </div>
+                            
+                            <div class="damage-policy">
+                                <h4>Damage Policy</h4>
+                                <p>You will be responsible for any damage to the property caused by you or your party during your stay.</p>
+                            </div>
+                            
                         </div>
-                        
-                        <div class="damage-policy">
-                            <h4>Damage Policy</h4>
-                            <p>You will be responsible for any damage to the property caused by you or your party during your stay.</p>
-                        </div>
-                        
                     </div>
+
+                    
 
                     <p>By clicking 'AGREE & CONTINUE' you are agreeing to the above policies and terms</p>
 
@@ -231,95 +233,38 @@
                         <h4>Step 3 of 3</h4>
                         <h2>Confirm Booking</h2>
 
-                        <div class="booking-summary">
-                            <form>
-                                {{ booking_form.hidden_tag() }}
-                                <div class="availability-form">
-                                    <div class="date-fields">
+                        <div class="invoice-details-summary">
 
-                                        <div class="input-container focused">
-                                            <label for="checkout-arrival-date" class="focused">Arrival Date</label>
-                                            <div id="checkout-arrival-date" class="focused" v-on:focus="arrivalDateFocus()" v-on:blur="arrivalDateBlur()" tabindex="0">&#60;% bookingFormData.arrivalDate %></div>      
+                            <div class="invoice-details">
+
+                                <h3 class="invoice-details-header">Summary</h3>
+                        
+                                <div class="invoice-details-main">
+                        
+                                    <div class="booking-summary-row">
+                                        <div class="description-col"><% stayLength %> nights</div>
+                                        <div class="amount-col">£<% bookingFormData['stayPrice'] %></div>
+                                    </div>
+                            
+                                    <template v-if="bookingFormData['dogs']">
+                                        <div class="booking-summary-row">
+                                            <div class="description-col"><% bookingFormData['dogs'] %> dog (£<% publicPriceListSettings['pricePerDog'] %> / week )</div>
+                                            <div class="amount-col">£<% bookingFormData['dogPrice'] %></div>
                                         </div>
-
-                                        <div class="input-container">
-                                            <label for="checkout-departure-date">Departure Date</label>
-                                            <div id="checkout-departure-date" v-on:focus="departureDateFocus()" v-on:blur="departureDateBlur()" tabindex="0">&#60;% bookingFormData.departureDate %></div>
+                                    </template>
+                                    
+                                    <template v-if="bookingFormData['multiWeekDiscount']">
+                                        <div class="booking-summary-row">
+                                            <div class="description-col">Discount (<% bookingFormData['multiWeekDiscountPercent'] %>%)</div>
+                                            <div class="amount-col">-£<% bookingFormData['multiWeekDiscount'] %></div>
                                         </div>
-                                
+                                    </template>
+                                    
+                                    <div class="booking-summary-row" id="subtotal-row">
+                                        <div class="description-col">Subtotal</div>
+                                        <div class="amount-col">£<% bookingFormData['total'] %></div>
                                     </div>
-
-                                    <div class="input-container">
-                                        <label for="checkout-guests">Guests</label>
-                                        <div id="checkout-guests" v-on:click="displayPartyOverlay()" v-on:blur="guestsBlur()" tabindex="0"><p>&#60;% partyString %></p>
-                                            <div class="party-container guests-dropdown" tabindex="0">
-                            
-                                                <div class="party-input-container">
-                                                    <label for="checkout-adults"><h5>Adults</h5>Ages 13 or above</label>
-                            
-                                                    <div class="party-input" id="checkout-adults">
-                                                        <button type="button" v-on:click="adultsDecrease($event)" class="party-decrease" :class="{ inactive: !bookingFormData.adults }">-</button>
-                                                        <div :class="{ inactive: !bookingFormData.adults }">&#60;% bookingFormData.adults %></div>
-                                                        <button type="button" v-on:click="adultsIncrease($event)" class="party-increase" :class="{ inactive: bookingFormData.adults + bookingFormData.children >= publicPriceListSettings.maxGuests }">+</button>
-                                                    </div>
-                                                </div>
-                            
-                                                <div class="party-input-container">
-                                                    <label for="checkout-children"><h5>Children</h5>Ages 2-12</label>
-                                                    <div class="party-input" id="checkout-children">
-                                                        <button type="button" v-on:click="childrenDecrease($event)" class="party-decrease" :class="{ inactive: !bookingFormData.children }">-</button>
-                                                        <div :class="{ inactive: !bookingFormData.children }">&#60;% bookingFormData.children %></div>
-                                                        <button type="button" v-on:click="childrenIncrease($event)" class="party-increase" :class="{ inactive: bookingFormData.adults + bookingFormData.children >= publicPriceListSettings.maxGuests }" >+</button>
-                                                    </div>
-                                                </div>
-                            
-                                                <div class="party-input-container">
-                                                    <label for="checkout-infants"><h5>Infants</h5>Under 2</label>
-                                                    <div class="party-input" id="checkout-infants">
-                                                        <button type="button" v-on:click="infantsDecrease($event)" class="party-decrease" :class="{ inactive: !bookingFormData.infants }">-</button>
-                                                        <div :class="{ inactive: !bookingFormData.infants }">&#60;% bookingFormData.infants %></div>
-                                                        <button type="button" v-on:click="infantsIncrease($event)" class="party-increase" :class="{ inactive: bookingFormData.infants >= publicPriceListSettings.maxInfants }">+</button>
-                                                    </div>
-                                                </div>
-                            
-                                                <div class="party-input-container">
-                                                    <label for="checkout-dogs"><h5>Dogs</h5>£20 each</label>
-                                                    <div class="party-input" id="checkout-dogs">
-                                                        <button type="button" v-on:click="dogsDecrease($event)" class="party-decrease" :class="{ inactive: !bookingFormData.dogs }">-</button>
-                                                        <div :class="{ inactive: !bookingFormData.dogs }">&#60;% bookingFormData.dogs %></div>
-                                                        <button type="button" v-on:click="dogsIncrease($event)" class="party-increase" :class="{ inactive: bookingFormData.dogs >= publicPriceListSettings.maxDogs }">+</button>
-                                                    </div>
-                                                </div>
-                                                                        
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                            </form>
-                                
-                            <div class="booking-proceed-box">
-                                <div class="total-breakdown" :class="{ show: bookingFormData.total && bookingFormData.arrivalDate && bookingFormData.departureDate }">
-
-                                    <div class="stay-length-total" :class="{ show: bookingFormData.stayPrice && bookingFormData.stayLength }">
-                                        <div><% stayLength %> nights</div>
-                                        <div>£<% bookingFormData.stayPrice %></div>
-                                    </div>
-
-                                    <div class="multi-week-discount" :class="{ show: bookingFormData.multiWeekDiscount }">
-                                        <div><% bookingFormData.stayLengthWeeks %> week discount (<% bookingFormData.multiWeekDiscountPercent %>%) </div>
-                                        <div>-£<% bookingFormData.multiWeekDiscount %></div>
-                                    </div>
-
-                                    <div class="dog-total" :class="{ show: bookingFormData.dogs }">
-                                        <div><% bookingFormData.dogs %> dog (£<% publicPriceListSettings.pricePerDog %> / week)</div>
-                                        <div>£<% bookingFormData.dogPrice %></div>
-                                    </div>
-
-                                    <div class="total-box">
-                                        <div>Total</div>
-                                        <div>£&#60;% bookingFormData.total %></div>
-                                    </div>
+                        
                                 </div>
                                 
                             </div>
@@ -357,24 +302,18 @@
                                         </div>
 
                                     </template>
-                                </div>
+                        </div>
 
-                                <div class="payment-instructions">
-                                    <p>Payments are to be made via bank transfer to the following account:</p>
-                                    <br>
-                                    <p>>> Insert bank details here <<</p>
-                                    <br>
-                                    <p>The first invoice will be sent to you via email upon acceptance of this booking request. If you choose to pay in multiple stages, then further invoices will be sent to you before each payment becomes due.</p>
-                                </div>
-                            </template>
-                            <template v-else>
-                                <h3>Payments</h3>
-                                <div class="full-payment-no-options">
-                                    <p>The full total of £<% bookingFormData['total'] %> is due within 7 days of this booking request being accepted. Payment is to be made via bank transfer to the below account.</p>
-                                    <br>
-                                    <p>>>Insert bank details here<<</p>
-                                </div>
-                            </template>
+                            <div class="payment-instructions">
+                                <p>The first invoice will be sent to you via email upon acceptance of this booking request. If you choose to pay in multiple stages, then further invoices will be sent to you before each payment becomes due. Payment is to be made via bank transfer.</p>
+                            </div>
+                    </template>
+                    <template v-else>
+                        <h3>Payments</h3>
+                        <div class="full-payment-no-options">
+                            <p>The full total of £<% bookingFormData['total'] %> is due within 7 days of this booking request being accepted. Payment is to be made via bank transfer.</p>
+                        </div>
+                    </template>
                             
                             
                         </div>

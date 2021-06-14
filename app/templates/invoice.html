@@ -79,8 +79,8 @@
     }
     
     h3 {
-        font-family: 'Arapey';
-        font-size: 20px;
+        font-family: 'Lato-bold';
+        font-size: 18px;
         font-weight: 400;
         margin-bottom: 16px;
     }
@@ -154,6 +154,15 @@
 
                 .invoice-info {
                 }
+
+                    .info-row {
+                        display: flex;
+                        justify-content: space-between;
+                    }
+
+                        .info-row h4 {
+                            padding-right: 32px;
+                        }
     
     .invoice-details {
         padding: 80px;
@@ -213,6 +222,35 @@
                 font-family: 'Lato-bold';
                 font-size: 18px;
             }
+
+        #due-by-row {
+
+        }
+
+            #due-by-row div {
+                font-family: 'Lato-bold';
+                font-size: 18px;
+            }
+
+    .bank-details {
+        padding-left: 80px;
+        width: 40%;
+        padding-bottom: 80px;
+    }
+
+        .bank-details h1 {
+            padding-bottom: 16px;
+            border-bottom: 1px solid grey;
+        }
+
+        .bank-details-account-name,
+        .bank-details-sort-code,
+        .bank-details-account-number {
+            display: flex;
+            justify-content: space-between;
+        }
+
+
         
 </style>
 </head>
@@ -240,7 +278,7 @@
         
         <div class="header-row-3">
             <div class="bill-to">
-                <h4>Bill to</h4>
+                <h3>Bill to</h3>
                 <div>{{ customer.first_name }} {{ customer.last_name }}</div>
                 <div>{{ customer.address_line_1 }}</div>
                 <!--if address_line_2-->
@@ -251,10 +289,23 @@
             </div>
         
             <div class="invoice-info">
-                <h4>Details</h4>
-                <div>Invoice number: {{ invoice.invoice_reference }}</div>
-                <div>Date: {{ invoice.date }}</div>
-                <div>Due by: {{ invoice.invoice_due_date }}</div>
+                <h3>Details</h3>
+
+                <div class="info-row">
+                    <h4>Invoice number</h4>
+                    <div>{{ invoice.invoice_reference }}</div>
+                </div>
+
+                <div class="info-row">
+                    <h4>Date</h4>
+                    <div>{{ invoice_date_string }}</div>
+                </div>
+
+                <div class="info-row">
+                    <h4>Due by</h4>
+                    <div>{{ invoice_due_date_string }}</div>
+                </div>
+                
             </div>
         </div>
         
@@ -298,10 +349,32 @@
             <div>Total due ({{ invoice.percentage_due }}%)</div>
             <div>£{{ invoice.amount }}</div>
         </div>
+
+        <div class="row" id="due-by-row">
+            <div>Payment due by</div>
+            <div>{{ invoice_due_date_string }}</div>
+        </div>
     </div>
 
     <div class="bank-details">
+        
+        <h1>Bank Details</h1>
 
+        <div class="bank-details-account-name">
+            <h4>Account name</h4>
+            <div>A M & C M Hitchcock</div>
+        </div>
+        
+        <div class="bank-details-sort-code">
+            <h4>Sort code</h4>
+            <div>09-01-27</div>
+        </div>
+
+        <div class="bank-details-account-number">
+            <h4>Account number</h4>
+            <div>81750201</div>
+        </div>
+        
     </div>
 
     

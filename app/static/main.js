@@ -964,6 +964,7 @@ const vm = new Vue({
                     this.bookingFormData.multiWeekDiscount = 0;  
                     this.bookingFormData.multiWeekDiscountPercent = 0;
                     this.bookingFormData.stayLengthWeeks = 1;
+                    this.bookingFormData.stayLengthDays = new Date
                 }
                 else if (this.departure2Week.includes(document.querySelector('.departure-date'))) {
                     this.bookingFormData.stayPrice = (+document.querySelector('.arrival-date').__vue__._props.isChangeoverData.price2Weeks).toFixed(2);

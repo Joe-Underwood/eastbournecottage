@@ -272,16 +272,23 @@ svg {
     .checkout-2 {
         position: relative;
         display: none;
-    }
+    }   
+        
+        .checkout-terms-main {
+            background-color: white;
+            border: 1px solid #a5c2cf;
+            border-radius: 4px;
+            padding: 16px;
+        }
 
-        .house-rules,
+        /*.house-rules,
         .booking-terms {
             background-color: white;
             padding: 16px;
             border: 1px solid #a5c2cf;
             border-radius: 4px;
             margin-bottom: 16px;
-        }
+        }*/
 
             .house-rules p,
             .booking-terms p {
@@ -311,9 +318,69 @@ svg {
         display: none;
     }
 
-        .checkout-3 .booking-summary {
+        .checkout-3 .invoice-details-summary {
             margin-bottom: 16px;
         }
+
+            .invoice-details {
+                padding-top: 0;
+            }
+        
+                .invoice-details-main {
+                    border-top: 1px solid grey;
+                    border-bottom: 1px solid grey;
+                    padding-left: 16px;
+                    padding-right: 16px;
+                }
+        
+                .booking-summary-row {
+                    display: flex;
+                    justify-content: space-between;
+                    width: 100%;
+                    padding-top: 8px;
+                    padding-bottom: 8px;
+                }
+        
+                #header-row {
+                    background-color: rgb(15, 72, 117);
+                    color: white;
+                    padding-left: 22px;
+                    padding-right: 22px;
+                    padding-top: 12px;
+                    padding-bottom: 12px;
+                }
+        
+                    .description-col {
+                        text-align: left;
+                    }
+        
+                    .amount-col {
+                        text-align: right;
+                    }
+        
+                    #header-row div {
+                        color: white;
+                        padding: 0;
+                    }
+        
+                #subtotal-row {
+                    border-top: 1px dotted grey;
+                }
+        
+                    #subtotal-row div {
+                        font-family: 'Lato-bold';
+                    }
+        
+                #total-row {
+                    padding-top: 12px;
+                    padding-bottom: 12px;
+                }
+        
+                    #total-row div {
+                        color: rgb(226, 138, 12);
+                        font-family: 'Lato-bold';
+                        font-size: 18px;
+                    }
 
         .payment-options {
             margin-bottom: 16px;
@@ -687,7 +754,7 @@ svg {
         .cottage-nav-links,
         .cottage-content,
         .booking-content,
-        .contact,
+        .contact-container,
         .checkout-1,
         .checkout-2,
         .checkout-3 {
@@ -729,7 +796,7 @@ svg {
         .cottage-nav-links,
         .cottage-content,
         .booking-content,
-        .contact,
+        .contact-container,
         .checkout-1,
         .checkout-2,
         .checkout-3,
@@ -780,7 +847,7 @@ svg {
         .cottage-nav-links,
         .cottage-content,
         .booking-content,
-        .contact,
+        .contact-container,
         .checkout-1,
         .checkout-2,
         .checkout-3 {
@@ -790,6 +857,8 @@ svg {
             padding-right: 80px;
             max-width: 1157px;
         }
+
+        
 
         .navbar-logo:hover {
             background-color:rgba(0, 0, 0, 0.1);
@@ -1983,6 +2052,12 @@ svg {
     padding-top: 16px;
     padding-bottom: 16px;
     background-color: white;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+    max-width: none;
+    width: 100%;
 }
 
     .contact-button-container {
