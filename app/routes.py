@@ -180,8 +180,7 @@ def set_price_list():
                 discount_amount_2_weeks = db_segment.discount_amount_2_weeks,
                 discount_amount_3_weeks = db_segment.discount_amount_3_weeks,
                 discount_amount_4_weeks = db_segment.discount_amount_4_weeks,
-                booking_id = db_segment.booking_id,
-                range_type = None
+                booking_id = db_segment.booking_id
             )
             db.session.add(delete_segment)
             db.session.delete(db_segment)
