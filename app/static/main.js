@@ -199,7 +199,7 @@ const vm = new Vue({
             cancellationTerms: []
         },
 
-        bookingFormComplete: false,
+        bookingFormSuccess: false,
         bookingFormFail: false,
 
         contactFormData: {
@@ -1630,25 +1630,29 @@ const vm = new Vue({
             e.target.classList.add('invalid');
         },
         submitBooking() {
-            fetch('/booking', {
-                method: 'post',
-                body: JSON.stringify(this.bookingFormData),
-                headers: new Headers({
-                    'content-type': 'application/json'
+            const response = 
+                fetch('/booking', {
+                    method: 'post',
+                    body: JSON.stringify(this.bookingFormData),
+                    headers: new Headers({
+                        'content-type': 'application/json'
+                    })
                 })
-            })
-                .then(response => {
-                    return (response.json());
-                })
-                .then(json => {
-                    if (json['success']) {
-                        this.bookingFormSuccess = true;
-                        console.log('request successful');
-                    } else {
-                        this.bookingFormFail = true;
-                        console.log('request unsuccessful');
-                    }
-                })
+                    .then(response => {
+                        return (response.json());
+                    })
+                    .then(json => {
+                        if (json['success']) {
+                            this.bookingFormSuccess = true;
+                            console.log('request successful');
+                        } else {
+                            this.bookingFormFail = true;
+                            console.log('request unsuccessful');
+                        }
+                        return json['success'];
+                    })
+            
+            return response;
         },
         cancellationTermsText() {
             if (this.bookingFormData['cancellationTerms'].length === 1) {

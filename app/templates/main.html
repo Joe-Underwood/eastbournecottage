@@ -229,7 +229,7 @@
                 </section>
                 
                 <section class="checkout-3 next">
-                    <template v-if="!bookingFormComplete && !bookingFormFail">
+                    <template v-if="!bookingFormSuccess && !bookingFormFail">
                         <h4>Step 3 of 3</h4>
                         <h2>Confirm Booking</h2>
 
@@ -302,20 +302,18 @@
                                         </div>
 
                                     </template>
+                            </template>
+                            <template v-else>
+                                <h3>Payments</h3>
+                                <div class="full-payment-no-options">
+                                    <p>The full total of £<% bookingFormData['total'] %> is due within 7 days of this booking request being accepted. Payment is to be made via bank transfer.</p>
+                                </div>
+                            </template>
+
                         </div>
 
-                            <div class="payment-instructions">
-                                <p>The first invoice will be sent to you via email upon acceptance of this booking request. If you choose to pay in multiple stages, then further invoices will be sent to you before each payment becomes due. Payment is to be made via bank transfer.</p>
-                            </div>
-                    </template>
-                    <template v-else>
-                        <h3>Payments</h3>
-                        <div class="full-payment-no-options">
-                            <p>The full total of £<% bookingFormData['total'] %> is due within 7 days of this booking request being accepted. Payment is to be made via bank transfer.</p>
-                        </div>
-                    </template>
-                            
-                            
+                        <div class="payment-instructions">
+                            <p>The first invoice will be sent to you via email upon acceptance of this booking request. If you choose to pay in multiple stages, then further invoices will be sent to you before each payment becomes due. Payment is to be made via bank transfer.</p>
                         </div>
 
                         <div>
@@ -326,9 +324,11 @@
                             <button class="checkout-back" type="button" v-on:click="checkoutPrev()"><svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 20 20" height="18px" viewBox="0 0 20 20" width="18px" fill="rgb(15, 72, 117)"><rect fill="none" height="20" width="20"/><polygon points="14.41,3.41 13,2 5,10 13,18 14.41,16.59 7.83,10"/></svg>BACK</button>
                             <button type="button" v-on:click="submitBooking()">CONFIRM</button>
                         </div>
+
                     </template>
 
-                    <template v-if="bookingFormComplete">
+
+                    <template v-if="bookingFormSuccess">
 
                         <section class="booking-form-complete">
                             <h1>Thanks for booking with us!</h1>
@@ -491,17 +491,31 @@
 
                     <div class="cottage-content">
                         <div class="overview">
-                            <p>Located just a short walk from the seafront in the Meads Village area of Eastbourne, this pretty fisherman's cottage is an ideal escape for couples and families, with a choice of pubs, restaurants, and shops right on the doorstep.</p>
-                            <br>
-                            <p>This property is an authentic and pretty Victorian fisherman’s cottage in Meads Village; a super choice for a traditional seaside stay with family or a couple of friends (and the dog). Take a short stroll down to the seafront, also known as the Holywell Retreat, and relax into a mosaic of laid-back cafes, bars and beach huts and onto the dog-friendly shingle beach. Around a 10-minute walk takes you into the main part of Eastbourne where you can visit the classic Victorian Pier or the vibrant shopping centre for some retail therapy.</p>
-                            <br>
-                            <p>This classic English cottage enjoys attractive seaside shades, natural wood and a private courtyard garden with outdoor seating. The original features combine well with the chic colours to give the rooms a mix of character and contemporary, while the kitchen and two upstairs bathrooms offer every modern comfort needed to relax. After a day of beachcombing, wind your way up the cottage-style staircase for a soak in the bath, then retire for the night to one of the lovely three bedrooms. Wake refreshed and raring to go - perhaps morning coffee in the pretty walled courtyard would be a nice treat before the adventure begins again.</p>
-                            <br>
-                            <p>On the main beach at Eastbourne you will find the Lifeboat Museum and historic Wish Tower and, just 5 miles further along the coastline is Pevensey Bay with its stunning beach. If you want an interesting and historical day out, Pevensey Castle has history oozing from its ancient walls, dungeons to explore and beautiful grounds to meander through. There is a restaurant and even the occasional medieval joust too. Further afield, you can spend a day in Brighton (20 miles) or Hastings (15 miles) for boutique shopping and delicious lunches.</p>
-                            <br>
-                            <p>Dogs are charged at £20 each per full or part week.</p>
+                            <p>
+                                <b>Located just a short walk away from Holywell beach at the centre of Meads Village in Eastbourne, this pretty Victorian fisherman’s cottage is an ideal escape for couples and families.</b>
+                                <br><br>
+                                This Victorian property is located just a short walk from the seafront in the Meads Village area of Eastbourne. The beach at this side of town is quieter than Eastbourne's main beach and is backed on one side by pretty Italian-style gardens. There is a thriving community in Meads Village, which offers a good choice of shops, restaurants and pubs just a few minutes walk away. Eastbourne town centre, which is well served by local buses, is just two miles from the property and offers a traditional beach with beach hut hire, the lovingly restored Victorian pier and seaside shops.
+                                <br><br>
+                                The cottage has been thoughtfull restored to provide a contemporary accomodation, whilst in keeping with the property's Victorian roots
+                            </p>
                         </div>
-                        <div class="facilities">facilities</div>
+
+                        <div class="facilities">
+                            <ul>
+                                <li>3 bedrooms - 1 double, 1 twin, and 1 small single</li>
+                                <li>1 bathroom and 1 en-suite bathroom</li>
+                                <li>Kitchen equipped with electric oven and hob, fridge and microwave</li>
+                                <li>Washing machine in outbuilding</li>
+                                <li>Wi-Fi included</li>
+                                <li>1 dog welcome</li>
+                                <li>Private patio garden to the rear</li>
+                                <li>Shops, pubs and beach within walking distance</li>
+                                <li>TV</li>
+                                <li>Free parking in nearby streets</li>
+                                <li>The gardens to the front are private for local residents use only</li>
+                            </ul>
+                        </div>
+                            
                         <div class="location">
 
                             <div class="map-container">
