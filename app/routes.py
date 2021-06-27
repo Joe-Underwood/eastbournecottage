@@ -234,32 +234,34 @@ def set_price_list():
                             print('invalid, new segment date overlaps with preexisting booking')
                             continue
 
-            if segment['price2Weeks']:
+            if segment['price2Weeks'] and segment['price2Weeks'] != 'None':
                 price_2_weeks = Decimal(segment['price2Weeks'])
             else:
                 price_2_weeks = None
 
-            if segment['price3Weeks']:
+            if segment['price3Weeks'] and segment['price3Weeks'] != 'None':
                 price_3_weeks = Decimal(segment['price3Weeks'])
             else:
                 price_3_weeks = None
 
-            if segment['price4Weeks']:
+            if segment['price4Weeks'] and segment['price4Weeks'] != 'None':
+                print(segment['price4Weeks'])
+                print(type(segment['price4Weeks']))
                 price_4_weeks = Decimal(segment['price4Weeks'])
             else:
                 price_4_weeks = None
 
-            if segment['discountAmount2Weeks']:
+            if segment['discountAmount2Weeks'] and segment['discountAmount2Weeks'] != 'None':
                 discount_amount_2_weeks = Decimal(segment['discountAmount2Weeks'])
             else:
                 discount_amount_2_weeks = None
 
-            if segment['discountAmount3Weeks']:
+            if segment['discountAmount3Weeks'] and segment['discountAmount3Weeks'] != 'None':
                 discount_amount_3_weeks = Decimal(segment['discountAmount3Weeks'])
             else:
                 discount_amount_3_weeks = None
 
-            if segment['discountAmount4Weeks']:
+            if segment['discountAmount4Weeks'] and segment['discountAmount4Weeks'] != 'None':
                 discount_amount_4_weeks = Decimal(segment['discountAmount4Weeks'])
             else:
                 discount_amount_4_weeks = None
