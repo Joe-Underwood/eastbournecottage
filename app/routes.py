@@ -122,7 +122,7 @@ def get_public_price_list():
     query = db.session.query(Price_List).filter(Price_List.range_type == 'ACTIVE').order_by(Price_List.start_date.asc())
     public_price_list = []
     for row in query:
-        if row.booking_id or row.block_flag:
+        if row.booking_id or row.block_flag or not row.price:
             booked = True
         else:
             booked = False
