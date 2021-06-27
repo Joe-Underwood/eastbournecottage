@@ -118,7 +118,7 @@ const vm = new Vue({
                         this.priceList = json['priceList'];
                         return json['priceList'];
                     })
-                    .then((data) => {
+                    /*.then((data) => {
                         const obj = this.clone(data);
                         for (let i = 0; i < this.priceList.length; i++) {
                             this.$watch(function() {
@@ -134,7 +134,7 @@ const vm = new Vue({
                             },
                             { deep: true })
                         }
-                    })
+                    })*/
             
             return response;
         },
@@ -148,7 +148,7 @@ const vm = new Vue({
                         this.priceListSettings = json['priceListSettings'];
                         return json['priceListSettings'];
                     })
-                    .then((data) => {
+                    /*.then((data) => {
                         const obj = this.clone(data);
                         this.$watch('priceListSettings',
                         function() {
@@ -160,7 +160,7 @@ const vm = new Vue({
                             }
                         },
                         { deep: true })
-                    })
+                    })*/
 
             return response;
         },
@@ -236,42 +236,36 @@ const vm = new Vue({
                         this.refreshCancellationBreakpoints();
                         return data;
                     })
-                    .then(data => {
+                    /*.then(data => {
                         this.$watch('billingSettings', 
                         function() {
                             this.billingSettings['updateFlag'] = true;
                         },
                         { deep: true })
                         return data;
-                    })
+                    })*/
 
             return response;
         },
         setBillingSettings() {
             this.refreshPaymentBreakpoints();
             this.refreshCancellationBreakpoints();
-            if (this.billingSettings['updateFlag']) {
-                const response = 
-                    fetch('/set_billing_settings', {
-                        method: 'post',
-                        body: JSON.stringify(this.billingSettings),
-                        headers: new Headers({
+            const response = 
+                fetch('/set_billing_settings', {
+                    method: 'post',
+                    body: JSON.stringify(this.billingSettings),
+                    headers: new Headers({
                             'content-type': 'application/json'
-                        })
                     })
-                    .then(response => {
-                        return response.json();
-                    })
-                    .then(json => {
-                        return json['success'];
-                    })
+                })
+                .then(response => {
+                    return response.json();
+                })
+                .then(json => {
+                    return json['success'];
+                })
 
-                if (response) {
-                    this.billingSettings['updateFlag'] = false;
-                }
-
-                return response;
-            }
+            return response;
         },
         refreshPaymentBreakpoints() {
             this.billingSettings['paymentBreakpoints'].sort(function(a, b) {
@@ -808,6 +802,7 @@ const vm = new Vue({
             document.querySelector('.price-list .cards-select').classList.add('hidden');
             document.querySelector('.price-list .cards-cancel').classList.remove('hidden');
             document.querySelector('.price-list .cards-delete').classList.remove('hidden');
+            document.querySelector('.price-list .cards-block').classList.remove('hidden');
         },
         priceListSelectOff() {
             this.cardSelect = false;
@@ -820,6 +815,7 @@ const vm = new Vue({
             document.querySelector('.price-list .cards-select').classList.remove('hidden');
             document.querySelector('.price-list .cards-cancel').classList.add('hidden');
             document.querySelector('.price-list .cards-delete').classList.add('hidden');
+            document.querySelector('.price-list .cards-block').classList.add('hidden');
         },
         bookingCardSelectOn() {
             this.cardSelect = true;
@@ -899,7 +895,29 @@ const vm = new Vue({
                     this.getCustomers();
                 }
                 else {
-                    console.log('failed to delete bookings');
+                    console.log('failed to delete segments');
+                }
+            })
+            this.priceListSelectOff();
+        },
+        priceListSelectionBlock() {
+            //prompt for user confirmation before deletion
+            for (let i = 0; i < this.cardSelection.length; i++) {
+                if (this.cardSelection[i]['blockFlag']) {
+                    this.cardSelection[i]['blockFlag'] = false;
+                }
+                else {
+                    this.cardSelection[i]['blockFlag'] = true;
+                }
+            }
+            this.setPriceList().then(success => {
+                if (success) {
+                    this.getPriceList();
+                    this.getBookings();
+                    this.getCustomers();
+                }
+                else {
+                    console.log('failed to block segments');
                 }
             })
             this.priceListSelectOff();

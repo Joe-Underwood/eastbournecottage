@@ -1240,6 +1240,14 @@ svg {
                     background-color:aqua;
                 }
 
+                .booked-segment {
+                    background-color: green;
+                }
+
+                .blocked {
+                    background-color: yellow;
+                }
+
 .settings {
     display: block;
     padding-bottom: 56px;
@@ -1678,6 +1686,21 @@ svg {
         }
 
         .cards-delete.hidden {
+            display: none;
+        }
+
+        .cards-block {
+            position: absolute;
+            bottom: 0;
+            right: 50%;
+            text-align: center;
+            color: rgb(246, 249, 250);
+            box-shadow: none;
+            border-radius: 4px;
+            z-index: 5;
+        }
+
+        .cards-block.hidden {
             display: none;
         }
 

@@ -155,11 +155,27 @@
                     <div class="checkout-terms-main">
                         <div class="house-rules">
                             <h4>House Rules</h4>
-                            <p><b>Check in</b> after <% publicPriceListSettings['checkInTime'] %></p>
-                            <p><b>Check out</b> before <% publicPriceListSettings['checkOutTime'] %></p>
-                            <p>Minimum age to book: <% publicPriceListSettings['minAge'] %></p>
-                            <p>Maximum overnight guests: <% publicPriceListSettings['maxGuests'] %></p>
-                            <p class="no-smoking"><span>No smoking</span> <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="rgb(15, 72, 117)"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M20.5 13H22v3h-1.5zM18 13h1.5v3H18zm-1 0h-2.34L17 15.34zm-2.5-4.35h1.53c1.05 0 1.97.74 1.97 2.05V12h1.5v-1.64c0-1.81-1.6-3.16-3.47-3.16H14.5c-1.02 0-1.85-.98-1.85-2s.83-1.75 1.85-1.75v-1.5c-1.85 0-3.35 1.5-3.35 3.35s1.5 3.35 3.35 3.35zm4.35-3.92c.62-.61 1-1.45 1-2.38h-1.5c0 1.02-.83 1.85-1.85 1.85v1.5c2.24 0 4 1.83 4 4.07V12H22V9.76c0-2.22-1.28-4.14-3.15-5.03zM3.41 4.59L2 6l7 7H2v3h10l7 7 1.41-1.41z"/></svg></p>
+                            
+                            <p class="check-in-time"><b>Check in</b> after <% publicPriceListSettings['checkInTime'] %></p>
+                            <p class="check-out-time"><b>Check out</b> before <% publicPriceListSettings['checkOutTime'] %></p>
+                            <p class="min-age-to-book">Minimum age to book: <% publicPriceListSettings['minAge'] %></p>
+                            <p class="max-guests">Maximum overnight guests: <% publicPriceListSettings['maxGuests'] %></p>
+
+                            <template v-if="publicPriceListSettings['maxDogs'] === 0">
+                                <p class="max-dogs">No dogs allowed</p>
+                            </template>
+
+                            <div class="max-dogs" v-if="publicPriceListSettings['maxDogs'] === 1">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><circle class="dogs-icon" cx="4.5" cy="9.5" r="2.5"/><circle class="dogs-icon" cx="9" cy="5.5" r="2.5"/><circle class="dogs-icon" cx="15" cy="5.5" r="2.5"/><circle class="dogs-icon" cx="19.5" cy="9.5" r="2.5"/><path class="dogs-icon" d="M17.34 14.86c-.87-1.02-1.6-1.89-2.48-2.91-.46-.54-1.05-1.08-1.75-1.32-.11-.04-.22-.07-.33-.09-.25-.04-.52-.04-.78-.04s-.53 0-.79.05c-.11.02-.22.05-.33.09-.7.24-1.28.78-1.75 1.32-.87 1.02-1.6 1.89-2.48 2.91-1.31 1.31-2.92 2.76-2.62 4.79.29 1.02 1.02 2.03 2.33 2.32.73.15 3.06-.44 5.54-.44h.18c2.48 0 4.81.58 5.54.44 1.31-.29 2.04-1.31 2.33-2.32.31-2.04-1.3-3.49-2.61-4.8z"/></svg>
+                                <p>1 dog allowed</p>
+                            </div>
+
+                            <div class="max-dogs" v-if="publicPriceListSettings['maxDogs'] > 1">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><circle class="dogs-icon" cx="4.5" cy="9.5" r="2.5"/><circle class="dogs-icon" cx="9" cy="5.5" r="2.5"/><circle class="dogs-icon" cx="15" cy="5.5" r="2.5"/><circle class="dogs-icon" cx="19.5" cy="9.5" r="2.5"/><path class="dogs-icon" d="M17.34 14.86c-.87-1.02-1.6-1.89-2.48-2.91-.46-.54-1.05-1.08-1.75-1.32-.11-.04-.22-.07-.33-.09-.25-.04-.52-.04-.78-.04s-.53 0-.79.05c-.11.02-.22.05-.33.09-.7.24-1.28.78-1.75 1.32-.87 1.02-1.6 1.89-2.48 2.91-1.31 1.31-2.92 2.76-2.62 4.79.29 1.02 1.02 2.03 2.33 2.32.73.15 3.06-.44 5.54-.44h.18c2.48 0 4.81.58 5.54.44 1.31-.29 2.04-1.31 2.33-2.32.31-2.04-1.3-3.49-2.61-4.8z"/></svg>
+                                <p><% publicPriceListSettings['maxDogs'] %> dogs allowed</p>
+                            </div>
+                            
+                            <p class="no-smoking"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="rgb(15, 72, 117)"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M20.5 13H22v3h-1.5zM18 13h1.5v3H18zm-1 0h-2.34L17 15.34zm-2.5-4.35h1.53c1.05 0 1.97.74 1.97 2.05V12h1.5v-1.64c0-1.81-1.6-3.16-3.47-3.16H14.5c-1.02 0-1.85-.98-1.85-2s.83-1.75 1.85-1.75v-1.5c-1.85 0-3.35 1.5-3.35 3.35s1.5 3.35 3.35 3.35zm4.35-3.92c.62-.61 1-1.45 1-2.38h-1.5c0 1.02-.83 1.85-1.85 1.85v1.5c2.24 0 4 1.83 4 4.07V12H22V9.76c0-2.22-1.28-4.14-3.15-5.03zM3.41 4.59L2 6l7 7H2v3h10l7 7 1.41-1.41z"/></svg><span>No smoking</span> </p>
                             <!--<p><svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="rgb(15, 72, 117)"><g><rect fill="none" height="24" width="24" y="0"/></g><g><g><g><path d="M2,22l14-5L7,8L2,22z M12.35,16.18L5.3,18.7l2.52-7.05L12.35,16.18z"/><path d="M14.53,12.53l5.59-5.59c0.49-0.49,1.28-0.49,1.77,0l0.59,0.59l1.06-1.06l-0.59-0.59c-1.07-1.07-2.82-1.07-3.89,0 l-5.59,5.59L14.53,12.53z"/><path d="M10.06,6.88L9.47,7.47l1.06,1.06l0.59-0.59c1.07-1.07,1.07-2.82,0-3.89l-0.59-0.59L9.47,4.53l0.59,0.59 C10.54,5.6,10.54,6.4,10.06,6.88z"/><path d="M17.06,11.88l-1.59,1.59l1.06,1.06l1.59-1.59c0.49-0.49,1.28-0.49,1.77,0l1.61,1.61l1.06-1.06l-1.61-1.61 C19.87,10.81,18.13,10.81,17.06,11.88z"/><path d="M15.06,5.88l-3.59,3.59l1.06,1.06l3.59-3.59c1.07-1.07,1.07-2.82,0-3.89l-1.59-1.59l-1.06,1.06l1.59,1.59 C15.54,4.6,15.54,5.4,15.06,5.88z"/></g></g></g></svg>
                                 No events</p>-->
                         </div>
@@ -218,8 +234,6 @@
                         </div>
                     </div>
 
-                    
-
                     <p>By clicking 'AGREE & CONTINUE' you are agreeing to the above policies and terms</p>
 
                     <div class="checkout-buttons">
@@ -235,11 +249,45 @@
 
                         <div class="invoice-details-summary">
 
+                            <h3 class="invoice-details-header">Summary</h3>
+
                             <div class="invoice-details">
 
-                                <h3 class="invoice-details-header">Summary</h3>
-                        
+                                <div class="booking-plus-personal-summary">
+
+                                    <div class="booking-details-summary">
+                                        <h5>Booking details</h5>
+                                        <div v-if="arrivalDateObject"><b>Arrival</b>: <% arrivalDateObject.toLocaleString('default', { day: 'numeric', month: 'long', year: 'numeric' }) %></div>
+                                        <div v-if="departureDateObject"><b>Departure</b>: <% departureDateObject.toLocaleString('default', { day: 'numeric', month: 'long', year: 'numeric' }) %></div>
+                                        <div><b>Party</b>: <% partyString %></div>
+                                        
+                                    </div>
+    
+                                    <div class="personal-details-summary">
+    
+                                        <h5>Personal details</h5>
+    
+                                        <div><% bookingFormData['firstName'] %> <% bookingFormData['lastName'] %></div>
+    
+                                        <div class="address-summary">
+    
+                                            <div><% bookingFormData['addressLine1'] %></div>
+                                            <div v-if="bookingFormData['addressLine2']"><% bookingFormData['addressLine2'] %></div>
+                                            <div><% bookingFormData['townOrCity'] %></div>
+                                            <div><% bookingFormData['countyOrRegion'] %></div>
+                                            <div><% bookingFormData['postcode'] %></div>
+    
+                                        </div>
+                                        
+                                        <div><% bookingFormData['emailAddress'] %></div>
+                                        <div><% bookingFormData['phoneNumber'] %></div>
+    
+                                    </div>
+                                </div>
+
                                 <div class="invoice-details-main">
+
+                                    <h5>Total breakdown</h5>
                         
                                     <div class="booking-summary-row">
                                         <div class="description-col"><% stayLength %> nights</div>
@@ -248,7 +296,7 @@
                             
                                     <template v-if="bookingFormData['dogs']">
                                         <div class="booking-summary-row">
-                                            <div class="description-col"><% bookingFormData['dogs'] %> dog (£<% publicPriceListSettings['pricePerDog'] %> / week )</div>
+                                            <div class="description-col"><% bookingFormData['dogs'] %> dog (£<% publicPriceListSettings['pricePerDog'] %> / week)</div>
                                             <div class="amount-col">£<% bookingFormData['dogPrice'] %></div>
                                         </div>
                                     </template>
@@ -312,12 +360,9 @@
 
                         </div>
 
-                        <div class="payment-instructions">
-                            <p>The first invoice will be sent to you via email upon acceptance of this booking request. If you choose to pay in multiple stages, then further invoices will be sent to you before each payment becomes due. Payment is to be made via bank transfer.</p>
-                        </div>
-
                         <div>
-                            <p>This booking is not confirmed until after the owner hasn't accepted the booking request. The first payment will be due upon acceptance which you will be notified of via email.</p>
+                            <p v-if="bookingFormData['progressivePayments'].length > 1">This booking is not confirmed until the owner has accepted the booking request. You will be notified via email when the status of your booking has been updated and before each payment becomes due.</p>
+                            <p v-if="bookingFormData['progressivePayments'].length == 1">This booking is not confirmed until the owner has accepted the booking request. You will be notified via email when the status of your booking has been updated, and payment is due.</p>
                         </div>
                         
                         <div class="checkout-buttons">
@@ -359,7 +404,7 @@
                     <div class="party-header">
                         <div class="party-header-text">Select Guests</div>
                         <div class="party-close-container" v-on:click="hidePartyOverlay()">
-                            <div class="party-close" >
+                            <div class="party-close">
                                 <span v-for="i in 2"></span>
                             </div>
                         </div>
@@ -425,12 +470,14 @@
                         <div class="swiper-container gallery-swiper">
                             <div class="swiper-wrapper">
                                 <img class="swiper-slide" src="../static/exterior_01.jpg" />
-                                <img class="swiper-slide" src="../static/exterior_02.jpg" />
-                                <img class="swiper-slide" src="../static/exterior_03.jpg" />
                                 <img class="swiper-slide" src="../static/exterior_04.jpg" />
                                 <img class="swiper-slide" src="../static/exterior_06.jpg" />
-                                <img class="swiper-slide" src="../static/exterior_09.jpg" />
-                                <img class="swiper-slide" src="../static/exterior_10.jpg" />
+                                <img class="swiper-slide" src="../static/interior_10.jpg" />
+                                <img class="swiper-slide" src="../static/interior_11.jpg" />
+                                <img class="swiper-slide" src="../static/interior_12.jpg" />
+                                <img class="swiper-slide" src="../static/interior_13.jpg" />
+                                <img class="swiper-slide" src="../static/interior_14.jpg" />
+                                <img class="swiper-slide" src="../static/interior_16.jpg" />
                                 <img class="swiper-slide" src="../static/interior_01.jpg" />
                                 <img class="swiper-slide" src="../static/interior_02.jpg" />
                                 <img class="swiper-slide" src="../static/interior_03.jpg" />
@@ -438,19 +485,15 @@
                                 <img class="swiper-slide" src="../static/interior_05.jpg" />
                                 <img class="swiper-slide" src="../static/interior_07.jpg" />
                                 <img class="swiper-slide" src="../static/interior_08.jpg" />
-                                <img class="swiper-slide" src="../static/interior_10.jpg" />
-                                <img class="swiper-slide" src="../static/interior_11.jpg" />
-                                <img class="swiper-slide" src="../static/interior_12.jpg" />
-                                <img class="swiper-slide" src="../static/interior_13.jpg" />
-                                <img class="swiper-slide" src="../static/interior_14.jpg" />
-                                <img class="swiper-slide" src="../static/interior_16.jpg" />
+                                <img class="swiper-slide" src="../static/exterior_09.jpg" />
+                                <img class="swiper-slide" src="../static/exterior_10.jpg" />
+                                <img class="swiper-slide" src="../static/interior_27.jpg" />
                                 <img class="swiper-slide" src="../static/interior_18.jpg" />
                                 <img class="swiper-slide" src="../static/interior_19.jpg" />
                                 <img class="swiper-slide" src="../static/interior_21.jpg" />
                                 <img class="swiper-slide" src="../static/interior_22.jpg" />
                                 <img class="swiper-slide" src="../static/interior_25.jpg" />
                                 <img class="swiper-slide" src="../static/interior_26.jpg" />
-                                <img class="swiper-slide" src="../static/interior_27.jpg" />
                                 <img class="swiper-slide" src="../static/interior_28.jpg" />
                             </div>  
                             <div class="fullscreen-toggle" v-on:click="toggleFullscreenGallery()">+</div>
@@ -491,13 +534,13 @@
 
                     <div class="cottage-content">
                         <div class="overview">
-                            <p>
-                                <b>Located just a short walk away from Holywell beach at the centre of Meads Village in Eastbourne, this pretty Victorian fisherman’s cottage is an ideal escape for couples and families.</b>
+                                <b>Situated just a short walk away from the seafront and the South Downs at the centre of Meads Village in Eastbourne, this pretty Victorian fisherman’s cottage is an ideal escape for couples and families. The Cottage has been thoughtfully restored to provide a contemporary accommodation, whilst in keeping with the property’s Victorian roots.</b>
                                 <br><br>
-                                This Victorian property is located just a short walk from the seafront in the Meads Village area of Eastbourne. The beach at this side of town is quieter than Eastbourne's main beach and is backed on one side by pretty Italian-style gardens. There is a thriving community in Meads Village, which offers a good choice of shops, restaurants and pubs just a few minutes walk away. Eastbourne town centre, which is well served by local buses, is just two miles from the property and offers a traditional beach with beach hut hire, the lovingly restored Victorian pier and seaside shops.
-                                <br><br>
-                                The cottage has been thoughtfull restored to provide a contemporary accomodation, whilst in keeping with the property's Victorian roots
-                            </p>
+                                <p>Downstairs, there is a lounge with comfy sofas and a TV, which overlooks the gardens. There is also a well equipped kitchen/diner with a good sized dining table, an electric oven, hob and a microwave. From the kitchen there is a door to the patio garden, with a  washing machine in the outbuilding. Upstairs, there is a double bedroom with views over the gardens, which benefits from an en-suite shower room, as well as a twin bedroom and a small single bedroom. Also on this floor, guests can find the large bathroom which offers a shower over bath and WC.</p>
+                                <br>
+                                <p>Outside, there is a secluded courtyard garden with table and chairs, an ideal spot for lunch or an evening drink after a day of exploring the beautiful Sussex countryside. At the front of the cottage, there is the outlook over the square, with private allotments and flower gardens. You can unload your car outside the property and then there is free roadside parking nearby.</p>
+                                <br>
+                                <p>Dogs are charged at £20 each per full or part week.</p>
                         </div>
 
                         <div class="facilities">
@@ -527,7 +570,9 @@
                             </div>
 
                             <div class="location-description">
-                                <p>Eastbourne is a bustling seaside resort on the south coast of England. It has been a popular British holiday destination since Victorian times. The town’s attractive pier and promenade is still a major draw for visitors in search of a traditional seaside experience – you can enjoy a long, level stroll along the sea front whilst enjoying an ice cream or some fish and chips. The pebble beach is a good place to park a deckchair and take in the sun, or paddle in the sea. Great for family breaks and as a romantic getaway, the town has much to offer all visitors. The South Downs Way starts in town and extends 100 miles eastwards to Winchester – one of the first stops on the National Trail are the imposing chalk cliffs of the iconic Beachy Head, a few miles to the east of town. Eastbourne is a big hit with train enthusiasts as it’s home to the Spa Valley Railway and the Miniature Steam Railway. Historians may like Redoubt Fort and The Observatory Science Museum (in nearby Herstmonceux). For all-weather attractions for children why not investigate Fort Fun or the indoor Motcombe Swimming Pool? Further afield, and within a one-hour drive to the west is Brighton, with its own pier, wonderful array of shops and eateries. To the west is Bexhill-on-Sea with its impressive art gallery, the De La Warr Pavillion, and long seafront. Just beyond is the old fishing town of Hastings with its new award-winning designer pier, ancient castle and fishing shanty town. </p>
+                                <p>The Cottage is located just a few minutes walk away from the Holywell beach. The beach at this side of town is quieter than Eastbourne's main beach and is backed on one side by pretty italian-style gardens. There is a thriving community in Meads Village, which offers a good choice of shops, restaurants and pubs. Meads Village is also on the edge of the South Downs national park, with Beachy Head being less than 2 miles away.</p>
+                                <br>
+                                <p>Eastbourne town centre, which is well server by local buses, is just two miles away and offers a traditional beach with beach hut hire, the lovingly restored Victorian pier and seaside shops.</p>
                             </div>
 
                         </div>

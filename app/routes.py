@@ -107,9 +107,9 @@ def get_price_list():
             'discountAmount3Weeks': str(row.discount_amount_3_weeks),
             'discountAmount4Weeks': str(row.discount_amount_4_weeks),
             'bookingId': row.booking_id,
+            'blockFlag': row.block_flag,
             'rangeType': row.range_type,
             'lockFlag': row.lock_flag,
-            'updateFlag': False,
             'deleteFlag': False,
             'selectFlag': False
             }
@@ -122,7 +122,7 @@ def get_public_price_list():
     query = db.session.query(Price_List).filter(Price_List.range_type == 'ACTIVE').order_by(Price_List.start_date.asc())
     public_price_list = []
     for row in query:
-        if row.booking_id:
+        if row.booking_id or row.block_flag:
             booked = True
         else:
             booked = False
@@ -187,7 +187,7 @@ def set_price_list():
             print('segment deleted')
             #works
 
-        elif (segment['updateFlag']):
+        else:
             start_date = datetime.strptime(segment['startDate'], '%Y-%m-%d').date()
             activeEndDatetime = datetime.today() + timedelta(weeks = price_list_settings.active_prices_range)
             futureEndDatetime = activeEndDatetime + timedelta(weeks = price_list_settings.future_prices_range)
@@ -234,22 +234,54 @@ def set_price_list():
                             print('invalid, new segment date overlaps with preexisting booking')
                             continue
 
+            if segment['price2Weeks']:
+                price_2_weeks = Decimal(segment['price2Weeks'])
+            else:
+                price_2_weeks = None
+
+            if segment['price3Weeks']:
+                price_3_weeks = Decimal(segment['price3Weeks'])
+            else:
+                price_3_weeks = None
+
+            if segment['price4Weeks']:
+                price_4_weeks = Decimal(segment['price4Weeks'])
+            else:
+                price_4_weeks = None
+
+            if segment['discountAmount2Weeks']:
+                discount_amount_2_weeks = Decimal(segment['discountAmount2Weeks'])
+            else:
+                discount_amount_2_weeks = None
+
+            if segment['discountAmount3Weeks']:
+                discount_amount_3_weeks = Decimal(segment['discountAmount3Weeks'])
+            else:
+                discount_amount_3_weeks = None
+
+            if segment['discountAmount4Weeks']:
+                discount_amount_4_weeks = Decimal(segment['discountAmount4Weeks'])
+            else:
+                discount_amount_4_weeks = None
+
             if (db_segment):
                 base_query.filter(Price_List.id == segment['id']).update({
                     Price_List.start_date: start_date,
                     Price_List.price: Decimal(segment['price']),
-                    Price_List.price_2_weeks: Decimal(segment['price2Weeks']),
-                    Price_List.price_3_weeks: Decimal(segment['price3Weeks']),
-                    Price_List.price_4_weeks: Decimal(segment['price4Weeks']),
-                    Price_List.discount_amount_2_weeks: Decimal(segment['discountAmount2Weeks']),
-                    Price_List.discount_amount_3_weeks: Decimal(segment['discountAmount3Weeks']),
-                    Price_List.discount_amount_4_weeks: Decimal(segment['discountAmount4Weeks']),
+                    Price_List.price_2_weeks: price_2_weeks,
+                    Price_List.price_3_weeks: price_3_weeks,
+                    Price_List.price_4_weeks: price_4_weeks,
+                    Price_List.discount_amount_2_weeks: discount_amount_2_weeks,
+                    Price_List.discount_amount_3_weeks: discount_amount_3_weeks,
+                    Price_List.discount_amount_4_weeks: discount_amount_4_weeks,
                     Price_List.booking_id: booking_id,
+                    Price_List.block_flag: segment['blockFlag'],
                     Price_List.range_type: range_type,
                     Price_List.lock_flag: segment['lockFlag']
                 },
                 synchronize_session = False
                 )
+                
             else:
                 new_segment = Price_List(
                     start_date = start_date,
@@ -261,6 +293,7 @@ def set_price_list():
                     discount_amount_3_weeks = Decimal(segment['discountAmount3Weeks']),
                     discount_amount_4_weeks = Decimal(segment['discountAmount4Weeks']),
                     booking_id = booking_id,
+                    block_flag = segment['blockFlag'],
                     range_type = range_type,
                     lock_flag = segment['lockFlag']
                 )
@@ -275,22 +308,22 @@ def set_price_list():
 def set_price_list_settings():
     json_request = request.get_json()
     query = db.session.query(Price_List_Settings).first()
-    if (json_request['updateFlag']):
-        #insert validation here
-        query.discount_2_weeks = Decimal(json_request['discount2Weeks'])
-        query.discount_3_weeks = Decimal(json_request['discount3Weeks'])
-        query.discount_4_weeks = Decimal(json_request['discount4Weeks'])
-        query.active_prices_range = int(json_request['activePricesRange'])
-        query.future_prices_range = int(json_request['futurePricesRange'])
-        query.default_changeover_day = json_request['defaultChangeoverDay']
-        query.max_segment_length = json_request['maxSegmentLength']
-        query.price_per_dog = Decimal(json_request['pricePerDog'])
-        query.max_dogs = json_request['maxDogs']
-        query.max_infants = json_request['maxInfants']
-        query.max_guests = json_request['maxGuests']
-        query.min_age = json_request['minAge']
-        query.check_in_time = time.fromisoformat(json_request['checkInTime'])
-        query.check_out_time = time.fromisoformat(json_request['checkOutTime'])
+
+    #insert validation here
+    query.discount_2_weeks = Decimal(json_request['discount2Weeks'])
+    query.discount_3_weeks = Decimal(json_request['discount3Weeks'])
+    query.discount_4_weeks = Decimal(json_request['discount4Weeks'])
+    query.active_prices_range = int(json_request['activePricesRange'])
+    query.future_prices_range = int(json_request['futurePricesRange'])
+    query.default_changeover_day = json_request['defaultChangeoverDay']
+    query.max_segment_length = json_request['maxSegmentLength']
+    query.price_per_dog = Decimal(json_request['pricePerDog'])
+    query.max_dogs = json_request['maxDogs']
+    query.max_infants = json_request['maxInfants']
+    query.max_guests = json_request['maxGuests']
+    query.min_age = json_request['minAge']
+    query.check_in_time = time.fromisoformat(json_request['checkInTime'])
+    query.check_out_time = time.fromisoformat(json_request['checkOutTime'])
 
     db.session.commit()
     update_price_list()
@@ -462,8 +495,6 @@ def set_bookings():
 
                 customer_thr = Thread(target=send_async_email, args=[app, customer_msg])
                 customer_thr.start()
-
-
         
         elif (booking['deleteFlag']):
             db_booking = query.filter(Booking.id == booking['id']).first()
@@ -811,8 +842,7 @@ def get_billing_settings():
         'firstPaymentDueAfter': settings_query.first_payment_due_after,
         'progressiveBillNotice': settings_query.progressive_bill_notice,
         'paymentBreakpoints': payment_breakpoints,
-        'cancellationBreakpoints': cancellation_breakpoints,
-        'updateFlag': False
+        'cancellationBreakpoints': cancellation_breakpoints
         }
 
     return { 'billingSettings': billing_settings }
@@ -1335,8 +1365,7 @@ def get_price_list_settings():
         'maxGuests': settings_query[0].max_guests,
         'minAge': settings_query[0].min_age,
         'checkInTime': settings_query[0].check_in_time.isoformat(timespec='minutes'),
-        'checkOutTime': settings_query[0].check_out_time.isoformat(timespec='minutes'),
-        'updateFlag': False
+        'checkOutTime': settings_query[0].check_out_time.isoformat(timespec='minutes')
         }
 
     return { 'priceListSettings': settings }

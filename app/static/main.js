@@ -717,7 +717,7 @@ const vm = new Vue({
                 let endX = event.changedTouches[0].clientX;
                 let endY = event.changedTouches[0].clientY;
                 if (document.elementFromPoint(endX, endY) === document.querySelector('.party-wrapper')) {
-                    vm.hidePartyOverlay();
+                    this.hidePartyOverlay();
                 }
                 this.partyScrimClose = false;
             }
@@ -1406,7 +1406,7 @@ const vm = new Vue({
                 document.querySelector('.party-wrapper').classList.remove('closed');
                 document.querySelector('.party-wrapper').classList.add('open');
                 document.querySelector('.party-wrapper .party-container').classList.add('open');
-                /*document.querySelector('.party-wrapper .party-container').style.transform = 'translate3d(0, 0, 0)';*/
+                document.querySelector('.party-wrapper .party-container').style.transform = 'translate3d(0, 0, 0)';
     
                 this.disableBodyScroll(document.querySelector('.party-wrapper .party-container'));
             } 
@@ -1420,7 +1420,7 @@ const vm = new Vue({
             document.querySelector('#guests').focus();
             document.querySelector('.party-wrapper').classList.remove('open');
             document.querySelector('.party-wrapper .party-container').classList.remove('open');
-            /*document.querySelector('.party-wrapper .party-container').style.transform = 'translate3d(0, 100%, 0)';*/
+            document.querySelector('.party-wrapper .party-container').style.transform = 'translate3d(0, 100%, 0)';
 
             document.querySelector('.party-wrapper .party-container').ontransitionend = function() {
                 if (!document.querySelector('.party-wrapper').classList.contains('open')) {

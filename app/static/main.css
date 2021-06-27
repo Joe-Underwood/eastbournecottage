@@ -275,63 +275,158 @@ svg {
     }   
         
         .checkout-terms-main {
-            background-color: white;
+            /*background-color: white;
             border: 1px solid #a5c2cf;
             border-radius: 4px;
-            padding: 16px;
+            padding: 16px;*/
+            margin-bottom: 16px;
         }
 
-        /*.house-rules,
-        .booking-terms {
+        .house-rules,
+        .cancellation-terms,
+        .damage-policy {
             background-color: white;
             padding: 16px;
             border: 1px solid #a5c2cf;
             border-radius: 4px;
             margin-bottom: 16px;
-        }*/
+        }
 
-            .house-rules p,
-            .booking-terms p {
+        .house-rules,
+        .cancellation-terms {
+            margin-bottom: 24px;
+        }
+
+            .check-in-time,
+            .check-out-time,
+            .cancellation-terms div {
+                min-height: 25px;
+            }
+
+            .check-out-time {
                 margin-bottom: 8px;
             }
 
-            .house-rules div,
-            .booking-terms div {
+            .min-age-to-book,
+            .max-guests {
+                min-height: 24px;
+            }
+
+            .max-guests {
                 margin-bottom: 16px;
             }
 
             .house-rules h4,
             .booking-terms h4 {
-                padding-bottom: 8px;
+                margin-bottom: 16px;
+                font-family: 'Lato-bold';
+            }
+
+            .max-dogs {
+                display: flex;
+                align-items: center;
+                margin-bottom: 8px;
             }
 
             .no-smoking {
                 display: flex;
+                align-items: center;
+                margin-bottom: 0;
             }
 
                 .no-smoking span {
                     margin-right: 4px;
                 }
+
+            .max-dogs .dogs-icon {
+                fill: rgb(15, 72, 117);
+            }
+
+            .house-rules svg {
+                margin-right: 8px;
+            }
+
+            .cancellation-terms div {
+                margin-bottom: 16px;
+            }
+
+            .cancellation-terms div:last-child {
+                margin-bottom: 0;
+            }
   
     .checkout-3 {
         position: relative;
         display: none;
     }
 
-        .checkout-3 .invoice-details-summary {
+        .checkout-3 h5 {
             margin-bottom: 16px;
         }
 
+        .checkout-3 .invoice-details-summary {
+            margin-bottom: 32px;
+        }
+
             .invoice-details {
-                padding-top: 0;
+                background-color: white;
+                padding: 16px;
+                border: 1px solid #a5c2cf;
+                border-radius: 4px;
+                display: block;
             }
-        
-                .invoice-details-main {
-                    border-top: 1px solid grey;
-                    border-bottom: 1px solid grey;
-                    padding-left: 16px;
-                    padding-right: 16px;
+
+            .booking-plus-personal-summary {
+                display: block;
+            }
+
+                @media screen and (min-width: 600px) {
+                    .booking-plus-personal-summary {
+                        display: flex; 
+                        justify-content: space-between;
+                    }
+
+                    .booking-details-summary,
+                    .personal-details-summary {
+                        width: 50%;
+                    }
                 }
+
+                @media screen and (min-width: 900px) {
+                    .invoice-details {
+                        display: flex;
+                        justify-content: space-between;
+                    }
+
+                    .invoice-details-main {
+                        width: 34%;
+                    }
+
+                    .booking-plus-personal-summary {
+                        width: 66%;
+                    }
+                }
+
+                .invoice-details-main .booking-summary-row:first-of-type {
+                    border-top: 1px solid grey;
+                }
+
+                .invoice-details-main .booking-sumary-row:last-of-type {
+                    border-bottom: 1px solid grey;
+                }
+
+                    .booking-details-summary,
+                    .personal-details-summary {
+                        margin-bottom: 24px;
+                    }
+
+                        .booking-details-summary div,
+                        .personal-details-summary div {
+                            margin-bottom: 4px;
+                        }
+
+                            .address-summary div {
+                                margin-bottom: 0;
+                            }
         
                 .booking-summary-row {
                     display: flex;
@@ -352,6 +447,7 @@ svg {
         
                     .description-col {
                         text-align: left;
+                        margin-right: 16px;
                     }
         
                     .amount-col {
@@ -396,7 +492,6 @@ svg {
             -webkit-appearance: none;
             border: 1px solid #a5c2cf;
             background-color: white;
-            line-height: 36px;
             font-size: 14px;
             position: relative;
         }
@@ -411,6 +506,10 @@ svg {
             border-bottom-right-radius: 4px;
             margin-top: -1px;
         }
+
+            .pay-in-parts div {
+                margin-bottom: 8px;
+            }
 
         .full-payment-no-options {
             border-radius: 4px;
@@ -427,10 +526,6 @@ svg {
             font-family: 'Lato-bold';
             color: rgb(15, 72, 117);
             line-height: 32px;
-        }
-
-        .payment-options div {
-            line-height: 28px;
         }
 
             .payment-option-header {
@@ -608,6 +703,7 @@ svg {
                 position: relative;
                 height: 40px;
                 width: 40px;
+                z-index: 5;
             }
 
                 .party-close {
@@ -615,6 +711,7 @@ svg {
                     height: 20px;
                     display: block;
                     position: relative;
+                    z-index: -1;
                 }
 
                     .party-close span {
@@ -624,6 +721,7 @@ svg {
                         width: 100%;
                         background-color: rgb(15, 72, 117);
                         border-radius: 3px;
+                        z-index: -1;
                     }
 
                     .party-close span:nth-child(1) {
@@ -1166,8 +1264,6 @@ svg {
                 font-weight: 200;
                 line-height: 40px;
                 height: 40px;
-                color:rgb
-
             }
 
 .content-wrapper {
@@ -1408,6 +1504,10 @@ svg {
         .facilities {
             display: none;
         }
+
+            .facilities ul {
+                list-style: disc;
+            }
 
         .location {
             display: none;
