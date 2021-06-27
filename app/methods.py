@@ -82,7 +82,7 @@ def update_price_list():
             segment.price_4_weeks = 0
             segment.discount_amount_4_weeks = 0   
             
-        if index < db_price_list_len - 1:
+        elif index < db_price_list_len - 1:
             if db_price_list[index + 1].price:
                 segment.price_2_weeks = segment.price + db_price_list[index + 1].price
                 segment.discount_amount_2_weeks = segment.price_2_weeks * (db_price_list_settings.discount_2_weeks / 100)

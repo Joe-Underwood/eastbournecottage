@@ -1414,7 +1414,6 @@ const vm = new Vue({
                 document.querySelector('.booking .guests-dropdown').classList.add('open');
                 window.addEventListener('click', this.hideGuestsDropdown);
             }
-            
         },
         hidePartyOverlay() {
             document.querySelector('#guests').focus();
