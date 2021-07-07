@@ -142,7 +142,7 @@
 
                         <div class="checkout-buttons">
                             <button class="checkout-back" type="button" v-on:click="checkoutPrev()"><svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 20 20" height="18px" viewBox="0 0 20 20" width="18px" fill="rgb(15, 72, 117)"><rect fill="none" height="20" width="20"/><polygon points="14.41,3.41 13,2 5,10 13,18 14.41,16.59 7.83,10"/></svg>BACK</button>
-                            <button type="button" v-on:click="checkoutNext()">CONTINUE</button>
+                            <button type="button" :class="{ disabled: !bookingFormDataComplete }" v-on:click="checkoutNext()">CONTINUE</button>
                         </div>
                         
                     <form>
@@ -159,7 +159,7 @@
                             <p class="check-in-time"><b>Check in</b> after <% publicPriceListSettings['checkInTime'] %></p>
                             <p class="check-out-time"><b>Check out</b> before <% publicPriceListSettings['checkOutTime'] %></p>
                             <p class="min-age-to-book">Minimum age to book: <% publicPriceListSettings['minAge'] %></p>
-                            <p class="max-guests">Maximum overnight guests: <% publicPriceListSettings['maxGuests'] %></p>
+                            <p class="max-guests">Maximum overnight guests (excluding infants): <% publicPriceListSettings['maxGuests'] %></p>
 
                             <template v-if="publicPriceListSettings['maxDogs'] === 0">
                                 <p class="max-dogs">No dogs allowed</p>
@@ -329,7 +329,7 @@
                                         <input type="radio" :checked="bookingFormData['payInFull']" />
                                     </div>
                                     
-                                    <div>Pay the full amount of £<% bookingFormData['total'] %>, due within 7 days of this booking being confirmed.</div>
+                                    <div>Pay the full amount of £<% bookingFormData['total'] %>, <template v-if="publicBillingSettings['firstPaymentDueAfter'] <= 0">due upon acceptance of this booking request</template><template v-else>due within <% publicBillingSettings['firstPaymentDueAfter'] %> of acceptance of this booking request</template></div>
                                     
                                 </div>
                                 <div class="pay-in-parts" v-on:click="payInParts()" :class="{ focused: !bookingFormData.payInFull }"> 
@@ -354,15 +354,15 @@
                             <template v-else>
                                 <h3>Payments</h3>
                                 <div class="full-payment-no-options">
-                                    <p>The full total of £<% bookingFormData['total'] %> is due within 7 days of this booking request being accepted. Payment is to be made via bank transfer.</p>
+                                    <p>The full total of £<% bookingFormData['total'] %> is <template v-if="publicBillingSettings['firstPaymentDueAfter'] <= 0">due upon acceptance of this booking request</template><template v-else>due within <% publicBillingSettings['firstPaymentDueAfter'] %> of acceptance of this booking request</template></p>
                                 </div>
                             </template>
 
                         </div>
 
                         <div>
-                            <p v-if="bookingFormData['progressivePayments'].length > 1">This booking is not confirmed until the owner has accepted the booking request. You will be notified via email when the status of your booking has been updated and before each payment becomes due.</p>
-                            <p v-if="bookingFormData['progressivePayments'].length == 1">This booking is not confirmed until the owner has accepted the booking request. You will be notified via email when the status of your booking has been updated, and payment is due.</p>
+                            <p v-if="bookingFormData['progressivePayments'].length > 1">Your booking is not confirmed until the owner has accepted this booking request and the first payment has been received. You will be notified via email when the status of your booking has been updated and before each payment becomes due.</p>
+                            <p v-if="bookingFormData['progressivePayments'].length == 1">Your booking is not confirmed until the owner has accepted this booking request and payment has been received. You will be notified via email when the status of your booking has been updated, and payment is due.</p>
                         </div>
                         
                         <div class="checkout-buttons">
@@ -377,7 +377,7 @@
 
                         <section class="booking-form-complete">
                             <h1>Thanks for booking with us!</h1>
-                            <p>You should receive an email shortly confirming submission of this booking request. As soon as the booking has been accepted/rejected you will be notified again via email. If you have any questions please contact us at anytime at bookings@thecottageeastbourne.co.uk! </p>
+                            <p>You should receive an email shortly confirming submission of this booking request. As soon as the booking has been accepted you will be notified again via email. If you have any questions please contact us at bookings@thecottageeastbourne.co.uk! </p>
                         </section>
     
                     </template>
@@ -391,9 +391,6 @@
                     </template>
                     
                 </section>
-
-                
-                
                 
             </div>
 

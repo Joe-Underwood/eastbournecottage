@@ -982,6 +982,8 @@ const vm = new Vue({
 
             pageElement.classList.remove('hidden');
 
+            document.querySelector('.bookings .main-view-buttons').classList.add('invisible');
+            document.querySelector('.customers .main-view-buttons').classList.add('invisible');
         },
         exitFullscreen(e) {
             function pageLevelElement(el) {
@@ -999,6 +1001,9 @@ const vm = new Vue({
 
             pageElement.classList.add('hidden');
             cardElement.classList.remove('invisible');
+
+            document.querySelector('.bookings .main-view-buttons').classList.remove('invisible');
+            document.querySelector('.customers .main-view-buttons').classList.remove('invisible');
         },
         adultsDecrease(booking, e) {
             e.preventDefault();

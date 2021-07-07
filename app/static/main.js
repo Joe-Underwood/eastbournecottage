@@ -305,6 +305,24 @@ const vm = new Vue({
             else {
                 return null;
             }
+        },
+        bookingFormDataComplete: function() {
+            if (this.bookingFormData['arrivalDate'] && 
+                this.bookingFormData['departureDate'] && 
+                this.bookingFormData['adults'] && 
+                this.bookingFormData['firstName'] && 
+                this.bookingFormData['lastName'] && 
+                this.bookingFormData['emailAddress'] && 
+                this.bookingFormData['phoneNumber'] && 
+                this.bookingFormData['addressLine1'] &&
+                this.bookingFormData['townOrCity'] && 
+                this.bookingFormData['countyOrRegion'] &&
+                this.bookingFormData['postcode']) {
+                return true;
+            }
+            else {
+                return false;
+            }
         }
     },
     created: function() {
@@ -1519,27 +1537,30 @@ const vm = new Vue({
             this.checkoutStep--;
         },      
         checkoutNext() {
-            if (this.checkoutStep === 1) {
-                document.querySelector('.checkout-1').style.display = 'none';
-                document.querySelector('.checkout-1').classList.add('prev');
-
-                document.querySelector('.checkout-2').style.display = 'block';
-                setTimeout( () => {
-                    document.querySelector('.checkout-2').classList.remove('next');
-                }, 25);
-                
-            } 
-            else if (this.checkoutStep === 2) {
-                document.querySelector('.checkout-2').style.display = 'none';
-                document.querySelector('.checkout-2').classList.add('prev');
-
-                document.querySelector('.checkout-3').style.display = 'block';
-                setTimeout( () => {
-                    document.querySelector('.checkout-3').classList.remove('next');
-                }, 25);
-                
+            if (this.bookingFormDataComplete) {
+                if (this.checkoutStep === 1) {
+                    document.querySelector('.checkout-1').style.display = 'none';
+                    document.querySelector('.checkout-1').classList.add('prev');
+    
+                    document.querySelector('.checkout-2').style.display = 'block';
+                    setTimeout( () => {
+                        document.querySelector('.checkout-2').classList.remove('next');
+                    }, 25);
+                    
+                } 
+                else if (this.checkoutStep === 2) {
+                    document.querySelector('.checkout-2').style.display = 'none';
+                    document.querySelector('.checkout-2').classList.add('prev');
+    
+                    document.querySelector('.checkout-3').style.display = 'block';
+                    setTimeout( () => {
+                        document.querySelector('.checkout-3').classList.remove('next');
+                    }, 25);
+                    
+                }
+                this.checkoutStep++;
             }
-            this.checkoutStep++;
+            
         },
         //----------------- BOOKING FORM (main)------------------------------------//
         //---------------PARTY INPUTS-------------------//

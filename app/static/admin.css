@@ -46,7 +46,8 @@
 }
 
 body {
-    overflow-x:hidden;
+    overflow-x: hidden;
+    background-color:rgb(246, 249, 250);
 }
 
 .settings {
@@ -100,6 +101,20 @@ button:active {
     bottom: 64px;
     width: 100%;
 }
+
+.settings .buttons-container {
+    bottom: 20px;
+}
+
+.page .buttons-container,
+.billing-settings .buttons-container {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+    .buttons-inner-container {
+        display: flex;
+    }
 
 h1, h2 {
     font-family: 'Arapey';
@@ -164,7 +179,8 @@ label.invalid {
     margin-bottom: 16px;
 }
 
-.settings label {
+.settings label,
+.billing-settings label {
     position: relative;
     padding-top: 0;
     padding-left: 16px;
@@ -194,7 +210,8 @@ label.invalid {
         padding-top: 0;
     }
 
-.settings input {
+.settings input,
+.billing-settings input {
     border: none;
     text-align: right;
     padding-right: 16px;
@@ -849,12 +866,7 @@ svg {
 
 /*----- margin breakpoints ------------------*/
 @media screen and (max-width: 744px) {
-    .price-list-main,
-    .price-list-header,
-    .bookings-main,
-    .customers-main,
-    .billing-main,
-    .settings,
+    .content-inner-wrapper,
     .page {
         padding-left: 16px;
         padding-right: 16px;
@@ -870,20 +882,16 @@ svg {
         position: relative;
     }
 
-    .buttons-container {
+    .page .buttons-container,
+    .billing-settings .buttons-container {
         width: calc(100% - 32px);
     }
 }
 
 @media screen and (min-width: 745px) {
-    .price-list-main,
-    .price-list-header,
-    .bookings-main,
-    .customers-main,
-    .billing-main,
+    .content-inner-wrapper,
     .tabs,
-    .settings,
-    .page {
+    .page{
         padding-left: 40px;
         padding-right: 40px;
     }
@@ -893,7 +901,8 @@ svg {
         position: relative;
     }
 
-    .buttons-container {
+    .page .buttons-container,
+    .billing-settings .buttons-container {
         width: calc(100% - 80px);
     }
 }
@@ -913,13 +922,8 @@ svg {
 }
 
 @media screen and (min-width: 1158px) {
-    .price-list-main,
-    .price-list-header,
-    .bookings-main,
-    .customers-main,
-    .billing-main,
+    .content-inner-wrapper,
     .tabs,
-    .settings,
     .page {
         padding-left: 80px;
         padding-right: 80px;
@@ -932,8 +936,10 @@ svg {
         position: relative;
     }
 
-    .buttons-container {
+    .page .buttons-container,
+    .billing-settings .buttons-container {
         width: calc(100% - 160px);
+        max-width: 997px;
     }
 }
 /*---------- new billing input overlay ---------------*/
@@ -1107,11 +1113,10 @@ svg {
 }
 
 .invisible {
-    visibility: none !important;
+    visibility: hidden !important;
 }
 
     .price-list-header {
-        background-color: white;
         display: block;
         position: relative;
         padding-top: 16px;
@@ -1421,17 +1426,14 @@ svg {
 
         .page {
             display: block;
-            position: fixed;
+            position: absolute;
             width: 100%;
-            height: 100%;
+            height: auto;
             left: 0;
             top: 0;
             z-index: 5;
-            box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.20);
-            background-color: white;
+            background-color: rgb(246, 249, 250);
             overflow: auto;
-            padding-left: 16px;
-            padding-right: 16px;
         }
 
             .page-close-container {
@@ -1561,6 +1563,10 @@ svg {
             width: 100%;
         }
 
+        .customer .card.invisible {
+            visibility: hidden;
+        }
+
             .customer-name {
                 grid-column: 1 / span 1;
                 grid-row: 1 / span 1;
@@ -1586,35 +1592,18 @@ svg {
                 font-size: 12px;
             }*/
 
-        .customer .page {
-            background-color: white;
-            display: block;
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            left: 0;
-            top: 0;
-            z-index: 5;
-            box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.20);
-            overflow: auto;
-        }
 
             .page-delete {
-                position: absolute;
-                left: 0;
-                bottom: 0;
+                position: relative;
             }
 
             .page-update {
-                position: absolute;
-                right: 0;
-                bottom: 0;
+                position: relative;
+                margin-left: auto;
             }
 
         .cards-add {
-            position: absolute;
-            bottom: 0;
-            left: 0;
+            position: relative;
             height: 40px;
             width: 40px;
             font-size: 22px;
@@ -1630,14 +1619,13 @@ svg {
         }
 
         .cards-select {
-            position: absolute;
-            bottom: 0;
-            right: 0;
+            position: relative;
             text-align: center;
             color: rgb(246, 249, 250);
             box-shadow: none;
             border-radius: 4px;
             z-index: 2;
+            margin-left: auto;
         }
 
         .cards-select.hidden {
@@ -1645,24 +1633,24 @@ svg {
         }
 
         .cards-select.shifted {
-            right: 104px;
         }
 
         .cards-update {
-            position: absolute;
-            bottom: 0;
-            right: 0;
+            position: relative;
             text-align: center;
             color: rgb(246, 249, 250);
             box-shadow: none;
             border-radius: 4px;
             z-index: 5;
+            margin-left: auto;
+        }
+
+        .price-list-main .cards-update {
+            margin-left: 16px;
         }
 
         .cards-cancel {
-            position: absolute;
-            bottom: 0;
-            left: 0;
+            position: relative;
             text-align: center;
             color: rgb(246, 249, 250);
             box-shadow: none;
@@ -1675,9 +1663,7 @@ svg {
         }
 
         .cards-delete {
-            position: absolute;
-            bottom: 0;
-            right: 0;
+            position: relative;
             text-align: center;
             color: rgb(246, 249, 250);
             box-shadow: none;
@@ -1690,9 +1676,7 @@ svg {
         }
 
         .cards-block {
-            position: absolute;
-            bottom: 0;
-            right: 50%;
+            position: relative;
             text-align: center;
             color: rgb(246, 249, 250);
             box-shadow: none;
@@ -1760,7 +1744,6 @@ svg {
                     line-height: 40px;
                     height: 40px;
                     width: 40px;
-                    background-color: white;
                     text-align: center;
                     transition: all 0.2s;
                     color: rgb(15, 72, 117);
@@ -1824,8 +1807,6 @@ svg {
     }
 
 .billing-settings {
-    padding-left: 16px;
-    padding-right: 16px;
 }
 
     .payment-terms-settings {
@@ -1926,6 +1907,7 @@ svg {
         display: flex;
         justify-content: space-between;
         width: 100%;
+        margin-bottom: 32px;
     }
 
     .controls-add {

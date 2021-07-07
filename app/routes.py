@@ -352,6 +352,7 @@ def get_bookings():
             'dogPrice': str(row.dog_price),
             'total': str(row.total),
             'status': row.status,
+            'bookingType': row.booking_type,
             'updateFlag': False,
             'updateStatusFlag': False,
             'deleteFlag': False,
@@ -384,7 +385,7 @@ def set_bookings():
             customer_id = None
 
         date_segments = []
-        if (booking['updateStatusFlag']):
+        if (booking['updateStatusFlag'] and booking['type'] == 'STANDARD'):
             print(booking['status'])
             query.filter(Booking.id == booking['id']).update({
                 Booking.status: booking['status']
@@ -513,7 +514,8 @@ def set_bookings():
                     multi_week_discount = Decimal(booking['multiWeekDiscount']),
                     dog_price = Decimal(booking['dogPrice']),
                     total = Decimal(booking['total']),
-                    status = booking['status']
+                    status = booking['status'],
+                    booking_type = booking['bookingType']
                 )
                 db.session.add(delete_booking)
                 for segment in db_booking.date_segments:
@@ -595,7 +597,8 @@ def set_bookings():
                     Booking.multi_week_discount: Decimal(booking['multi_week_discount']),
                     Booking.dog_price: Decimal(booking['dogPrice']),
                     Booking.total: Decimal(booking['total']),
-                    Booking.status: booking['status']
+                    Booking.status: booking['status'],
+                    Booking.booking_type: booking['bookingType']
                 },
                 synchronize_session = False
                 )
@@ -616,11 +619,13 @@ def set_bookings():
                     multi_week_discount = Decimal(booking['multiWeekDiscount']),
                     dog_price = Decimal(booking['dogPrice']),
                     total = Decimal(booking['total']),
-                    status = booking['status']
+                    status = booking['status'],
+                    booking_type = booking['bookingType']
                 )
                 for segment in date_segments:
                     new_booking.date_segments.append(segment)
                 db.session.add(new_booking)
+                
     db.session.commit()
     print('Booking updated')
     return { 'success': True }

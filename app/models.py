@@ -53,6 +53,7 @@ class Booking(db.Model):
     dog_price = db.Column(db.Numeric(10, 2))
     total = db.Column(db.Numeric(10,2))
     status = db.Column(db.Enum('AWAITING_CONFIRMATION', 'ACCEPTED', 'REJECTED', 'ACTIVE', 'INACTIVE', name='status'), nullable=True)
+    booking_type = db.Column(db.Enum('STANDARD', 'OWNER', 'EXTERNAL', name='booking_type'), nullable=False, default='STANDARD')
 
 #consider splitting this up into invoices, payments etc.
 class Billing(db.Model):
@@ -156,6 +157,7 @@ class Delete_Booking(db.Model):
     dog_price = db.Column(db.Numeric(10, 2))
     total = db.Column(db.Numeric(10,2))
     status = db.Column(db.Enum('AWAITING_CONFIRMATION', 'ACCEPTED', 'REJECTED', 'ACTIVE', 'INACTIVE', name='status'), default='INACTIVE', nullable=True)
+    booking_type = db.Column(db.Enum('STANDARD', 'OWNER', 'EXTERNAL'), nullable=True, default='standard')
 
 class Delete_Billing(db.Model):
     id = db.Column(db.Integer, primary_key=True)
