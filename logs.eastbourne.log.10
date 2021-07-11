@@ -1,114 +1,100 @@
-2021-06-19 20:11:53,954 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-19 20:31:43,061 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-19 20:31:43,139 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-19 20:31:43,153 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-19 20:31:43,192 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-19 20:32:02,685 ERROR: Exception on /set_price_list [POST] [in /hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py:1891]
-Traceback (most recent call last):
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
-    response = self.full_dispatch_request()
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
-    reraise(exc_type, exc_value, tb)
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
-    raise value
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
-    return self.view_functions[rule.endpoint](**req.view_args)
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
-    return func(*args, **kwargs)
-  File "/hdd/code/eastbournecottage/app/routes.py", line 243, in set_price_list
-    Price_List.price_4_weeks: Decimal(segment['price4Weeks']),
-decimal.InvalidOperation: [<class 'decimal.ConversionSyntax'>]
-2021-06-19 20:32:37,819 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-19 20:32:37,838 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-19 20:32:37,918 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-19 20:32:37,978 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-19 20:36:17,981 ERROR: Exception on /set_price_list [POST] [in /hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py:1891]
-Traceback (most recent call last):
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
-    response = self.full_dispatch_request()
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
-    reraise(exc_type, exc_value, tb)
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
-    raise value
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
-    return self.view_functions[rule.endpoint](**req.view_args)
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
-    return func(*args, **kwargs)
-  File "/hdd/code/eastbournecottage/app/routes.py", line 243, in set_price_list
-    Price_List.price_4_weeks: Decimal(segment['price4Weeks']),
-decimal.InvalidOperation: [<class 'decimal.ConversionSyntax'>]
-2021-06-19 20:37:44,505 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-19 20:37:44,530 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-19 20:37:44,588 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-19 20:37:44,661 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-19 20:37:52,367 ERROR: Exception on /set_price_list [POST] [in /hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py:1891]
-Traceback (most recent call last):
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
-    response = self.full_dispatch_request()
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
-    reraise(exc_type, exc_value, tb)
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
-    raise value
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
-    return self.view_functions[rule.endpoint](**req.view_args)
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
-    return func(*args, **kwargs)
-  File "/hdd/code/eastbournecottage/app/routes.py", line 245, in set_price_list
-    Price_List.price_4_weeks: Decimal(segment['price4Weeks']),
-decimal.InvalidOperation: [<class 'decimal.ConversionSyntax'>]
-2021-06-20 17:14:37,953 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 17:14:37,958 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 17:14:37,960 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 17:14:37,961 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 17:31:29,520 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 17:31:29,537 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 17:31:29,633 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 17:31:29,642 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 17:35:11,638 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 17:35:11,724 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 17:35:11,815 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 17:35:11,852 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 17:36:13,051 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 17:36:13,079 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 17:36:13,126 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 17:36:13,213 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 17:42:29,417 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 17:42:29,420 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 17:42:29,453 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 17:42:29,481 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 17:45:26,656 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 17:45:26,699 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 17:45:26,782 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 17:45:26,864 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 19:12:10,755 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 19:12:10,821 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 19:12:10,837 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 19:12:10,862 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 19:13:49,024 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 19:13:49,055 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 19:13:49,149 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 19:13:49,213 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 19:28:20,441 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 19:28:20,478 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 19:28:20,559 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 19:28:20,633 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 19:30:44,902 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 19:30:44,969 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 19:30:45,003 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 19:30:45,090 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 21:42:23,322 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 21:42:23,391 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 21:42:23,416 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-06-20 21:42:23,470 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-20 21:48:14,938 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-20 21:48:15,057 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-20 21:48:15,073 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-20 21:48:15,086 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-20 21:50:07,812 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-20 21:50:07,821 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-20 21:50:07,871 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-20 21:50:07,878 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-20 21:50:55,310 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-20 21:50:55,310 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-20 21:50:55,360 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-20 21:50:55,387 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 11:24:42,523 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 11:24:42,524 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 11:24:42,524 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 11:24:42,533 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 11:46:24,835 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 11:46:24,927 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 11:46:24,985 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 11:46:25,028 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:05:33,374 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:05:33,469 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:05:33,537 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:05:33,634 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:06:35,053 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:06:35,076 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:06:35,142 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:06:35,173 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:19:16,975 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:19:16,995 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:19:17,028 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:19:17,067 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:21:23,556 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:21:23,559 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:21:23,649 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:21:23,674 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:30:20,107 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:30:20,136 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:30:20,229 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:30:20,272 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:32:00,521 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:32:00,536 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:32:00,558 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:32:00,581 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:40:35,074 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:40:35,118 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:40:35,210 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:40:35,263 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:42:27,919 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:42:27,962 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:42:28,030 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 13:42:28,064 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 17:20:20,338 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 17:20:20,355 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 17:20:20,369 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 17:20:20,369 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 17:25:58,832 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 17:25:58,843 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 17:25:58,902 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 17:25:58,902 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 17:41:50,141 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 17:41:50,189 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 17:41:50,208 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 17:41:50,243 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 20:30:26,282 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 20:30:26,366 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 20:30:26,456 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 20:30:26,525 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 20:35:13,256 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 20:35:13,289 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 20:35:13,381 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-21 20:35:13,402 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:03:23,106 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:03:23,107 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:03:23,108 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:03:23,110 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:13:55,074 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:13:55,171 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:13:55,236 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:13:55,310 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:28:23,794 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:28:23,828 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:28:23,834 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:28:23,924 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:29:52,239 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:29:52,307 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:29:52,382 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:29:52,446 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:33:34,523 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:33:34,547 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:33:34,632 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:33:34,633 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:34:53,473 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:34:53,571 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:34:53,588 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:34:53,651 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:35:01,606 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:35:01,683 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:35:01,775 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-06-25 17:35:01,840 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]

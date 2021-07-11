@@ -35,7 +35,7 @@ def login():
             #flask('Invalid username or password')
             return redirect(url_for('login'))
         
-        login_user(user, remember=form.remember_me.data)
+        login_user(user)
         return redirect(url_for('admin'))
     return render_template('login.html', title='Sign In', form=form)
 
