@@ -1170,7 +1170,7 @@ const vm = new Vue({
             }
             element.classList.add('arrival-date');
             this.bookingFormData.arrivalDate = date.toISOString().slice(0, 10);
-            this.arrivalDateString = date.toDateString();
+            this.arrivalDateString = date.toLocaleString('default', { day: 'numeric', month: 'short', year: 'numeric' });
             this.arrivalDateObject = date;
             /*else if (date > departureDateObject) {
                 this.removeArrivalDate();
@@ -1212,7 +1212,7 @@ const vm = new Vue({
                     }
                     element.classList.add('departure-date');
                     this.bookingFormData.departureDate = date.toISOString().slice(0, 10);
-                    this.departureDateString = date.toDateString();
+                    this.departureDateString = date.toLocaleString('default', { day: 'numeric', month: 'short', year: 'numeric' });
                     this.departureDateObject = date;
                     if (!this.bookingFormData.adults) {
                         this.displayPartyOverlay();

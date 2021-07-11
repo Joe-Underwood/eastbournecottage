@@ -27,11 +27,14 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('admin'))
     form = LoginForm()
+
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
-        if user is None or not user.check_password(form.password.data):
+
+        if user is None or not user.check_password(form.password.data) or not user.verify_totp(form.token.data):
             #flask('Invalid username or password')
             return redirect(url_for('login'))
+        
         login_user(user, remember=form.remember_me.data)
         return redirect(url_for('admin'))
     return render_template('login.html', title='Sign In', form=form)
@@ -353,6 +356,7 @@ def get_bookings():
             'total': str(row.total),
             'status': row.status,
             'bookingType': row.booking_type,
+            'externalNote': row.external_note,
             'updateFlag': False,
             'updateStatusFlag': False,
             'deleteFlag': False,
@@ -515,7 +519,8 @@ def set_bookings():
                     dog_price = Decimal(booking['dogPrice']),
                     total = Decimal(booking['total']),
                     status = booking['status'],
-                    booking_type = booking['bookingType']
+                    booking_type = booking['bookingType'],
+                    external_note = booking['externalNote']
                 )
                 db.session.add(delete_booking)
                 for segment in db_booking.date_segments:
@@ -549,14 +554,16 @@ def set_bookings():
                 print('booking marked for deletion does not exist')
                 continue
         elif (booking['updateFlag']):
-            #match with price_list segment if possible
-            #find arrival date segment first, then departure date segment
-            if (not departure_date > arrival_date):
-                print('departure date must be after arrival date')
-                continue
-            if (not int(booking['adults']) >= 1):
-                print('no. of adults must be at least 1')
-                continue
+            if (booking['bookingType'] == 'STANDARD'):
+
+                #match with price_list segment if possible
+                #find arrival date segment first, then departure date segment
+                if (not departure_date > arrival_date):
+                    print('departure date must be after arrival date')
+                    continue
+                if (not int(booking['adults']) >= 1):
+                    print('no. of adults must be at least 1')
+                    continue
             
             def checkDateSegments():
                 arrivalSegmentFound = False
@@ -594,11 +601,12 @@ def set_bookings():
                     Booking.infants: int(booking['infants']),
                     Booking.dogs: int(booking['dogs']),
                     Booking.stay_price: Decimal(booking['stayPrice']),
-                    Booking.multi_week_discount: Decimal(booking['multi_week_discount']),
+                    Booking.multi_week_discount: Decimal(booking['multiWeekDiscount']),
                     Booking.dog_price: Decimal(booking['dogPrice']),
                     Booking.total: Decimal(booking['total']),
                     Booking.status: booking['status'],
-                    Booking.booking_type: booking['bookingType']
+                    Booking.booking_type: booking['bookingType'],
+                    Booking.external_note: booking['externalNote']
                 },
                 synchronize_session = False
                 )
@@ -620,7 +628,8 @@ def set_bookings():
                     dog_price = Decimal(booking['dogPrice']),
                     total = Decimal(booking['total']),
                     status = booking['status'],
-                    booking_type = booking['bookingType']
+                    booking_type = booking['bookingType'],
+                    external_note = booking['externalNote']
                 )
                 for segment in date_segments:
                     new_booking.date_segments.append(segment)
@@ -1086,7 +1095,8 @@ def booking():
         multi_week_discount = Decimal(correct_multi_week_discount),
         dog_price = Decimal(booking_form_data['dogPrice']),
         total = Decimal(correct_total),
-        status = 'AWAITING_CONFIRMATION'
+        status = 'AWAITING_CONFIRMATION',
+        booking_type = 'STANDARD'
     )
 
     customer = Customer(

@@ -236,6 +236,19 @@ label.invalid {
     z-index: 0;
 }
 
+    .input-container input {
+        height: 56px;
+        padding-left: 16px;
+        padding-right: 40px;
+        border-radius: 4px;
+        outline: none;
+        padding-top: 20px;
+        appearance: none;
+        -webkit-appearance: none;
+        border: 1px solid #a5c2cf;
+        font-size: 16px;
+    }
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -961,7 +974,7 @@ svg {
     transform: translate3d(0, 100%, 0);
 }
 
-.new-billing-wrapper.open {
+.new-billing-wrapper.open{
     background-color: rgba(0, 0, 0, 0.5);
     transform: translate3d(0, 0, 0);
 }
@@ -1034,59 +1047,24 @@ svg {
                         transform: translate3d(0, 9px, 0) rotate3d(0, 0, 1, -45deg);
                     }
 
-        .new-billing-input-container {
-            padding-left: 16px;
-            padding-right: 16px;
-            position: relative;
-            display: flex;
-            height: 56px;
-            width: 100%;
-            margin-bottom: 8px;
-        }
+                    .new-billing-inner-container .settings-input-container {
+                        position: relative;
+                        display: flex;
+                        height: 56px;
+                        width: 100%;
+                    }
 
-            .new-billing-input-container label {
-                position: relative;
-                padding-left: 8px;
-                line-height: 16px;
-            }
+                        .new-billing-inner-container label {
+                            position: relative;
+                            padding-left: 16px;
+                            line-height: 16px;
+                        }
 
-            .new-billing-input {
-                display: flex;
-                position: relative;
-                margin-left: auto;
-                justify-content: flex-end;
-                height: 40px;
-                margin-top: 8px;
-            }
+                        .new-billing-inner-container input {
+                            height: 100%;
+                            border: none;
+                        }
 
-                .new-billing-input button {
-                    height: 40px;
-                    width: 40px;
-                    background-color: white;
-                    border: 1px solid #a5c2cf;
-                    font-size: 22px;
-                    text-align: center;
-                    color: rgb(113, 113, 113);
-                    box-shadow: none;
-                    border-radius: 100%;
-                }
-
-                .new-billing-input button.inactive {
-                    opacity: 0.35;
-                }
-
-                .new-billing-input div {
-                    line-height: 40px;
-                    height: 40px;
-                    width: 40px;
-                    background-color: white;
-                    text-align: center;
-                    color: rgb(113, 113, 113);
-                }
-
-                .new-billing-input div.active {
-                    color: rgb(15, 72, 117);
-                }
 /*----------- PRICE-LIST-EDITOR ----------------------------*/
 .page-content {
     background-color: rgb(246, 249, 250);
@@ -1249,6 +1227,18 @@ svg {
                     background-color: green;
                 }
 
+                .booked-standard {
+                    background-color: green;
+                }
+
+                .booked-owner {
+                    background-color: turquoise;
+                }
+
+                .booked-external {
+                    background-color: blanchedalmond;
+                }
+
                 .blocked {
                     background-color: yellow;
                 }
@@ -1383,6 +1373,25 @@ svg {
             width: 100%;
         }
 
+            .booking-type-indicator {
+                position: absolute;
+                right: 0;
+                top: 0;
+                display: flex;
+            }
+
+                .booking-type-name {
+                    transform: rotateZ(90deg);
+                    width: 64px;
+                    text-align: center;
+                    font-size: 11px;
+                }
+
+                .booking-type-stripe {
+                    height: 64px;
+                    width: 24px;
+                }
+
             .booking .card.invisible {
                 visibility: hidden;
             }
@@ -1510,6 +1519,7 @@ svg {
                 text-align: right;
                 padding-right: 16px;
                 height: 100%;
+                min-width: 160px;
                 padding-left: 0;
             }
 
@@ -1669,6 +1679,7 @@ svg {
             box-shadow: none;
             border-radius: 4px;
             z-index: 5;
+            margin-left: auto;
         }
 
         .cards-delete.hidden {
@@ -1921,3 +1932,76 @@ svg {
         padding-bottom: 48px;
         z-index: -10;
     }
+
+.new-billing-inner-container {
+    margin-left: 8px;
+    margin-right: 8px;
+    margin-bottom: 96px;
+}
+
+.overlay-confirm-button {
+    margin-left: auto;
+}
+
+.dialog-box {
+    position: fixed;
+    display: block;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    transform: translate3d(0, 0, 0);
+    transition: all 0.2s;
+    box-shadow: 0 24px 38px 3px rgba(0,0,0,0.14), 0 9px 46px 8px rgba(0,0,0,0.12), 0 11px 15px -7px rgba(0,0,0,0.20);
+    z-index: 10;
+}
+
+.dialog-box.closed {
+    transform: translate3d(0, 100%, 0);
+    box-shadow: none;
+}
+
+    .dialog-box .content-inner-wrapper {
+        padding-top: 16px;
+        padding-bottom: 16px;
+    }
+
+.login-page-container {
+    background-color:white;
+    height: 100%;
+    width: 100%;
+}
+
+@media screen and (max-width: 744px) {
+    .login-page-container {
+        padding: 16px;
+    }
+}
+
+@media screen and (min-width: 745px) {
+    .login-page-container {
+        padding: 40px;
+    }
+}
+
+@media screen and (min-width: 1158px) {
+    .login-page-container {
+        padding: 80px;
+    }
+}
+
+    .login-form-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 16px;
+        background-color: rgb(246, 249, 250);
+        border-radius: 4px;
+        border: 1px solid #a5c2cf;
+        max-width: 400px;
+    }
+
+        .login-form-container input {
+            background-color:white;
+        }

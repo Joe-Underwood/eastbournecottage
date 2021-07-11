@@ -326,7 +326,10 @@
                                 <div class="pay-in-full" v-on:click="payInFull()" :class="{ focused: bookingFormData.payInFull }">
                                     <div class="payment-option-header">
                                         <h4>Pay In Full</h4>
-                                        <input type="radio" :checked="bookingFormData['payInFull']" />
+                                        <div class="radio-input-border" :class="{ checked: bookingFormData['payInFull'] }">
+                                            <input type="radio" :checked="bookingFormData['payInFull']" />
+                                        </div>
+                                        
                                     </div>
                                     
                                     <div>Pay the full amount of £<% bookingFormData['total'] %>, <template v-if="publicBillingSettings['firstPaymentDueAfter'] <= 0">due upon acceptance of this booking request</template><template v-else>due within <% publicBillingSettings['firstPaymentDueAfter'] %> of acceptance of this booking request</template></div>
@@ -335,7 +338,10 @@
                                 <div class="pay-in-parts" v-on:click="payInParts()" :class="{ focused: !bookingFormData.payInFull }"> 
                                     <div class="payment-option-header">
                                         <h4>Pay In Parts</h4>
-                                        <input type="radio" :checked="!bookingFormData['payInFull']" />
+                                        <div class="radio-input-border" :class="{ checked: !bookingFormData['payInFull'] }">
+                                            <input type="radio" :checked="!bookingFormData['payInFull']" />
+                                        </div>
+                                        
                                     </div>
                                     
                                     <div>Pay in the following stages:</div>
@@ -633,12 +639,12 @@
             
                                                 <div class="input-container focused">
                                                     <label for="arrival-date" class="focused">Arrival Date</label>
-                                                    <div id="arrival-date" class="focused" v-on:focus="arrivalDateFocus()" v-on:blur="arrivalDateBlur()" tabindex="0">&#60;% bookingFormData.arrivalDate %></div>      
+                                                    <div id="arrival-date" class="focused" v-on:focus="arrivalDateFocus()" v-on:blur="arrivalDateBlur()" tabindex="0">&#60;% arrivalDateString %></div>      
                                                 </div>
             
                                                 <div class="input-container">
                                                     <label for="departure-date">Departure Date</label>
-                                                    <div id="departure-date" v-on:focus="departureDateFocus()" v-on:blur="departureDateBlur()" tabindex="0">&#60;% bookingFormData.departureDate %></div>
+                                                    <div id="departure-date" v-on:focus="departureDateFocus()" v-on:blur="departureDateBlur()" tabindex="0">&#60;% departureDateString %></div>
                                                 </div>
                                         
                                             </div>

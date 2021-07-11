@@ -534,13 +534,39 @@ svg {
         .payment-stage {
             padding-left: 8px;
         }
-        
-        .payment-options input[type=radio] {
-            appearance: auto;
-            -webkit-appearance: auto;
-            height: auto;
+
+        .radio-input-border {
+            height: 20px;
+            width: 20px;
+            border: 1px solid grey;
+            border-radius: 100%;
+            display: block;
+            position: relative;
+        }
+
+        .radio-input-border.checked {
+            border: 1px solid rgb(15, 72, 117);
         }
         
+            .payment-options input[type=radio] {
+                width: 10px;
+                padding-top: 0;
+                padding-left: 0;
+                padding-right: 0;
+                padding-bottom: 0;
+                border-radius: 100%;
+                border: none;
+                height: 10px;
+                position: absolute;
+                top: 4px;
+                left: 4px;
+                opacity: 0;
+                background-color: rgb(15, 72, 117);
+            }
+
+            .payment-options input[type=radio]:checked {
+                opacity: 1;
+            }
 
     .booking-form {
         position: relative;

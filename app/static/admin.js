@@ -14,6 +14,8 @@ const vm = new Vue({
         cardSelect: false,
         cardSelection: [],
 
+        dialogBoxMessage: '',
+
         paymentBreakpointSelect: false,
         paymentBreakpointSelection: [],
 
@@ -427,11 +429,26 @@ const vm = new Vue({
                 'infants': 0,
                 'dogs': 0,
                 'stayPrice': 0,
+                'multiWeekDiscount': 0,
                 'dogPrice': 0,
-                'price': 0,
+                'total': 0,
+                'status': 'ACCEPTED',
+                'bookingType': null,
+                'externalNote': '',
                 'updateFlag': true,
+                'updateStatusFlag': false,
                 'deleteFlag': false
             })
+            this.$nextTick(() => {
+                const pageElement = document.querySelectorAll('.booking .page')[document.querySelectorAll('.booking .page').length - 1];
+                const cardElement = document.querySelectorAll('.booking .card')[document.querySelectorAll('.booking .card').length - 1];
+    
+                document.querySelector('#root').classList.add('fullscreen');
+                cardElement.classList.add('invisible');
+                pageElement.classList.remove('hidden');
+                document.querySelector('.bookings .main-view-buttons').classList.add('invisible');
+            })
+            
         },
         setCustomers() {
             const response = fetch('/set_customers', {
@@ -465,6 +482,16 @@ const vm = new Vue({
                 'updateFlag': true,
                 'deleteFlag': false
             })
+            this.$nextTick(() => {
+                const pageElement = document.querySelectorAll('.customer .page')[document.querySelectorAll('.customer .page').length - 1];
+                const cardElement = document.querySelectorAll('.customer .card')[document.querySelectorAll('.customer .card').length - 1];
+    
+                document.querySelector('#root').classList.add('fullscreen');
+                cardElement.classList.add('invisible');
+                pageElement.classList.remove('hidden');
+                document.querySelector('.customers .main-view-buttons').classList.add('invisible');
+            })
+            
         },
         initMonthSwiper() {
             const monthSwiper = new Swiper('.month-swiper', {
@@ -571,6 +598,15 @@ const vm = new Vue({
                 return (month <= new Date(segment['startDate']) && new Date(segment['startDate']) <= this.rangeMonths[index + 1]);
             }
         },
+        segmentBookedType(segment) {
+            if (segment['bookingId']) {
+                const bookingsFilter = this.bookings.filter(booking => booking['id'] === segment['bookingId']);
+                return bookingsFilter[0]['bookingType'];
+            }
+            else {
+                return null;
+            }
+        },
         goToPriceList() {
             document.querySelector('.price-list').classList.remove('hidden');
             document.querySelector('.bookings').classList.add('hidden');
@@ -579,6 +615,9 @@ const vm = new Vue({
             document.querySelector('.billing').classList.add('hidden');
             document.querySelector('.tabs').classList.remove('hidden');
             document.querySelector('.billing-settings').classList.add('hidden');
+            document.querySelector('.bookings .main-view-buttons').classList.remove('invisible');
+            document.querySelector('.customers .main-view-buttons').classList.remove('invisible');
+            document.querySelector('#root').classList.remove('fullscreen');
             this.priceListSelectOff();
             if (!this.monthTabGlider) {
                 this.monthTabsRefresh = false;
@@ -629,6 +668,9 @@ const vm = new Vue({
             document.querySelector('.settings').classList.add('hidden');
             document.querySelector('.billing').classList.add('hidden');
             document.querySelector('.billing-settings').classList.add('hidden');
+            document.querySelector('.bookings .main-view-buttons').classList.remove('invisible');
+            document.querySelector('.customers .main-view-buttons').classList.remove('invisible');
+            document.querySelector('#root').classList.remove('fullscreen');
             this.bookingCardSelectOff();
         },
         goToCustomers() {
@@ -639,6 +681,9 @@ const vm = new Vue({
             document.querySelector('.settings').classList.add('hidden');
             document.querySelector('.billing').classList.add('hidden');
             document.querySelector('.billing-settings').classList.add('hidden');
+            document.querySelector('.bookings .main-view-buttons').classList.remove('invisible');
+            document.querySelector('.customers .main-view-buttons').classList.remove('invisible');
+            document.querySelector('#root').classList.remove('fullscreen');
             this.customerCardSelectOff();
         },
         goToBilling() {
@@ -649,6 +694,9 @@ const vm = new Vue({
             document.querySelector('.settings').classList.add('hidden');
             document.querySelector('.billing').classList.remove('hidden');
             document.querySelector('.billing-settings').classList.add('hidden');
+            document.querySelector('.bookings .main-view-buttons').classList.remove('invisible');
+            document.querySelector('.customers .main-view-buttons').classList.remove('invisible');
+            document.querySelector('#root').classList.remove('fullscreen');
             this.customerCardSelectOff();
             if (!this.billingTableSwiper) {
                 this.initBillingTableSwiper();
@@ -1310,6 +1358,10 @@ const vm = new Vue({
                 }
                 this.hideNewBillingOverlay();
             }
+        },
+        showMessage(msg) {
+            this.dialogBoxMessage = msg;
+            document.querySelector('dialog-box').classList.remove('closed');
         }
         /*
         nextChangeoverDay(dateString, weekOffset=0) {

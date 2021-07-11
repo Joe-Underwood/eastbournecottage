@@ -2,6 +2,7 @@ from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from app import login
+import pyotp
 
 @login.user_loader
 def load_user(id):
@@ -12,6 +13,13 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
+    otp_secret = db.Column(db.String(32))
+
+    def __init__(self, **kwargs):
+        super(User, self).__init__(**kwargs)
+        if self.otp_secret is None:
+            # generate a random secret
+            self.otp_secret = pyotp.random_base32()
 
     def __repr__(self):
         return '<User {}>'.format(self.username)  
@@ -21,6 +29,13 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def get_totp_uri(self):
+        return 'otpauth://totp/eastbourne:{0}?secret={1}&issuer=eastbourne' \
+            .format(self.username, self.otp_secret)
+
+    def verify_totp(self, token):
+        return pyotp.TOTP(self.otp_secret).verify(token)
 
 class Price_List(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -54,7 +69,8 @@ class Booking(db.Model):
     total = db.Column(db.Numeric(10,2))
     status = db.Column(db.Enum('AWAITING_CONFIRMATION', 'ACCEPTED', 'REJECTED', 'ACTIVE', 'INACTIVE', name='status'), nullable=True)
     booking_type = db.Column(db.Enum('STANDARD', 'OWNER', 'EXTERNAL', name='booking_type'), nullable=False, default='STANDARD')
-
+    external_note = db.Column(db.String(30))
+    
 #consider splitting this up into invoices, payments etc.
 class Billing(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -157,7 +173,8 @@ class Delete_Booking(db.Model):
     dog_price = db.Column(db.Numeric(10, 2))
     total = db.Column(db.Numeric(10,2))
     status = db.Column(db.Enum('AWAITING_CONFIRMATION', 'ACCEPTED', 'REJECTED', 'ACTIVE', 'INACTIVE', name='status'), default='INACTIVE', nullable=True)
-    booking_type = db.Column(db.Enum('STANDARD', 'OWNER', 'EXTERNAL'), nullable=True, default='standard')
+    booking_type = db.Column(db.Enum('STANDARD', 'OWNER', 'EXTERNAL'), nullable=True, default='STANDARD')
+    external_note = db.Column(db.String(30))
 
 class Delete_Billing(db.Model):
     id = db.Column(db.Integer, primary_key=True)
