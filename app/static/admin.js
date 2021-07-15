@@ -51,7 +51,7 @@ const vm = new Vue({
 
     },
     computed: {
-        /*activePriceList: function() {
+        activePriceList: function() {
             if (this.priceList) {
                 return (this.priceList.filter(segment => segment['isActive']));
             }
@@ -66,7 +66,7 @@ const vm = new Vue({
             else {
                 return null;
             }
-        },
+        },/*
         pastPriceList: function () {
             if (this.priceList) {
                 return (this.priceList.filter(segment => segment['isPast']));
@@ -419,7 +419,7 @@ const vm = new Vue({
             return response;
         },
         addBooking() {
-            this.bookings.push({
+            const newBooking = {
                 'id': null,
                 'customerId': null,
                 'arrivalDate': null,
@@ -435,10 +435,35 @@ const vm = new Vue({
                 'status': 'ACCEPTED',
                 'bookingType': null,
                 'externalNote': '',
+                'payInFull': true,
+                'payInParts': false,
+                'payCustom': false,
                 'updateFlag': true,
-                'updateStatusFlag': false,
+                'updateStatusFlag': true,
                 'deleteFlag': false
-            })
+            }
+            this.bookings.push(newBooking);
+            /*
+            this.$watch(function() {
+                return newBooking;
+            },
+            function() {
+                //find price list segments associated with date, do validation etc and take price
+                //const bookingsFilter = this.bookings.filter(booking => booking['id'] === segment['bookingId']);
+                const dateSegments = [];
+
+                for (let i = 0; i < this.activePriceList.length; i++) {
+                    if 
+                    if (newBooking['arrivalDate'] >= this.activePriceList[i]['startDate'] && newBooking['arrivalDate'] <= this.activePriceList[i+1]['startDate']) {
+                        dateSegments.push(this.priceList[i]);
+                    }
+                }
+                newBooking['dogPrice'] = str((newBooking['dogs'] * parseFloat(this.priceListSettings['pricePerDog'])).toFixed(2));
+                newBooking['multiWeekDiscount'] = str((parseFloat(newBooking['stayPrice']) * this.priceListSettings['']).toFixed(2));
+                newBooking['total'] = str((parseFloat(newBooking['stayPrice']) + parseFloat(newBooking['dogPrice']) - parseFloat(newBooking['multiWeekDiscount'])).toFixed(2));
+
+            },
+            { deep: true })*/
             this.$nextTick(() => {
                 const pageElement = document.querySelectorAll('.booking .page')[document.querySelectorAll('.booking .page').length - 1];
                 const cardElement = document.querySelectorAll('.booking .card')[document.querySelectorAll('.booking .card').length - 1];
@@ -1362,39 +1387,15 @@ const vm = new Vue({
         showMessage(msg) {
             this.dialogBoxMessage = msg;
             document.querySelector('dialog-box').classList.remove('closed');
-        }
-        /*
-        nextChangeoverDay(dateString, weekOffset=0) {
-            let date = new Date(dateString);
-            if (date.getDay() === +this.priceListSettings['defaultChangeoverDay']) {
-                weekOffset++;
-            }
-            date.setDate((date.getDate() + weekOffset * 7) + (+this.priceListSettings['defaultChangeoverDay'] + (7 - date.getDay())) % 7);
-            return(date);
         },
-        generatePrice(dateString) {
-            const previousYear = new Date(new Date(dateString).setFullYear(new Date(dateString).getFullYear() - 1));
-            this.refreshActivePriceList();
-            this.refreshFuturePriceList();
-            for (let i = 0; i < this.activePriceList.length; i++) {
-                if (new Date(this.activePriceList[i]['startDate']) === previousYear) {
-                    return (this.activePriceList[i]['price']);
-                }
-                else if (new Date(this.activePriceList[i]['startDate']) > previousYear) {
-                    if (i === 0) {
-                        return (0);
-                    }
-                    const forwardDateDifference = Math.abs((new Date(this.activePriceList[i]['startDate']) - previousYear));
-                    const backwardDateDifference = Math.abs((new Date(this.activePriceList[i-1]['startDate']) - previousYear));
-                    if (forwardDateDifference >= backwardDateDifference) {
-                        return (this.activePriceList[i-1]['price']);
-                    }
-                    else {
-                        return (this.activePriceList[i]['price']);
-                    }
-                }
-            }
-        }*/
+        payInFull(booking) {
+            booking['payInFull'] = true;
+            booking['payInParts'] = false;
+        },
+        payInParts(booking) {
+            booking['payInFull'] = false;
+            booking['payInParts'] = true;
+        }
     },
     delimiters: ['<%', '%>']
 })

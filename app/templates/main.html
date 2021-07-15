@@ -332,7 +332,7 @@
                                         
                                     </div>
                                     
-                                    <div>Pay the full amount of £<% bookingFormData['total'] %>, <template v-if="publicBillingSettings['firstPaymentDueAfter'] <= 0">due upon acceptance of this booking request</template><template v-else>due within <% publicBillingSettings['firstPaymentDueAfter'] %> of acceptance of this booking request</template></div>
+                                    <div>Pay the full amount of £<% bookingFormData['total'] %>, <template v-if="publicBillingSettings['firstPaymentDueAfter'] <= 0">due upon acceptance of this booking request.</template><template v-else>due within <% publicBillingSettings['firstPaymentDueAfter'] %> days of acceptance of this booking request.</template></div>
                                     
                                 </div>
                                 <div class="pay-in-parts" v-on:click="payInParts()" :class="{ focused: !bookingFormData.payInFull }"> 
@@ -348,7 +348,7 @@
                                     <template v-for="(payment, index) in bookingFormData['progressivePayments']">
 
                                         <div v-if="payment['firstPayment']" class="payment-stage">
-                                            <% index + 1 %>: £<% parseFloat(payment['amountDue']).toFixed(2) %>, due within 7 days of this booking being confirmed.</div>
+                                            <% index + 1 %>: £<% parseFloat(payment['amountDue']).toFixed(2) %>, <template v-if="publicBillingSettings['firstPaymentDueAfter'] <= 0">due upon acceptance of this booking request.</template><template v-else>due within <% publicBillingSettings['firstPaymentDueAfter'] %> days of acceptance of this booking request.</template></div>
                                         </div>
 
                                         <div v-else class="payment-stage">
@@ -360,7 +360,7 @@
                             <template v-else>
                                 <h3>Payments</h3>
                                 <div class="full-payment-no-options">
-                                    <p>The full total of £<% bookingFormData['total'] %> is <template v-if="publicBillingSettings['firstPaymentDueAfter'] <= 0">due upon acceptance of this booking request</template><template v-else>due within <% publicBillingSettings['firstPaymentDueAfter'] %> of acceptance of this booking request</template></p>
+                                    <p>The full total of £<% bookingFormData['total'] %> is <template v-if="publicBillingSettings['firstPaymentDueAfter'] <= 0">due upon acceptance of this booking request.</template><template v-else>due within <% publicBillingSettings['firstPaymentDueAfter'] %> days of acceptance of this booking request.</template></p>
                                 </div>
                             </template>
 

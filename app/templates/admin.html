@@ -618,8 +618,56 @@
                                         
                                         <div class="settings-input-container">
                                             <label for="total">Total</label>
-                                            <input id="total" v-model="booking['total']" type="number" step="0.01" />
+                                            <input id="total" v-model="booking['total']" type="number" step="0.01" readonly/>
                                         </div>
+                                    </div>
+
+                                    <div v-if="booking['bookingType'] === 'STANDARD' && !booking['id']" class="payment-options">
+                            
+                                        <template>
+                                            <h3>Choose How To Pay</h3>
+                                            <div class="pay-in-full" v-on:click="payInFull(booking)" :class="{ focused: booking['payInFull'] }">
+                                                <div class="payment-option-header">
+                                                    <h4>Pay In Full</h4>
+                                                    <div class="radio-input-border" :class="{ checked: booking['payInFull'] }">
+                                                        <input type="radio" :checked="booking['payInFull']" />
+                                                    </div>
+                                                    
+                                                </div>
+                                                
+                                                <div>Pay the full amount of £<% booking['total'] %>, <template v-if="billingSettings['firstPaymentDueAfter'] <= 0">due upon booking creation.</template><template v-else>due within <% billingSettings['firstPaymentDueAfter'] %> days of booking creation.</template></div>
+                                                
+                                            </div>
+                                            <div class="pay-in-parts" v-on:click="payInParts(booking)" :class="{ focused: booking['payInParts'] }"> 
+                                                <div class="payment-option-header">
+                                                    <h4>Pay In Parts</h4>
+                                                    <div class="radio-input-border" :class="{ checked: booking['payInParts'] }">
+                                                        <input type="radio" :checked="booking['payInParts']" />
+                                                    </div>
+                                                    
+                                                </div>
+                                                
+                                                <div>Pay in the following stages:</div>
+                                                
+                                                <template v-for="(payment, index) in billingSettings['paymentBreakpoints']">
+            
+                                                    <div v-if="payment['firstPayment']" class="payment-stage">
+                                                        <% index + 1 %>: <% payment['amountDue'] %>%, <template v-if="billingSettings['firstPaymentDueAfter'] <= 0">due upon booking creation.</template><template v-else>due within <% billingSettings['firstPaymentDueAfter'] %> days of booking creation.</template></div>
+                                                    </div>
+            
+                                                    <div v-else class="payment-stage">
+                                                        <% index + 1 %>: <% payment['amountDue'] %>%, due <% payment['dueBy'] %> days before arrival.
+                                                    </div>
+            
+                                                </template>
+                                        </template>
+                                        <template>
+                                            <h3>Payments</h3>
+                                            <div class="full-payment-no-options">
+                                                <p>The full total of £<% booking['total'] %> is <template v-if="billingSettings['firstPaymentDueAfter'] <= 0">due upon booking creation.</template><template v-else>due within <% billingSettings['firstPaymentDueAfter'] %> of booking creation.</template></p>
+                                            </div>
+                                        </template>
+            
                                     </div>
                                     
                                     <div class="buttons-space"></div>

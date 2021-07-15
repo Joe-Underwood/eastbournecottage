@@ -2012,3 +2012,95 @@ svg {
             background-color: rgb(226, 138, 12);
             border: none;
         }
+
+        .payment-options {
+            margin-bottom: 16px;
+        }
+
+        .pay-in-full,
+        .pay-in-parts,
+        .full-payment-no-options {
+            padding: 8px;
+            padding-left: 16px;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            border: 1px solid #a5c2cf;
+            background-color: white;
+            font-size: 14px;
+            position: relative;
+        }
+
+        .pay-in-full {
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+        }
+
+        .pay-in-parts {
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+            margin-top: -1px;
+        }
+
+            .pay-in-parts div {
+                margin-bottom: 8px;
+            }
+
+        .full-payment-no-options {
+            border-radius: 4px;
+        }
+
+        .pay-in-full.focused,
+        .pay-in-parts.focused,
+        .full-payment-no-options.focused {
+            border: 2px solid rgb(15, 72, 117);
+            z-index: 1;
+        }
+
+        .payment-options h4 {
+            font-family: 'Lato-bold';
+            color: rgb(15, 72, 117);
+            line-height: 32px;
+        }
+
+            .payment-option-header {
+                display: flex;
+                justify-content: space-between;
+            }
+
+        .payment-stage {
+            padding-left: 8px;
+        }
+
+        .radio-input-border {
+            height: 20px;
+            width: 20px;
+            border: 1px solid grey;
+            border-radius: 100%;
+            display: block;
+            position: relative;
+        }
+
+        .radio-input-border.checked {
+            border: 1px solid rgb(15, 72, 117);
+        }
+        
+            .payment-options input[type=radio] {
+                width: 10px;
+                padding-top: 0;
+                padding-left: 0;
+                padding-right: 0;
+                padding-bottom: 0;
+                border-radius: 100%;
+                border: none;
+                height: 10px;
+                position: absolute;
+                top: 4px;
+                left: 4px;
+                opacity: 0;
+                background-color: rgb(15, 72, 117);
+            }
+
+            .payment-options input[type=radio]:checked {
+                opacity: 1;
+            }
