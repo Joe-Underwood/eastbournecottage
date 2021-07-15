@@ -413,7 +413,7 @@ const vm = new Vue({
                     return response.json();
                 })
                 .then(json => {
-                    return json['success'];
+                    return json['success'];  
                 })
 
             return response;
@@ -787,17 +787,35 @@ const vm = new Vue({
         },
         bookingUpdate(booking, e) {
             booking['updateFlag'] = true;
-            this.setBookings();
+            this.setBookings().then(success => {
+                if (success) {
+                    this.showMessage('Booking successfully updated!');
+                    this.exitFullscreen(e);
+                }
+                else {
+                    this.showMessage('Booking update failed - no changes were made.', true);
+                }
+                return success;
+            })
+            .then(success => {
+                if (success) {
+                    this.getPriceList();
+                    this.getBookings();
+                    this.getCustomers();
+                    this.getBillings();
+                }
+            });
             //prompt result, with(out) closing page
         },
         bookingDelete(booking, e) {
             booking['deleteFlag'] = true;
             this.setBookings().then(success => {
                 if (success) {
+                    this.showMessage('Booking succesfully deleted!');
                     this.exitFullscreen(e);
                 }
                 else {
-                    console.log('error updating bookings');
+                    this.showMessage('Booking deletion failed - no changes were made.', true);
                 }
                 return success;
             })
@@ -813,24 +831,41 @@ const vm = new Vue({
         },
         customerUpdate(customer, e) {
             customer['updateFlag'] = true;
-            this.setCustomers();
+            this.setCustomers().then(success => {
+                if (success) {
+                    this.showMessage('Customer successfully updated!');
+                    this.exitFullscreen(e);
+                }
+                else {
+                    this.showMessage('Customer update failed - no changes were made.', true);
+                }
+                return success;
+            })
+            .then(success => {
+                if (success) {
+                    this.getBookings();
+                    this.getCustomers();
+                    this.getBillings();
+                }
+            })
             //prompt result, with(out) closing page
         },
         customerDelete(customer, e) {
             customer['deleteFlag'] = true;
             this.setCustomers().then(success => {
                 if (success) {
+                    this.showMessage('Customer successfully deleted!');
                     this.exitFullscreen(e);
                 } else {
-                    console.log('error updating customers');
+                    this.showMessage('Customer deletion failed - no changes were made.', true);
                 }
                 return success;
             })
             .then(success => {
                 if (success) {
-                    this.getPriceList();
                     this.getBookings();
                     this.getCustomers();
+                    this.getBillings();
                 }
             })
             //if successful, delete from view/ refresh to show change
@@ -963,12 +998,14 @@ const vm = new Vue({
             }
             this.setPriceList().then(success => {
                 if (success) {
+                    this.showMessage('Price list selection successfully deleted!')
                     this.getPriceList();
                     this.getBookings();
                     this.getCustomers();
+                    this.getBillings();
                 }
                 else {
-                    console.log('failed to delete segments');
+                    this.showMessage('Price list selection deletion failed - no changes were made', true);
                 }
             })
             this.priceListSelectOff();
@@ -1002,12 +1039,14 @@ const vm = new Vue({
             }
             this.setBookings().then(success => {
                 if (success) {
+                    this.showMessage('Booking selection successfully deleted!');
                     this.getPriceList();
                     this.getBookings();
                     this.getCustomers();
+                    this.getBillings();
                 }
                 else {
-                    console.log('failed to delete bookings');
+                    this.showMessage('Booking selection deletion failed - no changes were made', true);
                 }
             })
             this.bookingCardSelectOff();
@@ -1019,12 +1058,14 @@ const vm = new Vue({
             }
             this.setCustomers().then(success => {
                 if (success) {
+                    this.showMessage('Customer selection successfully deleted!');
                     this.getPriceList();
                     this.getBookings();
                     this.getCustomers();
+                    this.getBillings();
                 }
                 else {
-                    console.log('failed to delete customers');
+                    this.showMessage('Customer selection deletion failed - no changes were made', true);
                 }
             })
             this.customerCardSelectOff();
@@ -1384,9 +1425,21 @@ const vm = new Vue({
                 this.hideNewBillingOverlay();
             }
         },
-        showMessage(msg) {
+        showMessage(msg, negative=false) {
             this.dialogBoxMessage = msg;
-            document.querySelector('dialog-box').classList.remove('closed');
+            document.querySelector('.dialog-box-message').classList.remove('negative');
+
+            if (negative) {
+                document.querySelector('.dialog-box-message').classList.add('negative');
+            }
+
+            document.querySelector('.dialog-box').classList.remove('closed');
+            setTimeout(() => {
+                document.querySelector('.dialog-box').classList.add('closed');
+            }, 3000);
+        },
+        closeMessage() {
+            document.querySelector('.dialog-box').classList.add('closed');
         },
         payInFull(booking) {
             booking['payInFull'] = true;

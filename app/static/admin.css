@@ -1226,11 +1226,11 @@ svg {
                 }
 
                 .booked-segment {
-                    background-color: green;
+                    background-color: rgb(121, 255, 100);
                 }
 
                 .booked-standard {
-                    background-color: green;
+                    background-color: rgb(121, 255, 100);
                 }
 
                 .booked-owner {
@@ -1238,11 +1238,11 @@ svg {
                 }
 
                 .booked-external {
-                    background-color: blanchedalmond;
+                    background-color: yellow;
                 }
 
                 .blocked {
-                    background-color: yellow;
+                    background-color: red;
                 }
 
 .settings {
@@ -1957,6 +1957,7 @@ svg {
     transition: all 0.2s;
     box-shadow: 0 24px 38px 3px rgba(0,0,0,0.14), 0 9px 46px 8px rgba(0,0,0,0.12), 0 11px 15px -7px rgba(0,0,0,0.20);
     z-index: 10;
+    min-height: 120px;
 }
 
 .dialog-box.closed {
@@ -1967,7 +1968,19 @@ svg {
     .dialog-box .content-inner-wrapper {
         padding-top: 16px;
         padding-bottom: 16px;
-    }
+    }   
+
+        .dialog-box-message {
+            font-size: 18px;
+        }
+
+        .dialog-box-message .negative {
+            color: red;
+        }
+
+        .dialog-box-message .positive {
+            color: green;
+        }
 
 .login-page-container {
     background-color:white;

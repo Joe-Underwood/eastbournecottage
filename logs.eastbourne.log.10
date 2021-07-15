@@ -1,45 +1,4 @@
-2021-07-10 23:46:53,580 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-07-10 23:46:53,673 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-07-10 23:46:53,722 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-07-10 23:46:53,793 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-07-10 23:52:27,779 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-07-10 23:52:27,803 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-07-10 23:52:27,894 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-07-10 23:52:27,903 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-07-10 23:54:15,394 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-07-10 23:54:15,450 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-07-10 23:54:15,503 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-07-10 23:54:15,592 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-07-11 15:17:58,752 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-07-11 15:17:58,753 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-07-11 15:17:58,756 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-07-11 15:17:58,757 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-07-11 15:18:16,561 ERROR: Exception on /login [POST] [in /hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py:1891]
-Traceback (most recent call last):
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
-    response = self.full_dispatch_request()
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
-    reraise(exc_type, exc_value, tb)
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
-    raise value
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
-    return self.view_functions[rule.endpoint](**req.view_args)
-  File "/hdd/code/eastbournecottage/app/routes.py", line 38, in login
-    login_user(user, remember=form.remember_me.data)
-AttributeError: 'LoginForm' object has no attribute 'remember_me'
-2021-07-11 15:23:32,816 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-07-11 15:23:32,869 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-07-11 15:23:32,880 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-07-11 15:23:32,970 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-07-11 15:25:08,779 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-07-11 15:25:08,788 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-07-11 15:25:08,800 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-07-11 15:25:08,863 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
-2021-07-11 15:25:17,408 ERROR: Exception on /login [GET] [in /hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py:1891]
+2021-07-11 15:25:19,552 ERROR: Exception on /login [GET] [in /hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py:1891]
 Traceback (most recent call last):
   File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -68,7 +27,7 @@ Traceback (most recent call last):
   File "/hdd/code/eastbournecottage/app/templates/login.html", line 34, in top-level template code
     <!--<p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>-->
 jinja2.exceptions.UndefinedError: 'app.forms.LoginForm object' has no attribute 'remember_me'
-2021-07-11 15:25:18,890 ERROR: Exception on /login [GET] [in /hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py:1891]
+2021-07-11 15:25:19,831 ERROR: Exception on /login [GET] [in /hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py:1891]
 Traceback (most recent call last):
   File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -97,3 +56,19 @@ Traceback (most recent call last):
   File "/hdd/code/eastbournecottage/app/templates/login.html", line 34, in top-level template code
     <!--<p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>-->
 jinja2.exceptions.UndefinedError: 'app.forms.LoginForm object' has no attribute 'remember_me'
+2021-07-11 15:25:50,576 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-11 15:25:50,666 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-11 15:25:50,744 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-11 15:25:50,778 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-11 15:30:11,383 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-11 15:30:11,415 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-11 15:30:11,502 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-11 15:30:11,524 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-11 16:57:22,192 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-11 16:57:22,204 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-11 16:57:22,234 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-11 16:57:22,322 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-12 14:28:35,584 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-12 14:28:35,590 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-12 14:28:35,592 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-12 14:28:35,596 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]

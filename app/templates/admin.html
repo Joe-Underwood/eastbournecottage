@@ -100,9 +100,9 @@
             </div>
         </div>
 
-        <div class="dialog-box closed">
+        <div class="dialog-box closed" v-on:click="closeMessage()">
             <div class="content-inner-wrapper">
-                <div>Placeholder message included successfully</div>
+                <div class="dialog-box-message"><% dialogBoxMessage %></div>
             </div>
         </div>
 
