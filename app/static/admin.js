@@ -467,11 +467,18 @@ const vm = new Vue({
             this.$nextTick(() => {
                 const pageElement = document.querySelectorAll('.booking .page')[document.querySelectorAll('.booking .page').length - 1];
                 const cardElement = document.querySelectorAll('.booking .card')[document.querySelectorAll('.booking .card').length - 1];
+                const parentElement = cardElement.parentElement;
     
                 document.querySelector('#root').classList.add('fullscreen');
                 cardElement.classList.add('invisible');
                 pageElement.classList.remove('hidden');
                 document.querySelector('.bookings .main-view-buttons').classList.add('invisible');
+
+                for (let i = 0; i < document.querySelectorAll('.booking').length; i++) {
+                    if (document.querySelectorAll('.booking')[i] !== parentElement) {
+                        document.querySelectorAll('.booking')[i].classList.add('hidden');
+                    }
+                }
             })
             
         },
@@ -510,11 +517,18 @@ const vm = new Vue({
             this.$nextTick(() => {
                 const pageElement = document.querySelectorAll('.customer .page')[document.querySelectorAll('.customer .page').length - 1];
                 const cardElement = document.querySelectorAll('.customer .card')[document.querySelectorAll('.customer .card').length - 1];
+                const parentElement = cardElement.parentElement;
     
                 document.querySelector('#root').classList.add('fullscreen');
                 cardElement.classList.add('invisible');
                 pageElement.classList.remove('hidden');
                 document.querySelector('.customers .main-view-buttons').classList.add('invisible');
+
+                for (let i = 0; i < document.querySelectorAll('.customer').length; i++) {
+                    if (document.querySelectorAll('.customer')[i] !== parentElement) {
+                        document.querySelectorAll('.customer')[i].classList.add('hidden');
+                    }
+                }
             })
             
         },
@@ -1082,6 +1096,7 @@ const vm = new Vue({
             const cardElement = cardLevelElement(e.target);
             const pageElement = cardElement.previousElementSibling;
             const transitionElement = cardElement.nextElementSibling;
+            const parentElement = cardElement.parentElement;
             const cardRect = cardElement.getBoundingClientRect();
             const pageRect = pageElement.getBoundingClientRect();
 
@@ -1098,6 +1113,21 @@ const vm = new Vue({
 
             document.querySelector('.bookings .main-view-buttons').classList.add('invisible');
             document.querySelector('.customers .main-view-buttons').classList.add('invisible');
+
+            if (parentElement.classList.contains('booking')) {
+                for (let i = 0; i < document.querySelectorAll('.booking').length; i++) {
+                    if (document.querySelectorAll('.booking')[i] !== parentElement) {
+                        document.querySelectorAll('.booking')[i].classList.add('hidden');
+                    }
+                }
+            }
+            else if (parentElement.classList.contains('customer')) {
+                for (let i = 0; i < document.querySelectorAll('.customer').length; i++) {
+                    if (document.querySelectorAll('.customer')[i] !== parentElement) {
+                        document.querySelectorAll('.customer')[i].classList.add('hidden');
+                    }
+                }
+            }
         },
         exitFullscreen(e) {
             function pageLevelElement(el) {
@@ -1110,6 +1140,7 @@ const vm = new Vue({
             
             const pageElement = pageLevelElement(e.target);
             const cardElement = pageElement.nextElementSibling;
+            const parentElement = cardElement.parentElement;
 
             document.querySelector('#root').classList.remove('fullscreen');
 
@@ -1118,6 +1149,17 @@ const vm = new Vue({
 
             document.querySelector('.bookings .main-view-buttons').classList.remove('invisible');
             document.querySelector('.customers .main-view-buttons').classList.remove('invisible');
+
+            if (parentElement.classList.contains('booking')) {
+                for (let i = 0; i < document.querySelectorAll('.booking').length; i++) {
+                    document.querySelectorAll('.booking')[i].classList.remove('hidden');
+                }
+            }
+            else if (parentElement.classList.contains('customer')) {
+                for (let i = 0; i < document.querySelectorAll('.customer').length; i++) {
+                    document.querySelectorAll('.customer')[i].classList.remove('hidden');
+                }
+            }
         },
         adultsDecrease(booking, e) {
             e.preventDefault();

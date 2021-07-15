@@ -102,6 +102,7 @@ button:active,
     display: block;
     bottom: 64px;
     width: 100%;
+    z-index: 9;
 }
 
 .settings .buttons-container {
