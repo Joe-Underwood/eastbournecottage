@@ -783,10 +783,11 @@ const vm = new Vue({
             booking['status'] = 'ACCEPTED';
             this.setBookings().then(success => {
                 if (success) {
+                    this.showMessage('Booking request accepted!');
                     this.exitFullscreen(e);
                 }
                 else {
-                    console.log('error rejecting booking');
+                    this.showMessage('Booking request acceptance failed. No changes were made.', true);
                 }
                 return success;
             })

@@ -346,7 +346,45 @@ const vm = new Vue({
                 this.$nextTick(() => {
                     this.initCalendar(this.serverDate, '');
                 })
-            });     
+            })
+            .then(() => {
+                this.$nextTick(() => {
+                    let priceListIndex = -1;
+
+                    for (date in document.querySelectorAll('.days')) {
+                        if (document.querySelectorAll('.days')[date].classList.contains('changeover-date')) {
+                            priceListIndex++;
+                        }
+                        else if (priceListIndex >= 0) {
+                            if (document.querySelectorAll('.changeover-date.days')[priceListIndex].classList.contains('booked')) {
+                                document.querySelectorAll('.days')[date].classList.add('booked');
+                            }
+                        }
+                    }
+
+                    for (date in document.querySelectorAll('.prev-days')) {
+                        if (document.querySelectorAll('.prev-days')[date].classList.contains('changeover-date')) {
+                            priceListIndex++;
+                        }
+                        else if (priceListIndex >= 0) {
+                            if (document.querySelectorAll('.changeover-date.prev-days')[priceListIndex].classList.contains('booked')) {
+                                document.querySelectorAll('.prev-days')[date].classList.add('booked');
+                            }
+                        }
+                    }
+
+                    for (date in document.querySelectorAll('.next-days')) {
+                        if (document.querySelectorAll('.next-days')[date].classList.contains('changeover-date')) {
+                            priceListIndex++;
+                        }
+                        else if (priceListIndex >= 0) {
+                            if (document.querySelectorAll('.changeover-date.next-days')[priceListIndex].classList.contains('booked')) {
+                                document.querySelectorAll('.next-days')[date].classList.add('booked');
+                            }
+                        }
+                    }
+                })
+            })
     },
     methods: {
         //fetch requests
@@ -929,47 +967,41 @@ const vm = new Vue({
             }
         },
         selectDate(element, date) {
-            if (element.classList.contains('available')) {
-                if (element.classList.contains('arrival-date')) {
-                    this.removeArrivalDate();
-                    this.arrivalDateFocus();
-                    this.hideDateRange();
-                    this.bookingHelperText();
-                } 
-                else if (element.classList.contains('departure-date')) {
-                    this.removeDepartureDate();
-                    this.hideDateRange();
-                    this.bookingHelperText();
-                }
-                else if (this.calendarSelector === 'arrival') {
-                    if (element.classList.contains('changeover-date')) {
-                        if (!this.bookingFormData.departureDate) {
-                            this.selectArrivalDate(element, date);
-                            this.showInvalidDates();
-                            this.calendarSelector = 'departure';
-                            this.departureDateFocus();
-                        } else if (element.classList.contains('valid-arrival-date')) {
-                            this.selectArrivalDate(element, date);
-                            this.showInvalidDates();
-                            if (date >= this.departureDateObject || !this.isValidRange()) {
-                                this.removeDepartureDate();
-                                this.hideDateRange();
-                            } else {
-                                this.hideDateRange();
-                                this.displayDateRange();
-                            }
-                            this.calendarSelector = 'departure';
-                            this.departureDateFocus();
-                        }
-                    }
-                } 
-                else if (element.classList.contains('valid-departure-date')) {
-                    if (this.bookingFormData.departureDate) {
+            if (element.classList.contains('arrival-date')) {
+                this.removeArrivalDate();
+                this.arrivalDateFocus();
+                this.hideDateRange();
+                this.bookingHelperText();
+            } 
+            else if (element.classList.contains('departure-date')) {
+                this.removeDepartureDate();
+                this.hideDateRange();
+                this.bookingHelperText();
+            }
+            else if (this.calendarSelector === 'arrival' && element.classList.contains('available') && element.classList.contains('changeover-date')) {
+                if (!this.bookingFormData.departureDate) {
+                    this.selectArrivalDate(element, date);
+                    this.showInvalidDates();
+                    this.departureDateFocus();
+                } else if (element.classList.contains('valid-arrival-date')) {
+                    this.selectArrivalDate(element, date);
+                    this.showInvalidDates();
+                    if (date >= this.departureDateObject || !this.isValidRange()) {
+                        this.removeDepartureDate();
                         this.hideDateRange();
+                    } else {
+                        this.hideDateRange();
+                        this.displayDateRange();
                     }
-                    this.selectDepartureDate(element, date);
-                    this.displayDateRange();                
+                    this.departureDateFocus();
                 }
+            }
+            else if (this.calendarSelector === 'departure' && element.classList.contains('valid-departure-date')) {
+                if (this.bookingFormData.departureDate) {
+                    this.hideDateRange();
+                }
+                this.selectDepartureDate(element, date);
+                this.displayDateRange(); 
             }
 
             if (this.arrivalDateObject && this.departureDateObject) {
@@ -1009,6 +1041,7 @@ const vm = new Vue({
                 this.hideValidDepartureDates();
                 this.showValidDepartureDates(document.querySelector('.arrival-date.days'));
                 this.bookingFormData.stayPrice = 0;
+
             } 
             else if (!this.arrivalDateObject && this.departureDateObject) {
                 this.hideValidArrivalDates();
@@ -1053,19 +1086,23 @@ const vm = new Vue({
                     }
                 }
             }
+
+            for (let i = 0; i < document.querySelectorAll('.changeover-date').length; i++) {
+                if (!(document.querySelectorAll('.changeover-date')[i].classList.contains('valid-departure-date') || document.querySelectorAll('.changeover-date')[i].classList.contains('arrival-date'))) {
+                    document.querySelectorAll('.changeover-date')[i].classList.add('invalid');
+                }
+            }
         },
         addNextValidDepartureDate(element, week) {
             const changeoverArray = Array.from(document.querySelectorAll('.changeover-date'));
             let prevElementIndex = changeoverArray.indexOf(element);
             if (changeoverArray[prevElementIndex + 1]) {
                 let newElement = changeoverArray[prevElementIndex + 1];
-                if (newElement.classList.contains('booked')) {
-                    return false;
-                }
                 if (newElement.classList.contains('arrival-date')) {
                     return (this.addNextValidDepartureDate(newElement, week));
                 }
                 newElement.classList.add('valid-departure-date');
+                
                 if (week === 1) {
                     this.departure1Week.push(newElement);
                 }
@@ -1078,7 +1115,11 @@ const vm = new Vue({
                 else if (week === 4) {
                     this.departure4Week.push(newElement);
                 }
-                if (!newElement.classList.contains('days')) {
+
+                if (newElement.classList.contains('booked')) {
+                    return false;
+                }
+                else if (!newElement.classList.contains('days')) {
                     return (this.addNextValidDepartureDate(newElement, week));
                 } 
                 else {
@@ -1104,6 +1145,12 @@ const vm = new Vue({
             for (date in validArrivalArray) {
                 if (new Date(validArrivalArray[date].__vue__._props.dateYear, validArrivalArray[date].__vue__._props.dateMonth, validArrivalArray[date].__vue__._props.dateDate) >= new Date(departureElement.__vue__._props.dateYear, departureElement.__vue__._props.dateMonth, departureElement.__vue__._props.dateDate)) {
                     validArrivalArray[date].classList.remove('valid-arrival-date');
+                }
+            }
+
+            for (let i = 0; i < document.querySelectorAll('.changeover-date').length; i++) {
+                if (!(document.querySelectorAll('.changeover-date')[i].classList.contains('valid-arrival-date') || document.querySelectorAll('.changeover-date')[i].classList.contains('departure-date'))) {
+                    document.querySelectorAll('.changeover-date')[i].classList.add('invalid');
                 }
             }
         },
@@ -1147,17 +1194,31 @@ const vm = new Vue({
             this.departure2Week.length = 0;
             this.departure3Week.length = 0;
             this.departure4Week.length = 0;
+
             const validDepartureNodeList = document.querySelectorAll('.valid-departure-date');
             const validDepartureArray = Array.from(validDepartureNodeList);
             for (let i = 0; i < validDepartureArray.length; i++) {
                 validDepartureNodeList[i].classList.remove('valid-departure-date');
             }
+
+            const invalidNodeList = document.querySelectorAll('.invalid');
+            const invalidArray = Array.from(invalidNodeList);
+            for (let i = 0; i < invalidArray.length; i++) {
+                invalidNodeList[i].classList.remove('invalid');
+            }
+
         },
         hideValidArrivalDates() {
             const validArrivalNodeList = document.querySelectorAll('.valid-arrival-date');
             const validArrivalArray = Array.from(validArrivalNodeList);
             for (let i = 0; i < validArrivalArray.length; i++) {
                 validArrivalNodeList[i].classList.remove('valid-arrival-date');
+            }
+
+            const invalidNodeList = document.querySelectorAll('.invalid');
+            const invalidArray = Array.from(invalidNodeList);
+            for (let i = 0; i < invalidArray.length; i++) {
+                invalidNodeList[i].classList.remove('invalid');
             }
         },
         selectArrivalDate(element, date) {
