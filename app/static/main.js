@@ -353,6 +353,11 @@ const vm = new Vue({
 
                     for (date in document.querySelectorAll('.days')) {
                         if (document.querySelectorAll('.days')[date].classList.contains('changeover-date')) {
+                            if (priceListIndex > 0) {
+                                if (document.querySelectorAll('.changeover-date.days')[priceListIndex - 1].classList.contains('booked')) {
+                                    document.querySelectorAll('.changeover-date.days')[priceListIndex].classList.add('before-booked');
+                                }
+                            }
                             priceListIndex++;
                         }
                         else if (priceListIndex >= 0) {
