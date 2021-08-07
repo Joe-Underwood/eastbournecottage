@@ -351,8 +351,8 @@ const vm = new Vue({
                 this.$nextTick(() => {
                     let priceListIndex = -1;
 
-                    for (date in document.querySelectorAll('.days')) {
-                        if (document.querySelectorAll('.days')[date].classList.contains('changeover-date')) {
+                    document.querySelectorAll('.days').forEach(element => {
+                        if (element.classList.contains('changeover-date')) {
                             if (priceListIndex > 0) {
                                 if (document.querySelectorAll('.changeover-date.days')[priceListIndex - 1].classList.contains('booked')) {
                                     document.querySelectorAll('.changeover-date.days')[priceListIndex].classList.add('before-booked');
@@ -362,32 +362,36 @@ const vm = new Vue({
                         }
                         else if (priceListIndex >= 0) {
                             if (document.querySelectorAll('.changeover-date.days')[priceListIndex].classList.contains('booked')) {
-                                document.querySelectorAll('.days')[date].classList.add('booked');
+                                element.classList.add('booked');
                             }
                         }
-                    }
+                    });
 
-                    for (date in document.querySelectorAll('.prev-days')) {
-                        if (document.querySelectorAll('.prev-days')[date].classList.contains('changeover-date')) {
+                    priceListIndex = -1;
+
+                    document.querySelectorAll('.prev-days').forEach(element => {
+                        if (element.classList.contains('changeover-date')) {
                             priceListIndex++;
                         }
                         else if (priceListIndex >= 0) {
                             if (document.querySelectorAll('.changeover-date.prev-days')[priceListIndex].classList.contains('booked')) {
-                                document.querySelectorAll('.prev-days')[date].classList.add('booked');
+                                element.classList.add('booked');
                             }
                         }
-                    }
+                    });
 
-                    for (date in document.querySelectorAll('.next-days')) {
-                        if (document.querySelectorAll('.next-days')[date].classList.contains('changeover-date')) {
+                    priceListIndex = -1;
+
+                    document.querySelectorAll('.next-days').forEach(element => {
+                        if (element.classList.contains('changeover-date')) {
                             priceListIndex++;
                         }
                         else if (priceListIndex >= 0) {
                             if (document.querySelectorAll('.changeover-date.next-days')[priceListIndex].classList.contains('booked')) {
-                                document.querySelectorAll('.next-days')[date].classList.add('booked');
+                                element.classList.add('booked');
                             }
                         }
-                    }
+                    });
                 })
             })
     },
