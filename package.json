@@ -19,6 +19,6 @@
   "dependencies": {
     "@glidejs/glide": "^3.4.1",
     "body-scroll-lock": "^3.0.3",
-    "swiper": "^6.2.0"
+    "swiper": "^6.5.1"
   }
 }
