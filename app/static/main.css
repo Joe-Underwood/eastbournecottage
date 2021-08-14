@@ -1878,6 +1878,11 @@ svg {
                     transform: scale(2) translateX(25%) translateY(46%) rotate(45deg);
                 }
 
+                .changeover-date.before-booked.booked::before {
+                    background-color: rgba(229, 229, 229, 0.5);
+                    transform: none;
+                }
+
                 .changeover-date.before-booked::before {
                     background-color: rgba(229, 229, 229, 0.5);
                     transform: scale(2) translateX(-25%) translateY(-46%) rotate(45deg);

@@ -762,10 +762,11 @@ const vm = new Vue({
             booking['status'] = 'REJECTED';
             this.setBookings().then(success => {
                 if (success) {
+                    this.showMessage('Booking request rejected!');
                     this.exitFullscreen(e);
                 }
                 else {
-                    console.log('error rejecting booking');
+                    this.showMessage('Booking request rejection failed. No changes were made.');
                 }
                 return success;
             })

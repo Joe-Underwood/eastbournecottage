@@ -1,0 +1,100 @@
+2021-07-15 12:40:15,684 ERROR: Exception on /set_bookings [POST] [in /hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/hdd/code/eastbournecottage/app/routes.py", line 392, in set_bookings
+    if (booking['updateStatusFlag'] and booking['type'] == 'STANDARD'):
+KeyError: 'type'
+2021-07-15 12:40:46,718 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-15 12:40:46,762 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-15 12:40:46,788 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-15 12:40:46,810 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-15 12:41:04,292 ERROR: Exception on /set_bookings [POST] [in /hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/hdd/code/eastbournecottage/app/routes.py", line 408, in set_bookings
+    if not len(db_booking.billings) > 0:
+AttributeError: 'NoneType' object has no attribute 'billings'
+2021-07-15 12:42:51,475 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-15 12:42:51,535 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-15 12:42:51,626 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-15 12:42:51,694 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-15 12:43:09,717 ERROR: Exception on /set_bookings [POST] [in /hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/hdd/code/eastbournecottage/app/routes.py", line 408, in set_bookings
+    if not db_booking.billings:
+AttributeError: 'NoneType' object has no attribute 'billings'
+2021-07-15 12:49:08,191 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-15 12:49:08,193 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-15 12:49:08,211 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-15 12:49:08,246 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-15 12:49:31,731 ERROR: Exception on /set_bookings [POST] [in /hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/hdd/code/eastbournecottage/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/hdd/code/eastbournecottage/app/routes.py", line 427, in set_bookings
+    amount = booking.total,
+AttributeError: 'dict' object has no attribute 'total'
+2021-07-15 14:11:32,691 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-15 14:11:32,756 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-15 14:11:32,765 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-15 14:11:32,817 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-15 14:29:11,761 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-15 14:29:11,807 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-15 14:29:11,883 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-15 14:29:11,929 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-15 14:35:11,357 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-15 14:35:11,466 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-15 14:35:11,568 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
+2021-07-15 14:35:11,642 INFO: eastbourne startup [in /hdd/code/eastbournecottage/app/__init__.py:31]
