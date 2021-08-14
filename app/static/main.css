@@ -1870,7 +1870,7 @@ svg {
 
                 .valid-departure-date.departure-date.booked div,
                 .valid-arrival-date.arrival-date div {
-                    background-color: rgb(255, 255, 255, 0);
+                    background-color: rgb(255, 255, 255);
                 }
 
                 .changeover-date.booked::before {
@@ -1889,7 +1889,7 @@ svg {
                 }
 
                 .changeover-date.before-booked.booked::before {
-                    background-color: rgba(229, 229, 229, 0);
+                    background-color: rgba(229, 229, 229, 0.5);
                 }
 
                 .arrival-date::before {
