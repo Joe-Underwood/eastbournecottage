@@ -1795,7 +1795,7 @@ svg {
 
                     .prev-days div {
                         color: grey !important;
-                        background-color: rgba(229, 229, 229);
+                        background-color: rgba(229, 229, 229, 0);
                     }
 
                         .prev-days.arrival-date div,
@@ -1814,7 +1814,11 @@ svg {
                         }
 
                     .changeover-date.prev-days {
-                        border: 1px solid rgba(15, 72, 117, 0.4);
+                        border: none;
+                    }
+
+                    .changeover-date.prev-days::before {
+                        background-color: none;
                     }
 
                     .changeover-date.prev-days div {
@@ -1830,7 +1834,11 @@ svg {
                     }
 
                     .changeover-date.next-days {
-                        border: 1px solid rgba(15, 72, 117, 0.4);
+                        border: none;
+                    }
+
+                    .changeover-date.next-days::before {
+                        background-color: none;
                     }
 
                     .changeover-date.next-days div {
