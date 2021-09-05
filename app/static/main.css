@@ -1794,7 +1794,11 @@ svg {
                 }
 
                 .days.changeover-date.booked div {
-                    background-color: white;
+                    background-color: rgba(229, 229, 229, 0);
+                }
+
+                .days.changeover-date.before-booked div {
+                    background-color: rgba(229, 229, 229, 0);
                 }
 
                     .prev-days div {
@@ -1864,6 +1868,7 @@ svg {
                 .booked div {
                     color: #829099;
                     text-decoration: none;
+                    border-radius: 0;
                 }
 
                     .booked.prev-days div,
