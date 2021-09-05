@@ -1793,6 +1793,10 @@ svg {
                     background-color:white;
                 }
 
+                .days.changeover-date.booked div {
+                    background-color: white;
+                }
+
                     .prev-days div {
                         color: grey !important;
                         background-color: rgba(229, 229, 229, 0);
