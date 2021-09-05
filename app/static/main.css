@@ -1817,7 +1817,7 @@ svg {
                         border: none;
                     }
 
-                    .changeover-date.prev-days::before {
+                    .changeover-date.booked.prev-days::before {
                         background-color: none;
                     }
 
@@ -1837,7 +1837,7 @@ svg {
                         border: none;
                     }
 
-                    .changeover-date.next-days::before {
+                    .changeover-date.booked.next-days::before {
                         background-color: none;
                     }
 
