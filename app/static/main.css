@@ -1795,26 +1795,34 @@ svg {
 
                     .prev-days div {
                         color: grey !important;
-                        background-color: rgba(229, 229, 229, 0.15);
+                        background-color: rgba(229, 229, 229);
                     }
 
                         .prev-days.arrival-date div,
                         .prev-days-departure-date div {
-                            background-color: rgba(229, 229, 229, 0.15);
+                            background-color: rgba(229, 229, 229, 0);
                         }
 
                     .next-days div {
                         color: grey !important;
-                        background-color: rgb(229, 229, 229, 0.15);
+                        background-color: rgb(229, 229, 229, 0);
                     }
 
                         .next-days.arrival-date div,
                         .next-days.departure-date div {
-                            background-color: rgba(229, 229, 229, 0.15);
+                            background-color: rgba(229, 229, 229, 0);
                         }
+
+                    .changeover-date.prev-days {
+                        border: 1px solid rgba(15, 72, 117, 0.4);
+                    }
 
                     .changeover-date.prev-days div {
                         border: 1px solid rgba(15, 72, 117, 0.4);
+                    }
+
+                    .booked.prev-days {
+                        border: none;
                     }
 
                     .booked.prev-days div {
@@ -1823,6 +1831,14 @@ svg {
 
                     .changeover-date.next-days {
                         border: 1px solid rgba(15, 72, 117, 0.4);
+                    }
+
+                    .changeover-date.next-days div {
+                        border: 1px solid rgba(15, 72, 117, 0.4);
+                    }
+
+                    .booked.next-days {
+                        border: none;
                     }
 
                     .booked.next-days div {
@@ -1840,14 +1856,14 @@ svg {
 
                     .booked.prev-days div,
                     .booked.next-days div {
-                        background-color: rgba(229, 229, 229, 0.5);
+                        background-color: rgba(229, 229, 229, 0);
                     }
                 
                 .days.booked {
                     border-radius: 0;
                 }
 
-                .booked::before {
+                .booked div {
                     background-color: rgba(229, 229, 229, 0.5);
                 }
 
@@ -1865,7 +1881,7 @@ svg {
                 .valid-departure-date.booked.prev-days div,
                 .valid-departure-date.booked.next-days div {
                     color: grey;
-                    background-color: rgba(229, 229, 229, 0.15);
+                    background-color: rgba(229, 229, 229, 0);
                 }
 
                 .valid-departure-date.departure-date.booked div,
@@ -2265,6 +2281,10 @@ svg {
     max-width: none;
     width: 100%;
 }
+
+    .contact h2 {
+        text-align: center;
+    }
 
     .contact-button-container {
         display: flex;

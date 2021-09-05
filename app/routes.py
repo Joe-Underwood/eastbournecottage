@@ -1297,7 +1297,7 @@ def booking():
         db.session.add(invoice)
         booking.billings.append(invoice)
 
-    else:
+    elif (booking_form_data['payInParts']):
         for index, breakpoint in enumerate(payment_terms):
             if breakpoint.first_payment:
                 first_invoice_amount += (Decimal(booking.total) * Decimal(breakpoint.amount_due / 100)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)

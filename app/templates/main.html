@@ -348,7 +348,7 @@
                                     <template v-for="(payment, index) in bookingFormData['progressivePayments']">
 
                                         <div v-if="payment['firstPayment']" class="payment-stage">
-                                            <% index + 1 %>: £<% parseFloat(payment['amountDue']).toFixed(2) %>, <template v-if="publicBillingSettings['firstPaymentDueAfter'] <= 0">due upon acceptance of this booking request.</template><template v-else>due within <% publicBillingSettings['firstPaymentDueAfter'] %> days of acceptance of this booking request.</template></div>
+                                            <% index + 1 %>: £<% parseFloat(payment['amountDue']).toFixed(2) %>, <template v-if="publicBillingSettings['firstPaymentDueAfter'] <= 0">due upon acceptance of this booking request.</template><template v-else>due within <% publicBillingSettings['firstPaymentDueAfter'] %> days of acceptance of this booking request.</template>
                                         </div>
 
                                         <div v-else class="payment-stage">
@@ -356,7 +356,10 @@
                                         </div>
 
                                     </template>
+                                </div>
+
                             </template>
+
                             <template v-else>
                                 <h3>Payments</h3>
                                 <div class="full-payment-no-options">
@@ -377,7 +380,6 @@
                         </div>
 
                     </template>
-
 
                     <template v-if="bookingFormSuccess">
 
@@ -457,7 +459,7 @@
             <!--==============  HERO AREA  =============-->
             <div class="content-wrapper">
                 <header class="hero-area">
-                    <img src="../static/cottage-02.jpg" />
+                    <img/>
                     <div class="hero-message">
                         <h1>WELCOME TO</h1>
                         <h1>The Cottage</h1>
