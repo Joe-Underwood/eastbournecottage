@@ -218,6 +218,12 @@ const vm = new Vue({
                     return response.json();
                 })
                 .then(json => {
+                    if (json['success']) {
+                        this.showMessage('Billings successfully updated!');
+                    }
+                    else {
+                        this.showMessage('Billings update unsuccessful.', true);
+                    }
                     return json['success'];
                 })
 
@@ -1403,7 +1409,7 @@ const vm = new Vue({
             this.offsetY = undefined;
         },
         displayNewBillingOverlay() {
-            const x = window.matchMedia("(max-width: 735px)");
+            const x = window.matchMedia("(max-width: 3000px)");
 
             if (x.matches) {
                 document.querySelector('.new-billing-wrapper').classList.remove('closed');
@@ -1467,6 +1473,7 @@ const vm = new Vue({
                     'note': null
                 }
                 this.hideNewBillingOverlay();
+                this.showMessage('New billing created, to confirm changes click update.');
             }
         },
         showMessage(msg, negative=false) {

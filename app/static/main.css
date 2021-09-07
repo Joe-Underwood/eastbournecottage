@@ -1531,6 +1531,7 @@ svg {
 
             .facilities ul {
                 list-style: disc;
+                list-style-position: inside;
             }
 
         .location {

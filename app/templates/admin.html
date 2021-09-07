@@ -36,55 +36,61 @@
             <div class="new-billing-container">
 
                 <div class="new-billing-header">
-                    <div class="new-billing-header-text">Create Billing</div>
-                    <div class="new-billing-close-container" v-on:click="hideNewBillingOverlay()">
-                        <div class="new-billing-close">
-                            <span v-for="i in 2"></span>
+                    <div class="content-inner-wrapper">
+                        <div class="new-billing-header-text">Create Billing</div>
+                        <div class="new-billing-close-container" v-on:click="hideNewBillingOverlay()">
+                            <div class="new-billing-close">
+                                <span v-for="i in 2"></span>
+                            </div>
                         </div>
                     </div>
+                    
                 </div>
 
                 <div class="new-billing-inner-container">
-                    <div class="settings-price-settings">
+                    <div class="content-inner-wrapper">
+                        <div class="settings-price-settings">
 
-                        <div class="settings-input-container">
-                            <label for="new-billing-type">Type</label>
-                            <select id="new-billing-type" name="new-billing-type" v-model="newBillingFormData['transactionType']">
-                                <option value="PAYMENT">Payment</option>
-                                <option value="CREDIT_NOTE">Credit Note</option>
-                                <option value="DEBIT_NOTE">Debit Note</option>
-                            </select>
+                            <div class="settings-input-container">
+                                <label for="new-billing-type">Type</label>
+                                <select id="new-billing-type" name="new-billing-type" v-model="newBillingFormData['transactionType']">
+                                    <option value="PAYMENT">Payment</option>
+                                    <option value="CREDIT_NOTE">Credit Note</option>
+                                    <option value="DEBIT_NOTE">Debit Note</option>
+                                </select>
+                            </div>
+            
+                            <div class="settings-input-container">
+                                <label for="new-billing-date">Date</label>
+                                <input id="new-billing-date" type="date" v-model="newBillingFormData['date']"/>
+                            </div>
+            
+                            <div class="settings-input-container">
+                                <label for="new-billing-amount">Amount</label>
+                                <input id="new-billing-amount" type="number" step="0.01" v-model="newBillingFormData['amount']"/>
+                            </div>
+            
+                            <div class="settings-input-container">
+                                <label for="new-billing-booking-id">Booking ID</label>
+                                <select id="new-billing-booking-id" name="new-billing-booking-id" v-model="newBillingFormData['bookingId']">
+                                    <option v-for="booking in bookings" :value="booking['id']"><% booking['id'] %></option>
+                                </select>
+                            </div>
+            
+                            <div class="settings-input-container">
+                                <label for="new-billing-invoice-reference">Invoice Reference</label>
+                                <select id="new-billing-invoice-reference" name="new-billing-invoice-reference" v-model="newBillingFormData['reference']">
+                                    <option v-for="invoice in billings.filter(invoice => invoice['transactionType'] == 'INVOICE')" :value="invoice['reference']"><% invoice['reference'] %></option>
+                                </select>
+                            </div>
+            
+                            <!--<div class="new-billing-input-container">
+                                <label for="new-billing-note">Note</label>
+                                <textarea id="new-billing-note"></textarea>
+                            </div>-->
                         </div>
-        
-                        <div class="settings-input-container">
-                            <label for="new-billing-date">Date</label>
-                            <input id="new-billing-date" type="date" v-model="newBillingFormData['date']"/>
-                        </div>
-        
-                        <div class="settings-input-container">
-                            <label for="new-billing-amount">Amount</label>
-                            <input id="new-billing-amount" type="number" step="0.01" v-model="newBillingFormData['amount']"/>
-                        </div>
-        
-                        <div class="settings-input-container">
-                            <label for="new-billing-booking-id">Booking ID</label>
-                            <select id="new-billing-booking-id" name="new-billing-booking-id" v-model="newBillingFormData['bookingId']">
-                                <option v-for="booking in bookings" :value="booking['id']"><% booking['id'] %></option>
-                            </select>
-                        </div>
-        
-                        <div class="settings-input-container">
-                            <label for="new-billing-invoice-reference">Invoice Reference</label>
-                            <select id="new-billing-invoice-reference" name="new-billing-invoice-reference" v-model="newBillingFormData['reference']">
-                                <option v-for="invoice in billings.filter(invoice => invoice['transactionType'] == 'INVOICE')" :value="invoice['reference']"><% invoice['reference'] %></option>
-                            </select>
-                        </div>
-        
-                        <!--<div class="new-billing-input-container">
-                            <label for="new-billing-note">Note</label>
-                            <textarea id="new-billing-note"></textarea>
-                        </div>-->
                     </div>
+
                     
                     <div class="buttons-container">
                         <div class="content-inner-wrapper">
