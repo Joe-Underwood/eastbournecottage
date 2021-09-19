@@ -548,7 +548,7 @@ const vm = new Vue({
             if (this.newOrientation === 'portait') {
                 document.querySelector('.hero-area img').src = '../static/cottage-02.jpg';
             } else {
-                document.querySelector('.hero-area img').src = '../static/cottage-01.jpg';
+                document.querySelector('.hero-area img').src = '../static/cottage-04.jpg';
             }
         
             document.querySelector('.hero-area').style.height = `${this.heroHeight - this.offsetHeight}px`;
