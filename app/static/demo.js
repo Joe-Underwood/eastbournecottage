@@ -151,101 +151,16 @@ const vm = new Vue({
                 this.initMonthSwiper();
             })
         })  
-
-        
-
-        /*this.getPriceList();
-        this.getBookings();
-        this.getCustomers();
-        this.getBillings();
-        this.getBillingSettings();
-        this.getPriceListSettings()
-            .then(() => {
-                return this.getServerDate();
-            })
-            .then((serverDate) => {
-                this.addRangeMonths(serverDate);
-                this.priceListMonth = this.rangeMonths[0];
-            })
-            .then(() => {
-                this.initMonthSwiper();
-                this.$nextTick(function() {
-                    document.querySelector('.tab').classList.add('current-month-tab');
-                    this.initMonthTabGlider();
-                    this.initPriceTableSwipers();
-                })
-            })*/
     },
     methods: {
         setBillings() {
-            const response = 
-                fetch('/set_billings', {
-                    method: 'post',
-                    body: JSON.stringify(this.billings),
-                    headers: new Headers({
-                        'content-type': 'application/json'
-                    })
-                })
-                .then(response => {
-                    return response.json();
-                })
-                .then(json => {
-                    if (json['success']) {
-                        this.showMessage('Billings successfully updated!');
-                    }
-                    else {
-                        this.showMessage('Billings update unsuccessful.', true);
-                    }
-                    return json['success'];
-                })
-
-            return response;
-        },
-        getBillingSettings() {
-            const response =
-                fetch('/get_billing_settings', { method: 'post' })
-                    .then(response => {
-                        return response.json();
-                    })
-                    .then(json => {
-                        this.billingSettings = json['billingSettings'];
-                        return json['billingSettings'];
-                    })
-                    .then(data => {
-                        this.refreshPaymentBreakpoints();
-                        this.refreshCancellationBreakpoints();
-                        return data;
-                    })
-                    /*.then(data => {
-                        this.$watch('billingSettings', 
-                        function() {
-                            this.billingSettings['updateFlag'] = true;
-                        },
-                        { deep: true })
-                        return data;
-                    })*/
-
-            return response;
+            this.showMessage('Billings successfully updated!');
+            return true;
         },
         setBillingSettings() {
             this.refreshPaymentBreakpoints();
             this.refreshCancellationBreakpoints();
-            const response = 
-                fetch('/set_billing_settings', {
-                    method: 'post',
-                    body: JSON.stringify(this.billingSettings),
-                    headers: new Headers({
-                            'content-type': 'application/json'
-                    })
-                })
-                .then(response => {
-                    return response.json();
-                })
-                .then(json => {
-                    return json['success'];
-                })
-
-            return response;
+            return true;
         },
         refreshPaymentBreakpoints() {
             this.billingSettings['paymentBreakpoints'].sort(function(a, b) {
@@ -280,40 +195,8 @@ const vm = new Vue({
         },
         setPriceList() {
             this.refreshPriceList();
-            const response = 
-                fetch('/set_price_list', {
-                    method: 'post',
-                    body: JSON.stringify(this.priceList),
-                    headers: new Headers({
-                        'content-type': 'application/json'
-                    })
-                })
-                .then(response => {
-                    return response.json();
-                })
-                .then(json => {
-                    return json['success'];
-                })
 
-            return response;
-        },
-        getServerDate() {
-            const response = 
-                fetch('/get_server_date', { method: 'post' })
-                    .then(response => {
-                        return response.json();
-                    })
-                    .then(json => {
-                        const year = json['serverDate'].substr(0, 4);
-                        const month = json['serverDate'].substr(5, 2);
-                        const date = json['serverDate'].substr(8, 2);
-                        const serverDate = new Date(year, month - 1, date);
-
-                        this.serverDate = serverDate;
-                        return serverDate;
-                    })
-                
-            return response;
+            return true;
         },
         addRangeMonths(startDate) {
             //expects startDate is a date object, returns array of date objects, one for each month including and between current date and end of future price list range
@@ -361,40 +244,10 @@ const vm = new Vue({
             { deep: true })*/
         },
         setPriceListSettings() {
-            const response = 
-                fetch('/set_price_list_settings', {
-                    method: 'post',
-                    body: JSON.stringify(this.priceListSettings),
-                    headers: new Headers({
-                        'content-type': 'application/json'
-                    })
-                })
-                .then(response => {
-                    return response.json();
-                })
-                .then(json => {
-                    return json['success'];
-                })
-
-            return response;
+            return true;
         },
         setBookings() {
-            const response =
-                fetch('/set_bookings', {
-                    method: 'post',
-                    body: JSON.stringify(this.bookings),
-                    headers: new Headers({
-                        'content-type': 'application/json'
-                    })
-                })
-                .then(response => {
-                    return response.json();
-                })
-                .then(json => {
-                    return json['success'];  
-                })
-
-            return response;
+            return true;
         },
         addBooking() {
             const newBooking = {
@@ -461,21 +314,7 @@ const vm = new Vue({
             
         },
         setCustomers() {
-            const response = fetch('/set_customers', {
-                method: 'post',
-                body: JSON.stringify(this.customers),
-                headers: new Headers({
-                    'content-type': 'application/json'
-                })
-            })
-                .then(response => {
-                    return response.json();
-                })
-                .then(json => {
-                    return json['success'];
-                })
-
-            return response;
+            return true;
         },
         addCustomer() {
             this.customers.push({
