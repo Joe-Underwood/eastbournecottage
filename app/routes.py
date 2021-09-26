@@ -17,6 +17,10 @@ def landing_page():
     booking_form = BookingForm()
     return render_template('main.html', booking_form=booking_form)
 
+@app.route('/demo', methods=['GET', 'POST'])
+def demo():
+    return render_template('demo.html')
+
 @app.route('/admin', methods=['GET', 'POST'])
 @login_required
 def admin():
