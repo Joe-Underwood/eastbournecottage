@@ -335,7 +335,7 @@
                                     <div>Pay the full amount of £<% bookingFormData['total'] %>, <template v-if="publicBillingSettings['firstPaymentDueAfter'] <= 0">due upon acceptance of this booking request.</template><template v-else>due within <% publicBillingSettings['firstPaymentDueAfter'] %> days of acceptance of this booking request.</template></div>
                                     
                                 </div>
-                                <div class="pay-in-parts" v-on:click="payInParts()" :class="{ focused: !bookingFormData.payInFull }"> 
+                                <div class="pay-in-parts" v-on:click="payInParts()" :class="{ focused: bookingFormData.payInParts }"> 
                                     <div class="payment-option-header">
                                         <h4>Pay In Parts</h4>
                                         <div class="radio-input-border" :class="{ checked: !bookingFormData['payInFull'] }">

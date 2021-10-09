@@ -1160,16 +1160,19 @@ def booking():
         if (not date_segments and segment.start_date > arrival_date):
             if (price_list[index - 1].booking_id):
                 print('date segment is already booked')
+                print('initial failure')
                 return { 'sucess': False }
             date_segments.append(price_list[index - 1])
         
         if (date_segments):
-            if (segment.booking_id):
-                print('date segment is already booked')
-                return { 'sucess': False }
             if (departure_date <= segment.start_date):
                 break
-            date_segments.append(price_list[index])
+            elif (segment.booking_id):
+                print('date segment is already booked')
+                print('secondary failure')
+                return { 'sucess': False }
+            else:
+                date_segments.append(price_list[index])
             
     if (not (date_segments)):
         return { 'success': False }

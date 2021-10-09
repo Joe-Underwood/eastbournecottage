@@ -195,6 +195,7 @@ const vm = new Vue({
             stayLengthWeeks: 0,
             total: 0,
             payInFull: true,
+            payInParts: false,
             progressivePayments: [],
             cancellationTerms: []
         },
@@ -1756,9 +1757,11 @@ const vm = new Vue({
         },
         payInFull() {
             this.bookingFormData['payInFull'] = true;
+            this.bookingFormData['payInParts'] = false;
         },
         payInParts() {
             this.bookingFormData['payInFull'] = false;
+            this.bookingFormData['payInParts'] = true;
         }
     },
     delimiters: ['<%', '%>']
