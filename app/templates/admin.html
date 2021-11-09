@@ -512,7 +512,7 @@
                             </div>
 
                             <h3>Upcoming</h3>
-                            <div class="booking" v-for="booking in bookings.filter(booking => booking['status'] === 'ACCEPTED' || booking['status'] === 'ACTIVE' || booking['bookingType'] !== 'STANDARD')" >
+                            <div class="booking" v-for="booking in bookings.filter(booking => (booking['updateFlag'] || !booking['departureDate'] || (new Date(parseInt(booking['departureDate'].substr(0, 4)), parseInt(booking['departureDate'].substr(5, 2)) - 1, parseInt(booking['departureDate'].substr(8, 2))) >= this.serverDate)) && (booking['status'] === 'ACCEPTED' || booking['status'] === 'ACTIVE' || booking['bookingType'] !== 'STANDARD'))" >
 
                                 <div class="page hidden">
                                     <div class="page-close-container" v-on:click="exitFullscreen($event)">

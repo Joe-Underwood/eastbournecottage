@@ -342,7 +342,8 @@ def set_price_list_settings():
 @app.route('/get_bookings', methods=['POST'])
 @login_required
 def get_bookings():
-    query = db.session.query(Booking).filter(Booking.departure_date >= date.today()).order_by(Booking.arrival_date.asc())
+    #query = db.session.query(Booking).filter(Booking.departure_date >= date.today()).order_by(Booking.arrival_date.asc())
+    query = db.session.query(Booking).order_by(Booking.arrival_date.asc())
     bookings = []
     for row in query:
         booking = {
