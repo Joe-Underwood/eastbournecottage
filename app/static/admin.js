@@ -1,16 +1,16 @@
 const vm = new Vue({
     el: '#root',
     data: {
-        priceList: null,
-        priceListSettings: null,
-        bookings: null,
-        customers: null,
-        billings: null,
-        billingSettings: null,
+        priceList: {},
+        priceListSettings: {},
+        bookings: {},
+        customers: {},
+        billings: {},
+        billingSettings: {},
 
-        serverDate: null,
+        serverDate: {},
         priceListMonthView: true,
-        rangeMonths: null,
+        rangeMonths: {},
         cardSelect: false,
         cardSelection: [],
 
@@ -22,20 +22,20 @@ const vm = new Vue({
         cancellationBreakpointSelect: false,
         cancellationBreakpointSelection: [],
 
-        monthSwiper: null,
-        monthTabGlider: null,
+        monthSwiper: {},
+        monthTabGlider: {},
         monthTabsRefresh: false,
         priceTableSwiperList: [],
 
 
-        billingTableSwiper: null,
+        billingTableSwiper: {},
 
         newBillingScrimClose: false,
-        initialY: undefined,
-        offsetY: undefined,
+        initialY: {},
+        offsetY: {},
 
-        disableBodyScroll: undefined,
-        enableBodyScroll: undefined,
+        disableBodyScroll: {},
+        enableBodyScroll: {},
 
         newBillingFormData: {
             'id': null,
@@ -373,7 +373,8 @@ const vm = new Vue({
                 'rangeType': null,
                 'lockFlag': false,
                 'updateFlag': true,
-                'deleteFlag': false
+                'deleteFlag': false,
+                'blockFlag': false
             })
             const lastSegment = this.priceList[this.priceList.length - 1];
             /*this.$watch(function() {

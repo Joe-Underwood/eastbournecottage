@@ -376,7 +376,7 @@ def get_bookings():
 def set_bookings():
     json_request = request.get_json()
     query = db.session.query(Booking)
-    price_list = db.session.query(Price_List)
+    price_list = db.session.query(Price_List).order_by(Price_List.start_date.asc())
 
     for booking in json_request:
 
@@ -1152,7 +1152,7 @@ def booking():
 
     #----VALIDATION-------#
     price_list_settings = db.session.query(Price_List_Settings)
-    price_list = db.session.query(Price_List)
+    price_list = db.session.query(Price_List).order_by(Price_List.start_date.asc())
     arrival_date = datetime.strptime(booking_form_data['arrivalDate'][0:10], '%Y-%m-%d').date()
     departure_date = datetime.strptime(booking_form_data['departureDate'][0:10], '%Y-%m-%d').date()
     date_segments = []

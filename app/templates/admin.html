@@ -32,79 +32,83 @@
             
         </div>
 
-        <div class="new-billing-wrapper closed" v-on:touchstart="newBillingTouchstart($event)" v-on:touchmove="newBillingTouchmove($event)" v-on:touchend="newBillingTouchend($event)">
-            <div class="new-billing-container">
-
-                <div class="new-billing-header">
-                    <div class="content-inner-wrapper">
-                        <div class="new-billing-header-text">Create Billing</div>
-                        <div class="new-billing-close-container" v-on:click="hideNewBillingOverlay()">
-                            <div class="new-billing-close">
-                                <span v-for="i in 2"></span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>
-
-                <div class="new-billing-inner-container">
-                    <div class="content-inner-wrapper">
-                        <div class="settings-price-settings">
-
-                            <div class="settings-input-container">
-                                <label for="new-billing-type">Type</label>
-                                <select id="new-billing-type" name="new-billing-type" v-model="newBillingFormData['transactionType']">
-                                    <option value="PAYMENT">Payment</option>
-                                    <option value="CREDIT_NOTE">Credit Note</option>
-                                    <option value="DEBIT_NOTE">Debit Note</option>
-                                </select>
-                            </div>
-            
-                            <div class="settings-input-container">
-                                <label for="new-billing-date">Date</label>
-                                <input id="new-billing-date" type="date" v-model="newBillingFormData['date']"/>
-                            </div>
-            
-                            <div class="settings-input-container">
-                                <label for="new-billing-amount">Amount</label>
-                                <input id="new-billing-amount" type="number" step="0.01" v-model="newBillingFormData['amount']"/>
-                            </div>
-            
-                            <div class="settings-input-container">
-                                <label for="new-billing-booking-id">Booking ID</label>
-                                <select id="new-billing-booking-id" name="new-billing-booking-id" v-model="newBillingFormData['bookingId']">
-                                    <option v-for="booking in bookings" :value="booking['id']"><% booking['id'] %></option>
-                                </select>
-                            </div>
-            
-                            <div class="settings-input-container">
-                                <label for="new-billing-invoice-reference">Invoice Reference</label>
-                                <select id="new-billing-invoice-reference" name="new-billing-invoice-reference" v-model="newBillingFormData['reference']">
-                                    <option v-for="invoice in billings.filter(invoice => invoice['transactionType'] == 'INVOICE')" :value="invoice['reference']"><% invoice['reference'] %></option>
-                                </select>
-                            </div>
-            
-                            <!--<div class="new-billing-input-container">
-                                <label for="new-billing-note">Note</label>
-                                <textarea id="new-billing-note"></textarea>
-                            </div>-->
-                        </div>
-                    </div>
-
-                    
-                    <div class="buttons-container">
+        <template v-if="billings">
+            <div class="new-billing-wrapper closed" v-on:touchstart="newBillingTouchstart($event)" v-on:touchmove="newBillingTouchmove($event)" v-on:touchend="newBillingTouchend($event)">
+                <div class="new-billing-container">
+    
+                    <div class="new-billing-header">
                         <div class="content-inner-wrapper">
-                            <div class="buttons-inner-container">
-                                <button class="overlay-confirm-button" v-on:click="createNewBilling()">CREATE</button>
+                            <div class="new-billing-header-text">Create Billing</div>
+                            <div class="new-billing-close-container" v-on:click="hideNewBillingOverlay()">
+                                <div class="new-billing-close">
+                                    <span v-for="i in 2"></span>
+                                </div>
                             </div>
-                            
                         </div>
                         
                     </div>
-                </div>
+    
+                    <div class="new-billing-inner-container">
+                        <div class="content-inner-wrapper">
+                            <div class="settings-price-settings">
+    
+                                <div class="settings-input-container">
+                                    <label for="new-billing-type">Type</label>
+                                    <select id="new-billing-type" name="new-billing-type" v-model="newBillingFormData['transactionType']">
+                                        <option value="PAYMENT">Payment</option>
+                                        <option value="CREDIT_NOTE">Credit Note</option>
+                                        <option value="DEBIT_NOTE">Debit Note</option>
+                                    </select>
+                                </div>
                 
+                                <div class="settings-input-container">
+                                    <label for="new-billing-date">Date</label>
+                                    <input id="new-billing-date" type="date" v-model="newBillingFormData['date']"/>
+                                </div>
+                
+                                <div class="settings-input-container">
+                                    <label for="new-billing-amount">Amount</label>
+                                    <input id="new-billing-amount" type="number" step="0.01" v-model="newBillingFormData['amount']"/>
+                                </div>
+                
+                                <div class="settings-input-container">
+                                    <label for="new-billing-booking-id">Booking ID</label>
+                                    <select id="new-billing-booking-id" name="new-billing-booking-id" v-model="newBillingFormData['bookingId']">
+                                        <option v-for="booking in bookings" :value="booking['id']"><% booking['id'] %></option>
+                                    </select>
+                                </div>
+                                
+                                <div class="settings-input-container">
+                                    <label for="new-billing-invoice-reference">Invoice Reference</label>
+                                    <select id="new-billing-invoice-reference" name="new-billing-invoice-reference" v-model="newBillingFormData['reference']">
+                                        <option v-for="invoice in billings.filter((invoice) => invoice['transactionType'] == 'INVOICE')" :value="invoice['reference']"><% invoice['reference'] %></option>
+                                    </select>
+                                </div>
+                
+                                <!--<div class="new-billing-input-container">
+                                    <label for="new-billing-note">Note</label>
+                                    <textarea id="new-billing-note"></textarea>
+                                </div>-->
+                            </div>
+                        </div>
+    
+                        
+                        <div class="buttons-container">
+                            <div class="content-inner-wrapper">
+                                <div class="buttons-inner-container">
+                                    <button class="overlay-confirm-button" v-on:click="createNewBilling()">CREATE</button>
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
             </div>
-        </div>
+        </template>
+
+        
 
         <div class="dialog-box closed" v-on:click="closeMessage()">
             <div class="content-inner-wrapper">
@@ -287,8 +291,8 @@
     
                                                     <div class="start-date-column price-table-column">
                                                         <div class="price-table-header">Start Date</div>
-                                                        <input class="segment-start-date" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="date" v-model="segment['startDate']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'booked-standard': segmentBookedType(segment) === 'STANDARD' }, { 'booked-owner': segmentBookedType(segment) === 'OWNER' }, { 'booked-external': segmentBookedType(segment) === 'EXTERNAL' }, { 'blocked': segment['blockFlag'] }]" :readonly="[cardSelect, segment['bookingId'], segment['blockFlag']]"/>
-                                                        <input class="segment-start-date" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="date" v-model="segment['startDate']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'blocked': segment['blockFlag'] }]" :readonly="[cardSelect, segment['bookingId'], segment['blockFlag']]"/>
+                                                        <input class="segment-start-date" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="date" v-model="segment['startDate']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'booked-standard': segmentBookedType(segment) === 'STANDARD' }, { 'booked-owner': segmentBookedType(segment) === 'OWNER' }, { 'booked-external': segmentBookedType(segment) === 'EXTERNAL' }, { 'blocked': segment['blockFlag'] }]" />
+                                                        <input class="segment-start-date" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="date" v-model="segment['startDate']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'blocked': segment['blockFlag'] }]" />
                                                     </div>
                                                     
                                                     <div class="swiper-container price-table-swiper">
@@ -296,44 +300,44 @@
     
                                                             <div class="swiper-slide price-column price-table-column">
                                                                 <div class="price-table-header">Price / £</div>
-                                                                <input class="segment-price" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['price']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'booked-standard': segmentBookedType(segment) === 'STANDARD' }, { 'booked-owner': segmentBookedType(segment) === 'OWNER' }, { 'booked-external': segmentBookedType(segment) === 'EXTERNAL' }, { 'blocked': segment['blockFlag'] }]" :readonly="[cardSelect, segment['bookingId'], segment['blockFlag']]"/>
-                                                                <input class="segment-price" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['price']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'blocked': segment['blockFlag'] }]" :readonly="[cardSelect, segment['bookingId'], segment['blockFlag']]"/>
+                                                                <input class="segment-price" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['price']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'booked-standard': segmentBookedType(segment) === 'STANDARD' }, { 'booked-owner': segmentBookedType(segment) === 'OWNER' }, { 'booked-external': segmentBookedType(segment) === 'EXTERNAL' }, { 'blocked': segment['blockFlag'] }]" />
+                                                                <input class="segment-price" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['price']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'blocked': segment['blockFlag'] }]" />
                                                             </div>
     
                                                             <div class="swiper-slide price-2-weeks-column price-table-column">
                                                                 <div class="price-table-header">2 Weeks / £</div>
-                                                                <input class="segment-price-2-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['price2Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'booked-standard': segmentBookedType(segment) === 'STANDARD' }, { 'booked-owner': segmentBookedType(segment) === 'OWNER' }, { 'booked-external': segmentBookedType(segment) === 'EXTERNAL' }, { 'blocked': segment['blockFlag'] }]" :readonly="[cardSelect, segment['bookingId'], segment['blockFlag']]"/>
-                                                                <input class="segment-price-2-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['price2Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'blocked': segment['blockFlag'] }]" :readonly="[cardSelect, segment['bookingId'], segment['blockFlag']]"/>
+                                                                <input class="segment-price-2-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['price2Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'booked-standard': segmentBookedType(segment) === 'STANDARD' }, { 'booked-owner': segmentBookedType(segment) === 'OWNER' }, { 'booked-external': segmentBookedType(segment) === 'EXTERNAL' }, { 'blocked': segment['blockFlag'] }]" />
+                                                                <input class="segment-price-2-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['price2Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'blocked': segment['blockFlag'] }]" />
                                                             </div>
     
                                                             <div class="swiper-slide price-3-weeks-column price-table-column">
                                                                 <div class="price-table-header">3 Weeks / £</div>
-                                                                <input class="segment-price-3-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['price3Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'booked-standard': segmentBookedType(segment) === 'STANDARD' }, { 'booked-owner': segmentBookedType(segment) === 'OWNER' }, { 'booked-external': segmentBookedType(segment) === 'EXTERNAL' }, { 'blocked': segment['blockFlag'] }]" :readonly="[cardSelect, segment['bookingId'], segment['blockFlag']]"/>
-                                                                <input class="segment-price-3-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['price3Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'blocked': segment['blockFlag'] }]" :readonly="[cardSelect, segment['bookingId'], segment['blockFlag']]"/>
+                                                                <input class="segment-price-3-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['price3Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'booked-standard': segmentBookedType(segment) === 'STANDARD' }, { 'booked-owner': segmentBookedType(segment) === 'OWNER' }, { 'booked-external': segmentBookedType(segment) === 'EXTERNAL' }, { 'blocked': segment['blockFlag'] }]" />
+                                                                <input class="segment-price-3-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['price3Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'blocked': segment['blockFlag'] }]" />
                                                             </div>
     
                                                             <div class="swiper-slide price-4-weeks-column price-table-column">
                                                                 <div class="price-table-header">4 Weeks / £</div>
-                                                                <input class="segment-price-4-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['price4Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'booked-standard': segmentBookedType(segment) === 'STANDARD' }, { 'booked-owner': segmentBookedType(segment) === 'OWNER' }, { 'booked-external': segmentBookedType(segment) === 'EXTERNAL' }, { 'blocked': segment['blockFlag'] }]" :readonly="[cardSelect, segment['bookingId'], segment['blockFlag']]"/>
-                                                                <input class="segment-price-4-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['price4Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'blocked': segment['blockFlag'] }]" :readonly="[cardSelect, segment['bookingId'], segment['blockFlag']]"/>
+                                                                <input class="segment-price-4-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['price4Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'booked-standard': segmentBookedType(segment) === 'STANDARD' }, { 'booked-owner': segmentBookedType(segment) === 'OWNER' }, { 'booked-external': segmentBookedType(segment) === 'EXTERNAL' }, { 'blocked': segment['blockFlag'] }]" />
+                                                                <input class="segment-price-4-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['price4Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'blocked': segment['blockFlag'] }]" />
                                                             </div>
 
                                                             <div class="swiper-slide discount-amount-2-weeks-column price-table-column">
                                                                 <div class="price-table-header">Discount 2 Weeks / £</div>
-                                                                <input class="segment-discount-amount-2-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['discountAmount2Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'booked-standard': segmentBookedType(segment) === 'STANDARD' }, { 'booked-owner': segmentBookedType(segment) === 'OWNER' }, { 'booked-external': segmentBookedType(segment) === 'EXTERNAL' }, { 'blocked': segment['blockFlag'] }]" :readonly="[cardSelect, segment['bookingId'], segment['blockFlag']]"/>
-                                                                <input class="segment-discount-amount-2-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['discountAmount2Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'blocked': segment['blockFlag'] }]" :readonly="[cardSelect, segment['bookingId'], segment['blockFlag']]"/>
+                                                                <input class="segment-discount-amount-2-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['discountAmount2Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'booked-standard': segmentBookedType(segment) === 'STANDARD' }, { 'booked-owner': segmentBookedType(segment) === 'OWNER' }, { 'booked-external': segmentBookedType(segment) === 'EXTERNAL' }, { 'blocked': segment['blockFlag'] }]" />
+                                                                <input class="segment-discount-amount-2-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['discountAmount2Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'blocked': segment['blockFlag'] }]" />
                                                             </div>
 
                                                             <div class="swiper-slide discount-amount-3-weeks-column price-table-column">
                                                                 <div class="price-table-header">Discount 3 Weeks / £</div>
-                                                                <input class="segment-discount-amount-3-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['discountAmount3Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'booked-standard': segmentBookedType(segment) === 'STANDARD' }, { 'booked-owner': segmentBookedType(segment) === 'OWNER' }, { 'booked-external': segmentBookedType(segment) === 'EXTERNAL' }, { 'blocked': segment['blockFlag'] }]" :readonly="[cardSelect, segment['bookingId'], segment['blockFlag']]"/>
-                                                                <input class="segment-discount-amount-3-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['discountAmount3Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'blocked': segment['blockFlag'] }]" :readonly="[cardSelect, segment['bookingId'], segment['blockFlag']]"/>
+                                                                <input class="segment-discount-amount-3-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['discountAmount3Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'booked-standard': segmentBookedType(segment) === 'STANDARD' }, { 'booked-owner': segmentBookedType(segment) === 'OWNER' }, { 'booked-external': segmentBookedType(segment) === 'EXTERNAL' }, { 'blocked': segment['blockFlag'] }]" />
+                                                                <input class="segment-discount-amount-3-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['discountAmount3Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'blocked': segment['blockFlag'] }]" />
                                                             </div>
 
                                                             <div class="swiper-slide discount-amount-4-weeks-column price-table-column">
                                                                 <div class="price-table-header">Discount 4 Weeks / £</div>
-                                                                <input class="segment-discount-amount-4-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['discountAmount4Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'booked-standard': segmentBookedType(segment) === 'STANDARD' }, { 'booked-owner': segmentBookedType(segment) === 'OWNER' }, { 'booked-external': segmentBookedType(segment) === 'EXTERNAL' }, { 'blocked': segment['blockFlag'] }]" :readonly="[cardSelect, segment['bookingId'], segment['blockFlag']]"/>
-                                                                <input class="segment-discount-amount-4-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['discountAmount4Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'blocked': segment['blockFlag'] }]" :readonly="[cardSelect, segment['bookingId'], segment['blockFlag']]"/>
+                                                                <input class="segment-discount-amount-4-weeks" v-for="(segment, index) in priceList.filter(segment => segmentMonthFilter(segment, month, index))" :key="segment['id']" type="number" step="0.01" v-model="segment['discountAmount4Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'booked-standard': segmentBookedType(segment) === 'STANDARD' }, { 'booked-owner': segmentBookedType(segment) === 'OWNER' }, { 'booked-external': segmentBookedType(segment) === 'EXTERNAL' }, { 'blocked': segment['blockFlag'] }]" />
+                                                                <input class="segment-discount-amount-4-weeks" v-for="(segment, index) in priceList.filter(segment => !segment['startDate'])" :key="segment['id'] + index" type="number" step="0.01" v-model="segment['discountAmount4Weeks']" v-on:click="segmentSelect(segment, $event)" :class="[{ selected: segment['selectFlag'] }, { 'alt-table-row': (index + 1) % 2 === 0 }, { 'future-segment': segment['rangeType'] === 'FUTURE' }, { 'blocked': segment['blockFlag'] }]" />
                                                             </div>
     
                                                             <!--<div class="swiper-slide customer-column price-table-column">
@@ -364,8 +368,8 @@
                     <div class="buttons-container">
                         <div class="content-inner-wrapper">
                             <div class="buttons-inner-container">
-                                <!--<button class="cards-add" v-on:click="addPriceListSegment()">+</button>-->
-                                <button class="cards-add" v-on:click="displayNewPriceSegmentOverlay()">+</button>
+                                <button class="cards-add" v-on:click="addPriceListSegment()">+</button>
+                                <!--<button class="cards-add" v-on:click="displayNewPriceSegmentOverlay()">+</button>-->
                                 <button class="cards-select shifted" v-on:click="priceListSelectOn()">SELECT</button>
                                 <button class="cards-update" v-on:click="setPriceList()">UPDATE</button>
                                 <button class="cards-cancel hidden" v-on:click="priceListSelectOff()">CANCEL</button>
