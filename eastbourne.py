@@ -17,3 +17,9 @@ def updatebillings():
     """Update Billing table and send invoices out for progressive billings"""
     update_billings()
     click.echo('Billing updated')
+    
+@app.cli.command()
+def testupdatebillings():
+    """Send preview of invoices to be sent to admin"""
+    update_billings()
+    click.echo('Previews sent')

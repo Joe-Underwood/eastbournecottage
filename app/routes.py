@@ -408,7 +408,7 @@ def set_bookings():
                 if (not int(booking['adults']) >= 1):
                     print('no. of adults must be at least 1')
                     continue
-            
+                
             def checkDateSegments():
                 arrivalSegmentFound = False
                 for index, segment in enumerate(price_list):
@@ -427,6 +427,25 @@ def set_bookings():
                             date_segments.append(segment)
                         else:
                             return True
+            
+            """def checkDateSegments():
+                arrivalSegmentFound = False
+                for index, segment in enumerate(price_list):
+                    if (arrival_date < segment.start_date and not arrivalSegmentFound):
+                        arrivalSegmentFound = True
+                        if (index > 0):
+                            if (price_list[index - 1].booking_id):
+                                if (price_list[index - 1].booking_id != booking['id']):
+                                    return False                    
+                            date_segments.append(price_list[index - 1])
+                    if (arrivalSegmentFound):
+                        if (departure_date > segment.start_date):
+                            if (segment.booking_id):
+                                if (segment.booking_id != booking['id']):
+                                    return False
+                            date_segments.append(segment)
+                        else:
+                            return True"""
             
             if not checkDateSegments():
                 print('dates overlap with preexisiting booking, new_booking is invalid')
@@ -728,7 +747,7 @@ def set_bookings():
                     elif len(db_booking.billings) > 1:
                         customer_msg.body = (
                             'Hello, \n \n' +
-                            'A new booking has been created for you! The first payment of £' + str(first_invoice.amount) + ' (' + str(first_invoice.percentage_due) + '%) is now due within ' + str(db_billing_settings.first_payment_due_after) + ' days of this email, and should be made via bank transfer. Our account details can be on the attached invoice. \n' +
+                            'A new booking has been created for you! The first payment of £' + str(first_invoice.amount) + ' (' + str(first_invoice.percentage_due) + '%) is now due within ' + str(db_billing_settings.first_payment_due_after) + ' days of this email, and should be made via bank transfer. Our account details can be found on the attached invoice. \n' +
                             'You will be notified via email before each installment becomes due. \n \n' + 
                             'Kind regards, \n \n' + 
                             'The Cottage - Eastbourne' 
